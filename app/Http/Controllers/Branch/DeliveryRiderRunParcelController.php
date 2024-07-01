@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Branch;
 
-use App\Http\Controllers\Controller;
-use App\Models\Branch;
-use App\Models\Merchant;
-use App\Models\Parcel;
-use App\Models\ParcelLog;
-use App\Models\Rider;
-use App\Models\RiderRun;
-use App\Models\RiderRunDetail;
-use App\Notifications\MerchantParcelNotification;
 use DataTables;
+use App\Models\Area;
+use App\Models\Rider;
+use App\Models\Branch;
+use App\Models\Parcel;
+use App\Models\Merchant;
+use App\Models\RiderRun;
+use App\Models\ParcelLog;
 use Illuminate\Http\Request;
+use App\Models\RiderRunDetail;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Models\MerchantServiceAreaReturnCharge;
+use App\Notifications\MerchantParcelNotification;
 
 class DeliveryRiderRunParcelController extends Controller
 {
@@ -40,9 +42,10 @@ class DeliveryRiderRunParcelController extends Controller
         $branch_id = auth()->guard('branch')->user()->branch->id;
         $branch_user_id = auth()->guard('branch')->user()->id;
 
-        $model = RiderRun::with(['rider' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $model = RiderRun::with([
+            'rider' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->whereRaw('branch_id = ? and run_type = 2', [$branch_id])
             ->orderBy('id', 'desc')
@@ -80,34 +83,34 @@ class DeliveryRiderRunParcelController extends Controller
                 return ($data->complete_date_time) ? date('d-m-Y H:i:s', strtotime($data->complete_date_time)) : "";
             })
             ->addColumn('total_amount', function ($data) {
-                $parcels=$data->rider_run_details;
+                $parcels = $data->rider_run_details;
                 $total_amount = 0;
-                foreach($parcels as $parcel){
-                    
-                $total_amount += $parcel->parcel->total_collect_amount;
+                foreach ($parcels as $parcel) {
+
+                    $total_amount += $parcel->parcel->total_collect_amount;
                 }
-                
+
                 return $total_amount;
             })
             ->editColumn('status', function ($data) {
                 switch ($data->status) {
-                    case 1 :
+                    case 1:
                         $status_name = "Run Create";
                         $class = "success";
                         break;
-                    case 2 :
+                    case 2:
                         $status_name = "Run Start";
                         $class = "success";
                         break;
-                    case 3 :
+                    case 3:
                         $status_name = "Run Cancel";
                         $class = "danger";
                         break;
-                    case 4 :
+                    case 4:
                         $status_name = "Run Complete";
                         $class = "success";
                         break;
-                    default :
+                    default:
                         $status_name = "None";
                         $class = "success";
                         break;
@@ -137,7 +140,7 @@ class DeliveryRiderRunParcelController extends Controller
                 }
                 return $button;
             })
-            ->rawColumns(['action', 'status', 'create_date_time', 'start_date_time', 'cancel_date_time', 'complete_date_time','total_amount'])
+            ->rawColumns(['action', 'status', 'create_date_time', 'start_date_time', 'cancel_date_time', 'complete_date_time', 'total_amount'])
             ->make(true);
     }
 
@@ -147,18 +150,19 @@ class DeliveryRiderRunParcelController extends Controller
         $branch_id = auth()->guard('branch')->user()->branch->id;
         $branch_user_id = auth()->guard('branch')->user()->id;
 
-        $model = RiderRun::with(['rider' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $model = RiderRun::with([
+            'rider' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->whereRaw('branch_id = ? and run_type = 2', [$branch_id])
             ->orderBy('id', 'desc')
             ->select();
-        $filter=[];
+        $filter = [];
 
         if ($request->has('run_status') && !is_null($request->get('run_status')) && $request->get('run_status') != 0) {
             $model->where('status', $request->get('run_status'));
-            $filter['run_status']=$request->get('run_status');
+            $filter['run_status'] = $request->get('run_status');
         } elseif ($request->get('run_status') == '') {
             $model->whereIn('status', [1, 2]);
         } else {
@@ -166,15 +170,15 @@ class DeliveryRiderRunParcelController extends Controller
         }
         if ($request->has('rider_id') && !is_null($request->get('rider_id')) && $request->get('rider_id') != 0) {
             $model->where('rider_id', $request->get('rider_id'));
-            $filter['rider_id']=$request->get('rider_id');
+            $filter['rider_id'] = $request->get('rider_id');
         }
         if ($request->has('from_date') && !is_null($request->get('from_date')) && $request->get('from_date') != 0) {
             $model->whereDate('create_date_time', '>=', $request->get('from_date'));
-            $filter['from_date']=$request->get('from_date');
+            $filter['from_date'] = $request->get('from_date');
         }
         if ($request->has('to_date') && !is_null($request->get('to_date')) && $request->get('to_date') != 0) {
             $model->whereDate('create_date_time', '<=', $request->get('to_date'));
-            $filter['to_date']=$request->get('to_date');
+            $filter['to_date'] = $request->get('to_date');
         }
 
         $riderRuns = $model->get();
@@ -196,23 +200,23 @@ class DeliveryRiderRunParcelController extends Controller
             })
             ->editColumn('status', function ($data) {
                 switch ($data->status) {
-                    case 1 :
+                    case 1:
                         $status_name = "Run Create";
                         $class = "success";
                         break;
-                    case 2 :
+                    case 2:
                         $status_name = "Run Start";
                         $class = "success";
                         break;
-                    case 3 :
+                    case 3:
                         $status_name = "Run Cancel";
                         $class = "danger";
                         break;
-                    case 4 :
+                    case 4:
                         $status_name = "Run Complete";
                         $class = "success";
                         break;
-                    default :
+                    default:
                         $status_name = "None";
                         $class = "success";
                         break;
@@ -285,8 +289,8 @@ class DeliveryRiderRunParcelController extends Controller
                     if ($check) {
                         $riderRunDetails = RiderRunDetail::where('rider_run_id', $request->rider_run_id)->get();
                         foreach ($riderRunDetails as $riderRunDetail) {
-                            $parcel=Parcel::where('id', $riderRunDetail->parcel_id)->first();
-                        $parcel->update([
+                            $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->first();
+                            $parcel->update([
                                 'status' => 17,
                                 'delivery_branch_id' => $branch_id,
                                 'delivery_branch_user_id' => $branch_user_id,
@@ -306,8 +310,8 @@ class DeliveryRiderRunParcelController extends Controller
                             RiderRunDetail::where('id', $riderRunDetail->id)->update([
                                 'status' => 2,
                             ]);
-                            
-                            
+
+
 
 
                             // $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->first();
@@ -316,22 +320,21 @@ class DeliveryRiderRunParcelController extends Controller
                             // $message .= "For  parcel ID No ".$parcel->parcel_invoice.".";
                             // $message .= "Please rate your experience with us in our https://www.facebook.com/beaconcourier.com.bd.";
                             // $this->send_sms($parcel->customer_contact_number, $message);
-                            
+
                             if ($parcel->delivery_rider->id != 18 && $parcel->delivery_rider->id != 1) {
 
-                            
-                            // if($parcel->delivery_rider->id!=18) {
 
-                            $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->first();
-                            
-                            $message = "Dear " . $parcel->customer_name . ", ";
-                            $message .= "Your OTP " . $parcel->parcel_code . ". \n";
-                            $message .= "Parcel from " . $parcel->merchant->company_name . " (TK " . $parcel->total_collect_amount . ")";
-                            $message .= " will be delivered by " . $parcel->delivery_rider->name . ", " . $parcel->delivery_rider->contact_number . ".\n";
-                            $message .= " Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Parceldex";
-                            $this->send_sms($parcel->customer_contact_number, $message);
-                            
-                                                             }
+                                // if($parcel->delivery_rider->id!=18) {
+
+                                $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->first();
+
+                                $message = "Dear " . $parcel->customer_name . ", ";
+                                $message .= "Your OTP " . $parcel->parcel_code . ". \n";
+                                $message .= "Parcel from " . $parcel->merchant->company_name . " (TK " . $parcel->total_collect_amount . ")";
+                                $message .= " will be delivered by " . $parcel->delivery_rider->name . ", " . $parcel->delivery_rider->contact_number . ".\n";
+                                $message .= " Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Parceldex";
+                                $this->send_sms($parcel->customer_contact_number, $message);
+                            }
 
                             $merchant_user = Merchant::where('id', $parcel->merchant_id)->first();
                             // $merchant_user->notify(new MerchantParcelNotification($parcel));
@@ -351,7 +354,7 @@ class DeliveryRiderRunParcelController extends Controller
                 } catch (\Exception $e) {
                     \DB::rollback();
                     $response = ['error' => $e->getMessage()];
-//                    $response = ['error' => 'Database Error Found' ];
+                    //                    $response = ['error' => 'Database Error Found' ];
                 }
             }
         }
@@ -386,8 +389,8 @@ class DeliveryRiderRunParcelController extends Controller
                         $riderRunDetails = RiderRunDetail::where('rider_run_id', $request->rider_run_id)->get();
 
                         foreach ($riderRunDetails as $riderRunDetail) {
-                            $parcel=Parcel::where('id', $riderRunDetail->parcel_id)->first();
-                        $parcel->update([
+                            $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->first();
+                            $parcel->update([
                                 'status' => 18,
                                 'parcel_date' => date('Y-m-d'),
                                 'delivery_branch_id' => $branch_id,
@@ -449,26 +452,27 @@ class DeliveryRiderRunParcelController extends Controller
             ->select('id', 'name', 'contact_number', 'address')
             ->get();
 
-        $parcels = Parcel::with(['rider_run_detail.rider_run','merchant' => function ($query) {
-            $query->select('id', 'name', 'company_name', 'contact_number');
-        },
+        $parcels = Parcel::with([
+            'rider_run_detail.rider_run', 'merchant' => function ($query) {
+                $query->select('id', 'name', 'company_name', 'contact_number');
+            },
         ])
             ->whereRaw('((status = 25 AND delivery_type = 3) OR status in (14,18,20)) and delivery_branch_id = ?', $branch_id)
-            ->select('id', 'parcel_invoice', 'status', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'customer_address', 'merchant_id','total_collect_amount','cod_charge','total_charge', 'created_at')
+            ->select('id', 'parcel_invoice', 'status', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'customer_address', 'merchant_id', 'total_collect_amount', 'cod_charge', 'total_charge', 'created_at')
             ->orderBy('id', 'DESC')
             ->get();
-            
-            
-            foreach ($parcels as $key => $parcel) {
-                foreach ($parcel->rider_run_detail as $rider_run_detail) {
-                      if ($rider_run_detail->rider_run->status == 2) {
-                          $parcels->forget($key);
-                      }
+
+
+        foreach ($parcels as $key => $parcel) {
+            foreach ($parcel->rider_run_detail as $rider_run_detail) {
+                if ($rider_run_detail->rider_run->status == 2) {
+                    $parcels->forget($key);
                 }
             }
-            
-            
-            $data['parcels'] = $parcels;
+        }
+
+
+        $data['parcels'] = $parcels;
 
         return view('branch.parcel.deliveryParcel.deliveryRiderRunGenerate', $data);
     }
@@ -485,9 +489,10 @@ class DeliveryRiderRunParcelController extends Controller
         if (!empty($parcel_invoice) || !empty($merchant_order_id)) {
 
 
-            $parcels = Parcel::with(['rider_run_detail.rider_run','merchant' => function ($query) {
-                $query->select('id', 'name', 'company_name', 'contact_number');
-            },
+            $parcels = Parcel::with([
+                'rider_run_detail.rider_run', 'merchant' => function ($query) {
+                    $query->select('id', 'name', 'company_name', 'contact_number');
+                },
             ])
                 ->whereRaw('((status = 25 AND delivery_type = 3) OR status in (14,18,20)) and delivery_branch_id = ?', $branch_id)
                 ->where(function ($query) use ($parcel_invoice, $merchant_order_id) {
@@ -499,33 +504,32 @@ class DeliveryRiderRunParcelController extends Controller
                         // $query->where([
                         //     'merchant_order_id' => $merchant_order_id,
                         // ]);
-                        
-                         $query->where([
+
+                        $query->where([
                             'customer_contact_number' => $merchant_order_id,
-                            
+
                         ]);
-                         $query->orWhere([
+                        $query->orWhere([
                             'merchant_order_id' => $merchant_order_id,
-                            
+
                         ]);
                     }
                 })
-                ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'customer_address', 'merchant_id','total_collect_amount','cod_charge','total_charge')
+                ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'customer_address', 'merchant_id', 'total_collect_amount', 'cod_charge', 'total_charge')
                 ->get();
-                
-                foreach ($parcels as $key => $parcel) {
-                    foreach ($parcel->rider_run_detail as $rider_run_detail) {
-                          if ($rider_run_detail->rider_run->status == 2) {
-                              $parcels->forget($key);
-                          }
+
+            foreach ($parcels as $key => $parcel) {
+                foreach ($parcel->rider_run_detail as $rider_run_detail) {
+                    if ($rider_run_detail->rider_run->status == 2) {
+                        $parcels->forget($key);
                     }
                 }
-
+            }
         } else {
             $parcels = [];
         }
-        
-        
+
+
 
         $data['parcels'] = $parcels;
         return view('branch.parcel.deliveryParcel.deliveryRiderRunParcel', $data);
@@ -538,22 +542,23 @@ class DeliveryRiderRunParcelController extends Controller
         $branch_user_id = auth()->guard('branch')->user()->id;
         $parcel_invoice = $request->input('parcel_invoice');
 
-         $parcels = Parcel::with(['rider_run_detail.rider_run','merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $parcels = Parcel::with([
+            'rider_run_detail.rider_run', 'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->whereIn('id', $request->parcel_invoices)
             ->orWhereIn('parcel_invoice', $request->parcel_invoices)
             ->whereRaw('delivery_branch_id = ? and ((status = 25 AND delivery_type in (3)) OR status in (14,18,20))', [$branch_id])
             ->get();
-            
-             foreach ($parcels as $key => $parcel) {
-                foreach ($parcel->rider_run_detail as $rider_run_detail) {
-                      if ($rider_run_detail->rider_run->status == 2) {
-                          $parcels->forget($key);
-                      }
+
+        foreach ($parcels as $key => $parcel) {
+            foreach ($parcel->rider_run_detail as $rider_run_detail) {
+                if ($rider_run_detail->rider_run->status == 2) {
+                    $parcels->forget($key);
                 }
             }
+        }
 
 
         if ($parcels->count() > 0) {
@@ -619,28 +624,29 @@ class DeliveryRiderRunParcelController extends Controller
     }
 
 
-   public function deliveryRiderEditRunParcelAddCart(Request $request)
+    public function deliveryRiderEditRunParcelAddCart(Request $request)
     {
         $branch_id = auth()->guard('branch')->user()->branch->id;
         $branch_user_id = auth()->guard('branch')->user()->id;
 
         $parcel_invoice = $request->input('parcel_invoice');
-         $parcels = Parcel::with(['rider_run_detail.rider_run','merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $parcels = Parcel::with([
+            'rider_run_detail.rider_run', 'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->whereIn('id', $request->parcel_invoices)
             ->orWhereIn('parcel_invoice', $request->parcel_invoices)
             ->whereRaw('delivery_branch_id = ? and ((status = 25 AND delivery_type in (3)) OR status in (14,18,20))', [$branch_id])
             ->get();
-            
-             foreach ($parcels as $key => $parcel) {
-                foreach ($parcel->rider_run_detail as $rider_run_detail) {
-                      if ($rider_run_detail->rider_run->status == 2) {
-                          $parcels->forget($key);
-                      }
+
+        foreach ($parcels as $key => $parcel) {
+            foreach ($parcel->rider_run_detail as $rider_run_detail) {
+                if ($rider_run_detail->rider_run->status == 2) {
+                    $parcels->forget($key);
                 }
             }
+        }
 
         if ($parcels->count() > 0) {
             $cart = \Cart::session($branch_id)->getContent();
@@ -764,8 +770,8 @@ class DeliveryRiderRunParcelController extends Controller
                         'parcel_id' => $parcel_id,
                     ]);
 
-                    $parcel=Parcel::where('id', $parcel_id)->first();
-                        $parcel->update([
+                    $parcel = Parcel::where('id', $parcel_id)->first();
+                    $parcel->update([
                         'status' => 16,
                         'parcel_date' => $request->input('date'),
                         'delivery_rider_id' => $request->input('rider_id'),
@@ -866,9 +872,10 @@ class DeliveryRiderRunParcelController extends Controller
             ->select('id', 'name', 'contact_number', 'address')
             ->get();
 
-        $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number');
-        },
+        $data['parcels'] = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number');
+            },
         ])
             ->where([
                 'delivery_branch_id' => $branch_id,
@@ -932,7 +939,7 @@ class DeliveryRiderRunParcelController extends Controller
                         'rider_run_id' => $riderRun->id,
                         'parcel_id' => $parcel_id,
                     ]);
-                    $parcel=Parcel::where('id', $parcel_id)->first();
+                    $parcel = Parcel::where('id', $parcel_id)->first();
                     $parcel->update([
                         'status' => 16,
                         'parcel_date' => $request->input('date'),
@@ -972,7 +979,6 @@ class DeliveryRiderRunParcelController extends Controller
                 $this->setMessage('Rider Run Update Failed', 'danger');
                 return redirect()->back()->withInput();
             }
-
         } catch (\Exception $e) {
             \DB::rollback();
             $this->setMessage('Database Error Found', 'danger');
@@ -1001,165 +1007,196 @@ class DeliveryRiderRunParcelController extends Controller
             } else {
 
                 \DB::beginTransaction();
-                try {
 
-                    $riderRun = RiderRun::where([
-                        'id' => $request->rider_run_id,
-                        'run_type' => 2,
-                        'status' => 2,
-                    ])
-                        ->update([
+                //try {
+
+                $riderRun = RiderRun::where([
+                    'id' => $request->rider_run_id,
+                    'run_type' => 2,
+                    'status' => 2,
+                ])
+                    ->update([
+                        'complete_date_time' => date('Y-m-d H:i:s'),
+                        'total_run_complete_parcel' => $request->total_run_complete_parcel,
+                        'note' => $request->run_note,
+                        'status' => 4,
+                    ]);
+
+
+                if ($riderRun) {
+                    $rider_run_status = $request->rider_run_status;
+                    $rider_run_details_id = $request->rider_run_details_id;
+                    $parcel_id = $request->parcel_id;
+                    $complete_type = $request->complete_type;
+                    $customer_collect_amount = $request->customer_collect_amount;
+                    $amount_to_be_collect = $request->amount_to_be_collect;
+                    $reschedule_parcel_date = $request->reschedule_parcel_date;
+                    $complete_note = $request->complete_note;
+
+                    $count = count($rider_run_details_id);
+
+                    for ($i = 0; $i < $count; $i++) {
+                        RiderRunDetail::where('id', $rider_run_details_id[$i])->update([
+                            'complete_note' => $complete_note[$i],
                             'complete_date_time' => date('Y-m-d H:i:s'),
-                            'total_run_complete_parcel' => $request->total_run_complete_parcel,
-                            'note' => $request->run_note,
-                            'status' => 4,
+                            'status' => $rider_run_status[$i],
                         ]);
 
+                        $parcel_update_data = [
+                            'status' => 20,
+                            //                                'parcel_note' => $complete_note[$i],
+                            'parcel_date' => date('Y-m-d'),
+                            'delivery_branch_date' => date('Y-m-d'),
+                        ];
 
-                    if ($riderRun) {
-                        $rider_run_status = $request->rider_run_status;
-                        $rider_run_details_id = $request->rider_run_details_id;
-                        $parcel_id = $request->parcel_id;
-                        $complete_type = $request->complete_type;
-                        $customer_collect_amount = $request->customer_collect_amount;
-                        $reschedule_parcel_date = $request->reschedule_parcel_date;
-                        $complete_note = $request->complete_note;
+                        $parcel_log_create_data = [
+                            'parcel_id' => $parcel_id[$i],
+                            'pickup_branch_id' => auth()->guard('branch')->user()->id,
+                            'date' => date('Y-m-d'),
+                            'note' => $complete_note[$i],
+                            'time' => date('H:i:s'),
+                            'status' => 20,
+                        ];
 
-                        $count = count($rider_run_details_id);
+                        $sms_delivery_status = 0;
+                        $sms_delivery_type = "";
+                        $parcel = Parcel::where('id', $parcel_id[$i])->first();
+                        $confirm_customer_collect_amount = $customer_collect_amount[$i];
+                        $confirm_amount_to_be_collect = $amount_to_be_collect[$i];
+                        switch ($complete_type[$i]) {
+                            case 21:
 
-                        for ($i = 0; $i < $count; $i++) {
-                            RiderRunDetail::where('id', $rider_run_details_id[$i])->update([
-                                'complete_note' => $complete_note[$i],
-                                'complete_date_time' => date('Y-m-d H:i:s'),
-                                'status' => $rider_run_status[$i],
-                            ]);
+                                //update cod charge start
+                                $cod_percent = $parcel->cod_percent;
+                                $charge_without_cod = $parcel->total_charge - $parcel->cod_charge;
+                                $collection_amount = $confirm_customer_collect_amount ?? 0;
+                                if ($collection_amount != 0 && $cod_percent != 0) {
+                                    $cod_charge = ($collection_amount / 100) * $cod_percent;
+                                    $parcel_update_data['total_charge'] = $charge_without_cod + $cod_charge;
+                                    $parcel_update_data['cod_charge'] = $cod_charge;
+                                }
+                                //update cod charge end
 
-                            $parcel_update_data = [
-                                'status' => 20,
-//                                'parcel_note' => $complete_note[$i],
-                                'parcel_date' => date('Y-m-d'),
-                                'delivery_branch_date' => date('Y-m-d'),
-                            ];
+                                $parcel_update_data['status'] = 25;
+                                $parcel_update_data['customer_collect_amount'] = $confirm_customer_collect_amount;
+                                $parcel_update_data['delivery_type'] = 1;
+                                $parcel_update_data['delivery_date'] = date("Y-m-d");
+                                $parcel_log_create_data['status'] = 25;
+                                $sms_delivery_status = 1;
+                                $sms_delivery_type = "Delivered";
+                                break;
 
-                            $parcel_log_create_data = [
-                                'parcel_id' => $parcel_id[$i],
-                                'pickup_branch_id' => auth()->guard('branch')->user()->id,
-                                'date' => date('Y-m-d'),
-                                'note' => $complete_note[$i],
-                                'time' => date('H:i:s'),
-                                'status' => 20,
-                            ];
+                            case 22:
 
-                            $sms_delivery_status = 0;
-                            $sms_delivery_type = "";
-                            $parcel = Parcel::where('id', $parcel_id[$i])->first();
-                            $confirm_customer_collect_amount = $customer_collect_amount[$i];
-                            switch ($complete_type[$i]) {
-                                case 21 :
-                                    
-                                    //update cod charge start
-                                    $cod_percent = $parcel->cod_percent;
-                                    $charge_without_cod = $parcel->total_charge - $parcel->cod_charge;
-                                    $collection_amount = $confirm_customer_collect_amount ?? 0;
-                                    if ($collection_amount != 0 && $cod_percent != 0) {
-                                        $cod_charge = ($collection_amount / 100) * $cod_percent;
-                                        $parcel_update_data['total_charge'] = $charge_without_cod+$cod_charge;
-                                        $parcel_update_data['cod_charge'] = $cod_charge;
-                                    }
-                                    //update cod charge end
-                                    
-                                    $parcel_update_data['status'] = 25;
-                                    $parcel_update_data['customer_collect_amount'] = $confirm_customer_collect_amount;
-                                    $parcel_update_data['delivery_type'] = 1;
-                                    $parcel_update_data['delivery_date'] = date("Y-m-d");
-                                    $parcel_log_create_data['status'] = 25;
-                                    $sms_delivery_status = 1;
-                                    $sms_delivery_type = "Delivered";
-                                    break;
+                                //update cod charge start
+                                $cod_percent = $parcel->cod_percent;
+                                $charge_without_cod = $parcel->total_charge - $parcel->cod_charge;
+                                $collection_amount = $confirm_customer_collect_amount ?? 0;
+                                if ($collection_amount != 0 && $cod_percent != 0) {
+                                    $cod_charge = ($collection_amount / 100) * $cod_percent;
+                                    $parcel_update_data['total_charge'] = $charge_without_cod + $cod_charge;
+                                    $parcel_update_data['cod_charge'] = $cod_charge;
+                                }
+                                //update cod charge end
 
-                                case 22 :
-                                    
-                                    //update cod charge start
-                                    $cod_percent = $parcel->cod_percent;
-                                    $charge_without_cod = $parcel->total_charge - $parcel->cod_charge;
-                                    $collection_amount = $confirm_customer_collect_amount ?? 0;
-                                    if ($collection_amount != 0 && $cod_percent != 0) {
-                                        $cod_charge = ($collection_amount / 100) * $cod_percent;
-                                        $parcel_update_data['total_charge'] = $charge_without_cod+$cod_charge;
-                                        $parcel_update_data['cod_charge'] = $cod_charge;
-                                    }
-                                    //update cod charge end
-                                    
-                                    $parcel_update_data['status'] = 25;
-                                    $parcel_update_data['customer_collect_amount'] = $confirm_customer_collect_amount;
-                                    $parcel_update_data['delivery_type'] = 2;
-                                    $parcel_update_data['delivery_date'] = date("Y-m-d");
-                                    $parcel_log_create_data['status'] = 25;
-                                    $sms_delivery_status = 1;
-                                    $sms_delivery_type = "Delivered";
-                                    break;
+                                $parcel_update_data['status'] = 25;
+                                $parcel_update_data['customer_collect_amount'] = $confirm_customer_collect_amount;
+                                $parcel_update_data['delivery_type'] = 2;
+                                $parcel_update_data['delivery_date'] = date("Y-m-d");
+                                $parcel_log_create_data['status'] = 25;
+                                $sms_delivery_status = 1;
+                                $sms_delivery_type = "Delivered";
 
-                                case 23 :
-                                    $parcel_update_data['status'] = 25;
-                                    $parcel_update_data['reschedule_parcel_date'] = $reschedule_parcel_date[$i];
-                                    $parcel_update_data['customer_collect_amount'] = 0;
-                                    $parcel_update_data['delivery_type'] = 3;
-                                    $parcel_log_create_data['status'] = 25;
-                                    $parcel_log_create_data['reschedule_parcel_date'] = $reschedule_parcel_date[$i];
-                                    $sms_delivery_status = 0;
-                                    $sms_delivery_type = "";
-                                    break;
+                                $area = Area::with('district')->where('id', $parcel->area_id)->first();
+                                $service_area_id = $area->district->service_area_id;
 
-                                case 24 :
-                                    $parcel_update_data['status'] = 25;
-                                    $parcel_update_data['delivery_type'] = 4;
-                                    if ($parcel->cod_charge != 0) {
-                                        $parcel_update_data['total_charge'] = ($parcel->total_charge - $parcel->cod_charge);
-                                    }
-                                    $parcel_update_data['customer_collect_amount'] = 0;
-                                    $parcel_update_data['cod_charge'] = 0;
-                                    $parcel_log_create_data['status'] = 25;
-                                    $sms_delivery_status = 1;
-                                    $sms_delivery_type = "Canceled";
-                                    break;
+                                $merchantServiceAreaReturnCharge = MerchantServiceAreaReturnCharge::where([
+                                    'service_area_id' => $service_area_id,
+                                    'merchant_id' => $parcel->merchant_id,
+                                ])->first();
 
-                                default:
+                                $merchant_service_area_return_charge = 0;
 
-                                    break;
-                            }
-                            Parcel::where('id', $parcel_id[$i])->update($parcel_update_data);
-                           $parcel = Parcel::where('id', $parcel_id[$i])->first();
-                            $parcel_log_create_data['delivery_type'] = $parcel->delivery_type;
-                            ParcelLog::create($parcel_log_create_data);
+                                if ($merchantServiceAreaReturnCharge && !empty($merchantServiceAreaReturnCharge->return_charge)) {
+                                    $merchant_service_area_return_charge = $merchantServiceAreaReturnCharge->return_charge;
+                                }
 
-//                            if ($sms_delivery_status == 1) {
-                                $parcel = Parcel::with('merchant')->where('id', $parcel_id[$i])->first();
-                                $message = "Dear " . $parcel->merchant->name . ", ";
-                                $message .= "Your Parcel ID No " . $parcel->parcel_invoice . "  is successfully " . $sms_delivery_type . ".";
-                                $message .= "Please rate your experience https://www.facebook.com/parceldex  \n-Parceldex";
-                              //  $this->send_sms($parcel->merchant->contact_number, $message);
-//                            }
+                                $new_parcel = $parcel->replicate();
+                                $new_parcel->parcel_invoice = 'P-' . $parcel->parcel_invoice;
+                                $new_parcel->delivery_type = 4;
+                                $new_parcel->status = 25;
+                                $new_parcel->total_collect_amount = $confirm_amount_to_be_collect - $confirm_customer_collect_amount;
+                                $new_parcel->delivery_charge = 0;
+                                $new_parcel->merchant_service_area_charge = 0;
+                                $new_parcel->cod_percent = 0;
+                                $new_parcel->cod_charge = 0;
+                                $new_parcel->total_charge = 0;
+                                $new_parcel->customer_collect_amount = 0;
+                                $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                $new_parcel->created_at = now();
+                                $new_parcel->save();
 
-                            $parcel = Parcel::where('id', $parcel_id[$i])->first();
-                            // $this->merchantDashboardCounterEvent($parcel->merchant_id);
-                            // $this->branchDashboardCounterEvent($parcel->delivery_branch_id);
+                                break;
+
+                            case 23:
+                                $parcel_update_data['status'] = 25;
+                                $parcel_update_data['reschedule_parcel_date'] = $reschedule_parcel_date[$i];
+                                $parcel_update_data['customer_collect_amount'] = 0;
+                                $parcel_update_data['delivery_type'] = 3;
+                                $parcel_log_create_data['status'] = 25;
+                                $parcel_log_create_data['reschedule_parcel_date'] = $reschedule_parcel_date[$i];
+                                $sms_delivery_status = 0;
+                                $sms_delivery_type = "";
+                                break;
+
+                            case 24:
+                                $parcel_update_data['status'] = 25;
+                                $parcel_update_data['delivery_type'] = 4;
+                                if ($parcel->cod_charge != 0) {
+                                    $parcel_update_data['total_charge'] = ($parcel->total_charge - $parcel->cod_charge);
+                                }
+                                $parcel_update_data['customer_collect_amount'] = 0;
+                                $parcel_update_data['cod_charge'] = 0;
+                                $parcel_log_create_data['status'] = 25;
+                                $sms_delivery_status = 1;
+                                $sms_delivery_type = "Canceled";
+                                break;
+
+                            default:
+
+                                break;
                         }
+                        Parcel::where('id', $parcel_id[$i])->update($parcel_update_data);
+                        $parcel = Parcel::where('id', $parcel_id[$i])->first();
+                        $parcel_log_create_data['delivery_type'] = $parcel->delivery_type;
+                        ParcelLog::create($parcel_log_create_data);
 
-                        \DB::commit();
-                        // $this->adminDashboardCounterEvent();
-                        $response = ['success' => 'Delivery Rider Run Reconciliation Successfully'];
-                    } else {
-                        $response = ['error' => 'Database Error Found'];
+                        //                            if ($sms_delivery_status == 1) {
+                        $parcel = Parcel::with('merchant')->where('id', $parcel_id[$i])->first();
+                        $message = "Dear " . $parcel->merchant->name . ", ";
+                        $message .= "Your Parcel ID No " . $parcel->parcel_invoice . "  is successfully " . $sms_delivery_type . ".";
+                        $message .= "Please rate your experience https://www.facebook.com/parceldex  \n-Parceldex";
+                        //  $this->send_sms($parcel->merchant->contact_number, $message);
+                        //                            }
+
+                        $parcel = Parcel::where('id', $parcel_id[$i])->first();
+                        // $this->merchantDashboardCounterEvent($parcel->merchant_id);
+                        // $this->branchDashboardCounterEvent($parcel->delivery_branch_id);
                     }
-                } catch (\Exception $e) {
-                    \DB::rollback();
-                    // $response = ['error' => 'Database Error Found'];
-                    $response = ['error' => $e->getMessage() ];
+
+                    \DB::commit();
+                    // $this->adminDashboardCounterEvent();
+                    $response = ['success' => 'Delivery Rider Run Reconciliation Successfully'];
+                } else {
+                    $response = ['error' => 'Database Error Found'];
                 }
+                // } catch (\Exception $e) {
+                //     \DB::rollback();
+                //     // $response = ['error' => 'Database Error Found'];
+                //     $response = ['error' => $e->getMessage()];
+                // }
             }
         }
         return response()->json($response);
-
     }
-
 }

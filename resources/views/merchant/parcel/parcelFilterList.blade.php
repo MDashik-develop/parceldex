@@ -35,7 +35,7 @@
 
                         <div class="report-header" style="margin-top: 10px;">
 
-                            <h3 class="text-center">Parcel Filter List </h3>
+                            <h3 class="text-center">Parcel Filter List</h3>
 
                             <h4 class="text-center text-capitalize">{{str_replace('_',' ',$type)}} </h3>
                                 <h5 class="text-center">Parcel - {{count($parcels)}} </h3>
@@ -47,12 +47,14 @@
                                     <th width="5%" class="text-center">Parcel Date</th>
                                     <th width="5%" class="text-center"> Invoice ID</th>
                                     <th width="5%" class="text-center"> Status</th>
-                                    <th width="15%" class="text-center"> Customer Name </th>
-                                    <th width="10%" class="text-center"> District </th>
+                                    <th width="10%" class="text-center"> Customer Name </th>
+                                    <th width="5%" class="text-center"> District </th>
                                     <th width="10%" class="text-center"> Area </th>
                                     <th width="15%" class="text-center"> Address </th>
                                     <th width="10%" class="text-center"> Phone </th>
-                                    <th width="5%" class="text-center"> Collection Amount</th>
+                                    <th width="10%" class="text-center"> Note </th>
+                                    <th width="5%" class="text-center"> Amount to be Collect</th>
+                                    <th width="5%" class="text-center"> Collected Amount</th>
                                     <th width="5%" class="text-center"> Delivery Charge</th>
                                     <th width="5%" class="text-center">Action</th>
                                 </tr>
@@ -74,6 +76,18 @@
                                         $parcelStatus = returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type);
                                         $status_name = $parcelStatus['status_name'];
                                         $class = $parcelStatus['class'];
+
+
+                                        $logs_note = "";
+
+                                        if ($parcel->parcel_logs) {
+                                            foreach ($parcel->parcel_logs as $parcel_log) {
+                                                if ("" != $logs_note) {
+                                                    $logs_note .= ",<br>";
+                                                }
+                                                $logs_note .= $parcel_log->note;
+                                            }
+                                        }
                                 ?>
                                         <tr>
                                             <td class="text-center">{{ $i }}</td>
@@ -87,7 +101,9 @@
                                             <td class="text-center">{{ $parcel->area->name }}</td>
                                             <td class="text-center">{{ $parcel->customer_address }}</td>
                                             <td class="text-left">{{ $parcel->customer_contact_number }}</td>
+                                            <td class="text-center">{{ $logs_note }}</td>
                                             <td class="text-center">{{ $parcel->total_collect_amount }}</td>
+                                            <td class="text-center">{{ $parcel->customer_collect_amount }}</td>
                                             <td class="text-center">{{ $parcel->total_charge }}</td>
                                             <td>
                                                 <button class="btn btn-primary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" parcel_id="{{$parcel->id}}" title="Parcel View">

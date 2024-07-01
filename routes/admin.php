@@ -275,6 +275,9 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin/'], function () {
     Route::patch('parcel/{parcel}/confirmEditParcel', [App\Http\Controllers\Admin\ParcelController::class, 'confirmEditParcel'])->name('parcel.confirmEditParcel');
     Route::delete('parcel/deleteParcel', [App\Http\Controllers\Admin\ParcelController::class, 'delete'])->name('parcel.deleteParcel');
 
+    Route::post('parcel/printParcelMultiple', [App\Http\Controllers\Admin\ParcelController::class, 'printParcelMultiple'])->name('parcel.printParcelMultiple');
+
+
 
     Route::get('/merchant-parcel-report', [App\Http\Controllers\Admin\MerchantParcelReportController::class, 'monthlyParcelReport'])->name('merchant.parcelReport');
     Route::post('/get-merchant-parcel-report', [App\Http\Controllers\Admin\MerchantParcelReportController::class, 'getMonthlyParcelReport'])->name('merchant.getParcelReport');
@@ -306,26 +309,26 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin/'], function () {
     Route::patch('account/{parcelDeliveryPayment}/confirmRejectBranchDeliveryPayment', [App\Http\Controllers\Admin\BranchDeliveryPaymentController::class, 'confirmRejectBranchDeliveryPayment'])->name('account.confirmRejectBranchDeliveryPayment');
     //================ Branch Delivery Payment  ================================
 
-    Route::get('parcel/parcelPaymentRequestList', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'parcelPaymentRequestList'] )->name('parcel.parcelPaymentRequestList');
-    Route::get('parcel/getParcelPaymentRequestList', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'getParcelPaymentRequestList'] )->name('parcel.getParcelPaymentRequestList');
-    Route::get('parcel/viewParcelPaymentRequest/{parcelPaymentRequest}', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'viewParcelPaymentRequest'] )->name('parcel.viewParcelPaymentRequest');
-    Route::post('parcel/acceptPaymentRequestParcel', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'acceptPaymentRequestParcel'] )->name('parcel.acceptPaymentRequestParcel');
-    Route::post('parcel/rejectPaymentRequestParcel', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'rejectPaymentRequestParcel'] )->name('parcel.rejectPaymentRequestParcel');
+    Route::get('parcel/parcelPaymentRequestList', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'parcelPaymentRequestList'])->name('parcel.parcelPaymentRequestList');
+    Route::get('parcel/getParcelPaymentRequestList', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'getParcelPaymentRequestList'])->name('parcel.getParcelPaymentRequestList');
+    Route::get('parcel/viewParcelPaymentRequest/{parcelPaymentRequest}', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'viewParcelPaymentRequest'])->name('parcel.viewParcelPaymentRequest');
+    Route::post('parcel/acceptPaymentRequestParcel', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'acceptPaymentRequestParcel'])->name('parcel.acceptPaymentRequestParcel');
+    Route::post('parcel/rejectPaymentRequestParcel', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'rejectPaymentRequestParcel'])->name('parcel.rejectPaymentRequestParcel');
 
 
 
     Route::get('parcel/{parcelPaymentRequest}/paymentGenerate', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'parcelPaymentGenerate'])->name('parcel.paymentGenerate');
     Route::post('parcel/confirmPaymentGenerate', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'confirmParcelPaymentGenerate'])->name('parcel.confirmParcelPaymentGenerate');
     Route::post('parcel/merchantDeliveryPaymentParcelAddCart', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'merchantDeliveryPaymentParcelAddCart'])->name('parcel.merchantDeliveryPaymentParcelAddCart');
-    Route::get('parcel/merchantPaymentDeliveryList', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'merchantPaymentDeliveryList'] )->name('parcel.merchantPaymentDeliveryList');
-    Route::get('parcel/getMerchantPaymentDeliveryList', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'getMerchantPaymentDeliveryList'] )->name('parcel.getMerchantPaymentDeliveryList');
-    Route::get('parcel/{parcelMerchantDeliveryPayment}/viewMerchantDeliveryPayment', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'viewMerchantDeliveryPayment'] )->name('parcel.viewMerchantDeliveryPayment');
-    Route::get('parcel/{parcelMerchantDeliveryPayment}/printMerchantDeliveryPayment', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'printMerchantDeliveryPayment'] )->name('parcel.printMerchantDeliveryPayment');
+    Route::get('parcel/merchantPaymentDeliveryList', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'merchantPaymentDeliveryList'])->name('parcel.merchantPaymentDeliveryList');
+    Route::get('parcel/getMerchantPaymentDeliveryList', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'getMerchantPaymentDeliveryList'])->name('parcel.getMerchantPaymentDeliveryList');
+    Route::get('parcel/{parcelMerchantDeliveryPayment}/viewMerchantDeliveryPayment', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'viewMerchantDeliveryPayment'])->name('parcel.viewMerchantDeliveryPayment');
+    Route::get('parcel/{parcelMerchantDeliveryPayment}/printMerchantDeliveryPayment', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'printMerchantDeliveryPayment'])->name('parcel.printMerchantDeliveryPayment');
 
-    Route::get('parcel/{parcelMerchantDeliveryPayment}/merchantPaymentDeliveryAccept', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'merchantDeliveryPaymentAccept'] )->name('parcel.merchantDeliveryPaymentAccept');
-    Route::patch('parcel/{parcelMerchantDeliveryPayment}/merchantDeliveryPaymentAcceptConfirm', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'merchantDeliveryPaymentAcceptConfirm'] )->name('parcel.merchantDeliveryPaymentAcceptConfirm');
+    Route::get('parcel/{parcelMerchantDeliveryPayment}/merchantPaymentDeliveryAccept', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'merchantDeliveryPaymentAccept'])->name('parcel.merchantDeliveryPaymentAccept');
+    Route::patch('parcel/{parcelMerchantDeliveryPayment}/merchantDeliveryPaymentAcceptConfirm', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'merchantDeliveryPaymentAcceptConfirm'])->name('parcel.merchantDeliveryPaymentAcceptConfirm');
 
-    Route::delete('parcel/merchantDeliveryPaymentDelete', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'merchantPaymentDeliveryDelete'] )->name('parcel.merchantDeliveryPaymentDelete');
+    Route::delete('parcel/merchantDeliveryPaymentDelete', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'merchantPaymentDeliveryDelete'])->name('parcel.merchantDeliveryPaymentDelete');
 
     Route::post('parcel/printMerchantDeliveryPaymentList', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'printMerchantDeliveryPaymentList'])->name('parcel.printMerchantDeliveryPaymentList');
 
@@ -368,7 +371,7 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin/'], function () {
     //=== Expenses =====//admin.expense.store
     Route::get('expenses', [ExpenseController::class, 'index'])->name('expenses');
     Route::get('expense-create', [App\Http\Controllers\Admin\ExpenseController::class, 'create'])->name('expense-create');
-    Route::get('get-expense', [App\Http\Controllers\Admin\ExpenseController::class, 'show'] )->name('getExpense');
+    Route::get('get-expense', [App\Http\Controllers\Admin\ExpenseController::class, 'show'])->name('getExpense');
     Route::post('expense-store', [App\Http\Controllers\Admin\ExpenseController::class, 'store'])->name('expense.store');
     Route::post('expense-update-status', [App\Http\Controllers\Admin\ExpenseController::class, 'updateStatus'])->name('expense.updateStatus');
     Route::delete('expense-delete-status', [App\Http\Controllers\Admin\ExpenseController::class, 'delete'])->name('expense.delete');
@@ -521,9 +524,8 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin/'], function () {
 
     /** Notice Section Route */
 
-    Route::get('notice/getNoticeList', [App\Http\Controllers\Admin\NoticeController::class, 'getNoticeList'] )->name('notice.getNoticeList');
-    Route::post('notice/updateStatus', [App\Http\Controllers\Admin\NoticeController::class, 'updateStatus'] )->name('notice.updateStatus');
-    Route::delete('notice/delete', [App\Http\Controllers\Admin\NoticeController::class, 'delete'] )->name('notice.delete');
+    Route::get('notice/getNoticeList', [App\Http\Controllers\Admin\NoticeController::class, 'getNoticeList'])->name('notice.getNoticeList');
+    Route::post('notice/updateStatus', [App\Http\Controllers\Admin\NoticeController::class, 'updateStatus'])->name('notice.updateStatus');
+    Route::delete('notice/delete', [App\Http\Controllers\Admin\NoticeController::class, 'delete'])->name('notice.delete');
     Route::resource('notice', App\Http\Controllers\Admin\NoticeController::class);
-
 });

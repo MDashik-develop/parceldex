@@ -35,7 +35,7 @@ class BranchParcelExport implements
      */
     public function collection()
     {
-        $request=$this->request;
+        $request = $this->request;
 
 
         $branch_user = auth()->guard('branch')->user();
@@ -51,7 +51,8 @@ class BranchParcelExport implements
             $where_condition = "sub_branch_id = {$branch_id} and status NOT IN (2,3,4)";
         }
 
-        $model = Parcel::with(['district', 'upazila', 'area', 'parcel_logs',
+        $model = Parcel::with([
+            'district', 'upazila', 'area', 'parcel_logs',
             'merchant' => function ($query) {
                 $query->select('id', 'name', 'company_name', 'contact_number', 'address');
             },
@@ -62,9 +63,9 @@ class BranchParcelExport implements
         if ($request->has('ex_parcel_invoice') && !is_null($request->get('ex_parcel_invoice')) && $request->get('ex_parcel_invoice') != 0) {
 
             $parcel_invoice = $request->get('ex_parcel_invoice');
-            $model->where('parcel_invoice','like', "{$parcel_invoice}");
-            $model->orWhere('merchant_order_id','like', "{$parcel_invoice}");
-            $model->orWhere('customer_contact_number','like', "{$parcel_invoice}");
+            $model->where('parcel_invoice', 'like', "{$parcel_invoice}");
+            $model->orWhere('merchant_order_id', 'like', "{$parcel_invoice}");
+            $model->orWhere('customer_contact_number', 'like', "{$parcel_invoice}");
         }
 
 
@@ -104,7 +105,6 @@ class BranchParcelExport implements
             } elseif ($parcel_status == 12) {
                 $model->whereRaw('delivery_branch_id = ' . $branch_id . ' and status >= 25 and delivery_type in(3)');
             }
-
         }
 
         if ($request->has('ex_merchant_id') && !is_null($request->get('ex_merchant_id')) && $request->get('ex_merchant_id') != 0) {
@@ -122,11 +122,9 @@ class BranchParcelExport implements
                 } else {
                     $model->whereDate('date', '>=', $request->get('ex_from_date'));
                 }
-
             } else {
                 $model->whereDate('date', '>=', $request->get('ex_from_date'));
             }
-
         }
 
         if ($request->has('ex_to_date') && !is_null($request->get('ex_to_date')) && $request->get('ex_to_date') != 0) {
@@ -140,16 +138,14 @@ class BranchParcelExport implements
                 } else {
                     $model->whereDate('date', '<=', $request->get('ex_to_date'));
                 }
-
             } else {
                 $model->whereDate('date', '<=', $request->get('ex_to_date'));
             }
-
         }
 
         $parcels = $model->get();
         $data_parcel_array  = [];
-        if(count($parcels) > 0) {
+        if (count($parcels) > 0) {
             foreach ($parcels as $key => $parcel) {
                 $parcelStatus = returnParcelStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type);
                 $status_name = $parcelStatus['status_name'];
@@ -175,7 +171,7 @@ class BranchParcelExport implements
                     // 'date' => $parcel->date,
                     'status' => $status_name,
                     'parcel_date' => date('d M Y', strtotime($parcel->parcel_date)),
-//                    'parcel_code' => $parcel->parcel_code,
+                    //                    'parcel_code' => $parcel->parcel_code,
                     'company_name' => $parcel->merchant->company_name,
                     'customer_name' => $parcel->customer_name,
                     'customer_contact_number' => $parcel->customer_contact_number,
@@ -183,6 +179,8 @@ class BranchParcelExport implements
                     'district_name' => $parcel->district->name,
                     'area_name' => $parcel->area->name,
                     'service_type' => optional($parcel->service_type)->title,
+                    'delivery_branch' => optional($parcel->delivery_branch)->name,
+                    'delivery_rider' => optional($parcel->delivery_rider)->name,
                     'item_type' => optional($parcel->item_type)->title,
                     'total_collect_amount' => $parcel->total_collect_amount,
                     'customer_collect_amount' => $parcel->customer_collect_amount,
@@ -198,8 +196,6 @@ class BranchParcelExport implements
 
 
         return new Collection($data_parcel_array);
-
-
     }
 
     public function map($row): array
@@ -211,7 +207,7 @@ class BranchParcelExport implements
             $row->date,
             $row->status,
             $row->parcel_date,
-//            $row->parcel_code,
+            //            $row->parcel_code,
             $row->company_name,
             $row->customer_name,
             $row->customer_contact_number,
@@ -219,6 +215,8 @@ class BranchParcelExport implements
             $row->district_name,
             $row->area_name,
             $row->service_type,
+            $row->delivery_branch,
+            $row->delivery_rider,
             $row->item_type,
             $row->total_collect_amount,
             $row->customer_collect_amount,
@@ -240,7 +238,7 @@ class BranchParcelExport implements
             'Parcel Date',
             'status',
             'Last Update Date',
-//            'parcel_code',
+            //            'parcel_code',
             'Company Name',
             'Customer Name',
             'Customer Contact Number',
@@ -248,6 +246,8 @@ class BranchParcelExport implements
             'District Name',
             'Area Name',
             'Service Type',
+            'Delivery Branch',
+            'Delivery Rider',
             'Item Type',
             'Amount to be Collect',
             'Collected',
@@ -263,15 +263,15 @@ class BranchParcelExport implements
     public function properties(): array
     {
         return [
-//            'creator'        => 'Patrick Brouwers',
-//            'lastModifiedBy' => 'Patrick Brouwers',
+            //            'creator'        => 'Patrick Brouwers',
+            //            'lastModifiedBy' => 'Patrick Brouwers',
             'title'             => 'Admin Parcel List',
-//            'description'    => 'Latest Invoices',
-//            'subject'        => 'Invoices',
-//            'keywords'       => 'invoices,export,spreadsheet',
-//            'category'       => 'Invoices',
-//            'manager'        => 'Patrick Brouwers',
-//            'company'        => 'Maatwebsite',
+            //            'description'    => 'Latest Invoices',
+            //            'subject'        => 'Invoices',
+            //            'keywords'       => 'invoices,export,spreadsheet',
+            //            'category'       => 'Invoices',
+            //            'manager'        => 'Patrick Brouwers',
+            //            'company'        => 'Maatwebsite',
         ];
     }
 
@@ -279,7 +279,7 @@ class BranchParcelExport implements
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class    => function (AfterSheet $event) {
 
                 $event->sheet->getStyle('A1:Z1')->applyFromArray([
                     'font'  => [
@@ -287,34 +287,33 @@ class BranchParcelExport implements
                     ]
                 ]);
 
-//                $event->sheet->getStyle('A'.$this->count.':K'.$this->count)->applyFromArray([
-//                    'font'  => [
-//                        'bold'  => true,
-//                    ]
-//                ]);
+                //                $event->sheet->getStyle('A'.$this->count.':K'.$this->count)->applyFromArray([
+                //                    'font'  => [
+                //                        'bold'  => true,
+                //                    ]
+                //                ]);
 
-                if('pdf' == "pdf") {
+                if ('pdf' == "pdf") {
 
-                    foreach(range('B','Z') as $columnID) {
+                    foreach (range('B', 'Z') as $columnID) {
                         $event->sheet->getDelegate()->getColumnDimension($columnID)->setAutoSize(true);
                     }
 
                     $event->sheet->getDelegate()->getPageSetup()
                         ->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
-
                 }
 
-//                $event->sheet->getStyle(
-//                    'B2:G8',
-//                    [
-//                        'borders' => [
-//                            'outline' => [
-//                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
-//                                'color' => ['argb' => 'FFFF0000'],
-//                            ],
-//                        ]
-//                    ]
-//                );
+                //                $event->sheet->getStyle(
+                //                    'B2:G8',
+                //                    [
+                //                        'borders' => [
+                //                            'outline' => [
+                //                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                //                                'color' => ['argb' => 'FFFF0000'],
+                //                            ],
+                //                        ]
+                //                    ]
+                //                );
 
             },
         ];

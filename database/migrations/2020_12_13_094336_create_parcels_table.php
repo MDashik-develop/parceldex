@@ -16,7 +16,7 @@ class CreateParcelsTable extends Migration
         Schema::create('parcels', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('parcel_invoice',50);
+            $table->string('parcel_invoice', 50);
             $table->integer('merchant_id');
             $table->string('order_id', 255)->nullable();
             $table->date('date')->comment('Parcel Generate Date');
@@ -26,20 +26,22 @@ class CreateParcelsTable extends Migration
             $table->string('customer_name', 255);
             $table->text('customer_address');
             $table->string('customer_contact_number', 100);
+            $table->string('customer_contact_number2', 100)->nullable();
+            $table->string('exchange', 10)->default('no');
             $table->text('product_details');
             $table->integer('district_id')->default(0);
             $table->integer('upazila_id')->default(0);
             $table->integer('area_id')->default(0);
 
             $table->integer('weight_package_id')->default(0);
-            $table->float('delivery_charge', 8,2)->default(0);
+            $table->float('delivery_    charge', 8, 2)->default(0);
 
-            $table->float('total_collect_amount',  8,2)->default(0);
-            $table->float('cod_percent',  8,2)->default(0);
-            $table->float('cod_charge', 8,2)->default(0);
+            $table->float('total_collect_amount',  8, 2)->default(0);
+            $table->float('cod_percent',  8, 2)->default(0);
+            $table->float('cod_charge', 8, 2)->default(0);
 
-            $table->float('total_charge',  8,2)->default(0);
-            $table->float('customer_collect_amount',  8,2)->default(0);
+            $table->float('total_charge',  8, 2)->default(0);
+            $table->float('customer_collect_amount',  8, 2)->default(0);
 
             $table->bigInteger('delivery_option_id')->default(0);
 

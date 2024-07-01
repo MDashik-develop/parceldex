@@ -39,6 +39,8 @@ class AdminParcelExport implements
 
 
         $model = Parcel::with([
+            'delivery_branch:id,name',
+            'delivery_rider:id,name',
             'district:id,name',
             'upazila:id,name',
             'area:id,name',
@@ -150,7 +152,7 @@ class AdminParcelExport implements
                     'date' => date('d M Y', strtotime($parcel->date)),
                     'status' => $status_name,
                     'parcel_date' => date('d M Y', strtotime($parcel->parcel_date)),
-//                    'parcel_code' => $parcel->parcel_code,
+                    //                    'parcel_code' => $parcel->parcel_code,
                     'company_name' => $parcel->merchant->company_name,
                     'customer_name' => $parcel->customer_name,
                     'customer_contact_number' => $parcel->customer_contact_number,
@@ -158,12 +160,14 @@ class AdminParcelExport implements
                     'district_name' => $parcel->district->name,
                     'area_name' => $parcel->area->name,
                     'service_type' => optional($parcel->service_type)->title,
+                    'delivery_branch' => optional($parcel->delivery_branch)->name,
+                    'delivery_rider' => optional($parcel->delivery_rider)->name,
                     'item_type' => optional($parcel->item_type)->title,
                     'total_collect_amount' => $parcel->total_collect_amount,
                     'customer_collect_amount' => $parcel->customer_collect_amount,
                     'weight_package_charge' => $parcel->weight_package_charge,
                     'cod_charge' => $parcel->cod_charge,
-                    'delivery_charge' =>$parcel->delivery_charge,
+                    'delivery_charge' => $parcel->delivery_charge,
                     'return_charge' => $parcel->return_charge,
                     'total_charge' => $parcel->total_charge,
                     'parcel_note' => $parcel->parcel_note,
@@ -176,8 +180,6 @@ class AdminParcelExport implements
 
 
         return new Collection($data_parcel_array);
-
-
     }
 
     public function map($row): array
@@ -189,7 +191,7 @@ class AdminParcelExport implements
             $row->date,
             $row->status,
             $row->parcel_date,
-//            $row->parcel_code,
+            //            $row->parcel_code,
             $row->company_name,
             $row->customer_name,
             $row->customer_contact_number,
@@ -197,6 +199,8 @@ class AdminParcelExport implements
             $row->district_name,
             $row->area_name,
             $row->service_type,
+            $row->delivery_branch,
+            $row->delivery_rider,
             $row->item_type,
             $row->total_collect_amount,
             $row->customer_collect_amount,
@@ -222,7 +226,7 @@ class AdminParcelExport implements
             'Parcel Date',
             'Status',
             'Last Update Date',
-//            'parcel_code',
+            //            'parcel_code',
             'Company Name',
             'Customer Name',
             'Customer Contact Number',
@@ -230,6 +234,8 @@ class AdminParcelExport implements
             'District Name',
             'Area Name',
             'Service Type',
+            'Delivery Branch',
+            'Delivery Rider',
             'Item Type',
             'Amount to be Collect',
             'Collected',
@@ -248,15 +254,15 @@ class AdminParcelExport implements
     public function properties(): array
     {
         return [
-//            'creator'        => 'Patrick Brouwers',
-//            'lastModifiedBy' => 'Patrick Brouwers',
+            //            'creator'        => 'Patrick Brouwers',
+            //            'lastModifiedBy' => 'Patrick Brouwers',
             'title' => 'Admin Parcel List',
-//            'description'    => 'Latest Invoices',
-//            'subject'        => 'Invoices',
-//            'keywords'       => 'invoices,export,spreadsheet',
-//            'category'       => 'Invoices',
-//            'manager'        => 'Patrick Brouwers',
-//            'company'        => 'Maatwebsite',
+            //            'description'    => 'Latest Invoices',
+            //            'subject'        => 'Invoices',
+            //            'keywords'       => 'invoices,export,spreadsheet',
+            //            'category'       => 'Invoices',
+            //            'manager'        => 'Patrick Brouwers',
+            //            'company'        => 'Maatwebsite',
         ];
     }
 
@@ -272,11 +278,11 @@ class AdminParcelExport implements
                     ]
                 ]);
 
-//                $event->sheet->getStyle('A'.$this->count.':K'.$this->count)->applyFromArray([
-//                    'font'  => [
-//                        'bold'  => true,
-//                    ]
-//                ]);
+                //                $event->sheet->getStyle('A'.$this->count.':K'.$this->count)->applyFromArray([
+                //                    'font'  => [
+                //                        'bold'  => true,
+                //                    ]
+                //                ]);
 
                 if ('pdf' == "pdf") {
 
@@ -286,20 +292,19 @@ class AdminParcelExport implements
 
                     $event->sheet->getDelegate()->getPageSetup()
                         ->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
-
                 }
 
-//                $event->sheet->getStyle(
-//                    'B2:G8',
-//                    [
-//                        'borders' => [
-//                            'outline' => [
-//                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
-//                                'color' => ['argb' => 'FFFF0000'],
-//                            ],
-//                        ]
-//                    ]
-//                );
+                //                $event->sheet->getStyle(
+                //                    'B2:G8',
+                //                    [
+                //                        'borders' => [
+                //                            'outline' => [
+                //                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                //                                'color' => ['argb' => 'FFFF0000'],
+                //                            ],
+                //                        ]
+                //                    ]
+                //                );
 
             },
         ];

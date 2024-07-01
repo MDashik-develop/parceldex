@@ -130,7 +130,7 @@
                                     <th width="10%" class="text-center">Run Status</th>
                                     <th width="10%" class="text-center">M.Company</th>
                                     <th width="15%" class="text-center">Customer Name</th>
-                                    <th width="10%" class="text-center">Total Collection Amount</th>
+                                    <th width="10%" class="text-center">Amount to be Collect</th>
                                     @if($riderRun->rider->id == 1)
                                         <th class="text-center">Pathao Info</th>
                                     @endif
@@ -167,6 +167,7 @@
                                             {{  $rider_run_detail->parcel->total_collect_amount }}
 
                                             <input type="hidden"
+                                                    class="amount_to_be_collect"
                                                    id="total_collect_amount{{ $rider_run_detail->id }}"
                                                    value="{{ $rider_run_detail->parcel->total_collect_amount }}">
 
@@ -368,9 +369,15 @@
         var complete_type = $('.complete_type').map(function () {
             return this.value;
         }).get();
+
         var customer_collect_amount = $('.customer_collect_amount').map(function () {
             return this.value;
         }).get();
+        
+        var amount_to_be_collect = $('.amount_to_be_collect').map(function () {
+            return this.value;
+        }).get();
+
         var reschedule_parcel_date = $('.reschedule_parcel_date').map(function () {
             return this.value;
         }).get();
@@ -391,6 +398,7 @@
                 rider_run_details_id: rider_run_details_id,
                 parcel_id: parcel_id,
                 complete_type: complete_type,
+                amount_to_be_collect: amount_to_be_collect,
                 customer_collect_amount: customer_collect_amount,
                 reschedule_parcel_date: reschedule_parcel_date,
                 complete_note: complete_note,

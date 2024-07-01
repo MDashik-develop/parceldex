@@ -24,7 +24,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Merchant Delivery Payment Statement </h3>
+                        <h3 class="card-title">Merchant Delivery Payment Statement</h3>
 
                         <div class="row input-daterange" style="margin-top: 40px">
                             <div class="col-md-3">

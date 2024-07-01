@@ -102,8 +102,26 @@
 </script>
 
 <body>
-<div class="col-md-12" style="margin-top: 60px;">
+  
+<div class="col-md-12" style="margin-top: 40px;">
+    <div class="col-md-4"></div>
     <div class="col-md-4">
+        <table width="100%" style="margin-top: 3rem">
+            <thead>
+            <tr>
+                <td class="text-center text-bold">
+                    <img src="{{ asset('uploads/application/') . '/' . session()->get('company_photo') }}"
+                            style="width: 80%; height: 30px">
+                </td>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+<div class="col-md-12" style="margin-top: 20px;">
+    {{-- <div class="col-md-4">
         <table width="100%" style="margin-top: 3rem">
             <thead>
             <tr>
@@ -114,8 +132,8 @@
             </tr>
             </thead>
         </table>
-    </div>
-    <div class="col-md-4">
+    </div> --}}
+    <div class="col-md-6">
         <table class="table table-bordered" width="100%" style="margin-top: 3rem">
             <caption class="text-center text-bold">
                         <span style="font-size: 16px; font-weight: bold">
@@ -159,7 +177,7 @@
             </tr>
         </table>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
         <table class="table table-bordered" width="100%" style="margin-top: 3rem">
             <caption class="text-center text-bold">
                         <span style="font-size: 16px; font-weight: bold">

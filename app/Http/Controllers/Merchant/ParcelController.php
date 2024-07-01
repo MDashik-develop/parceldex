@@ -29,7 +29,7 @@ class ParcelController extends Controller
 
     public function add()
     {
-        if (auth()->guard('merchant')->user()->branch_id == 0 || !auth()->guard('merchant')->user()->branch_id){
+        if (auth()->guard('merchant')->user()->branch_id == 0 || !auth()->guard('merchant')->user()->branch_id) {
             $this->setMessage('Your branch Not Assigned. You are waiting for authorization!', 'danger');
             return redirect()->back();
         }
@@ -45,7 +45,7 @@ class ParcelController extends Controller
         return view('merchant.parcel.addParcel', $data);
     }
 
-// For getting customer Info -->
+    // For getting customer Info -->
 
     // public function customerInfo(Request $request){
     //     $phone = $request->phone;
@@ -57,52 +57,72 @@ class ParcelController extends Controller
 
 
 
-// For getting customer Info -->
+    // For getting customer Info -->
 
-    public function customerInfo(Request $request){
+    public function customerInfo(Request $request)
+    {
+        // // dd($phone);
+        // // $customer = Parcel::where('customer_contact_number',$phone)->select('customer_name','customer_address')->first();
+
+        // $customer = Parcel::where($column, $phone)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
+        // $customerParcel = Parcel::where($column, $phone)->count();
+        // $totalDeliveryComplete = Parcel::whereRaw("'$column' = '$phone' and status >= 25 and delivery_type in (1)")->select('id')->count();
+        // $totalDeliveryPending = Parcel::whereRaw("'$column' = '$phone' and status < 25 ")->select('id')->count();
+        // $totalDeliveryCancel = Parcel::whereRaw("'$column' = '$phone' and status >= 25 and delivery_type in (4)")->select('id')->count();
+
         $phone = $request->phone;
+        $phone2 = $request->phone2;
         // dd($phone);
         // $customer = Parcel::where('customer_contact_number',$phone)->select('customer_name','customer_address')->first();
-        $customer = Parcel::where('customer_contact_number',$phone)->select('customer_name','customer_address','district_id','area_id')->first();
-        $customerParcel = Parcel::where('customer_contact_number',$phone)->count();
-        $totalDeliveryComplete = Parcel::whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (1)")->select('id')->count();
-        $totalDeliveryPending = Parcel::whereRaw("customer_contact_number = '$phone' and status < 25 ")->select('id')->count();
-        $totalDeliveryCancel = Parcel::whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (4)")->select('id')->count();
-        
-        if ($customerParcel > 0) {
-            $percenrtComplete=round(($totalDeliveryComplete/$customerParcel)*100);
-        }else{
-            $percenrtComplete= 0;
-        }
-        
-         if ($customerParcel > 0) {
-            $percenrtPending=round(($totalDeliveryPending/$customerParcel)*100);
-        }else{
-            $percenrtPending= 0;
-        }
-        
-        
-         if ($customerParcel > 0) {
-            $percenrtCancle=round(($totalDeliveryCancel/$customerParcel)*100);
-        }else{
-            $percenrtCancle= 0;
-        }
-        
-        
-        
 
-          
+        if ($request->phone) {
+            $customer = Parcel::where('customer_contact_number', $phone)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
+            $customerParcel = Parcel::where('customer_contact_number', $phone)->count();
+            $totalDeliveryComplete = Parcel::whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (1)")->select('id')->count();
+            $totalDeliveryPending = Parcel::whereRaw("customer_contact_number = '$phone' and status < 25 ")->select('id')->count();
+            $totalDeliveryCancel = Parcel::whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (4)")->select('id')->count();
+        } elseif ($request->phone2) {
+            $customer = Parcel::where('customer_contact_number2', $phone2)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
+            $customerParcel = Parcel::where('customer_contact_number2', $phone2)->count();
+            $totalDeliveryComplete = Parcel::whereRaw("customer_contact_number2 = '$phone2' and status >= 25 and delivery_type in (1)")->select('id')->count();
+            $totalDeliveryPending = Parcel::whereRaw("customer_contact_number2 = '$phone2' and status < 25 ")->select('id')->count();
+            $totalDeliveryCancel = Parcel::whereRaw("customer_contact_number2 = '$phone2' and status >= 25 and delivery_type in (4)")->select('id')->count();
+        }
+
+        if ($customerParcel > 0) {
+            $percenrtComplete = round(($totalDeliveryComplete / $customerParcel) * 100);
+        } else {
+            $percenrtComplete = 0;
+        }
+
+        if ($customerParcel > 0) {
+            $percenrtPending = round(($totalDeliveryPending / $customerParcel) * 100);
+        } else {
+            $percenrtPending = 0;
+        }
+
+
+        if ($customerParcel > 0) {
+            $percenrtCancle = round(($totalDeliveryCancel / $customerParcel) * 100);
+        } else {
+            $percenrtCancle = 0;
+        }
+
+
+
+
+
         return response()->json([
-                'customer' =>$customer,
-                'customerParcel' =>$customerParcel,
-                'totalDeliveryComplete'=>" Delivered:"." ". $totalDeliveryComplete,
-                'totalDeliveryPending' =>" Pending: "." ".$totalDeliveryPending,
-                'totalDeliveryCancel' =>" Canceled: "." ".$totalDeliveryCancel,
-                'percenrtComplete' =>"(". $percenrtComplete."%)",
-                'percenrtPending' =>"(". $percenrtPending."%)",
-                'percenrtCancel' =>"(". $percenrtCancle."%)",
-            
-            ]);
+            'customer' => $customer,
+            'customerParcel' => $customerParcel,
+            'totalDeliveryComplete' => " Delivered:" . " " . $totalDeliveryComplete,
+            'totalDeliveryPending' => " Pending: " . " " . $totalDeliveryPending,
+            'totalDeliveryCancel' => " Canceled: " . " " . $totalDeliveryCancel,
+            'percenrtComplete' => "(" . $percenrtComplete . "%)",
+            'percenrtPending' => "(" . $percenrtPending . "%)",
+            'percenrtCancel' => "(" . $percenrtCancle . "%)",
+
+        ]);
     }
     // For getting customer Info -->
 
@@ -111,7 +131,7 @@ class ParcelController extends Controller
 
     public function store(Request $request)
     {
-//        dd($request->all());
+        //        dd($request->all());
         $validator = Validator::make($request->all(), [
             'merchant_order_id' => 'sometimes',
             'cod_percent' => 'required',
@@ -123,12 +143,13 @@ class ParcelController extends Controller
             'total_charge' => 'required',
             'weight_package_id' => 'required',
             'delivery_option_id' => 'required',
-//          'product_details' => 'required',
- //         'product_value' => 'required|numeric|min:1',
+            //          'product_details' => 'required',
+            //         'product_value' => 'required|numeric|min:1',
             'product_value' => 'sometimes',
             'total_collect_amount' => 'sometimes',
             'customer_name' => 'required',
             'customer_contact_number' => 'required|numeric|digits:11',
+            'customer_contact_number2' => 'nullable|numeric|digits:11',
             'customer_address' => 'required',
             'district_id' => 'required',
             // 'upazila_id'                   => 'required',
@@ -154,6 +175,8 @@ class ParcelController extends Controller
                 'customer_name' => $request->input('customer_name'),
                 'customer_address' => $request->input('customer_address'),
                 'customer_contact_number' => $request->input('customer_contact_number'),
+                'customer_contact_number2' => $request->input('customer_contact_number2'),
+                'exchange' => $request->input('exchange'),
                 'product_details' => $request->input('product_details'),
                 'product_value' => $request->input('product_value'),
                 'district_id' => $request->input('district_id'),
@@ -235,21 +258,19 @@ class ParcelController extends Controller
 
                 \DB::commit();
 
-//                $this->sweetAlertMessage('success', '', 'Parcel Create Successfully');
+                //                $this->sweetAlertMessage('success', '', 'Parcel Create Successfully');
                 $this->setMessage('Parcel Create Successfully', 'success');
                 return redirect()->back();
-//                return redirect()->route('merchant.parcel.list');
+                //                return redirect()->route('merchant.parcel.list');
             } else {
                 $this->sweetAlertMessage('error', '', 'Parcel Create Failed');
                 return redirect()->back()->withInput();
             }
-
         } catch (\Exception $e) {
             \DB::rollback();
             $this->setMessage($e->getMessage(), 'danger');
             return redirect()->back()->withInput();
         }
-
     }
 
     public function list()
@@ -283,24 +304,26 @@ class ParcelController extends Controller
                 $parcel_invoice = $request->input('parcel_invoice');
                 $merchant_order_id = $request->input('merchant_order_id');
                 $customer_contact_number = $request->input('customer_contact_number');
+                $customer_contact_number2 = $request->input('customer_contact_number2');
                 $from_date = $request->input('from_date');
                 $to_date = $request->input('to_date');
 
                 if (($request->has('parcel_status') && !is_null($parcel_status))
                     || ($request->has('parcel_invoice') && !is_null($parcel_invoice))
                     || ($request->has('customer_contact_number') && !is_null($customer_contact_number))
+                    || ($request->has('customer_contact_number2') && !is_null($customer_contact_number2))
                     || ($request->has('merchant_order_id') && !is_null($merchant_order_id))
                     || ($request->has('from_date') && !is_null($from_date))
                     || ($request->has('to_date') && !is_null($to_date))
                 ) {
-                    if ((!is_null($parcel_invoice))
-                    ) {
-                    
-            $query->where('parcel_invoice','like', "%{$parcel_invoice}%");
-            $query->orWhere('merchant_order_id','like', "%{$parcel_invoice}%");
-            $query->orWhere('customer_contact_number','like', "%{$parcel_invoice}%");
-                        
-                        
+                    if ((!is_null($parcel_invoice))) {
+
+                        $query->where('parcel_invoice', 'like', "%{$parcel_invoice}%");
+                        $query->orWhere('merchant_order_id', 'like', "%{$parcel_invoice}%");
+                        $query->orWhere('customer_contact_number', 'like', "%{$parcel_invoice}%");
+                        $query->orWhere('customer_contact_number2', 'like', "%{$parcel_invoice}%");
+
+
                         /*if (!is_null($parcel_invoice) && !is_null($parcel_invoice)) {
                             $query->where('parcel_invoice', 'like', "%$parcel_invoice");
                         } elseif (!is_null($merchant_order_id) && !is_null($merchant_order_id)) {
@@ -331,11 +354,11 @@ class ParcelController extends Controller
                                 $query->whereRaw('status >= ? AND status <= ? AND status != ?', [1, 9, 3]);
 
                                 // $query->whereRaw('status in (1) and delivery_type IS NULL or delivery_type = ""');
-                            }elseif ($parcel_status == 8) {
+                            } elseif ($parcel_status == 8) {
                                 $query->whereRaw('status >= 25 and delivery_type in(3)');
                             }
                         }
-                       /* if ($request->has('from_date') && !is_null($from_date)) {
+                        /* if ($request->has('from_date') && !is_null($from_date)) {
                             $query->whereDate('date', '>=', $from_date);
                         }
                         if ($request->has('to_date') && !is_null($to_date)) {
@@ -370,18 +393,43 @@ class ParcelController extends Controller
                                 $query->whereDate('date', '<=', $request->get('to_date'));
                             }
                         }
-
                     }
                 }
-               /* else {
+                /* else {
                     $query->where('status', '!=', 3);
                 }*/
             })
             ->orderBy('id', 'desc')
-            ->select('id', 'parcel_invoice', 'tracking_number', 'merchant_id', 'date',
-                'parcel_note', 'merchant_order_id', 'customer_name', 'customer_address', 'customer_contact_number',
-                'customer_collect_amount', 'total_collect_amount',
-                'cod_charge', 'weight_package_charge', 'delivery_charge','reschedule_parcel_date','delivery_date','pickup_branch_date', 'total_charge', 'district_id', 'service_type_id', 'item_type_id', 'upazila_id', 'area_id', 'status', 'delivery_type', 'payment_type');
+            ->select(
+                'id',
+                'parcel_invoice',
+                'tracking_number',
+                'merchant_id',
+                'date',
+                'parcel_note',
+                'merchant_order_id',
+                'customer_name',
+                'customer_address',
+                'customer_contact_number',
+                'customer_contact_number2',
+                'customer_collect_amount',
+                'total_collect_amount',
+                'cod_charge',
+                'weight_package_charge',
+                'delivery_charge',
+                'reschedule_parcel_date',
+                'delivery_date',
+                'pickup_branch_date',
+                'total_charge',
+                'district_id',
+                'service_type_id',
+                'item_type_id',
+                'upazila_id',
+                'area_id',
+                'status',
+                'delivery_type',
+                'payment_type'
+            );
 
         return DataTables::of($model)
             ->addIndexColumn()
@@ -407,20 +455,20 @@ class ParcelController extends Controller
                 $parcelStatus = returnParcelStatusNameForMerchant($data->status, $data->delivery_type, $data->payment_type);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
-                return '<span class="  text-bold badge badge-'.$class.'" style="font-size:16px;"> ' . $status_name . '</span> <p><strong>Date: </strong>'.$date_time.'</p>';
+                return '<span class="  text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong>Date: </strong>' . $date_time . '</p>';
             })
             ->editColumn('payment_status', function ($data) {
                 $return = "";
                 $parcelStatus = returnPaymentStatusForMerchant($data->status, $data->delivery_type, $data->payment_type);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
-                $return.= '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <br>';
+                $return .= '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <br>';
 
 
                 $parcelStatus = returnReturnStatusForAdmin($data->status, $data->delivery_type, $data->payment_type);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
-                $return.= '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
+                $return .= '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
                 return $return;
             })
 
@@ -456,24 +504,23 @@ class ParcelController extends Controller
                                         <i class="fas fa-pencil-alt"></i>
                                 </a>';
                     }
-
                 }
                 return $button;
             })
             ->addColumn('parcel_info', function ($data) {
                 $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
-                $parcel_info = '<p><strong>Merchant Order ID: </strong>'.$data->merchant_order_id.'</p>';
-                $parcel_info .= '<p><strong>Parcel OTP: </strong>'.$data->parcel_code.'</p>';
-                $parcel_info .= '<p><strong>Service Type: </strong>'.optional($data->service_type)->title.'</p>';
-                $parcel_info .= '<p><strong>Item Type: </strong>'.optional($data->item_type)->title.'</p>';
-                $parcel_info.='</span> <p><strong>Created Date: </strong>'.$date_time.'</p>';
+                $parcel_info = '<p><strong>Merchant Order ID: </strong>' . $data->merchant_order_id . '</p>';
+                $parcel_info .= '<p><strong>Parcel OTP: </strong>' . $data->parcel_code . '</p>';
+                $parcel_info .= '<p><strong>Service Type: </strong>' . optional($data->service_type)->title . '</p>';
+                $parcel_info .= '<p><strong>Item Type: </strong>' . optional($data->item_type)->title . '</p>';
+                $parcel_info .= '</span> <p><strong>Created Date: </strong>' . $date_time . '</p>';
                 return $parcel_info;
             })
 
             ->addColumn('company_info', function ($data) {
-                $company_info = '<p><strong>Name: </strong>'.$data->merchant->company_name.'</p>';
-                $company_info .= '<p><strong>Phone: </strong>'.$data->merchant->contact_number.'</p>';
-//                $company_info .= '<span><strong>Address: </strong>'.$data->merchant->address.'</span>';
+                $company_info = '<p><strong>Name: </strong>' . $data->merchant->company_name . '</p>';
+                $company_info .= '<p><strong>Phone: </strong>' . $data->merchant->contact_number . '</p>';
+                //                $company_info .= '<span><strong>Address: </strong>'.$data->merchant->address.'</span>';
                 return $company_info;
             })
 
@@ -487,24 +534,31 @@ class ParcelController extends Controller
                 if ($data->area) {
                     $area = $data->area->name;
                 }
-                $customer_info = '<p><strong>Name: </strong>'.$data->customer_name.'</p>';
-                $customer_info .= '<p><strong>Number: </strong>'.$data->customer_contact_number.'</p>';
-                $customer_info .= '<p><strong>District: </strong>'.$district.'</p>';
-                $customer_info .= '<p><strong>Area: </strong>'.$area.'</p>';
-                $customer_info .= '<span><strong>Address: </strong>'.$data->customer_address.'</span>';
+
+                $customer_contact_number2 = "---";
+                if ($data->customer_contact_number2) {
+                    $customer_contact_number2 = $data->customer_contact_number2;
+                }
+
+                $customer_info = '<p><strong>Name: </strong>' . $data->customer_name . '</p>';
+                $customer_info .= '<p><strong>Number: </strong>' . $data->customer_contact_number . '</p>';
+                $customer_info .= '<p><strong>Alternative Number: </strong>' . $customer_contact_number2 . '</p>';
+                $customer_info .= '<p><strong>District: </strong>' . $district . '</p>';
+                $customer_info .= '<p><strong>Area: </strong>' . $area . '</p>';
+                $customer_info .= '<span><strong>Address: </strong>' . $data->customer_address . '</span>';
 
                 return $customer_info;
             })
             ->addColumn('amount', function ($data) {
-                $amount = '<p><strong>Amount to be Collect: ৳ </strong>'.$data->total_collect_amount.'</p>';
-                $amount .= '<p><strong>Collected: ৳ </strong>'.$data->customer_collect_amount.'</p>';
-                 $amount .= '<p><strong>Delivery Charge:  ৳ </strong>'.$data->delivery_charge.'</p>';
+                $amount = '<p><strong>Amount to be Collect: ৳ </strong>' . $data->total_collect_amount . '</p>';
+                $amount .= '<p><strong>Collected: ৳ </strong>' . $data->customer_collect_amount . '</p>';
+                $amount .= '<p><strong>Delivery Charge:  ৳ </strong>' . $data->delivery_charge . '</p>';
                 // $amount .= '<p><strong>Delivery Charge: </strong>'.$data->total_charge.'</p>';
                 // $amount .= '<p><strong>COD Charge: </strong>'.$data->cod_charge.'</p>';
                 return $amount;
             })
             ->addColumn('print', function ($data) {
-               return '<input type="checkbox" class="print-check" id="" value="' . $data->id . '"/>';
+                return '<input type="checkbox" class="print-check" id="" value="' . $data->id . '"/>';
             })
             ->addColumn('remarks', function ($data) {
                 $logs_note = "";
@@ -516,8 +570,8 @@ class ParcelController extends Controller
                         $logs_note .= $parcel_log->note;
                     }
                 }
-                $remarks = '<span><strong>Remarks: </strong>'.$data->parcel_note.'</span> <br>';
-                $remarks .= '<span><strong>Notes: </strong>'.$logs_note.'</span>';
+                $remarks = '<span><strong>Remarks: </strong>' . $data->parcel_note . '</span> <br>';
+                $remarks .= '<span><strong>Notes: </strong>' . $logs_note . '</span>';
                 return $remarks;
             })
 
@@ -541,7 +595,7 @@ class ParcelController extends Controller
     public function printParcelList(Request $request)
     {
         $merchant_id = auth()->guard('merchant')->user()->id;
-        $filter=[];
+        $filter = [];
 
         $parcel_status = $request->input('parcel_status');
         $parcel_invoice = $request->input('parcel_invoice');
@@ -549,23 +603,23 @@ class ParcelController extends Controller
         $customer_contact_number = $request->input('customer_contact_number');
         $from_date = $request->input('from_date');
         $to_date = $request->input('to_date');
-        if ($parcel_status && $parcel_status!=0){
-            $filter['parcel_status']=$parcel_status;
+        if ($parcel_status && $parcel_status != 0) {
+            $filter['parcel_status'] = $parcel_status;
         }
-        if ($parcel_invoice && $parcel_invoice!=0){
-            $filter['parcel_invoice']=$parcel_invoice;
+        if ($parcel_invoice && $parcel_invoice != 0) {
+            $filter['parcel_invoice'] = $parcel_invoice;
         }
-        if ($merchant_order_id && $merchant_order_id!=0){
-            $filter['merchant_order_id']=$merchant_order_id;
+        if ($merchant_order_id && $merchant_order_id != 0) {
+            $filter['merchant_order_id'] = $merchant_order_id;
         }
-        if ($customer_contact_number && $customer_contact_number!=0){
-            $filter['customer_contact_number']=$customer_contact_number;
+        if ($customer_contact_number && $customer_contact_number != 0) {
+            $filter['customer_contact_number'] = $customer_contact_number;
         }
-        if ($from_date && $from_date!=0){
-            $filter['from_date']=$from_date;
+        if ($from_date && $from_date != 0) {
+            $filter['from_date'] = $from_date;
         }
-        if ($to_date && $to_date!=0){
-            $filter['to_date']=$to_date;
+        if ($to_date && $to_date != 0) {
+            $filter['to_date'] = $to_date;
         }
 
         $model = Parcel::with([
@@ -603,7 +657,6 @@ class ParcelController extends Controller
                             $query->where('parcel_invoice', 'like', "%$parcel_invoice");
                         } elseif (!is_null($merchant_order_id) && !is_null($merchant_order_id)) {
                             $query->where('merchant_order_id', 'like', "%$merchant_order_id");
-
                         } elseif (!is_null($customer_contact_number) && !is_null($customer_contact_number)) {
                             $query->where('customer_contact_number', 'like', "%$customer_contact_number");
                         }
@@ -628,7 +681,7 @@ class ParcelController extends Controller
                                 $query->whereRaw('status = ? and delivery_type in (?)', [36, 4]);
                             } elseif ($parcel_status == 7) {
                                 $query->whereRaw('status in (1) and delivery_type IS NULL or delivery_type = ""');
-                            }elseif ($parcel_status == 8) {
+                            } elseif ($parcel_status == 8) {
                                 $query->whereRaw('status >= 25 and delivery_type in(3)');
                             }
                         }
@@ -644,20 +697,42 @@ class ParcelController extends Controller
                 }
             })
             ->orderBy('id', 'desc')
-            ->select('id', 'parcel_invoice', 'tracking_number', 'merchant_id', 'date',
-                'parcel_note', 'merchant_order_id', 'customer_name', 'customer_address', 'customer_contact_number',
-                'customer_collect_amount', 'total_collect_amount',
-                'cod_charge', 'weight_package_charge', 'delivery_charge', 'total_charge', 'district_id', 'service_type_id', 'item_type_id', 'upazila_id', 'area_id', 'status', 'delivery_type', 'payment_type');
+            ->select(
+                'id',
+                'parcel_invoice',
+                'tracking_number',
+                'merchant_id',
+                'date',
+                'parcel_note',
+                'merchant_order_id',
+                'customer_name',
+                'customer_address',
+                'customer_contact_number',
+                'customer_collect_amount',
+                'total_collect_amount',
+                'cod_charge',
+                'weight_package_charge',
+                'delivery_charge',
+                'total_charge',
+                'district_id',
+                'service_type_id',
+                'item_type_id',
+                'upazila_id',
+                'area_id',
+                'status',
+                'delivery_type',
+                'payment_type'
+            );
         $parcels = $model->get();
-        return view('merchant.parcel.printParcelList', compact('parcels','filter'));
+        return view('merchant.parcel.printParcelList', compact('parcels', 'filter'));
     }
 
     public function printParcelMultiple(Request $request)
     {
-//        dd($request->all());
+        //        dd($request->all());
         $parcel_ids = $request->input('parcel_ids');
-        $parcels = Parcel::whereIn("id",$parcel_ids)->with('merchant', 'weight_package', 'pickup_branch', 'pickup_rider', 'delivery_branch', 'delivery_rider')->get();
-//        dd($parcels);
+        $parcels = Parcel::whereIn("id", $parcel_ids)->with('merchant', 'weight_package', 'pickup_branch', 'pickup_rider', 'delivery_branch', 'delivery_rider')->get();
+        //        dd($parcels);
 
         return view('merchant.parcel.printParcelMultiple', compact('parcels'));
     }
@@ -697,9 +772,7 @@ class ParcelController extends Controller
                 } else {
                     $response = ['error' => 'Database Error Found'];
                 }
-
             }
-
         }
 
         return response()->json($response);
@@ -739,9 +812,7 @@ class ParcelController extends Controller
                 } else {
                     $response = ['error' => 'Database Error Found'];
                 }
-
             }
-
         }
 
         return response()->json($response);
@@ -781,9 +852,7 @@ class ParcelController extends Controller
                 } else {
                     $response = ['error' => 'Database Error Found'];
                 }
-
             }
-
         }
 
         return response()->json($response);
@@ -840,7 +909,7 @@ class ParcelController extends Controller
 
     public function update(Request $request, Parcel $parcel)
     {
-//        dd($request->all());
+        //        dd($request->all());
         $validator = Validator::make($request->all(), [
             'merchant_order_id' => 'sometimes',
             'cod_percent' => 'required',
@@ -852,7 +921,7 @@ class ParcelController extends Controller
             'total_charge' => 'required',
             'weight_package_id' => 'required',
             'delivery_option_id' => 'required',
-//            'product_details' => 'required',
+            //            'product_details' => 'required',
             'product_value' => 'required|numeric|min:1',
             'total_collect_amount' => 'sometimes',
             'customer_name' => 'required',
@@ -926,60 +995,58 @@ class ParcelController extends Controller
                 $this->setMessage('Parcel Update Failed', 'danger');
                 return redirect()->back()->withInput();
             }
-
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             \DB::rollback();
             $this->setMessage('Database Error Found', 'danger');
             return redirect()->back()->withInput();
         }
-
     }
 
 
-//     public function merchantBulkParcelImport()
-//     {
-//         $data = [];
-//         $data['main_menu'] = 'parcel';
-//         $data['child_menu'] = 'list';
-//         $data['page_title'] = 'Merchant Bulk Parcel Upload';
-//         $data['collapse'] = 'sidebar-collapse';
-//         return view('merchant.parcel.merchantBulkParcelImport', $data);
-//     }
+    //     public function merchantBulkParcelImport()
+    //     {
+    //         $data = [];
+    //         $data['main_menu'] = 'parcel';
+    //         $data['child_menu'] = 'list';
+    //         $data['page_title'] = 'Merchant Bulk Parcel Upload';
+    //         $data['collapse'] = 'sidebar-collapse';
+    //         return view('merchant.parcel.merchantBulkParcelImport', $data);
+    //     }
 
 
-//     public function merchantBulkParcelImportStore(Request $request)
-//     {
-// //        dd($request->all());
-//         $file = $request->file('file')->store('import');
+    //     public function merchantBulkParcelImportStore(Request $request)
+    //     {
+    // //        dd($request->all());
+    //         $file = $request->file('file')->store('import');
 
-//         $merchant_id = auth()->guard('merchant')->user()->id;
-//         $rider_id = $request->input('rider_id');
-//         $branch_id = auth()->guard('merchant')->user()->branch->id;
+    //         $merchant_id = auth()->guard('merchant')->user()->id;
+    //         $rider_id = $request->input('rider_id');
+    //         $branch_id = auth()->guard('merchant')->user()->branch->id;
 
-//         \DB::beginTransaction();
-//         try {
+    //         \DB::beginTransaction();
+    //         try {
 
-//             $import = new MerchantBulkParcelImport();
-//             $import->import($file);
-//             if ($import->failures()->isNotEmpty()) {
-//                 return back()->withFailures($import->failures());
-//             }
+    //             $import = new MerchantBulkParcelImport();
+    //             $import->import($file);
+    //             if ($import->failures()->isNotEmpty()) {
+    //                 return back()->withFailures($import->failures());
+    //             }
 
-//             \DB::commit();
+    //             \DB::commit();
 
-//             // $this->merchantDashboardCounterEvent($merchant_id);
-//             // $this->adminDashboardCounterEvent();
-//             $this->setMessage('Merchant Bulk Parcel Insert Successfully', 'success');
-//             return redirect()->route('merchant.parcel.list');
-//         } catch (\Exception $e) {
-//             \DB::rollback();
-// //            dd($e->getMessage());
-//             $this->setMessage($e->getMessage(), 'danger');
-//             return redirect()->back()->withInput();
-//         }
-//     }
+    //             // $this->merchantDashboardCounterEvent($merchant_id);
+    //             // $this->adminDashboardCounterEvent();
+    //             $this->setMessage('Merchant Bulk Parcel Insert Successfully', 'success');
+    //             return redirect()->route('merchant.parcel.list');
+    //         } catch (\Exception $e) {
+    //             \DB::rollback();
+    // //            dd($e->getMessage());
+    //             $this->setMessage($e->getMessage(), 'danger');
+    //             return redirect()->back()->withInput();
+    //         }
+    //     }
 
- public function merchantBulkParcelImport()
+    public function merchantBulkParcelImport()
     {
         $data = [];
         $data['main_menu'] = 'parcel';
@@ -1093,7 +1160,7 @@ class ParcelController extends Controller
                                 $upazila_id = $area->upazila_id;
                                 $area_id = $area->id;
                                 $service_area_id = $area->district->service_area_id;
-                                
+
                                 $merchantServiceAreaCodCharge = MerchantServiceAreaCodCharge::where([
                                     'service_area_id' => $service_area_id,
                                     'merchant_id' => $merchant->id,
@@ -1101,7 +1168,7 @@ class ParcelController extends Controller
                                 // dd($merchantServiceAreaCodCharge);
                                 if ($merchantServiceAreaCodCharge) {
                                     $cod_percent = $merchantServiceAreaCodCharge->cod_charge;
-                                }else {
+                                } else {
                                     $cod_percent = $area->district->service_area->cod_charge;
                                 }
                                 $merchant_service_area_charge = $area->district->service_area->default_charge;
@@ -1297,12 +1364,12 @@ class ParcelController extends Controller
             return redirect()->back()->withInput();
         }
     }
-    
-    
-     
-        public function excelAllParcelList(Request $request)
+
+
+
+    public function excelAllParcelList(Request $request)
     {
-        $fileName= 'parcel_'.time().'.xlsx';
+        $fileName = 'parcel_' . time() . '.xlsx';
         return Excel::download(new MerchantParcelExport($request), $fileName);
     }
 
@@ -1335,6 +1402,4 @@ class ParcelController extends Controller
         $this->setMessage('Import Parcel reset successful!', 'success');
         return redirect()->route('merchant.parcel.merchantBulkParcelImport');
     }
-
-
 }

@@ -68,7 +68,7 @@ class RiderController extends Controller
 
     public function printRiders(Request $request)
     {
-        $riders = Rider::with(['branch', 'district', 'upazila', 'area', 'branch'])->orderBy('id','desc')->get();
+        $riders = Rider::with(['branch', 'district', 'upazila', 'area', 'branch'])->orderBy('id', 'desc')->get();
         return view('admin.team.rider.print', compact('riders'));
     }
 
@@ -168,7 +168,7 @@ class RiderController extends Controller
     public function update(Request $request, Rider $rider)
     {
 
-//        dd($request->all());
+        //        dd($request->all());
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:riders,email,' . $rider->id,
             'name' => 'required',
@@ -235,7 +235,6 @@ class RiderController extends Controller
             $this->setMessage('Rider Update Failed', 'danger');
             return redirect()->back()->withInput();
         }
-
     }
 
     public function updateStatus(Request $request)
@@ -323,7 +322,6 @@ class RiderController extends Controller
 
     public function riderLogin(Rider $rider)
     {
-
         if ($rider) {
             auth()->guard('rider')->login($rider);
 
@@ -384,6 +382,4 @@ class RiderController extends Controller
         }
         return redirect()->back();
     }
-
-
 }

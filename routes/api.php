@@ -35,6 +35,7 @@ Route::post('orderStatusUpdate', [App\Http\Controllers\API\ParcelController::cla
 Route::post('pathaoParcelStatus', [App\Http\Controllers\API\ParcelController::class, 'pathaoParcelStatus']);
 
 
+
 // Merchant Route
 Route::group(['as' => 'api.merchant.'], base_path('routes/merchant_api.php'));
 Route::group(['as' => 'api.rider.'], base_path('routes/rider_api.php'));
@@ -50,9 +51,9 @@ Route::group(['as' => 'api.rider.'], base_path('routes/rider_api.php'));
 
 
 
-Route::any('/{any}', function(){
+Route::any('/{any}', function () {
     return response()->json([
         'success'   => 401,
         'message' => 'No Route is found'
-    ],401);
+    ], 401);
 })->where('any', '.*');

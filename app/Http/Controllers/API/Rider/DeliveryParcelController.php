@@ -31,9 +31,20 @@ class DeliveryParcelController extends Controller
             ->whereRaw('(delivery_rider_id = ? and status in (17, 19) )', [$rider_id])
             ->orderBy('id', 'desc')
             ->select(
-                'id', 'parcel_invoice', 'customer_name', 'customer_address',
-                'customer_contact_number', 'total_charge', 'total_collect_amount',
-                'district_id', 'merchant_id', 'status', 'parcel_note'
+                'id',
+                'parcel_invoice',
+                'customer_name',
+                'customer_address',
+                'customer_contact_number',
+                'customer_contact_number2',
+                'exchange',
+                'total_charge',
+                'total_collect_amount',
+                'district_id',
+                'merchant_id',
+                'area_id',
+                'status',
+                'parcel_note'
             )
             ->get();
 
@@ -41,115 +52,115 @@ class DeliveryParcelController extends Controller
 
         foreach ($parcels as $parcel) {
             switch ($parcel->status) {
-                case 1 :
+                case 1:
                     $parcel_status = "Parcel Send Pick Request";
                     break;
-                case 2 :
+                case 2:
                     $parcel_status = "Parcel Hold";
                     break;
-                case 3 :
+                case 3:
                     $parcel_status = "Parcel Cancel";
                     break;
-                case 4 :
+                case 4:
                     $parcel_status = "Parcel Reschedule";
                     break;
-                case 5 :
+                case 5:
                     $parcel_status = "Pickup Run Start";
                     break;
-                case 6 :
+                case 6:
                     $parcel_status = "Pickup Run Create";
                     break;
-                case 7 :
+                case 7:
                     $parcel_status = "Pickup Run Cancel";
                     break;
-                case 8 :
+                case 8:
                     $parcel_status = "Pickup Run Accept Rider";
                     break;
-                case 9 :
+                case 9:
                     $parcel_status = "Pickup Run Cancel Rider";
                     break;
-                case 10 :
+                case 10:
                     $parcel_status = "Pickup Run Complete Rider";
                     break;
-                case 11 :
+                case 11:
                     $parcel_status = "Pickup Complete";
                     break;
-                case 12 :
+                case 12:
                     $parcel_status = "Assign Delivery Branch";
                     break;
-                case 13 :
+                case 13:
                     $parcel_status = "Assign Delivery Branch Cancel";
                     break;
-                case 14 :
+                case 14:
                     $parcel_status = "Assign Delivery Branch Received";
                     break;
-                case 15 :
+                case 15:
                     $parcel_status = "Assign Delivery Branch Reject";
                     break;
-                case 16 :
+                case 16:
                     $parcel_status = "Delivery Run Create";
                     break;
-                case 17 :
+                case 17:
                     $parcel_status = "Delivery Run Start";
                     break;
-                case 18 :
+                case 18:
                     $parcel_status = "Delivery Run Cancel";
                     break;
-                case 19 :
+                case 19:
                     $parcel_status = "Delivery Run Rider Accept";
                     break;
-                case 20 :
+                case 20:
                     $parcel_status = "Delivery Run Rider Reject";
                     break;
-                case 21 :
+                case 21:
                     $parcel_status = "Delivery Rider Delivery";
                     break;
-                case 22 :
+                case 22:
                     $parcel_status = "Delivery Rider Partial Delivery";
                     break;
-                case 23 :
+                case 23:
                     $parcel_status = "Delivery Rider Reschedule";
                     break;
-                case 24 :
+                case 24:
                     $parcel_status = "Delivery Rider Return";
                     break;
-                case 25 :
+                case 25:
                     $parcel_status = "Delivery  Complete";
                     break;
-                case 26 :
+                case 26:
                     $parcel_status = "Return Branch Assign";
                     break;
-                case 27 :
+                case 27:
                     $parcel_status = "Return Branch Assign Cancel";
                     break;
-                case 28 :
+                case 28:
                     $parcel_status = "Return Branch Assign Received";
                     break;
-                case 29 :
+                case 29:
                     $parcel_status = "Return Branch Assign Reject";
                     break;
-                case 30 :
+                case 30:
                     $parcel_status = "Return Branch   Run Create";
                     break;
-                case 31 :
+                case 31:
                     $parcel_status = "Return Branch  Run Start";
                     break;
-                case 32 :
+                case 32:
                     $parcel_status = "Return Branch  Run Cancel";
                     break;
-                case 33 :
+                case 33:
                     $parcel_status = "Return Rider Accept";
                     break;
-                case 34 :
+                case 34:
                     $parcel_status = "Return Rider Reject";
                     break;
-                case 35 :
+                case 35:
                     $parcel_status = "Return Rider Complete";
                     break;
-                case 36 :
+                case 36:
                     $parcel_status = "Return Branch  Run Complete";
                     break;
-                default :
+                default:
                     break;
             }
             $logs_note = "";
@@ -161,12 +172,15 @@ class DeliveryParcelController extends Controller
                     }
                 }
             }
+
             $new_parcels[] = [
                 'parcel_id' => $parcel->id,
                 'parcel_invoice' => $parcel->parcel_invoice,
                 'customer_name' => $parcel->customer_name,
                 'customer_address' => $parcel->customer_address,
                 'customer_contact_number' => $parcel->customer_contact_number,
+                'customer_contact_number2' => $parcel->customer_contact_number2,
+                'exchange' => $parcel->exchange,
                 'amount_to_be_collect'        => $parcel->total_collect_amount,
                 'collect_amount' => $parcel->total_collect_amount,
                 'district_name' => $parcel->district->name,
@@ -233,115 +247,115 @@ class DeliveryParcelController extends Controller
 
             $parcel_status = "";
             switch ($parcel->status) {
-                case 1 :
+                case 1:
                     $parcel_status = "Parcel Send Pick Request";
                     break;
-                case 2 :
+                case 2:
                     $parcel_status = "Parcel Hold";
                     break;
-                case 3 :
+                case 3:
                     $parcel_status = "Parcel Cancel";
                     break;
-                case 4 :
+                case 4:
                     $parcel_status = "Parcel Reschedule";
                     break;
-                case 5 :
+                case 5:
                     $parcel_status = "Pickup Run Start";
                     break;
-                case 6 :
+                case 6:
                     $parcel_status = "Pickup Run Create";
                     break;
-                case 7 :
+                case 7:
                     $parcel_status = "Pickup Run Cancel";
                     break;
-                case 8 :
+                case 8:
                     $parcel_status = "Pickup Run Accept Rider";
                     break;
-                case 9 :
+                case 9:
                     $parcel_status = "Pickup Run Cancel Rider";
                     break;
-                case 10 :
+                case 10:
                     $parcel_status = "Pickup Run Complete Rider";
                     break;
-                case 11 :
+                case 11:
                     $parcel_status = "Pickup Complete";
                     break;
-                case 12 :
+                case 12:
                     $parcel_status = "Assign Delivery Branch";
                     break;
-                case 13 :
+                case 13:
                     $parcel_status = "Assign Delivery Branch Cancel";
                     break;
-                case 14 :
+                case 14:
                     $parcel_status = "Assign Delivery Branch Received";
                     break;
-                case 15 :
+                case 15:
                     $parcel_status = "Assign Delivery Branch Reject";
                     break;
-                case 16 :
+                case 16:
                     $parcel_status = "Delivery Run Create";
                     break;
-                case 17 :
+                case 17:
                     $parcel_status = "Delivery Run Start";
                     break;
-                case 18 :
+                case 18:
                     $parcel_status = "Delivery Run Cancel";
                     break;
-                case 19 :
+                case 19:
                     $parcel_status = "Delivery Run Rider Accept";
                     break;
-                case 20 :
+                case 20:
                     $parcel_status = "Delivery Run Rider Reject";
                     break;
-                case 21 :
+                case 21:
                     $parcel_status = "Delivery Rider Delivery";
                     break;
-                case 22 :
+                case 22:
                     $parcel_status = "Delivery Rider Partial Delivery";
                     break;
-                case 23 :
+                case 23:
                     $parcel_status = "Delivery Rider Reschedule";
                     break;
-                case 24 :
+                case 24:
                     $parcel_status = "Delivery Rider Return";
                     break;
-                case 25 :
+                case 25:
                     $parcel_status = "Delivery  Complete";
                     break;
-                case 26 :
+                case 26:
                     $parcel_status = "Return Branch Assign";
                     break;
-                case 27 :
+                case 27:
                     $parcel_status = "Return Branch Assign Cancel";
                     break;
-                case 28 :
+                case 28:
                     $parcel_status = "Return Branch Assign Received";
                     break;
-                case 29 :
+                case 29:
                     $parcel_status = "Return Branch Assign Reject";
                     break;
-                case 30 :
+                case 30:
                     $parcel_status = "Return Branch   Run Create";
                     break;
-                case 31 :
+                case 31:
                     $parcel_status = "Return Branch  Run Start";
                     break;
-                case 32 :
+                case 32:
                     $parcel_status = "Return Branch  Run Cancel";
                     break;
-                case 33 :
+                case 33:
                     $parcel_status = "Return Rider Accept";
                     break;
-                case 34 :
+                case 34:
                     $parcel_status = "Return Rider Reject";
                     break;
-                case 35 :
+                case 35:
                     $parcel_status = "Return Rider Complete";
                     break;
-                case 36 :
+                case 36:
                     $parcel_status = "Return Branch  Run Complete";
                     break;
-                default :
+                default:
                     break;
             }
             $parcel->status = $parcel_status;
@@ -384,7 +398,6 @@ class DeliveryParcelController extends Controller
             'error' => "Delivery Parcel Not found",
         ], 401);
     }
-
 
     public
     function parcelDeliveryRequestAccept(Request $request)
@@ -442,7 +455,6 @@ class DeliveryParcelController extends Controller
                     'success' => 200,
                     'message' => "Rider Parcel Delivery Request Accept Successfully",
                 ], 200);
-
             } else {
                 return response()->json([
                     'success' => 401,
@@ -518,7 +530,6 @@ class DeliveryParcelController extends Controller
                     'success' => 200,
                     'message' => "Rider Parcel Delivery Request Reject Successfully",
                 ], 200);
-
             } else {
                 return response()->json([
                     'success' => 401,
@@ -608,13 +619,85 @@ class DeliveryParcelController extends Controller
                     'success' => 200,
                     'message' => "Customer OTP Send Successfully",
                 ], 200);
-
             } else {
                 return response()->json([
                     'success' => 401,
                     'message' => "Customer OTP Send Failed!",
                     'error' => "Customer OTP Send Failed!",
                 ], 401);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => 401,
+                'message' => "Oop's, something went wrong. Please try again!",
+                'error' => "Oop's, something went wrong. Please try again!",
+            ], 401);
+        }
+    }
+
+    /** For Customer OTP SEND */
+    public
+    function parcelDeliveryOtpSend(Request $request)
+    {
+        $rider_id = auth()->guard('rider_api')->user()->id;
+
+        $validator = Validator::make($request->all(), [
+            'parcel_id'      => 'required',
+            'is_alternative' => 'nullable',
+            'send_to'        => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => 401,
+                'message' => "Validation Error",
+                'error' => $validator->errors(),
+            ], 401);
+        }
+
+        $parcel = Parcel::where('id', $request->get('parcel_id'))
+            ->where('delivery_rider_id', $rider_id)->first();
+        $parcel->parcel_otp = random_int(100000, 999999);
+        $parcel->parcel_otp_expired_at = now()->addMinutes(30)->toDateTimeString();
+        $parcel->save();
+
+        try {
+            if ($request->send_to == 'customer') {
+                $message = "Provide this OTP: " . $parcel->parcel_otp . " to rider if you received parcel (" . $parcel->parcel_invoice . "). This OTP will be valid for 30 minutes. Parceldex Ltd.";
+
+                $number = $parcel->customer_contact_number;
+
+                if ($request->is_alternative == 'yes') {
+                    $number = $parcel->customer_contact_number2;
+                }
+
+                if ($this->send_sms($number, $message)) {
+                    return response()->json([
+                        'success' => 200,
+                        'message' => "Customer OTP Send Successfully",
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'success' => 401,
+                        'message' => "Customer OTP Send Failed!",
+                        'error' => "Customer OTP Send Failed!",
+                    ], 401);
+                }
+            } elseif ($request->send_to == 'merchant') {
+                $message = "Provide this OTP: " . $parcel->parcel_otp . " to rider if you received parcel (" . $parcel->parcel_invoice . "). This OTP will be valid for 30 minutes. Parceldex Ltd.";
+
+                if ($this->send_sms($parcel->merchant->contact_number, $message)) {
+                    return response()->json([
+                        'success' => 200,
+                        'message' => "Merchant OTP Send Successfully",
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'success' => 401,
+                        'message' => "Merchant OTP Send Failed!",
+                        'error' => "Merchant OTP Send Failed!",
+                    ], 401);
+                }
             }
         } catch (\Exception $e) {
             return response()->json([
@@ -637,6 +720,8 @@ class DeliveryParcelController extends Controller
             'parcel_code' => 'sometimes',
             'reschedule_date' => 'sometimes',
             'parcel_note' => 'sometimes',
+            'parcel_otp' => 'sometimes',
+            'cancel_amount_collection' => 'sometimes',
         ]);
 
         if ($validator->fails()) {
@@ -646,6 +731,16 @@ class DeliveryParcelController extends Controller
                 'error' => $validator->errors(),
             ], 401);
         }
+
+        $parcel = Parcel::find($request->parcel_id);
+
+        if ($request->parcel_otp && ($request->parcel_otp !== $parcel->parcel_otp || $parcel->parcel_otp_expired_at < now()->toDateTimeString())) {
+            return response()->json([
+                'success' => 401,
+                'message' => "Invalid OTP",
+            ], 401);
+        }
+
         \DB::beginTransaction();
         try {
             $riderRunDetail = RiderRunDetail::where([
@@ -668,7 +763,8 @@ class DeliveryParcelController extends Controller
                 $delivery_type = (int)$request->delivery_type;
                 $parcel_note = $request->parcel_note;
 
-                if ($delivery_type == 0
+                if (
+                    $delivery_type == 0
                     || is_null($delivery_type)
                     || !($delivery_type == 21 || $delivery_type == 22 || $delivery_type == 23 || $delivery_type == 24)
                 ) {
@@ -681,7 +777,7 @@ class DeliveryParcelController extends Controller
                 if ($delivery_type == 21) {
                     $parcel = Parcel::where([
                         'id' => $request->parcel_id,
-//                        'parcel_code'   => $parcel_code,
+                        //                        'parcel_code'   => $parcel_code,
                         'total_collect_amount' => $customer_collect_amount,
                     ])->first();
 
@@ -697,7 +793,7 @@ class DeliveryParcelController extends Controller
                 if ($delivery_type == 22) {
                     $parcel = Parcel::where([
                         'id' => $request->parcel_id,
-//                        'parcel_code'   => $parcel_code,
+                        //                        'parcel_code'   => $parcel_code,
                     ])->first();
 
                     if (empty($parcel)) {
@@ -773,13 +869,17 @@ class DeliveryParcelController extends Controller
                 $parcel_log_update_data['note'] = $parcel_note;
                 ParcelLog::create($parcel_log_update_data);
 
+                if ($request->cancel_amount_collection) {
+                    $parcel = Parcel::find($request->parcel_id);
+                    $parcel->cancel_amount_collection = $request->cancel_amount_collection;
+                    $parcel->save();
+                }
 
                 \DB::commit();
                 return response()->json([
                     'success' => 200,
                     'message' => "Rider Parcel Delivery Request Complete Successfully",
                 ], 200);
-
             } else {
                 return response()->json([
                     'success' => 401,
@@ -796,5 +896,4 @@ class DeliveryParcelController extends Controller
             ], 401);
         }
     }
-
 }

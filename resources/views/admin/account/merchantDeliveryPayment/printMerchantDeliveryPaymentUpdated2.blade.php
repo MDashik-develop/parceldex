@@ -7,16 +7,18 @@
     <title>Merchant Delivery Payment| {{ session()->get('company_name') ?? config('app.name', 'Flier Express') }}
     </title>
     <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            min-height: 100%;
+        }
+
         body {
             font-size: 10px !important;
             font-family: Arial, sans-serif;
             background: url('{{ public_path('image/invoice-bg.png') }}') no-repeat center center fixed;
             background-size: cover;
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .container {

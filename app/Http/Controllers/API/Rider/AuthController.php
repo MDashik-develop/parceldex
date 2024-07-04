@@ -20,7 +20,6 @@ class AuthController extends Controller {
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(Request $request) {
-
         $validator = Validator::make($request->all(), [
             'email'    => 'required',
             'password' => 'required|min:5',

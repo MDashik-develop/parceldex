@@ -165,7 +165,7 @@ class PaymentParcelController extends Controller
 
         return response()->json([
             'success' => 200,
-            'message' => "Delivery Parcel Results",
+            'message' => "Delivery Parcel Results---",
             'parcels' => $new_parcels,
         ], 200);
     }
@@ -319,7 +319,7 @@ class PaymentParcelController extends Controller
 
         return response()->json([
             'success' => 200,
-            'message' => "Delivery Parcel Results",
+            'message' => "Delivery Parcel Results.......",
             'parcels' => $new_parcels,
         ], 200);
     }

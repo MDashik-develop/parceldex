@@ -1,0 +1,7 @@
+new migration:
+1. ALTER TABLE `parcels` ADD `customer_contact_number2` VARCHAR(20) NULL AFTER `customer_contact_number`;
+2. ALTER TABLE `parcels` ADD `exchange` VARCHAR(10) NOT NULL DEFAULT 'no' AFTER `customer_contact_number2`;
+3. ALTER TABLE `parcels` ADD `parcel_otp` CHAR(6) NULL AFTER `exchange`;
+4. ALTER TABLE `parcels` ADD `parcel_otp_expired_at` DATETIME NULL AFTER `parcel_otp`;
+5. ALTER TABLE `parcels` ADD `cancel_amount_collection` SMALLINT NOT NULL DEFAULT '0' AFTER `parcel_otp_expired_at`;
+

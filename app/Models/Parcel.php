@@ -92,7 +92,7 @@ class Parcel extends Model
     {
         return $this->hasMany(ParcelLog::class, 'parcel_id');
     }
-    
+
     public function rider_run_detail()
     {
         return $this->hasMany(RiderRunDetail::class, 'parcel_id');
@@ -110,7 +110,7 @@ class Parcel extends Model
 
     public function area()
     {
-        return $this->belongsTo(Area::class, 'area_id')->withDefault(['name' => '']);
+        return $this->belongsTo(Area::class, 'area_id')->withDefault(['name' => 'Area Name']);
     }
 
     public function created_admin()

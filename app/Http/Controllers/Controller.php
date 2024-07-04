@@ -57,9 +57,9 @@ class Controller extends BaseController
         $details['phone'] = $phone;
         $details['message'] = $message;
 
-       return send_bl_sms($phone, $message);
+        return send_bl_sms($phone, $message);
 
-      //  For sms stop comment  dispatch
+        //  For sms stop comment  dispatch
         // dispatch(new SendMessage($details));
         // return 1;
 
@@ -98,7 +98,6 @@ class Controller extends BaseController
         $details['phone'] = $phone;
         $details['message'] = $message;
         return send_signup_sms($phone, $message);
-
     }
 
 
@@ -328,8 +327,8 @@ class Controller extends BaseController
     {
         $image_name = time() . str_random() . rand(1, 10000) . '.' . $image->getClientOriginalExtension();
         $image->move('public/uploads/' . $upload_path, $image_name);
-//        $image_path = 'public/uploads/' . $upload_path . '/' . $image_name;
-//        Image::make($image)->save($image_path);
+        //        $image_path = 'public/uploads/' . $upload_path . '/' . $image_name;
+        //        Image::make($image)->save($image_path);
         return $image_name;
     }
 
@@ -364,9 +363,9 @@ class Controller extends BaseController
         $data['warehouse_url'] = route('admin.warehouse.index');
 
 
-//        $admin_user = auth()->guard('admin')->user();
-//        $admin_type = $admin_user->type;
-//        if($admin_type == 3) {
+        //        $admin_user = auth()->guard('admin')->user();
+        //        $admin_type = $admin_user->type;
+        //        if($admin_type == 3) {
         /** 1st Row */
         // Today Product Value = Today Total collect Amount
         $today_ecourier_product_value = Parcel::whereRaw('parcel_date = ? and status >= 25 and delivery_type IN (1,2) ', [date("Y-m-d")])->sum('total_collect_amount');
@@ -386,15 +385,15 @@ class Controller extends BaseController
         $data['totalCollectionAmount'] = number_format((float)($total_ecourier_collect_amount), 2, '.', '');
         // Total Expense
         $total_expense = Expense::sum('amount');
-        $data['total_expense'] = number_format((float)($total_expense), 2, '.','');
+        $data['total_expense'] = number_format((float)($total_expense), 2, '.', '');
 
         // Total Expense current month
         $total_expense_month =  Expense::select('amount')->whereMonth('date', Carbon::now()->month)->get()->sum('amount');
-        $data['total_expense_month'] = number_format((float)($total_expense_month), 2, '.','');
+        $data['total_expense_month'] = number_format((float)($total_expense_month), 2, '.', '');
 
         // Total Expense current date
         $total_expense_date = Expense::select('amount')->whereDate('date', Carbon::now())->sum('amount');
-        $data['total_expense_date'] = number_format((float)($total_expense_date), 2, '.','');
+        $data['total_expense_date'] = number_format((float)($total_expense_date), 2, '.', '');
 
         /** 3rd Row */
         $data['merchant_statement_url'] = route('admin.account.merchantPaymentDeliveryStatement');
@@ -409,7 +408,7 @@ class Controller extends BaseController
         $today_collect_amount_paid_merchant = $today_merchant_paid_details->paid_amount;
         $today_charge_amount_paid_merchant = $today_merchant_paid_details->total_charge;
         $data['todayPaidToMerchant'] = number_format((float)($today_collect_amount_paid_merchant), 2, '.', '');
-//            $data['todayPaidToMerchant']            = number_format((float) ($today_collect_amount_paid_merchant - $today_charge_amount_paid_merchant), 2, '.', '');
+        //            $data['todayPaidToMerchant']            = number_format((float) ($today_collect_amount_paid_merchant - $today_charge_amount_paid_merchant), 2, '.', '');
 
 
         // Total Paid amount account to merchant
@@ -420,7 +419,7 @@ class Controller extends BaseController
         $total_collect_amount_paid_merchant = $total_merchant_paid_details->paid_amount;
         $total_charge_amount_paid_merchant = $total_merchant_paid_details->total_charge;
         $data['totalPaidToMerchant'] = number_format((float)($total_collect_amount_paid_merchant), 2, '.', '');
-//            $data['totalPaidToMerchant']            = number_format((float) ($total_collect_amount_paid_merchant - $total_charge_amount_paid_merchant), 2, '.', '');
+        //            $data['totalPaidToMerchant']            = number_format((float) ($total_collect_amount_paid_merchant - $total_charge_amount_paid_merchant), 2, '.', '');
 
         // Total pending amount in accounts
         $total_merchant_paid_pending_details = ParcelMerchantDeliveryPaymentDetail::select(DB::raw('SUM(parcel_merchant_delivery_payment_details.paid_amount) As paid_amount, SUM(parcels.total_charge) As total_charge'))
@@ -431,7 +430,7 @@ class Controller extends BaseController
         $total_collect_amount_pending_merchant = $total_merchant_paid_pending_details->paid_amount;
         $total_charge_amount_pending_merchant = $total_merchant_paid_pending_details->total_charge;
         $data['totalPendingAmount'] = number_format((float)($total_collect_amount_pending_merchant), 2, '.', '');;
-//            $data['totalPendingAmount']                 = number_format((float) ($total_collect_amount_pending_merchant - $total_charge_amount_pending_merchant), 2, '.', '');;
+        //            $data['totalPendingAmount']                 = number_format((float) ($total_collect_amount_pending_merchant - $total_charge_amount_pending_merchant), 2, '.', '');;
 
         // Today Income Amount after paid merchant
         $data['todayTotalIncome'] = number_format((float)($today_charge_amount_paid_merchant), 2, '.', '');;
@@ -448,14 +447,14 @@ class Controller extends BaseController
                     ->first();*/
         $this_month_merchant_paid_details = ParcelMerchantDeliveryPaymentDetail::select(DB::raw('SUM(parcel_merchant_delivery_payment_details.paid_amount) As paid_amount, SUM(parcels.total_charge) As total_charge'))
             ->leftJoin('parcels', 'parcels.id', '=', 'parcel_id')
-            ->whereDate('parcel_merchant_delivery_payment_details.date_time',">=", date("Y-m")."-1")
+            ->whereDate('parcel_merchant_delivery_payment_details.date_time', ">=", date("Y-m") . "-1")
             ->where('parcel_merchant_delivery_payment_details.status', 2)
             ->first();
         $this_month_charge_amount_paid_merchant = $this_month_merchant_paid_details->total_charge;
         $data['thisMonthIncome'] = number_format((float)($this_month_charge_amount_paid_merchant), 2, '.', '');;
 
 
-//        }else {
+        //        }else {
 
 
         /** E-courier */
@@ -475,12 +474,12 @@ class Controller extends BaseController
             ->select('id')->count();
 
         //Total Pickup Request a to z
-//        $data['totalPickupRequest']     = Parcel::whereRaw('pickup_branch_id != "" and status NOT IN (2,3,4)')
-//            //->whereBetween('parcel_date', [$from_date, $to_date])
-//            ->whereHas('merchant', function ($q) {
-//                $q->where('status', 1);
-//            })
-//            ->select('id')->count();
+        //        $data['totalPickupRequest']     = Parcel::whereRaw('pickup_branch_id != "" and status NOT IN (2,3,4)')
+        //            //->whereBetween('parcel_date', [$from_date, $to_date])
+        //            ->whereHas('merchant', function ($q) {
+        //                $q->where('status', 1);
+        //            })
+        //            ->select('id')->count();
 
         //dd($data['totalPickupRequest']);
 
@@ -506,16 +505,16 @@ class Controller extends BaseController
 
         /** 2nd Row */
         // Today New Parcel = Previous day pickup done parcel
-//        $data['todayNewParcels']             = Parcel::whereRaw('pickup_branch_id != "" and date = ? and status = 11', [date("Y-m-d", strtotime("-1 days"))])->select('id')->count();
+        //        $data['todayNewParcels']             = Parcel::whereRaw('pickup_branch_id != "" and date = ? and status = 11', [date("Y-m-d", strtotime("-1 days"))])->select('id')->count();
         $data['todayNewParcels'] = ParcelLog::whereRaw('pickup_branch_id != "" and date = ? and status = 11', [date("Y-m-d", strtotime("-1 days"))])->select('id')->count();
 
         // Previous Pending Parcel
-//        $data['previousPendingParcels']         = Parcel::whereRaw('pickup_branch_id != "" and date = ? and status > 11 and status < 25', [date("Y-m-d", strtotime("-1 days"))])->select('id')->count();
-//        $data['previousPendingParcels']         = Parcel::whereRaw('pickup_branch_id != ""  and status > 11 and status < 25')->select('id')->count();
+        //        $data['previousPendingParcels']         = Parcel::whereRaw('pickup_branch_id != "" and date = ? and status > 11 and status < 25', [date("Y-m-d", strtotime("-1 days"))])->select('id')->count();
+        //        $data['previousPendingParcels']         = Parcel::whereRaw('pickup_branch_id != ""  and status > 11 and status < 25')->select('id')->count();
         $data['previousPendingParcels'] = Parcel::whereRaw('delivery_branch_id != "" and date < ? and status >= 11 and status <= 25 and delivery_type IS NULL OR (status in (23,25) and delivery_type = 3)', [date("Y-m-d", strtotime("-1 days"))])->select('id')->count();
 
         // Today Parcel for delivery
-//        $data['todayParcelForDelivery'] = $data['todayNewParcels'];
+        //        $data['todayParcelForDelivery'] = $data['todayNewParcels'];
         $data['todayParcelForDelivery'] = Parcel::whereRaw('delivery_branch_id != "" and date = ? and status >= 11 and status <= 25 and delivery_type IS NULL OR (status in (23,25) and delivery_type = 3)', [date("Y-m-d")])->select('id')->count();
 
         // Total Parcel for Delivery = all parcel delivery branch without delivery complete
@@ -556,10 +555,10 @@ class Controller extends BaseController
         $total_ecourier_collection = Parcel::whereRaw('delivery_branch_id != "" and status >= 25 and delivery_type in (1,2)')->sum('customer_collect_amount');
         $data['ecourierTotalCollectAmount'] = number_format((float)($total_ecourier_collection), 2, '.', '');
 
-//        $ecourier_collection_paid_to_account    = Parcel::whereRaw('delivery_branch_id = ? and delivery_type in (1,2) and payment_type in(2, 4, 5, 6)', [$branch_id] )->sum('customer_collect_amount');
-//        $data['ecourierPaidToAccount']          = number_format((float) $ecourier_collection_paid_to_account, 2, '.', '');
-//
-//        $data['ecourierBalanceCollectAmount']   = number_format((float) ($total_ecourier_collection - $ecourier_collection_paid_to_account), 2, '.', '');
+        //        $ecourier_collection_paid_to_account    = Parcel::whereRaw('delivery_branch_id = ? and delivery_type in (1,2) and payment_type in(2, 4, 5, 6)', [$branch_id] )->sum('customer_collect_amount');
+        //        $data['ecourierPaidToAccount']          = number_format((float) $ecourier_collection_paid_to_account, 2, '.', '');
+        //
+        //        $data['ecourierBalanceCollectAmount']   = number_format((float) ($total_ecourier_collection - $ecourier_collection_paid_to_account), 2, '.', '');
 
 
         /** Traditional */
@@ -584,8 +583,8 @@ class Controller extends BaseController
         $collection_accounts_amount = BookingParcelPayment::whereRaw('payment_status = ?', [2])->sum('receive_amount');
         $data['accountsTotalBalance'] = number_format((float)$collection_accounts_amount, 2, '.', '');
 
-//        $data['balanceCollectAmount'] = number_format((float) ($data['totalCollectAmount'] - $collection_paid_to_account), 2, '.', '');
-//        }
+        //        $data['balanceCollectAmount'] = number_format((float) ($data['totalCollectAmount'] - $collection_paid_to_account), 2, '.', '');
+        //        }
 
         return json_encode($data);
     }
@@ -668,17 +667,17 @@ class Controller extends BaseController
         /** 2nd Row */
         // Today New Parcel = Previous day pickup done parcel
         $data['todayNewParcels'] = Parcel::whereRaw('pickup_branch_id = ? and date = ?', [$branch_id, date("Y-m-d")])->select('id')->count();
-//         $data['todayNewParcels']             = Parcel::whereRaw('pickup_branch_id = ? and date = ?', [$branch_id, date("Y-m-d", strtotime("-1 days"))])->select('id')->count();
-//        $data['todayNewParcels'] = ParcelLog::whereRaw('pickup_branch_id = ? and date = ? and status = 11', [$branch_id, date("Y-m-d", strtotime("-1 days"))])->select('id')->count();
-//        $data['todayNewParcels'] = ParcelLog::whereRaw('pickup_branch_id = ? and date = ? and status = 11', [$branch_id, date("Y-m-d", strtotime("-1 days"))])->select('id')->count();
+        //         $data['todayNewParcels']             = Parcel::whereRaw('pickup_branch_id = ? and date = ?', [$branch_id, date("Y-m-d", strtotime("-1 days"))])->select('id')->count();
+        //        $data['todayNewParcels'] = ParcelLog::whereRaw('pickup_branch_id = ? and date = ? and status = 11', [$branch_id, date("Y-m-d", strtotime("-1 days"))])->select('id')->count();
+        //        $data['todayNewParcels'] = ParcelLog::whereRaw('pickup_branch_id = ? and date = ? and status = 11', [$branch_id, date("Y-m-d", strtotime("-1 days"))])->select('id')->count();
 
         // Previous Pending Parcel
         // $data['previousPendingParcels']         = Parcel::whereRaw('pickup_branch_id = ? and date = ? and status > 11 and status < 25', [$branch_id, date("Y-m-d", strtotime("-1 days"))])->select('id')->count();
-        $data['previousPendingParcels'] = Parcel::whereRaw('delivery_branch_id = ?  and pickup_branch_date < ? and ((status > 11 and status <= 25 and delivery_type IS NULL) OR (status in (23,25) and delivery_type = 3))', [$branch_id,date("Y-m-d")])->select('id')->count();
+        $data['previousPendingParcels'] = Parcel::whereRaw('delivery_branch_id = ?  and pickup_branch_date < ? and ((status > 11 and status <= 25 and delivery_type IS NULL) OR (status in (23,25) and delivery_type = 3))', [$branch_id, date("Y-m-d")])->select('id')->count();
 
         // Today Parcel for delivery
-//        $data['todayParcelForDelivery'] = $data['todayNewParcels'] + $data['previousPendingParcels'];
-        $data['todayParcelForDelivery'] =  Parcel::whereRaw('delivery_branch_id = ?  and pickup_branch_date = ? and (( status > 11 and status <= 25 and delivery_type IS NULL) OR (status in (23,25) and delivery_type = 3))', [$branch_id,date("Y-m-d")])->select('id')->count();
+        //        $data['todayParcelForDelivery'] = $data['todayNewParcels'] + $data['previousPendingParcels'];
+        $data['todayParcelForDelivery'] =  Parcel::whereRaw('delivery_branch_id = ?  and pickup_branch_date = ? and (( status > 11 and status <= 25 and delivery_type IS NULL) OR (status in (23,25) and delivery_type = 3))', [$branch_id, date("Y-m-d")])->select('id')->count();
 
         // Total Parcel for Delivery = all parcel delivery branch without delivery complete
         $data['totalParcelForDelivery'] = Parcel::whereRaw('delivery_branch_id = ? and ((status > 11 and status <= 25 and delivery_type IS NULL) OR (status in (23,25) and delivery_type = 3))', [$branch_id])->select('id')->count();
@@ -688,24 +687,24 @@ class Controller extends BaseController
         $data['etodayDeliveryComplete'] = Parcel::whereRaw('delivery_branch_id = ? and delivery_date = ? and status >= 25 and delivery_type in (1,2)', [$branch_id, date("Y-m-d")])->select('id')->count();
 
         // Today's Delivery Pending = Pending Delivery
-//        $data['etodayDeliveryPending'] = Parcel::whereRaw('delivery_branch_id = ? and parcel_date = ? and status > 11 and (status <= 24 OR (status = 25 and delivery_type = 3) )', [$branch_id, date("Y-m-d")])->select('id')->count();
+        //        $data['etodayDeliveryPending'] = Parcel::whereRaw('delivery_branch_id = ? and parcel_date = ? and status > 11 and (status <= 24 OR (status = 25 and delivery_type = 3) )', [$branch_id, date("Y-m-d")])->select('id')->count();
         $data['etodayDeliveryPending'] = Parcel::whereRaw('delivery_branch_id = ? and parcel_date = ? and status >= 16 and (status <= 24 OR (status = 25 and delivery_type = 3) )', [$branch_id, date("Y-m-d")])->select('id')->count();
-//        dd($data['etodayDeliveryPending']);
+        //        dd($data['etodayDeliveryPending']);
         $data['etoday_delivery_pending_url'] = route('branch.parcel.deliveryRiderRunList');
 
         // Today's Cancel Parcel = Cancel Delivery
         $data['etodayDeliveryCancel'] = Parcel::whereRaw('delivery_branch_id = ? and parcel_date = ? and status IN (25,26,27,29) and delivery_type = 4', [$branch_id, date("Y-m-d")])->select('id')->count();
-       /* $data['todayBranchTransfer'] = Parcel::whereRaw('pickup_branch_id = ? and parcel_date = ? and status IN (12)', [$branch_id, date("Y-m-d")])
+        /* $data['todayBranchTransfer'] = Parcel::whereRaw('pickup_branch_id = ? and parcel_date = ? and status IN (12)', [$branch_id, date("Y-m-d")])
             ->whereHas('merchant', function ($q) {
                 $q->where('status', 1);
             })->select('id')->count();*/
 
-//        $data['todayBranchTransfer'] = DeliveryBranchTransfer::whereRaw('from_branch_id = ? and created_at = ? and status IN (3)', [$branch_id, date("Y-m-d")])->select('total_transfer_parcel')->sum('total_transfer_parcel');
-//        $data['todayBranchTransfer'] = DeliveryBranchTransfer::whereRaw('from_branch_id = ? and created_at = ?', [$branch_id, date("Y-m-d")])->select('total_transfer_parcel')->sum('total_transfer_parcel');
+        //        $data['todayBranchTransfer'] = DeliveryBranchTransfer::whereRaw('from_branch_id = ? and created_at = ? and status IN (3)', [$branch_id, date("Y-m-d")])->select('total_transfer_parcel')->sum('total_transfer_parcel');
+        //        $data['todayBranchTransfer'] = DeliveryBranchTransfer::whereRaw('from_branch_id = ? and created_at = ?', [$branch_id, date("Y-m-d")])->select('total_transfer_parcel')->sum('total_transfer_parcel');
         $data['todayBranchTransfer'] = DeliveryBranchTransfer::where('from_branch_id', $branch_id)
             ->whereDate('received_date_time', date("Y-m-d"))
             ->select('total_transfer_parcel')->sum('total_transfer_parcel');
-//        dd($data['todayBranchTransfer']);
+        //        dd($data['todayBranchTransfer']);
 
         /** 4th Row */
         // Total Delivery parcel = Complete Delivery
@@ -787,11 +786,11 @@ class Controller extends BaseController
             ->whereRaw('parcel_date = ? ', [date("Y-m-d")])
             ->count();
         $data['total_parcel'] = Parcel::where('merchant_id', $merchant_id)->count();
-//            ->where('status', '!=', 3)->count();
+        //            ->where('status', '!=', 3)->count();
 
         $data['total_cancel_parcel'] = Parcel::where('merchant_id', $merchant_id)
             ->where('status', 3)
-//            ->whereRaw('status >= 25 and delivery_type = 4')
+            //            ->whereRaw('status >= 25 and delivery_type = 4')
             ->count();
         $data['today_total_cancel_parcel'] = Parcel::where('merchant_id', $merchant_id)
             ->where('status', 3)
@@ -826,12 +825,27 @@ class Controller extends BaseController
 
         $data['today_total_delivery_complete_parcel'] = Parcel::where('merchant_id', $merchant_id)
             // ->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25,1,2,5])
-            ->whereRaw('status >= ? and delivery_type in (?,?)', [25, 1, 2])
+            ->whereRaw('delivery_type = ? and status in (?,?)', [1, 21, 25])
+            //->whereRaw('status >= ? and delivery_type in (?,?)', [25, 1, 2])
             ->whereRaw('parcel_date = ? ', [date("Y-m-d")])
             ->count();
+
+        $data['today_total_partial_delivery_complete_parcel'] = Parcel::where('merchant_id', $merchant_id)
+            // ->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25,1,2,5])
+            ->whereRaw('delivery_type = ? and status in (?,?)', [2, 22, 25])
+            //->whereRaw('status >= ? and delivery_type in (?,?)', [25, 1, 2])
+            ->whereRaw('parcel_date = ? ', [date("Y-m-d")])
+            ->count();
+
+
         $data['total_delivery_complete_parcel'] = Parcel::where('merchant_id', $merchant_id)
             // ->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25,1,2,5])
-            ->whereRaw('status >= ? and delivery_type in (?,?)', [25, 1, 2])
+            ->whereRaw('delivery_type = ? and status in (?,?)', [1, 21, 25])
+            ->count();
+
+        $data['total_partial_delivery_complete_parcel'] = Parcel::where('merchant_id', $merchant_id)
+            // ->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25,1,2,5])
+            ->whereRaw('delivery_type = ? and status in (?,?)', [2, 22, 25])
             ->count();
 
         $data['total_partial_delivery_complete'] = Parcel::where('merchant_id', $merchant_id)
@@ -860,7 +874,8 @@ class Controller extends BaseController
             ->count();
 
         $data['total_pending_collect_amount'] = Parcel::where('merchant_id', $merchant_id)
-            ->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25, 1, 2, 4])
+            //->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25, 1, 2, 4])
+            ->whereIn('payment_type', [2, 6])
             ->sum('merchant_paid_amount');
 
         // $data['total_pending_collect_amount']    = Parcel::where('merchant_id', $merchant_id)
@@ -871,7 +886,8 @@ class Controller extends BaseController
 
 
         $data['total_collect_amount'] = Parcel::where('merchant_id', $merchant_id)
-            ->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25, 1, 2, 5])
+            //->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25, 1, 2, 5])
+            ->where('payment_type', 5)
             ->sum('merchant_paid_amount');
 
         return $data;
@@ -970,6 +986,4 @@ class Controller extends BaseController
         curl_close($curl);
         return $result;
     }
-
-
 }

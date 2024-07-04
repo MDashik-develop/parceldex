@@ -11,15 +11,9 @@
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
         }
 
         .container {
-            max-width: 600px;
-            margin: 0 auto;
             background: rgba(255, 255, 255, 0.8);
             padding: 20px;
             border-radius: 8px;

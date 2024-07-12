@@ -108,7 +108,7 @@
 </head>
 
 <body>
-    <div class="container" style="margin-top: 100px;">
+    <div class="container" style="margin-top: 200px;">
         <div class="section">
             <h2>Payment Info</h2>
             <table>
@@ -157,10 +157,11 @@
         </div>
 
         @if ($parcelMerchantDeliveryPayment->parcel_merchant_delivery_payment_details->count() > 0)
-            <table class="table table-bordered" width="100%" style="margin-top: 3rem">
+            <table class="table table-bordered" width="97%"
+                style="margin-top: 3rem; margin-left: auto; margin-right: auto;">
                 <thead>
                     <tr>
-                        <th width="5%" class="text-center"> SL</th>
+                        <th width="2%" class="text-center"> SL</th>
                         <th width="10%" class="text-center">Invoice</th>
                         <th width="10%" class="text-center">Order ID</th>
                         <th width="10%" class="text-center">Status</th>

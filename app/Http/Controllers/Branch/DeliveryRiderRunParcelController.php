@@ -994,6 +994,8 @@ class DeliveryRiderRunParcelController extends Controller
 
     public function confirmDeliveryRiderRunReconciliation(Request $request)
     {
+        logger($request->all());
+        dd(5445);
         $response = ['error' => 'Error Found'];
         if ($request->ajax()) {
             $validator = Validator::make($request->all(), [
@@ -1030,6 +1032,7 @@ class DeliveryRiderRunParcelController extends Controller
                     $complete_type = $request->complete_type;
                     $customer_collect_amount = $request->customer_collect_amount;
                     $amount_to_be_collect = $request->amount_to_be_collect;
+                    $cancel_amount_collection = $request->cancel_amount_collection;
                     $reschedule_parcel_date = $request->reschedule_parcel_date;
                     $complete_note = $request->complete_note;
 
@@ -1150,6 +1153,7 @@ class DeliveryRiderRunParcelController extends Controller
                                 break;
 
                             case 24:
+                                $parcel_update_data['cancel_amount_collection'] = $cancel_amount_collection[$i];
                                 $parcel_update_data['status'] = 25;
                                 $parcel_update_data['delivery_type'] = 4;
                                 if ($parcel->cod_charge != 0) {

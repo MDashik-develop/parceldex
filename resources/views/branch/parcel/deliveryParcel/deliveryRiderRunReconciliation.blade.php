@@ -1,16 +1,16 @@
 <div class="modal-header bg-default">
-    <h4 class="modal-title">Delivery Rider Run Reconciliation </h4>
+    <h4 class="modal-title">Delivery Rider Run Reconciliation</h4>
     <button type="button" class="close bg-danger" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
 <div class="modal-body">
     <form role="form" action="{{ route('branch.parcel.confirmDeliveryRiderRunReconciliation') }}"
-          id="confirmAssignDeliveryBranch" method="POST" enctype="multipart/form-data"
-          onsubmit="return createForm(this)">
+        id="confirmAssignDeliveryBranch" method="POST" enctype="multipart/form-data"
+        onsubmit="return createForm(this)">
         <input type="hidden" name="rider_run_id" id="rider_run_id" value="{{ $riderRun->id }}">
         <input type="hidden" name="total_run_complete_parcel" id="total_run_complete_parcel"
-               value="{{ $riderRun->total_run_complete_parcel }}">
+            value="{{ $riderRun->total_run_complete_parcel }}">
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
@@ -27,30 +27,38 @@
                                     <tr>
                                         <th style="width: 40%">Create Date</th>
                                         <td style="width: 10%"> :</td>
-                                        <td style="width: 50%"> {{ \Carbon\Carbon::parse($riderRun->create_date_time)->format('d/m/Y H:i:s') }} </td>
+                                        <td style="width: 50%">
+                                            {{ \Carbon\Carbon::parse($riderRun->create_date_time)->format('d/m/Y H:i:s') }}
+                                        </td>
                                     </tr>
 
-                                    @if($riderRun->start_date_time)
+                                    @if ($riderRun->start_date_time)
                                         <tr>
                                             <th style="width: 40%">Start Date</th>
                                             <td style="width: 10%"> :</td>
-                                            <td style="width: 50%"> {{ \Carbon\Carbon::parse($riderRun->start_date_time)->format('d/m/Y H:i:s') }} </td>
+                                            <td style="width: 50%">
+                                                {{ \Carbon\Carbon::parse($riderRun->start_date_time)->format('d/m/Y H:i:s') }}
+                                            </td>
                                         </tr>
                                     @endif
 
-                                    @if($riderRun->cancel_date_time)
+                                    @if ($riderRun->cancel_date_time)
                                         <tr>
                                             <th style="width: 40%">Cancel Date</th>
                                             <td style="width: 10%"> :</td>
-                                            <td style="width: 50%"> {{ \Carbon\Carbon::parse($riderRun->cancel_date_time)->format('d/m/Y H:i:s') }} </td>
+                                            <td style="width: 50%">
+                                                {{ \Carbon\Carbon::parse($riderRun->cancel_date_time)->format('d/m/Y H:i:s') }}
+                                            </td>
                                         </tr>
                                     @endif
 
-                                    @if($riderRun->complete_date_time)
+                                    @if ($riderRun->complete_date_time)
                                         <tr>
                                             <th style="width: 40%">Complete Date</th>
                                             <td style="width: 10%"> :</td>
-                                            <td style="width: 50%"> {{ \Carbon\Carbon::parse($riderRun->complete_date_time)->format('d/m/Y H:i:s') }} </td>
+                                            <td style="width: 50%">
+                                                {{ \Carbon\Carbon::parse($riderRun->complete_date_time)->format('d/m/Y H:i:s') }}
+                                            </td>
                                         </tr>
                                     @endif
 
@@ -62,8 +70,8 @@
                                     <tr>
                                         <th style="width: 40%">Total Run Complete</th>
                                         <td style="width: 10%"> :</td>
-                                        <td style="width: 50%"
-                                            id="view_total_run_complete_parcel"> {{ $riderRun->total_run_complete_parcel }} </td>
+                                        <td style="width: 50%" id="view_total_run_complete_parcel">
+                                            {{ $riderRun->total_run_complete_parcel }} </td>
                                     </tr>
                                     <tr>
                                         <th style="width: 40%">Status</th>
@@ -72,24 +80,27 @@
                                             @switch($riderRun->status)
                                                 @case(1)
                                                     <div class="badge badge-success">Run Create</div>
-                                                    @break
+                                                @break
+
                                                 @case(2)
                                                     <div class="badge badge-success">Run Start</div>
-                                                    @break
+                                                @break
+
                                                 @case(3)
                                                     <div class="badge badge-danger ">Run Cancel</div>
-                                                    @break
+                                                @break
+
                                                 @case(4)
                                                     <div class="badge badge-success">Run Complete</div>
-                                                    @break
+                                                @break
+
                                                 @default
                                             @endswitch
                                         </td>
                                     </tr>
                                     <tr>
                                         <th colspan="3">
-                                            <textarea name="run_note" class="form-control"
-                                                      placeholder="Rider Run Not">{{ $riderRun->note }}</textarea>
+                                            <textarea name="run_note" class="form-control" placeholder="Rider Run Not">{{ $riderRun->note }}</textarea>
                                         </th>
                                     </tr>
                                 </table>
@@ -122,147 +133,185 @@
                                 </fieldset>
                             </div>
                         </div>
-                        @if($riderRun->rider_run_details->count() > 0)
+                        @if ($riderRun->rider_run_details->count() > 0)
                             <table class="table table-style table-striped">
                                 <thead>
-                                <tr>
-                                    <th width="10%" class="text-center">Order ID</th>
-                                    <th width="10%" class="text-center">Run Status</th>
-                                    <th width="10%" class="text-center">M.Company</th>
-                                    <th width="15%" class="text-center">Customer Name</th>
-                                    <th width="10%" class="text-center">Amount to be Collect</th>
-                                    @if($riderRun->rider->id == 1)
-                                        <th class="text-center">Pathao Info</th>
-                                    @endif
-                                    <th width="15%" class="text-center">Status</th>
-                                    <th width="10%" class="text-center">Delivery Type</th>
-                                    <th width="10%" class="text-center"></th>
-                                    <th width="30%" class="text-center">Complete Note</th>
-                                </tr>
+                                    <tr>
+                                        <th width="10%" class="text-center">Order ID</th>
+                                        <th width="10%" class="text-center">Run Status</th>
+                                        <th width="10%" class="text-center">M.Company</th>
+                                        <th width="15%" class="text-center">Customer Name</th>
+                                        <th width="10%" class="text-center">Amount to be Collect</th>
+                                        @if ($riderRun->rider->id == 1)
+                                            <th class="text-center">Pathao Info</th>
+                                        @endif
+                                        <th width="15%" class="text-center">Status</th>
+                                        <th width="10%" class="text-center">Delivery Type</th>
+                                        <th width="10%" class="text-center"></th>
+                                        <th width="30%" class="text-center">Complete Note</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                @foreach ($riderRun->rider_run_details as $rider_run_detail)
-                                    <tr>
-                                        <td class="text-center"> {{ $rider_run_detail->parcel->parcel_invoice }} </td>
-                                        <td class="text-center">
-                                            @switch($rider_run_detail->status)
-                                                @case(1) Run Create  @break
-                                                @case(2) Run Start @break
-                                                @case(3) Run Cancel @break
-                                                @case(4) Rider Accept @break
-                                                @case(5) Rider Reject @break
-                                                @case(7) Rider Complete @break
-                                                @default  @break
-                                            @endswitch
-                                            @if($rider_run_detail->status == 7)
-                                                <br>
-                                                {{ \Carbon\Carbon::parse($rider_run_detail->complete_date_time)->format('d/m/Y H:i:s') }}
-                                                <br>
-                                            @endif
-                                        </td>
-                                        <td class="text-center"> {{ ($rider_run_detail->parcel->merchant) ? $rider_run_detail->parcel->merchant->company_name : "" }} </td>
-                                        <td class="text-center"> {{ $rider_run_detail->parcel->customer_name }} </td>
-                                        <td class="text-center">
-
-                                            {{  $rider_run_detail->parcel->total_collect_amount }}
-
-                                            <input type="hidden"
-                                                    class="amount_to_be_collect"
-                                                   id="total_collect_amount{{ $rider_run_detail->id }}"
-                                                   value="{{ $rider_run_detail->parcel->total_collect_amount }}">
-
-                                        </td>
-                                        @if($rider_run_detail->parcel->is_pathao == 1)
-                                            <td class="text-center">
-                                                <span
-                                                    class="">{{optional($rider_run_detail->PathaoOrderDetail)->consignment_id}}</span>
-                                                <br>
-                                                <span
-                                                    class="">{{str_replace("_"," ",$rider_run_detail->parcel->pathao_status)}}</span>
+                                    @foreach ($riderRun->rider_run_details as $rider_run_detail)
+                                        <tr>
+                                            <td class="text-center"> {{ $rider_run_detail->parcel->parcel_invoice }}
                                             </td>
-                                        @endif
-                                        <td class="text-center">
-                                            <select name="rider_run_status[]"
-                                                    class="form-control select2 rider_run_status"
-                                                    style="width: 100%"
+                                            <td class="text-center">
+                                                @switch($rider_run_detail->status)
+                                                    @case(1)
+                                                        Run Create
+                                                    @break
+
+                                                    @case(2)
+                                                        Run Start
+                                                    @break
+
+                                                    @case(3)
+                                                        Run Cancel
+                                                    @break
+
+                                                    @case(4)
+                                                        Rider Accept
+                                                    @break
+
+                                                    @case(5)
+                                                        Rider Reject
+                                                    @break
+
+                                                    @case(7)
+                                                        Rider Complete
+                                                    @break
+
+                                                    @default
+                                                    @break
+                                                @endswitch
+                                                @if ($rider_run_detail->status == 7)
+                                                    <br>
+                                                    {{ \Carbon\Carbon::parse($rider_run_detail->complete_date_time)->format('d/m/Y H:i:s') }}
+                                                    <br>
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                {{ $rider_run_detail->parcel->merchant ? $rider_run_detail->parcel->merchant->company_name : '' }}
+                                            </td>
+                                            <td class="text-center"> {{ $rider_run_detail->parcel->customer_name }}
+                                            </td>
+                                            <td class="text-center">
+
+                                                {{ $rider_run_detail->parcel->total_collect_amount }}
+
+                                                <input type="hidden" class="amount_to_be_collect"
+                                                    id="total_collect_amount{{ $rider_run_detail->id }}"
+                                                    value="{{ $rider_run_detail->parcel->total_collect_amount }}">
+
+                                            </td>
+                                            @if ($rider_run_detail->parcel->is_pathao == 1)
+                                                <td class="text-center">
+                                                    <span
+                                                        class="">{{ optional($rider_run_detail->PathaoOrderDetail)->consignment_id }}</span>
+                                                    <br>
+                                                    <span
+                                                        class="">{{ str_replace('_', ' ', $rider_run_detail->parcel->pathao_status) }}</span>
+                                                </td>
+                                            @endif
+                                            <td class="text-center">
+                                                <select name="rider_run_status[]"
+                                                    class="form-control select2 rider_run_status" style="width: 100%"
                                                     onchange="return rider_run_status(this,{{ $rider_run_detail->id }})">
-                                                <option value="7"
-                                                        @if($rider_run_detail->status == 7) selected ="" @endif >Run
-                                                    Complete
-                                                </option>
-                                                <option value="5"
-                                                        @if($rider_run_detail->status != 7) selected ="" @endif >Run
-                                                    Reject
-                                                </option>
-                                            </select>
-                                            <input type="hidden" name="rider_run_details_id"
-                                                   class="rider_run_details_id" value="{{$rider_run_detail->id }}">
-                                            <input type="hidden" name="parcel_id" class="parcel_id"
-                                                   value="{{$rider_run_detail->parcel_id }}">
-                                        </td>
-                                        <td class="text-center">
-                                            <select name="complete_type[]"
+                                                    <option value="7"
+                                                        @if ($rider_run_detail->status == 7) selected ="" @endif>Run
+                                                        Complete
+                                                    </option>
+                                                    <option value="5"
+                                                        @if ($rider_run_detail->status != 7) selected ="" @endif>Run
+                                                        Reject
+                                                    </option>
+                                                </select>
+                                                <input type="hidden" name="rider_run_details_id"
+                                                    class="rider_run_details_id" value="{{ $rider_run_detail->id }}">
+                                                <input type="hidden" name="parcel_id" class="parcel_id"
+                                                    value="{{ $rider_run_detail->parcel_id }}">
+                                            </td>
+                                            <td class="text-center">
+                                                <select name="complete_type[]"
                                                     class="form-control select2 complete_type"
-                                                    id="complete_type{{ $rider_run_detail->id }}"
-                                                    style="width: 100%"
+                                                    id="complete_type{{ $rider_run_detail->id }}" style="width: 100%"
                                                     onchange="return check_complete_type(this,{{ $rider_run_detail->id }})">
-                                                <option value="0">Select Delivery Type</option>
-                                                <option
-                                                    @if($rider_run_detail->parcel->status == 22) value="22"
+                                                    <option value="0">Select Delivery Type</option>
+                                                    <option
+                                                        @if ($rider_run_detail->parcel->status == 22) value="22"
                                                     @else value="21" @endif
-                                                    @if($rider_run_detail->parcel->status == 21 || $rider_run_detail->parcel->status == 22) selected ="" @endif
-                                                >Delivery Complete
-                                                </option>
-                                                <option value="22"
-                                                        @if($rider_run_detail->parcel->status == 22) selected ="" @endif >
-                                                    Partial Delivery
-                                                </option>
-                                                <option value="23"
-                                                        @if($rider_run_detail->parcel->status == 23) selected ="" @endif >
-                                                    Reschedule Delivery
-                                                </option>
-                                                <option value="24"
-                                                        @if($rider_run_detail->parcel->status == 24) selected ="" @endif >
-                                                    Delivery Cancel
-                                                </option>
-                                                {{--                                                <option value="24" @if($rider_run_detail->parcel->status == 24) selected ="" @endif >Delivery Cancel</option>--}}
-                                            </select>
-                                        </td>
-                                        <td class="text-center">
-                                            <div id="div_customer_collect_amount{{ $rider_run_detail->id }}"
-                                                 style="display: {{ ($rider_run_detail->parcel->status == 21 || $rider_run_detail->parcel->status == 22) ? "inline" : "none" }}">
-                                                <input type="number" name="customer_collect_amount[]"
-                                                       class="form-control customer_collect_amount"
-                                                       id="customer_collect_amount{{ $rider_run_detail->id }}"
-                                                       value="{{ $rider_run_detail->parcel->customer_collect_amount }}"
-                                                       placeholder="Customer Payment Amount"
-                                                       total_collect_amount="{{ $rider_run_detail->parcel->total_collect_amount }}"
-                                                       customer_collect_amount="{{ $rider_run_detail->parcel->customer_collect_amount }}"
-                                                       style="width: 100%">
-                                            </div>
-                                            <div id="div_reschedule_parcel_date{{ $rider_run_detail->id }}"
-                                                 style="display: {{ ($rider_run_detail->parcel->status == 23) ? "inline" : "none" }}">
+                                                        @if ($rider_run_detail->parcel->status == 21 || $rider_run_detail->parcel->status == 22) selected ="" @endif>Delivery
+                                                        Complete
+                                                    </option>
+                                                    <option value="22"
+                                                        @if ($rider_run_detail->parcel->status == 22) selected ="" @endif>
+                                                        Partial Delivery
+                                                    </option>
+                                                    <option value="23"
+                                                        @if ($rider_run_detail->parcel->status == 23) selected ="" @endif>
+                                                        Reschedule Delivery
+                                                    </option>
+                                                    <option value="24"
+                                                        @if ($rider_run_detail->parcel->status == 24) selected ="" @endif>
+                                                        Delivery Cancel
+                                                    </option>
+                                                    {{--                                                <option value="24" @if ($rider_run_detail->parcel->status == 24) selected ="" @endif >Delivery Cancel</option> --}}
+                                                </select>
+                                            </td>
+                                            <td class="text-center">
+                                                <div id="div_customer_collect_amount{{ $rider_run_detail->id }}"
+                                                    style="display: {{ $rider_run_detail->parcel->status == 21 || $rider_run_detail->parcel->status == 22 ? 'inline' : 'none' }}">
+                                                    <input type="number" name="customer_collect_amount[]"
+                                                        class="form-control customer_collect_amount"
+                                                        id="customer_collect_amount{{ $rider_run_detail->id }}"
+                                                        value="{{ $rider_run_detail->parcel->customer_collect_amount }}"
+                                                        placeholder="Customer Payment Amount"
+                                                        total_collect_amount="{{ $rider_run_detail->parcel->total_collect_amount }}"
+                                                        customer_collect_amount="{{ $rider_run_detail->parcel->customer_collect_amount }}"
+                                                        style="width: 100%">
+                                                </div>
+                                                <div id="div_reschedule_parcel_date{{ $rider_run_detail->id }}"
+                                                    style="display: {{ $rider_run_detail->parcel->status == 23 ? 'inline' : 'none' }}">
 
-                                                @php
-                                                    if(!is_null($rider_run_detail->parcel->reschedule_parcel_date) && "" != $rider_run_detail->parcel->reschedule_parcel_date) {
-                                                        $reschedule_date = date('Y-m-d', strtotime($rider_run_detail->parcel->reschedule_parcel_date) );
-                                                    }else{
-                                                        $reschedule_date = date("Y-m-d", strtotime("+ 1 day"));
-                                                    }
-                                                @endphp
+                                                    @php
+                                                        if (
+                                                            !is_null(
+                                                                $rider_run_detail->parcel->reschedule_parcel_date,
+                                                            ) &&
+                                                            '' != $rider_run_detail->parcel->reschedule_parcel_date
+                                                        ) {
+                                                            $reschedule_date = date(
+                                                                'Y-m-d',
+                                                                strtotime(
+                                                                    $rider_run_detail->parcel->reschedule_parcel_date,
+                                                                ),
+                                                            );
+                                                        } else {
+                                                            $reschedule_date = date('Y-m-d', strtotime('+ 1 day'));
+                                                        }
+                                                    @endphp
 
-                                                <input type="date" name="reschedule_parcel_date[]"
-                                                       class="form-control reschedule_parcel_date"
-                                                       id="reschedule_parcel_date{{ $rider_run_detail->id }}"
-                                                       value="{{ $reschedule_date }}">
-                                            </div>
-                                        </td>
-                                        <td class="text-center">
-                                            <textarea name="complete_note[]" class="form-control complete_note"
-                                                      placeholder="Complete Not">{{ $rider_run_detail->complete_note }}</textarea>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                                    <input type="date" name="reschedule_parcel_date[]"
+                                                        class="form-control reschedule_parcel_date"
+                                                        id="reschedule_parcel_date{{ $rider_run_detail->id }}"
+                                                        value="{{ $reschedule_date }}">
+
+                                                </div>
+
+                                                <div id="div_cancel_amount_collection{{ $rider_run_detail->id }}"
+                                                    style="display: {{ $rider_run_detail->parcel->status == 24 ? 'inline' : 'none' }}">
+                                                    <input type="number" name="cancel_amount_collection[]"
+                                                        class="form-control cancel_amount_collection"
+                                                        id="cancel_amount_collection{{ $rider_run_detail->id }}"
+                                                        value="0">
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <textarea name="complete_note[]" class="form-control complete_note" placeholder="Complete Not">{{ $rider_run_detail->complete_note }}</textarea>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         @endif
@@ -278,11 +327,13 @@
 
 </div>
 <div class="modal-footer">
-    <button type="button" id="viewModalCloseBtn" class="btn btn-danger float-right" data-dismiss="modal">Close</button>
+    <button type="button" id="viewModalCloseBtn" class="btn btn-danger float-right"
+        data-dismiss="modal">Close</button>
 </div>
 
 <style>
-    .table-style td, .table-style th {
+    .table-style td,
+    .table-style th {
         padding: .1rem !important;
     }
 
@@ -300,13 +351,11 @@
         left: 7px;
         /*z-index: 2;*/
     }
-
 </style>
 <script>
-
     function rider_run_status(object, rider_run_detail_id) {
         var complete = 0;
-        var rider_run_status = $('.rider_run_status option:selected').map(function () {
+        var rider_run_status = $('.rider_run_status option:selected').map(function() {
             if (this.value == 7) {
                 complete++;
             }
@@ -328,18 +377,23 @@
     function check_complete_type(object, rider_run_detail_id) {
 
         let total_collect_amount = $("#customer_collect_amount" + rider_run_detail_id).attr('total_collect_amount');
-        console.log(total_collect_amount);
 
         if ($(object).val() == '21' || $(object).val() == '22') {
+            $("#div_cancel_amount_collection" + rider_run_detail_id).hide();
             $("#div_customer_collect_amount" + rider_run_detail_id).show();
             $("#div_reschedule_parcel_date" + rider_run_detail_id).hide();
             $("#customer_collect_amount" + rider_run_detail_id).val(total_collect_amount);
         } else if ($(object).val() == '23') {
+            $("#div_cancel_amount_collection" + rider_run_detail_id).hide();
             $("#div_customer_collect_amount" + rider_run_detail_id).hide();
             $("#customer_collect_amount" + rider_run_detail_id).val(0);
             $("#div_reschedule_parcel_date" + rider_run_detail_id).show();
-
+        } else if ($(object).val() == '24') {
+            $("#div_customer_collect_amount" + rider_run_detail_id).hide();
+            $("#div_reschedule_parcel_date" + rider_run_detail_id).hide();
+            $("#div_cancel_amount_collection" + rider_run_detail_id).show();
         } else {
+            $("#div_cancel_amount_collection" + rider_run_detail_id).hide();
             $("#div_customer_collect_amount" + rider_run_detail_id).hide();
             $("#customer_collect_amount" + rider_run_detail_id).val(0);
             $("#div_reschedule_parcel_date" + rider_run_detail_id).hide();
@@ -353,35 +407,40 @@
         var total_run_complete_parcel = $("#total_run_complete_parcel").val();
         let run_note = $('#run_note').val();
 
-        var rider_run_status = $('.rider_run_status').map(function () {
+        var rider_run_status = $('.rider_run_status').map(function() {
             return this.value;
         }).get();
 
 
-        var rider_run_details_id = $('.rider_run_details_id').map(function () {
+        var rider_run_details_id = $('.rider_run_details_id').map(function() {
             return this.value;
         }).get();
 
-        var parcel_id = $('.parcel_id').map(function () {
+        var parcel_id = $('.parcel_id').map(function() {
             return this.value;
         }).get();
 
-        var complete_type = $('.complete_type').map(function () {
+        var complete_type = $('.complete_type').map(function() {
             return this.value;
         }).get();
 
-        var customer_collect_amount = $('.customer_collect_amount').map(function () {
-            return this.value;
-        }).get();
-        
-        var amount_to_be_collect = $('.amount_to_be_collect').map(function () {
+        var customer_collect_amount = $('.customer_collect_amount').map(function() {
             return this.value;
         }).get();
 
-        var reschedule_parcel_date = $('.reschedule_parcel_date').map(function () {
+        var amount_to_be_collect = $('.amount_to_be_collect').map(function() {
             return this.value;
         }).get();
-        var complete_note = $('.complete_note').map(function () {
+
+        var reschedule_parcel_date = $('.reschedule_parcel_date').map(function() {
+            return this.value;
+        }).get();
+
+        var cancel_amount_collection = $('.cancel_amount_collection').map(function() {
+            return this.value;
+        }).get();
+
+        var complete_note = $('.complete_note').map(function() {
             return this.value;
         }).get();
 
@@ -401,20 +460,21 @@
                 amount_to_be_collect: amount_to_be_collect,
                 customer_collect_amount: customer_collect_amount,
                 reschedule_parcel_date: reschedule_parcel_date,
+                cancel_amount_collection: cancel_amount_collection,
                 complete_note: complete_note,
                 _token: "{{ csrf_token() }}"
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 alert("An error occurred: " + xhr.status + " " + xhr.statusText);
             },
             url: object.action,
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     toastr.success(response.success);
 
                     $('#yajraDatatable').DataTable().ajax.reload();
                     $('#yajraDatatable').DataTable().ajax.reload();
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $('#viewModal').modal('hide');
                         $('#viewModalCloseBtn').click();
                     }, 1000);
@@ -439,8 +499,8 @@
 
     }
 
-    $(document).ready(function () {
-        $(document).on("keyup", ".customer_collect_amount", function () {
+    $(document).ready(function() {
+        $(document).on("keyup", ".customer_collect_amount", function() {
             var total_collect_amount = returnNumber($(this).attr('total_collect_amount'));
             var customer_collect_amount = returnNumber($(this).attr('customer_collect_amount'));
             var current_amount = returnNumber($(this).val());
@@ -454,10 +514,9 @@
 
     setInterval(() => {
         var sum = 0;
-        $(".customer_collect_amount").each(function () {
+        $(".customer_collect_amount").each(function() {
             sum += returnNumber($(this).val());
         });
         $(".total_complete_collection_amount span").text(sum);
     }, 500);
-
 </script>

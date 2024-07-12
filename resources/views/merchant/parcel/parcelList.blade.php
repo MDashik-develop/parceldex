@@ -25,7 +25,7 @@
                     <div class="card">
                          
                         <div class="card-header">
-                            <h3 class="card-title"> Parcels List</h3>
+                            <h3 class="card-title"> Parcels List </h3>
                             
                           <div class="card-body">  <a href="{{ route('merchant.parcel.merchantBulkParcelImport') }}"
                                class="btn btn-success float-right" style="margin-right: 20px;">
@@ -294,7 +294,6 @@
                 });
 
             });
-            
             $(document).on('click', '#printBtn', function () {
 
                 var parcel_status = $('#parcel_status option:selected').val();

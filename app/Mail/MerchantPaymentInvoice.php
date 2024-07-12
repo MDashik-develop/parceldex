@@ -46,7 +46,7 @@ class MerchantPaymentInvoice extends Mailable
                 'merchant' => $this->merchant,
                 'amount' => $this->amount,
                 'invoiceId' => $this->invoiceId,
-            ]);
+            ])->subject('Merchant Payment Invoice - ' . now()->format('d/m/Y'));
 
         if ($this->path) {
             $email->attach($this->path);

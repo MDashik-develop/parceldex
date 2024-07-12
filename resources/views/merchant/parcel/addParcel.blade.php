@@ -89,10 +89,10 @@
                                                             style="margin-right: 5px; margin-left: 20px;"> </span> <span class="font-weight-bold text-success"
                                                             id="p_complete2" style="margin-right: 10px;"></span>
 
-                                                        <span class="font-weight-bold text-warning" id="pending2" style="margin-right: 5px;"></span> <span class="font-weight-bold text-warning"
+                                                            <span class="font-weight-bold text-warning" id="pending2" style="margin-right: 5px;"></span> <span class="font-weight-bold text-warning"
                                                             id="p_pending2" style="margin-right: 10px;"></span>
 
-                                                        <span class="font-weight-bold text-danger" id="cancel2" style="margin-right: 5px;"></span> <span class="font-weight-bold text-danger"
+                                                            <span class="font-weight-bold text-danger" id="cancel2" style="margin-right: 5px;"></span> <span class="font-weight-bold text-danger"
                                                             id="p_cancel2"></span>
 
 

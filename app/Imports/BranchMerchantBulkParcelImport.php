@@ -44,7 +44,7 @@ class BranchMerchantBulkParcelImport implements
     protected $date = '';
     protected $note = null;
 
-    public function __construct($rider_id,$date,$note)
+    public function __construct($rider_id, $date, $note)
     {
         $this->rider_id = $rider_id;
         $this->date = $date;
@@ -74,7 +74,7 @@ class BranchMerchantBulkParcelImport implements
             }
 
             $parcel_count = 0;
-            $parcel_data=[];
+            $parcel_data = [];
 
             foreach ($rows as $row) {
 
@@ -82,27 +82,30 @@ class BranchMerchantBulkParcelImport implements
                 $merchant_order_id = isset($row['order_id']) ? trim($row['order_id']) : null;
                 $customer_name = isset($row['name']) ? trim($row['name']) : null;
                 $customer_contact_number = isset($row['phone']) ? trim($row['phone']) : null;
+                $customer_contact_number2 = isset($row['alternative_phone']) ? trim($row['alternative_phone']) : null;
                 $customer_address = isset($row['address']) ? trim($row['address']) : null;
                 $area_name = isset($row['area']) ? trim($row['area']) : null;
                 $product_details = isset($row['product_details']) ? trim($row['product_details']) : null;
                 $weight = isset($row['weight']) ? trim($row['weight']) : null;
                 $remark = isset($row['remark']) ? trim($row['remark']) : null;
                 $collection_amount = isset($row['collection_amount']) ? floatval($row['collection_amount']) : null;
+                $exchange = isset($row['exchange']) ? trim($row['exchange']) : 'no';
 
                 $merchant = Merchant::where('m_id', $merchant_id)->first();
 
                 if ($merchant) {
 
-                    if ($merchant_id != null && $customer_name != null
+                    if (
+                        $merchant_id != null && $customer_name != null
                         && $customer_contact_number != null
-                        && $customer_address != null && $area_name != null) {
+                        && $customer_address != null && $area_name != null
+                    ) {
 
                         if ($parcel_count != 0) {
                             $get_serial = substr($parcel_invoice, 9, 30);
                             $random_string = strtoupper(Controller::generateRandomString(3));
                             $get_serial = strtoupper(base_convert(base_convert($get_serial, 36, 10) + 1, 10, 36));
                             $parcel_invoice = $currentDate . $random_string . str_pad($get_serial, 4, '0', STR_PAD_LEFT);
-
                         }
 
                         $parcel_count++;
@@ -146,7 +149,6 @@ class BranchMerchantBulkParcelImport implements
                             if ($merchantServiceAreaReturnCharge && !empty($merchantServiceAreaReturnCharge->return_charge)) {
                                 $merchant_service_area_return_charge = $merchantServiceAreaReturnCharge->return_charge;
                             }
-
                         }
 
                         $weightPackageId = null;
@@ -165,7 +167,6 @@ class BranchMerchantBulkParcelImport implements
                             if ($weightPackage) {
                                 $weightPackageId = $weightPackage->id;
                             }
-
                         }
 
                         $collection_amount = $collection_amount ?? 0;
@@ -180,12 +181,14 @@ class BranchMerchantBulkParcelImport implements
                             'customer_name' => $customer_name,
                             'customer_address' => $customer_address,
                             'customer_contact_number' => $customer_contact_number,
+                            'customer_contact_number2' => $customer_contact_number2,
                             'product_details' => $product_details,
                             'district_id' => $district_id,
                             'area_id' => $area_id,
                             'weight_package_id' => $weightPackageId,
                             'total_collect_amount' => $collection_amount ?? 0,
                             'parcel_note' => $remark,
+                            'exchange' => $exchange,
                             'delivery_option_id' => 1,
                             'pickup_branch_id' => $merchant->branch_id,
                             'rider_id' => $rider_id,
@@ -193,19 +196,15 @@ class BranchMerchantBulkParcelImport implements
 
                         $parcel_data[] = $data;
                     }
-
                 }
-
             }
 
-            $import_parcel['parcel']=$parcel_data;
+            $import_parcel['parcel'] = $parcel_data;
             $import_parcel['rider_id'] = $rider_id;
             $import_parcel['date'] = $date;
             $import_parcel['note'] = $note;
             \session(['import_parcel' => $import_parcel]);
-
         }
-
     }
 
     public function rules(): array
@@ -222,8 +221,7 @@ class BranchMerchantBulkParcelImport implements
     {
     }
 
-    public function onFailure(Failure...$failure)
+    public function onFailure(Failure ...$failure)
     {
     }
-
 }

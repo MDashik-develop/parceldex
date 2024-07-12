@@ -77,7 +77,9 @@ class MerchantBulkParcelImport implements
                 $merchant_order_id = isset($row['order_id']) ? $row['order_id'] : null;
                 $customer_name = isset($row['name']) ? $row['name'] : null;
                 $customer_contact_number = isset($row['phone']) ? $row['phone'] : null;
+                $customer_contact_number2 = isset($row['alternative_phone']) ? $row['alternative_phone'] : null;
                 $customer_address = isset($row['address']) ? $row['address'] : null;
+                $exchange = isset($row['exchange']) ? $row['exchange'] : 'no';
                 $area_name = isset($row['area']) ? $row['area'] : null;
                 $product_details = isset($row['product_details']) ? $row['product_details'] : null;
                 $weight = isset($row['weight']) ? $row['weight'] : null;
@@ -218,7 +220,7 @@ class MerchantBulkParcelImport implements
                         //         // },
                         //     ])
                         //         ->where(['title' => $service])
-                            
+
                         //         ->first();
                         //     if ($serviceType) {
                         //         $serviceTypeId = $serviceType->id;
@@ -249,6 +251,7 @@ class MerchantBulkParcelImport implements
                             'customer_name' => $customer_name,
                             'customer_address' => $customer_address,
                             'customer_contact_number' => $customer_contact_number,
+                            'customer_contact_number2' => $customer_contact_number2,
                             'product_details' => $product_details,
                             'district_id' => $district_id,
                             'area_id' => $area_id,
@@ -259,6 +262,7 @@ class MerchantBulkParcelImport implements
 
                             'total_collect_amount' => $collection_amount ?? 0,
                             'parcel_note' => $remark,
+                            'exchange' => $exchange,
                             'delivery_option_id' => 1,
                             'pickup_branch_id' => $merchant->branch_id,
                         ];

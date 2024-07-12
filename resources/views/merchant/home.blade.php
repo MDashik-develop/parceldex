@@ -75,7 +75,7 @@
         <div class="container-fluid">
             <div class="row" style="text-align: right !important;">
                 <div class="col-sm-8">
-                    <div class="content">
+                    {{-- <div class="content">
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-12 row">
@@ -104,7 +104,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="col-sm-4">
@@ -159,7 +159,7 @@
 
 
             <div class="row admin_client_info justify-content-center">
-                <div class="col-lg-3 col-6 text-right" style="padding: 0px 5px !important;">
+                <div class="col-lg-3 col-3 text-right" style="padding: 0px 5px !important;">
                     <button type="button" class="btn btn-primary btn-block" href="#"
                         style="color: #0069d9;
     border: 1px solid #0069d9;
@@ -170,11 +170,31 @@
                         Available Balance ( {{ number_format($total_pending_payment, 2, '.', '') }})
                     </button>
                 </div>
-                <div class="col-lg-3 col-6"
+                <div class="col-lg-3 col-3"
                     @if ($total_pending_payment <= 0) style="font-size: large; padding: 0px; border-radius: 1.5rem;" @endif
                     style=" font-size: x-large; padding: 0px;!important; border-radius: 1.5rem;">
                     <a href="https://play.google.com/store/apps/details?id=com.parceldexltd.merchant&pcampaignid=web_share"
                         target="_blank"><img height="40" src="{{ asset('image/playstore.png') }}"></a>
+                </div>
+
+                <div class="col-lg-4 col-4">
+                    <div class="form-group">
+                        <input type="text" name="parcel_invoice" id="parcel_invoice"
+                            value="{{ $parcel_invoice }}" class="form-control"
+                            placeholder="Enter Parcel Invoice Or Order ID Or Customer Number"
+                            onkeypress="return add_parcel(event)"
+                            style="font-size: 20px; 
+                                padding: 3px 0px 3px 3px;   
+                                margin: 5px 1px 3px 0px;
+                                border: 2px solid rgb(62, 196, 118);">
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-2" style="margin: auto;">
+                    <button type="button" class="btn btn-info btn-block"
+                        onclick="return parcelResult()">
+                        Search
+                    </button>
                 </div>
 
                 {{-- <div class="col-lg-3 col-6 d-flex align-items-center justify-content-center" 
@@ -194,9 +214,9 @@
             <div class="row" style="margin-top: 20px;">
 
 
-                <div class="col-12 col-sm-6 col-md-2">
+                <div class="col-sm-6 col-md-3">
                     <div class="info-box">
-                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-truck"></i></span>
+                        {{-- <span class="info-box-icon bg-info elevation-1"><i class="fas fa-truck"></i></span> --}}
 
                         <div class="info-box-content" style="text-align: center">
                             <span class="info-box-number">
@@ -214,9 +234,9 @@
                 </div>
 
                 <!-- /.col -->
-                <div class="col-12 col-sm-6 col-md-2" style="text-align: center">
+                <div class="col-sm-6 col-md-3" style="text-align: center">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-thumbs-up"></i></span>
+                        {{-- <span class="info-box-icon bg-success elevation-1"><i class="fas fa-thumbs-up"></i></span> --}}
 
                         <div class="info-box-content">
                             <span class="info-box-number">{{ $counter_data['today_total_delivery_complete_parcel'] }}</span>
@@ -232,9 +252,9 @@
                     <!-- /.info-box -->
                 </div>
 
-                <div class="col-12 col-sm-6 col-md-3" style="text-align: center">
+                <div class="col-sm-6 col-md-3" style="text-align: center">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-thumbs-up"></i></span>
+                        {{-- <span class="info-box-icon bg-success elevation-1"><i class="fas fa-thumbs-up"></i></span> --}}
 
                         <div class="info-box-content">
                             <span
@@ -255,9 +275,9 @@
                 <!-- fix for small devices only -->
                 <div class="clearfix hidden-md-up"></div>
 
-                <div class="col-12 col-sm-6 col-md-2" style="text-align: center">
+                <div class="col-sm-6 col-md-3" style="text-align: center">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-ban"></i></span>
+                        {{-- <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-ban"></i></span> --}}
 
                         <div class="info-box-content">
                             <span class="info-box-number">{{ $today_cancel_parcel }}</span>
@@ -272,9 +292,9 @@
                     <!-- /.info-box -->
                 </div>
                 <!-- /.col -->
-                <div class="col-12 col-sm-6 col-md-3">
+                <div class="col-sm-6 col-md-3">
                     <div class="info-box mb-3" style="text-align: center">
-                        <span class="info-box-icon bg-warning elevation-1"><i class="fa fa-hourglass-start"></i></span>
+                        {{-- <span class="info-box-icon bg-warning elevation-1"><i class="fa fa-hourglass-start"></i></span> --}}
 
                         <div class="info-box-content">
                             <span class="info-box-number"> {{ $total_pickup_pending }}</span>
@@ -290,16 +310,16 @@
                     <!-- /.info-box -->
                 </div>
                 <!-- /.col -->
-            </div>
+            {{-- </div> --}}
             <!-- /.row -->
 
             <!-- Info boxes -->
-            <div class="row" style="margin-top: 20px;">
+            {{-- <div class="row" style="margin-top: 20px;"> --}}
 
 
-                <div class="col-12 col-sm-6 col-md-2" style="text-align: center">
+                <div class="col-sm-6 col-md-3" style="text-align: center">
                     <div class="info-box">
-                        <span class="info-box-icon bg-info elevation-1"><i class="far fa-copy"></i></span>
+                        {{-- <span class="info-box-icon bg-info elevation-1"><i class="far fa-copy"></i></span> --}}
 
                         <div class="info-box-content">
                             <span class="info-box-number">
@@ -316,9 +336,9 @@
                 </div>
 
                 <!-- /.col -->
-                <div class="col-12 col-sm-6 col-md-2" style="text-align: center">
+                <div class="col-sm-6 col-md-3" style="text-align: center">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-chart-pie"></i></span>
+                        {{-- <span class="info-box-icon bg-success elevation-1"><i class="fas fa-chart-pie"></i></span> --}}
 
                         <div class="info-box-content">
                             <span class="info-box-number">{{ $counter_data['total_delivery_complete_parcel'] }} <sup><small style="color: #007bff; font-size: 15px;">{{ ($counter_data['total_delivery_complete_parcel'] / 100) * $counter_data['total_parcel']; }}%</small></sup> </span>
@@ -331,9 +351,9 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-sm-6 col-md-3" style="text-align: center">
+                <div class="col-sm-6 col-md-3" style="text-align: center">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-chart-pie"></i></span>
+                        {{-- <span class="info-box-icon bg-success elevation-1"><i class="fas fa-chart-pie"></i></span> --}}
 
                         <div class="info-box-content">
                             <span
@@ -351,10 +371,10 @@
                 <!-- fix for small devices only -->
                 <div class="clearfix hidden-md-up"></div>
 
-                <div class="col-12 col-sm-6 col-md-2" style="text-align: center">
+                <div class="col-sm-6 col-md-3" style="text-align: center">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-danger elevation-1"><i
-                                class="fa fa-exclamation-triangle"></i></span>
+                        {{-- <span class="info-box-icon bg-danger elevation-1"><i --}}
+                                {{-- class="fa fa-exclamation-triangle"></i></span> --}}
 
                         <div class="info-box-content">
                             <span class="info-box-number"> {{ $total_cancel_parcel }} <sup><small style="color: #007bff; font-size: 15px;">{{ ($total_cancel_parcel / 100) * $counter_data['total_parcel']; }}%</small></sup></span>
@@ -369,9 +389,9 @@
                     <!-- /.info-box -->
                 </div>
                 <!-- /.col -->
-                <div class="col-12 col-sm-6 col-md-3" style="text-align: center">
+                <div class="col-sm-6 col-md-3" style="text-align: center">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-sync-alt"></i></span>
+                        {{-- <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-sync-alt"></i></span> --}}
 
                         <div class="info-box-content">
                             <span class="info-box-number"> {{ $total_pending_parcel }} <sup><small style="color: #007bff; font-size: 15px;">{{ ($total_pending_parcel / 100) * $counter_data['total_parcel']; }}%</small></sup></span>
@@ -474,46 +494,46 @@
                 <div class="col-md-3">
                     <!-- /.info-box -->
                     <div class="info-box mb-3 bg-warning">
-                        <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
+                        {{-- <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span> --}}
 
-                        <div class="info-box-content2">
-                            <span class="info-box-text">Ready for Payment</span>
-                            <span class="info-box-number2">
+                        <div class="info-box-content2" style="text-align: center">
+                            <span class="info-box-number2" style="font-size: 36px;">
                                 {{ number_format($counter_data['total_pending_collect_amount'], 2) }} TK</span>
+                                <span class="info-box-text" style="font-size: 16px;">Ready for Payment</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
                     <!-- Info Boxes Style 2 -->
                     <div class="info-box mb-3 bg-info">
-                        <span class="info-box-icon"><i class="fas fa-tag"></i></span>
+                        {{-- <span class="info-box-icon"><i class="fas fa-tag"></i></span> --}}
 
-                        <div class="info-box-content2">
-                            <span class="info-box-text">Total Collected</span>
-                            <span class="info-box-number2">{{ number_format($total_customer_collected_amount, 2) }}
+                        <div class="info-box-content2" style="text-align: center">
+                            <span class="info-box-number2" style="font-size: 36px;">{{ number_format($total_customer_collected_amount, 2) }}
                                 TK</span>
+                                <span class="info-box-text" style="font-size: 16px;">Total Collected</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
                     <!-- /.info-box -->
                     <div class="info-box mb-3 bg-success">
-                        <span class="info-box-icon"><i class="fa fa-credit-card"></i></span>
+                        {{-- <span class="info-box-icon"><i class="fa fa-credit-card"></i></span> --}}
 
-                        <div class="info-box-content2">
-                            <span class="info-box-text">Total Paid</span>
-                            <span class="info-box-number2">{{ number_format($counter_data['total_collect_amount'], 2) }}
+                        <div class="info-box-content2" style="text-align: center">
+                            <span class="info-box-number2" style="font-size: 36px;">{{ number_format($counter_data['total_collect_amount'], 2) }}
                                 TK
                             </span>
+                            <span class="info-box-text" style="font-size: 16px;">Total Paid</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
 
                     <!-- /.info-box -->
                     <!--<div class="info-box mb-3 bg-info">-->
-                    <!--  <span class="info-box-icon"><i class="far fa-comment"></i></span>-->
+                    {{-- <!--  <span class="info-box-icon"><i class="far fa-comment"></i></span>--> --}}
 
                     <!--  <div class="info-box-content">-->
-                    <!--    <span class="info-box-text">Direct Messages</span>-->
-                    <!--    <span class="info-box-number2">163,921</span>-->
+                    <!--    <span class="info-box-text" style="font-size: 16px;">Direct Messages</span>-->
+                    <!--    <span class="info-box-number2" style="font-size: 36px;">163,921</span>-->
                     <!--  </div>-->
                     <!-- /.info-box-content -->
                     <!--</div>-->
@@ -528,21 +548,21 @@
                 <div class="col-md-3">
                     <!-- Info Boxes Style 2 -->
                     <div class="info-box mb-3 bg-info">
-                        <span class="info-box-icon"><i class="fas fa-tag"></i></span>
+                        {{-- <span class="info-box-icon"><i class="fas fa-tag"></i></span> --}}
 
-                        <div class="info-box-content2">
-                            <span class="info-box-text">Total Service Charge</span>
-                            <span class="info-box-number2">{{ number_format($total_service_charge, 2) }} TK</span>
+                        <div class="info-box-content2" style="text-align: center">
+                            <span class="info-box-number2" style="font-size: 36px;">{{ number_format($total_service_charge, 2) }} TK</span>
+                            <span class="info-box-text" style="font-size: 16px;">Total Service Charge</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
                     <!-- /.info-box -->
                     <div class="info-box mb-3 bg-success">
-                        <span class="info-box-icon"><i class="fa fa-credit-card"></i></span>
+                        {{-- <span class="info-box-icon"><i class="fa fa-credit-card"></i></span> --}}
 
-                        <div class="info-box-content2">
-                            <span class="info-box-text">Awaiting payment</span>
-                            <span class="info-box-number2">{{ number_format($total_customer_collect_amount_due, 2) }} TK</span>
+                        <div class="info-box-content2" style="text-align: center">
+                            <span class="info-box-number2" style="font-size: 36px;">{{ number_format($total_customer_collect_amount_due, 2) }} TK</span>
+                            <span class="info-box-text" style="font-size: 16px;">Awaiting payment</span>
 
                             <!--<span class="info-box-number2">{{ number_format($total_customer_collect_amount_due, 2) }} TK </span>-->
                         </div>
@@ -550,17 +570,17 @@
                     </div>
                     <!-- /.info-box -->
                     <div class="info-box mb-3 bg-warning">
-                        <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
+                        {{-- <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span> --}}
 
-                        <div class="info-box-content2">
-                            <span class="info-box-text">To Be Collected</span>
-                            <span class="info-box-number2"> {{ number_format($total_to_be_collected, 2) }} TK</span>
+                        <div class="info-box-content2" style="text-align: center">
+                            <span class="info-box-number2" style="font-size: 36px;"> {{ number_format($total_to_be_collected, 2) }} TK</span>
+                            <span class="info-box-text" style="font-size: 16px;">To Be Collected</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
                     <!-- /.info-box -->
                     <!--<div class="info-box mb-3 bg-info">-->
-                    <!--  <span class="info-box-icon"><i class="far fa-comment"></i></span>-->
+                    {{-- <!--  <span class="info-box-icon"><i class="far fa-comment"></i></span>--> --}}
 
                     <!--  <div class="info-box-content">-->
                     <!--    <span class="info-box-text">Direct Messages</span>-->

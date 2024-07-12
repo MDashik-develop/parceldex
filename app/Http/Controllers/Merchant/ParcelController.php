@@ -61,19 +61,15 @@ class ParcelController extends Controller
 
     public function customerInfo(Request $request)
     {
-        // // dd($phone);
-        // // $customer = Parcel::where('customer_contact_number',$phone)->select('customer_name','customer_address')->first();
-
-        // $customer = Parcel::where($column, $phone)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
-        // $customerParcel = Parcel::where($column, $phone)->count();
-        // $totalDeliveryComplete = Parcel::whereRaw("'$column' = '$phone' and status >= 25 and delivery_type in (1)")->select('id')->count();
-        // $totalDeliveryPending = Parcel::whereRaw("'$column' = '$phone' and status < 25 ")->select('id')->count();
-        // $totalDeliveryCancel = Parcel::whereRaw("'$column' = '$phone' and status >= 25 and delivery_type in (4)")->select('id')->count();
-
         $phone = $request->phone;
         $phone2 = $request->phone2;
         // dd($phone);
         // $customer = Parcel::where('customer_contact_number',$phone)->select('customer_name','customer_address')->first();
+        // $customer = Parcel::where('customer_contact_number',$phone)->select('customer_name','customer_address','district_id','area_id')->first();
+        // $customerParcel = Parcel::where('customer_contact_number',$phone)->count();
+        // $totalDeliveryComplete = Parcel::whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (1)")->select('id')->count();
+        // $totalDeliveryPending = Parcel::whereRaw("customer_contact_number = '$phone' and status < 25 ")->select('id')->count();
+        // $totalDeliveryCancel = Parcel::whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (4)")->select('id')->count();
 
         if ($request->phone) {
             $customer = Parcel::where('customer_contact_number', $phone)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
@@ -321,7 +317,6 @@ class ParcelController extends Controller
                         $query->where('parcel_invoice', 'like', "%{$parcel_invoice}%");
                         $query->orWhere('merchant_order_id', 'like', "%{$parcel_invoice}%");
                         $query->orWhere('customer_contact_number', 'like', "%{$parcel_invoice}%");
-                        $query->orWhere('customer_contact_number2', 'like', "%{$parcel_invoice}%");
 
 
                         /*if (!is_null($parcel_invoice) && !is_null($parcel_invoice)) {
@@ -402,6 +397,7 @@ class ParcelController extends Controller
             ->orderBy('id', 'desc')
             ->select(
                 'id',
+                'created_at',
                 'parcel_invoice',
                 'tracking_number',
                 'merchant_id',
@@ -415,6 +411,8 @@ class ParcelController extends Controller
                 'customer_collect_amount',
                 'total_collect_amount',
                 'cod_charge',
+                'exchange',
+                'product_details',
                 'weight_package_charge',
                 'delivery_charge',
                 'reschedule_parcel_date',
@@ -434,10 +432,13 @@ class ParcelController extends Controller
         return DataTables::of($model)
             ->addIndexColumn()
             ->editColumn('parcel_invoice', function ($data) {
+               // $date_time =  $data->date . " " . date("h:i A", strtotime($data->created_at));
+                $date_time =   $data->created_at->format('Y-m-d h:i A');
+
                 return '<a href="' . route('merchant.orderTracking', $data->parcel_invoice) . '"
                 title="Parcel View">
                     ' . $data->parcel_invoice . '
-                </a>';
+                </a><br></span> <p><strong>Created Date: </strong>' . $date_time . '</p>';
             })
             ->editColumn('parcel_status', function ($data) {
                 $date_time = '---';
@@ -450,7 +451,8 @@ class ParcelController extends Controller
                 } elseif ($data->status == 11 || $data->status == 13 || $data->status == 15) {
                     $date_time = date("Y-m-d", strtotime($data->pickup_branch_date));
                 } else {
-                    $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
+                   // $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
+                    $date_time = $data->date;
                 }
                 $parcelStatus = returnParcelStatusNameForMerchant($data->status, $data->delivery_type, $data->payment_type);
                 $status_name = $parcelStatus['status_name'];
@@ -508,12 +510,13 @@ class ParcelController extends Controller
                 return $button;
             })
             ->addColumn('parcel_info', function ($data) {
-                $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
                 $parcel_info = '<p><strong>Merchant Order ID: </strong>' . $data->merchant_order_id . '</p>';
                 $parcel_info .= '<p><strong>Parcel OTP: </strong>' . $data->parcel_code . '</p>';
                 $parcel_info .= '<p><strong>Service Type: </strong>' . optional($data->service_type)->title . '</p>';
                 $parcel_info .= '<p><strong>Item Type: </strong>' . optional($data->item_type)->title . '</p>';
-                $parcel_info .= '</span> <p><strong>Created Date: </strong>' . $date_time . '</p>';
+                $parcel_info .= '<p><strong>Exchange: </strong>' . $data->exchange . '</p>';
+                $parcel_info .= '<p><strong>Product Details: </strong>' . $data->product_details . '</p>';
+
                 return $parcel_info;
             })
 
@@ -542,7 +545,7 @@ class ParcelController extends Controller
 
                 $customer_info = '<p><strong>Name: </strong>' . $data->customer_name . '</p>';
                 $customer_info .= '<p><strong>Number: </strong>' . $data->customer_contact_number . '</p>';
-                $customer_info .= '<p><strong>Alternative Number: </strong>' . $customer_contact_number2 . '</p>';
+                $customer_info .= '<p><strong>Alternative: </strong>' . $customer_contact_number2 . '</p>';
                 $customer_info .= '<p><strong>District: </strong>' . $district . '</p>';
                 $customer_info .= '<p><strong>Area: </strong>' . $area . '</p>';
                 $customer_info .= '<span><strong>Address: </strong>' . $data->customer_address . '</span>';

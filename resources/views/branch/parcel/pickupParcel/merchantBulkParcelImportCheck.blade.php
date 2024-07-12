@@ -43,29 +43,38 @@
                                                 <th>Merchant Id</th>
                                                 <th> Customer Name</th>
                                                 <th> Customer Number</th>
+                                                <th> Alternative Number</th>
                                                 <th> Customer Address</th>
                                                 <th> Customer Area</th>
                                                 <th> Product Details</th>
                                                 <th> Weight</th>
                                                 <!-- <th> Item Type</th>
-                                                    <th> Service Type</th> -->
+                                                                                        <th> Service Type</th> -->
                                                 <th> Collection Amount</th>
+                                                <th width="5%">Exchange</th>
                                                 <th> Remarks</th>
                                             </tr>
+
                                             @foreach ($import_parcels['parcel'] as $key => $import_parcel)
                                                 @php
                                                     $tdColor = '';
-                                                    if ($import_parcel['weight_package_id'] == 0 || $import_parcel['weight_package_id'] == null) {
+                                                    if (
+                                                        $import_parcel['weight_package_id'] == 0 ||
+                                                        $import_parcel['weight_package_id'] == null
+                                                    ) {
                                                         $tdColor = 'bg-warning ';
                                                     }
 
-                                                    if ($import_parcel['district_id'] == 0 || $import_parcel['area_id'] == 0) {
+                                                    if (
+                                                        $import_parcel['district_id'] == 0 ||
+                                                        $import_parcel['area_id'] == 0
+                                                    ) {
                                                         $tdColor = 'bg-danger ';
                                                     }
 
                                                 @endphp
 
-{{--                                                 @dd($import_parcels)--}}
+                                                {{--                                                 @dd($import_parcels) --}}
 
 
                                                 <tr class="{{ $tdColor }} ">
@@ -98,6 +107,12 @@
                                                             name="parcel[{{ $key }}][customer_contact_number]"
                                                             value="{{ $import_parcel['customer_contact_number'] }}"
                                                             placeholder="Customer Number">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control"
+                                                            name="parcel[{{ $key }}][customer_contact_number2]"
+                                                            value="{{ $import_parcel['customer_contact_number2'] }}"
+                                                            placeholder="Alternative Number">
                                                     </td>
                                                     <td>
                                                         <input type="text" class="form-control"
@@ -150,6 +165,17 @@
                                                             name="parcel[{{ $key }}][total_collect_amount]"
                                                             value="{{ $import_parcel['total_collect_amount'] }}"
                                                             placeholder="Collection Amount">
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control"
+                                                            name="parcel[{{ $key }}][exchange]">
+                                                            <option value="yes"
+                                                                {{ $import_parcel['exchange'] == 'yes' ? 'selected' : '' }}>
+                                                                Yes</option>
+                                                            <option value="no"
+                                                                {{ $import_parcel['exchange'] == 'no' ? 'selected' : '' }}>
+                                                                No</option>
+                                                        </select>
                                                     </td>
                                                     <td>
                                                         <input type="text" class="form-control"

@@ -34,30 +34,33 @@ use function PHPUnit\Framework\isNull;
 use App\Models\MerchantServiceAreaReturnCharge;
 
 class BranchMerchantBulkParcelImport implements
-ToCollection,
-WithHeadingRow,
-SkipsOnError,
-WithValidation,
-SkipsOnFailure,
-WithChunkReading,
-ShouldQueue,
-WithEvents {
+    ToCollection,
+    WithHeadingRow,
+    SkipsOnError,
+    WithValidation,
+    SkipsOnFailure,
+    WithChunkReading,
+    ShouldQueue,
+    WithEvents
+{
     use Importable, SkipsErrors, SkipsFailures, RegistersEventListeners;
 
     protected $rider_run_id = null;
     protected $rider_id = 0;
 
-    public function __construct($rider_run_id, $rider_id) {
+    public function __construct($rider_run_id, $rider_id)
+    {
         $this->rider_run_id  = $rider_run_id;
         $this->rider_id      = $rider_id;
     }
 
-    public function collection(Collection $rows) {
+    public function collection(Collection $rows)
+    {
         // dd($rows);
 
         $rider_run_id   = $this->rider_run_id;
         $rider_id       = $this->rider_id;
-        if(count($rows)){
+        if (count($rows)) {
             $branch_user_id = auth()->guard('branch')->user()->id;
             $branch_id      = auth()->guard('branch')->user()->branch->id;
 
@@ -75,14 +78,13 @@ WithEvents {
             }
             */
             $currentDate    = date("ymd");
-            if(!empty($lastParcel)){
-                $get_serial         = substr($lastParcel->parcel_invoice,9,30);
+            if (!empty($lastParcel)) {
+                $get_serial         = substr($lastParcel->parcel_invoice, 9, 30);
                 $random_string      = strtoupper(Controller::generateRandomString(3));
-                $get_serial         = strtoupper(base_convert(base_convert($get_serial,36,10)+1,10,36));
-                $parcel_invoice = $currentDate.$random_string.str_pad($get_serial, 4, '0', STR_PAD_LEFT);
-            }
-            else{
-                $parcel_invoice = $currentDate.'ANZ0001';
+                $get_serial         = strtoupper(base_convert(base_convert($get_serial, 36, 10) + 1, 10, 36));
+                $parcel_invoice = $currentDate . $random_string . str_pad($get_serial, 4, '0', STR_PAD_LEFT);
+            } else {
+                $parcel_invoice = $currentDate . 'ANZ0001';
             }
 
 
@@ -90,38 +92,38 @@ WithEvents {
 
 
             foreach ($rows as $row) {
-               
-                
-                $merchant_id                = isset($row['merchant_id'])? trim($row['merchant_id']) : null;
-                $merchant_order_id          = isset($row['order_id'])? trim($row['order_id']) : null;
-                $customer_name              = isset($row['name'])? trim($row['name']) : null;
-                $customer_contact_number    = isset($row['phone'])? trim($row['phone']) : null;
-                $customer_address           = isset($row['address'])? trim($row['address']) : null;
-                $area_name                  = isset($row['area'])? trim($row['area']) : null;
-                $product_details            = isset($row['product_details'])? trim($row['product_details']) : null;
-                $weight                     = isset($row['weight'])? trim($row['weight']) : null;
-                $remark                     = isset($row['remark'])? trim($row['remark']) : null;
-                $collection_amount          = isset($row['collection_amount'])? floatval($row['collection_amount']) : null;
+
+                $merchant_id                = isset($row['merchant_id']) ? trim($row['merchant_id']) : null;
+                $merchant_order_id          = isset($row['order_id']) ? trim($row['order_id']) : null;
+                $customer_name              = isset($row['name']) ? trim($row['name']) : null;
+                $customer_contact_number    = isset($row['phone']) ? trim($row['phone']) : null;
+                $customer_address           = isset($row['address']) ? trim($row['address']) : null;
+                $area_name                  = isset($row['area']) ? trim($row['area']) : null;
+                $product_details            = isset($row['product_details']) ? trim($row['product_details']) : null;
+                $weight                     = isset($row['weight']) ? trim($row['weight']) : null;
+                $remark                     = isset($row['remark']) ? trim($row['remark']) : null;
+                $collection_amount          = isset($row['collection_amount']) ? floatval($row['collection_amount']) : null;
 
                 $merchant = Merchant::where('m_id', $merchant_id)->first();
-               
-                if($merchant){
-                     
-                    if ($merchant_id != null && $customer_name != null
-                        && $customer_contact_number != null 
-                        && $customer_address != null && $area_name != null) {
-                            
 
-                        if($parcel_count != 0){ 
-                            $get_serial         = substr($parcel_invoice,9,30);
+                if ($merchant) {
+
+                    if (
+                        $merchant_id != null && $customer_name != null
+                        && $customer_contact_number != null
+                        && $customer_address != null && $area_name != null
+                    ) {
+
+
+                        if ($parcel_count != 0) {
+                            $get_serial         = substr($parcel_invoice, 9, 30);
                             $random_string      = strtoupper(Controller::generateRandomString(3));
-                            $get_serial         = strtoupper(base_convert(base_convert($get_serial,36,10)+1,10,36));
-                            $parcel_invoice     = $currentDate.$random_string.str_pad($get_serial, 4, '0', STR_PAD_LEFT);
-                         
+                            $get_serial         = strtoupper(base_convert(base_convert($get_serial, 36, 10) + 1, 10, 36));
+                            $parcel_invoice     = $currentDate . $random_string . str_pad($get_serial, 4, '0', STR_PAD_LEFT);
                         }
                         $parcel_count++;
-                        
-                        
+
+
 
                         // Set District, Upazila, Area ID and Merchant Service Area Charge
                         $merchant_service_area_charge = 0;
@@ -134,12 +136,12 @@ WithEvents {
                         $service_area_id        = 0;
 
                         $area = Area::with('upazila')->where('name', $area_name)->first();
-                        if($area){
+                        if ($area) {
                             $district_id        = $area->district_id;
                             $upazila_id         = $area->upazila_id;
                             $area_id            = $area->id;
                             $service_area_id    = $area->upazila->district->service_area_id;
-                            if(is_null($cod_percent)){
+                            if (is_null($cod_percent)) {
                                 $cod_percent     = $area->upazila->district->service_area->cod_charge;
                             }
 
@@ -164,7 +166,7 @@ WithEvents {
                         }
 
                         // Weight Package Charge
-                        if($weight){
+                        if ($weight) {
                             $weightPackage = WeightPackage::where('name', $weight)->first();
 
                             $weightPackage  = WeightPackage::with([
@@ -172,9 +174,9 @@ WithEvents {
                                     $query->where('service_area_id', '=', $service_area_id);
                                 },
                             ])
-                            ->where(['name' => $weight])
-                            ->orWhere(['wp_id' => $weight])
-                            ->first();
+                                ->where(['name' => $weight])
+                                ->orWhere(['wp_id' => $weight])
+                                ->first();
 
 
                             $weight_package_charge = $weightPackage->rate;
@@ -183,14 +185,14 @@ WithEvents {
                             }
                         }
 
-                        if(empty($weightPackage) || isNull($weight)){
+                        if (empty($weightPackage) || isNull($weight)) {
                             $weightPackage  = WeightPackage::with([
                                 'service_area' => function ($query) use ($service_area_id) {
                                     $query->where('service_area_id', '=', $service_area_id);
                                 },
                             ])
-                            ->where(['status' => 1])
-                            ->first();
+                                ->where(['status' => 1])
+                                ->first();
 
                             $weight_package_charge = $weightPackage->rate;
                             if (!empty($weightPackage->service_area)) {
@@ -204,8 +206,8 @@ WithEvents {
 
                         $cod_charge         = 0;
                         $collection_amount  = $collection_amount ?? 0;
-                        if($collection_amount != 0 && $cod_percent != 0){
-                            $cod_charge = ($collection_amount/100) * $cod_percent;
+                        if ($collection_amount != 0 && $cod_percent != 0) {
+                            $cod_charge = ($collection_amount / 100) * $cod_percent;
                         }
                         $total_charge    = $delivery_charge + $cod_charge + $weight_package_charge;
 
@@ -216,7 +218,7 @@ WithEvents {
                             'date'                         => date('Y-m-d'),
                             'merchant_order_id'            => $merchant_order_id,
                             'customer_name'                => $customer_name,
-                            
+
                             'customer_contact_number'      => $customer_contact_number,
                             'product_details'              => $product_details,
                             'district_id'                  => $district_id,
@@ -242,8 +244,8 @@ WithEvents {
                             'status'                       => 10,
                             'customer_address'             => $customer_address,
                         ];
-                         
-                         
+
+
                         $parcel = Parcel::create($data);
 
                         // Insert Parcel Log
@@ -263,13 +265,13 @@ WithEvents {
                         $rider_run_details = [
                             'rider_run_id'      => $rider_run_id,
                             'parcel_id'         => $parcel->id,
-                            'complete_date_time'=>  date('Y-m-d H:i:s'),
+                            'complete_date_time' =>  date('Y-m-d H:i:s'),
                             'status'            => 7,
                         ];
                         RiderRunDetail::create([
                             'rider_run_id'      => $rider_run_id,
                             'parcel_id'         => $parcel->id,
-                            'complete_date_time'=>  date('Y-m-d H:i:s'),
+                            'complete_date_time' =>  date('Y-m-d H:i:s'),
                             'status'            => 7,
                         ]);
                     }
@@ -287,18 +289,21 @@ WithEvents {
         }
     }
 
-    public function rules(): array{
+    public function rules(): array
+    {
         return [];
     }
 
-    public function chunkSize(): int {
+    public function chunkSize(): int
+    {
         return 1000;
     }
 
-    public static function afterImport(AfterImport $event) {
+    public static function afterImport(AfterImport $event)
+    {
     }
 
-    public function onFailure(Failure...$failure) {
-    } 
-
+    public function onFailure(Failure ...$failure)
+    {
+    }
 }

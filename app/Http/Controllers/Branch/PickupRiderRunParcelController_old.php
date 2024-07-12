@@ -46,9 +46,10 @@ class PickupRiderRunParcelController extends Controller
     public function getPickupRiderRunList(Request $request)
     {
         $branch_id = auth()->guard('branch')->user()->branch->id;
-        $model = RiderRun::with(['rider' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $model = RiderRun::with([
+            'rider' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->whereRaw('branch_id = ? and run_type = 1', [$branch_id])
             ->orderBy('id', 'desc')
@@ -87,19 +88,19 @@ class PickupRiderRunParcelController extends Controller
             })
             ->editColumn('status', function ($data) {
                 switch ($data->status) {
-                    case 1 :
+                    case 1:
                         $status_name = "Run Create";
                         $class = "success";
                         break;
-                    case 2 :
+                    case 2:
                         $status_name = "Run Start";
                         $class = "success";
                         break;
-                    case 3 :
+                    case 3:
                         $status_name = "Run Cancel";
                         $class = "danger";
                         break;
-                    case 4 :
+                    case 4:
                         $status_name = "Run Complete";
                         $class = "success";
                         break;
@@ -144,20 +145,21 @@ class PickupRiderRunParcelController extends Controller
 
     public function printPickupRiderRunList(Request $request)
     {
-//        return $request->all();
+        //        return $request->all();
         $branch_id = auth()->guard('branch')->user()->branch->id;
-        $model = RiderRun::with(['rider' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $model = RiderRun::with([
+            'rider' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->whereRaw('branch_id = ? and run_type = 1', [$branch_id])
             ->orderBy('id', 'desc')
             ->select();
-        $filter=[];
+        $filter = [];
 
         if ($request->has('run_status') && !is_null($request->get('run_status')) && $request->get('run_status') != 0) {
             $model->where('status', $request->get('run_status'));
-            $filter['run_status']=$request->get('run_status');
+            $filter['run_status'] = $request->get('run_status');
         } elseif ($request->get('run_status') == '') {
             $model->whereIn('status', [1, 2]);
         } else {
@@ -165,18 +167,18 @@ class PickupRiderRunParcelController extends Controller
         }
         if ($request->has('rider_id') && !is_null($request->get('rider_id')) && $request->get('rider_id') != 0) {
             $model->where('rider_id', $request->get('rider_id'));
-            $filter['rider_id']=$request->get('rider_id');
+            $filter['rider_id'] = $request->get('rider_id');
         }
         if ($request->has('from_date') && !is_null($request->get('from_date')) && $request->get('from_date') != 0) {
             $model->whereDate('create_date_time', '>=', $request->get('from_date'));
-            $filter['from_date']=$request->get('from_date');
+            $filter['from_date'] = $request->get('from_date');
         }
         if ($request->has('to_date') && !is_null($request->get('to_date')) && $request->get('to_date') != 0) {
             $model->whereDate('create_date_time', '<=', $request->get('to_date'));
-            $filter['to_date']=$request->get('to_date');
+            $filter['to_date'] = $request->get('to_date');
         }
         $riderRuns = $model->get();
-        return view('branch.parcel.pickupParcel.printPickupRiderRunList', compact('riderRuns','filter'));
+        return view('branch.parcel.pickupParcel.printPickupRiderRunList', compact('riderRuns', 'filter'));
     }
 
 
@@ -285,8 +287,8 @@ class PickupRiderRunParcelController extends Controller
                         $riderRunDetails = RiderRunDetail::where('rider_run_id', $request->rider_run_id)->get();
 
                         foreach ($riderRunDetails as $riderRunDetail) {
-                            $parcel=Parcel::where('id', $riderRunDetail->parcel_id)->first();
-                        $parcel->update([
+                            $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->first();
+                            $parcel->update([
                                 'status' => 6,
                                 'parcel_date' => date('Y-m-d'),
                                 'pickup_rider_date' => date('Y-m-d'),
@@ -359,7 +361,7 @@ class PickupRiderRunParcelController extends Controller
                                 'status' => 7,
                                 'parcel_date' => date('Y-m-d'),
                             ]);
-                            $parcel=Parcel::where('id', $riderRunDetail->parcel_id)->first();
+                            $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->first();
                             ParcelLog::create([
                                 'parcel_id' => $riderRunDetail->parcel_id,
                                 'pickup_branch_id' => auth()->guard('branch')->user()->branch->id,
@@ -418,12 +420,12 @@ class PickupRiderRunParcelController extends Controller
             ->select('id', 'name', 'contact_number', 'address')
             ->get();
 
-//        $data['merchants']     = Merchant::where([
-//                    'status'    => 1,
-//                    'branch_id' => $branch_id,
-//                ])
-//                ->select('id', 'name', 'company_name','contact_number', 'address')
-//                ->get();
+        //        $data['merchants']     = Merchant::where([
+        //                    'status'    => 1,
+        //                    'branch_id' => $branch_id,
+        //                ])
+        //                ->select('id', 'name', 'company_name','contact_number', 'address')
+        //                ->get();
 
 
         $data['merchants'] = Parcel::join('merchants as m', 'm.id', '=', 'parcels.merchant_id')->where([
@@ -436,14 +438,22 @@ class PickupRiderRunParcelController extends Controller
             ->get();
 
 
-        $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'company_name', 'contact_number', 'address');
-        },
+        $data['parcels'] = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'company_name', 'contact_number', 'address');
+            },
         ])
             ->whereRaw("pickup_branch_id = ? AND status in (1, 4, 7, 9)", [$branch_id])
-            ->select('id', 'parcel_invoice', 'merchant_order_id',
-                'pickup_address', 'customer_name',
-                'customer_contact_number', 'total_collect_amount', 'merchant_id')
+            ->select(
+                'id',
+                'parcel_invoice',
+                'merchant_order_id',
+                'pickup_address',
+                'customer_name',
+                'customer_contact_number',
+                'total_collect_amount',
+                'merchant_id'
+            )
             ->orderBy('id', 'DESC')
             ->get();
 
@@ -460,9 +470,10 @@ class PickupRiderRunParcelController extends Controller
 
         if (!empty($parcel_invoice) || !empty($merchant_order_id) || !empty($merchant_id)) {
 
-            $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-                $query->select('id', 'name', 'company_name', 'contact_number', 'address');
-            },
+            $data['parcels'] = Parcel::with([
+                'merchant' => function ($query) {
+                    $query->select('id', 'name', 'company_name', 'contact_number', 'address');
+                },
             ])
                 ->where(function ($query) use ($branch_id, $parcel_invoice, $merchant_order_id, $merchant_id) {
 
@@ -471,30 +482,37 @@ class PickupRiderRunParcelController extends Controller
                     if (!empty($parcel_invoice)) {
                         $query->where('parcel_invoice', 'LIKE', "%{$parcel_invoice}%");
                     } elseif (!empty($merchant_order_id)) {
-                       // $query->where('merchant_order_id', 'LIKE', "%{$merchant_order_id}%");
-                        
-                         $query->where([
+                        // $query->where('merchant_order_id', 'LIKE', "%{$merchant_order_id}%");
+
+                        $query->where([
                             'customer_contact_number' => $merchant_order_id,
-                            
+
                         ]);
-                         $query->orWhere([
+                        $query->orWhere([
                             'merchant_order_id' => $merchant_order_id,
-                            
+
                         ]);
                     } elseif (!empty($merchant_id)) {
                         $query->where([
                             'merchant_id' => $merchant_id,
                         ]);
-                        
                     }
                 })
-                ->select('id', 'parcel_invoice', 'merchant_order_id', 'pickup_address',
-                    'customer_name', 'customer_contact_number', 'merchant_id')
+                ->select(
+                    'id',
+                    'parcel_invoice',
+                    'merchant_order_id',
+                    'pickup_address',
+                    'customer_name',
+                    'customer_contact_number',
+                    'merchant_id'
+                )
                 ->get();
         } else {
-            $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-                $query->select('id', 'name', 'company_name', 'contact_number', 'address');
-            },
+            $data['parcels'] = Parcel::with([
+                'merchant' => function ($query) {
+                    $query->select('id', 'name', 'company_name', 'contact_number', 'address');
+                },
             ])
                 ->where(function ($query) use ($branch_id, $parcel_invoice, $merchant_order_id, $merchant_id) {
                     $query->whereIn('status', [1, 4, 7, 9]);
@@ -503,8 +521,15 @@ class PickupRiderRunParcelController extends Controller
                         'pickup_branch_id' => $branch_id,
                     ]);
                 })
-                ->select('id', 'parcel_invoice', 'merchant_order_id', 'pickup_address',
-                    'customer_name', 'customer_contact_number', 'merchant_id')
+                ->select(
+                    'id',
+                    'parcel_invoice',
+                    'merchant_order_id',
+                    'pickup_address',
+                    'customer_name',
+                    'customer_contact_number',
+                    'merchant_id'
+                )
                 ->get();
         }
         return view('branch.parcel.pickupParcel.pickupRiderRunParcel', $data);
@@ -515,9 +540,10 @@ class PickupRiderRunParcelController extends Controller
     {
         $branch_id = auth()->guard('branch')->user()->branch->id;
         $parcel_invoice = $request->input('parcel_invoice');
-        $parcels = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $parcels = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->whereIn('id', $request->parcel_invoices)
             ->where([
@@ -562,7 +588,6 @@ class PickupRiderRunParcelController extends Controller
                         'associatedModel' => $parcel,
                     ]);
                 }
-
             }
 
             $error = "";
@@ -595,9 +620,10 @@ class PickupRiderRunParcelController extends Controller
     {
         $branch_id = auth()->guard('branch')->user()->branch->id;
         $parcel_invoice = $request->input('parcel_invoice');
-        $parcels = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $parcels = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->whereIn('id', $request->parcel_invoices)
             ->where([
@@ -642,7 +668,6 @@ class PickupRiderRunParcelController extends Controller
                         'associatedModel' => $parcel,
                     ]);
                 }
-
             }
 
             $error = "";
@@ -737,7 +762,7 @@ class PickupRiderRunParcelController extends Controller
                         'pickup_branch_id' => $branch_id,
                         'pickup_branch_user_id' => $branch_user_id,
                     ]);
-                    $parcel=Parcel::where('id', $parcel_id)->first();
+                    $parcel = Parcel::where('id', $parcel_id)->first();
                     ParcelLog::create([
                         'parcel_id' => $parcel_id,
                         'pickup_rider_id' => $request->input('rider_id'),
@@ -771,8 +796,8 @@ class PickupRiderRunParcelController extends Controller
             }
         } catch (\Exception $e) {
             \DB::rollback();
-//            $this->setMessage('Database Error', 'danger');
-//            return redirect()->back()->withInput();
+            //            $this->setMessage('Database Error', 'danger');
+            //            return redirect()->back()->withInput();
 
             return $e->getMessage();
         }
@@ -832,12 +857,12 @@ class PickupRiderRunParcelController extends Controller
             ->select('id', 'name', 'contact_number', 'address')
             ->get();
 
-//        $data['merchants']     = Merchant::where([
-//                    'status'    => 1,
-//                    'branch_id' => $branch_id,
-//                ])
-//                ->select('id', 'name', 'company_name','contact_number', 'address')
-//                ->get();
+        //        $data['merchants']     = Merchant::where([
+        //                    'status'    => 1,
+        //                    'branch_id' => $branch_id,
+        //                ])
+        //                ->select('id', 'name', 'company_name','contact_number', 'address')
+        //                ->get();
 
         $data['merchants'] = Parcel::where([
             'pickup_branch_id' => $branch_id,
@@ -847,9 +872,10 @@ class PickupRiderRunParcelController extends Controller
             ->distinct()
             ->orderBy('merchant_id', 'ASC')->get();
 
-        $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'company_name', 'contact_number');
-        },
+        $data['parcels'] = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'company_name', 'contact_number');
+            },
         ])
             ->where([
                 'pickup_branch_id' => $branch_id,
@@ -922,7 +948,7 @@ class PickupRiderRunParcelController extends Controller
                         'pickup_branch_id' => $branch_id,
                         'pickup_branch_user_id' => $branch_user_id,
                     ]);
-                    $parcel=Parcel::where('id', $parcel_id)->first();
+                    $parcel = Parcel::where('id', $parcel_id)->first();
                     ParcelLog::create([
                         'parcel_id' => $parcel_id,
                         'pickup_rider_id' => $request->input('rider_id'),
@@ -959,7 +985,6 @@ class PickupRiderRunParcelController extends Controller
             $this->setMessage('Database Error', 'danger');
             return redirect()->back()->withInput();
         }
-
     }
 
 
@@ -1028,7 +1053,7 @@ class PickupRiderRunParcelController extends Controller
                                 'parcel_date' => date('Y-m-d'),
                                 'pickup_branch_date' => date('Y-m-d'),
                             ]);
-                            $parcel=Parcel::where('id', $parcel_id[$i])->first();
+                            $parcel = Parcel::where('id', $parcel_id[$i])->first();
                             ParcelLog::create([
                                 'parcel_id' => $parcel_id[$i],
                                 'pickup_branch_id' => auth()->guard('branch')->user()->branch->id,
@@ -1043,10 +1068,10 @@ class PickupRiderRunParcelController extends Controller
                             $parcel = Parcel::with("merchant:id,name,company_name,contact_number")->where('id', $parcel_id[$i])->first();
                             $message = "Dear " . $parcel->merchant->name . ". ";
                             $message .= "Your  Parcel ID No {$parcel->parcel_invoice} is successfully Picked up.";
-                           // $this->send_sms($parcel->merchant->contact_number, $message);
-                            if ($rider_run_status[$i]==7){
-                                $c_message="Dear ".$parcel->customer_name.", we received a parcel from ".$parcel->merchant->company_name." and will deliver soon. Track here: ".route('frontend.orderTracking')."?trackingBox=".$parcel->parcel_invoice."   \n- Foring";
-                          // $this->send_sms($parcel->customer_contact_number, $c_message);
+                            // $this->send_sms($parcel->merchant->contact_number, $message);
+                            if ($rider_run_status[$i] == 7) {
+                                $c_message = "Dear " . $parcel->customer_name . ", we received a parcel from " . $parcel->merchant->company_name . " and will deliver soon. Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Foring";
+                                // $this->send_sms($parcel->customer_contact_number, $c_message);
                             }
 
                             // $parcel = Parcel::where('id', $parcel_id)->first();
@@ -1069,8 +1094,5 @@ class PickupRiderRunParcelController extends Controller
             }
         }
         return response()->json($response);
-
     }
-
-
 }

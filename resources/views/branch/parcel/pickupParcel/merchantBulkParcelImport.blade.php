@@ -39,7 +39,7 @@
                                         <div class="card-body row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="file">Import File <code>(.csv)</code></label>
+                                                    <label for="file">Import File<code>(.csv)</code></label>
                                                     <input type="file" name="file" id="file" class="form-control"
                                                         required>
                                                 </div>

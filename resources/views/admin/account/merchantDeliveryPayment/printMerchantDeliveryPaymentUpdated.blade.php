@@ -39,7 +39,7 @@
 
 <body>
     <div class="container">
-        <div class="header">Dear valued Merchant {{ $merchant->name }},</div>
+        <div class="header">Dear valued Merchant {{ $merchant->company_name }},</div>
         <div class="content">
             <p>A Payment invoice has been generated on {{ now()->format('d/m/Y') }} and invoiced amount has been paid to
                 your desired payment method.</p>

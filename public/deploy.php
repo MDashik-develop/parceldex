@@ -3,6 +3,7 @@
 // Define your secret (if you set one in GitHub & this is optional***)
 $secret = 'your_secret_key';
 
+
 // Get the payload from GitHub
 $payload = file_get_contents('php://input');
 $signature = $_SERVER['HTTP_X_HUB_SIGNATURE'];

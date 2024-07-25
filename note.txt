@@ -5,3 +5,5 @@ new migration:
 4. ALTER TABLE `parcels` ADD `parcel_otp_expired_at` DATETIME NULL AFTER `parcel_otp`;
 5. ALTER TABLE `parcels` ADD `cancel_amount_collection` SMALLINT NOT NULL DEFAULT '0' AFTER `parcel_otp_expired_at`;
 
+
+---------------------------

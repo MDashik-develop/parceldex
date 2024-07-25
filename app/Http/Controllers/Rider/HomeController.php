@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Mail\RiderPasswordRestMail;
 use Illuminate\Support\Facades\Mail;
 
-class HomeControllerx extends Controller{
+class HomeController extends Controller{
 
     public function login(){
         if (auth()->guard('rider')->check()) {

@@ -113,7 +113,7 @@
                         {{--</ul>--}}
                     {{--</li>--}}
 
-                    <li class="nav-item has-treeview {{ $main_menu == 'account' ? 'menu-open' : '' }} ">
+                    {{-- <li class="nav-item has-treeview {{ $main_menu == 'account' ? 'menu-open' : '' }} ">
                         <a href="#" class="nav-link {{ $main_menu == 'account' ? 'active' : '' }}">
                             <i class="fas fa-file-invoice-dollar fa-lg text-success"></i>
                             <p>
@@ -145,9 +145,23 @@
                         <!--        </a>-->
                         <!--    </li>-->
                         <!--</ul>-->
-                    </li>
+                    </li> --}}
                 @endif
 
+                <li class="nav-item">
+                    {{-- <a href="{{ route('merchant.orderTracking') }}" class="nav-link {{ $child_menu == 'orderTracking' ? 'active' : '' }}" >
+                        <i class="fas fa-search-location fa-lg text-success"></i>
+                        <p>
+                            Order Tracking
+                        </p>
+                    </a> --}}
+
+                    <a href="{{ route('merchant.account.deliveryPaymentList') }}" class="nav-link {{ $child_menu == 'deliveryPaymentList' ? 'active' : '' }}">
+                        <i class="fas fa-file-invoice-dollar fa-lg text-success"></i>
+                        <p> Payment List </p>
+                    </a>
+                </li>
+                
                 <li class="nav-item">
                     <a href="{{ route('merchant.orderTracking') }}" class="nav-link {{ $child_menu == 'orderTracking' ? 'active' : '' }}" >
                         <i class="fas fa-search-location fa-lg text-success"></i>

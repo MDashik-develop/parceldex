@@ -202,7 +202,7 @@ class ParcelController extends Controller
                 return '<a href="' . route('merchant.orderTracking', $data->parcel_invoice) . '"
                  title="Parcel View">
                      ' . $data->parcel_invoice . '
-                 </a><br></span> <p><strong>Created Date: </strong>' . $date_time . '</p>';
+                 </a><br></span> <p><strong>Created: </strong>' . $date_time . '</p>';
             })
             ->editColumn('parcel_status', function ($data) {
                 $date_time = '---';
@@ -505,7 +505,7 @@ class ParcelController extends Controller
                 $parcel_info .= '<p><strong>Parcel OTP: </strong>' . $data->parcel_code . '</p>';
                 $parcel_info .= '<p><strong>Service Type: </strong>' . optional($data->service_type)->title . '</p>';
                 $parcel_info .= '<p><strong>Item Type: </strong>' . optional($data->item_type)->title . '</p>';
-                $parcel_info .= '</span> <p><strong>Created Date: </strong>' . $date_time . '</p>';
+                $parcel_info .= '</span> <p><strong>Created: </strong>' . $date_time . '</p>';
                 return $parcel_info;
             })
             ->addColumn('company_info', function ($data) {
@@ -679,6 +679,7 @@ class ParcelController extends Controller
         $fileName = 'parcel_' . time() . '.xlsx';
         return Excel::download(new BranchParcelExport($request), $fileName);
     }
+    
     public function printAllRiderParcelList(Request $request)
     {
         $branch_user = auth()->guard('branch')->user();

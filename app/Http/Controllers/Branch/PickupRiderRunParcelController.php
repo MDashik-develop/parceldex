@@ -1346,10 +1346,14 @@ class PickupRiderRunParcelController extends Controller
                             $message .= "Your  Parcel ID No {$parcel->parcel_invoice} is successfully Picked up.";
 
                             // $this->send_sms($parcel->merchant->contact_number, $message);
-                            if ($rider_run_status[$i] == 7) {
-                                $c_message = "Dear " . $parcel->customer_name . ", we received a parcel from " . $parcel->merchant->company_name . " and will deliver soon. Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Foring";
-                                // $this->send_sms($parcel->customer_contact_number, $c_message);
-                            }
+                            // if ($rider_run_status[$i] == 7) {
+                            //     $c_message = "Dear " . $parcel->customer_name . ", we received a parcel from " . $parcel->merchant->company_name . " and will deliver soon. Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Foring";
+                            //     // $this->send_sms($parcel->customer_contact_number, $c_message);
+                            // }
+
+                            $message = "Dear " . ucwords($parcel->customer_name) . ", Track your parcel from " . ucwords($parcel->merchant->company_name) . ". " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Foring";
+
+                            $this->send_sms($parcel->customer_contact_number, $message);
 
                             // $parcel = Parcel::where('id', $parcel_id)->first();
 

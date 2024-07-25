@@ -178,8 +178,8 @@ class DeliveryPaymentParcelController extends Controller
             $query->select('id', 'name', 'company_name', 'contact_number');
         },])
             // ->whereRaw('delivery_branch_id = ? and (delivery_type = 1 OR (delivery_type = 2  AND status >= 25)) and (payment_type is null OR payment_type = 3)', [$branch_id])
-             ->whereRaw('delivery_branch_id = ? and ((delivery_type = 1 AND status >= 25) OR (delivery_type = 2  AND status >= 25)) and (payment_type is null OR payment_type = 3)', [$branch_id])
-            ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id', 'customer_collect_amount')
+             ->whereRaw('delivery_branch_id = ? and ((delivery_type = 1 AND status >= 25) OR (delivery_type = 2  AND status >= 25)) and (payment_type is null OR payment_type = 3 OR status = 24)', [$branch_id])
+            ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id', 'customer_collect_amount', 'delivery_type', 'cancel_amount_collection')
             ->get();
 
         return view('branch.parcel.deliveryPayment.deliveryPaymentGenerate', $data);

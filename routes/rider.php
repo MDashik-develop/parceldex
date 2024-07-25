@@ -43,6 +43,7 @@ Route::group(['middleware' => 'rider', 'prefix'=>'rider/'], function () {
         Route::get('parcel/{parcel}/parcelDeliveryComplete', [App\Http\Controllers\Rider\DeliveryParcelController::class, 'parcelDeliveryComplete'] )->name('parcel.parcelDeliveryComplete');
         Route::post('parcel/returnConfirmParcelCode', [App\Http\Controllers\Rider\DeliveryParcelController::class, 'returnConfirmParcelCode'] )->name('parcel.returnConfirmParcelCode');
         Route::post('parcel/confirmParcelDeliveryComplete', [App\Http\Controllers\Rider\DeliveryParcelController::class, 'confirmParcelDeliveryComplete'] )->name('parcel.confirmParcelDeliveryComplete');
+        Route::post('parcel/sendOpToMerchant', [App\Http\Controllers\Rider\DeliveryParcelController::class, 'sendOpToMerchant'] )->name('parcel.sendOpToMerchant');
     //================ Delivery Parcel ================================
 
 

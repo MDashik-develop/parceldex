@@ -2,23 +2,29 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Branch;
-use App\Models\Merchant;
-use App\Models\Parcel;
-use App\Models\ParcelDeliveryPayment;
-use App\Models\ParcelDeliveryPaymentDetail;
-use App\Models\ParcelLog;
-use App\Notifications\MerchantParcelNotification;
-use Carbon\Carbon;
 use DataTables;
+use Carbon\Carbon;
+use App\Models\Branch;
+use App\Models\Parcel;
+use App\Models\Merchant;
+use App\Models\ParcelLog;
 use Illuminate\Http\Request;
+use App\Exports\BranchParcelExport;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Models\ParcelDeliveryPayment;
 use Illuminate\Support\Facades\Validator;
+use App\Exports\BranchDeliveryPaymentList;
+use App\Models\ParcelDeliveryPaymentDetail;
+use App\Notifications\MerchantParcelNotification;
+use App\Exports\BranchDeliveryPayment;
 
-class BranchDeliveryPaymentController extends Controller {
+class BranchDeliveryPaymentController extends Controller
+{
 
     /** Branch Delivery Payment List */
-    public function branchDeliveryPaymentList() {
+    public function branchDeliveryPaymentList()
+    {
         $data               = [];
         $data['main_menu']  = 'branch-payment';
         $data['child_menu'] = 'branchDeliveryPaymentList';
@@ -28,11 +34,13 @@ class BranchDeliveryPaymentController extends Controller {
         return view('admin.account.deliveryPayment.branchDeliveryPaymentList', $data);
     }
 
-    public function getBranchDeliveryPaymentList(Request $request) {
+    public function getBranchDeliveryPaymentList(Request $request)
+    {
 
-        $model = ParcelDeliveryPayment::with(['branch' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $model = ParcelDeliveryPayment::with([
+            'branch' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->where(function ($query) use ($request) {
                 $branch_id = $request->input('branch_id');
@@ -55,7 +63,6 @@ class BranchDeliveryPaymentController extends Controller {
                 if ($request->has('to_date') && !is_null($to_date) && $to_date != '') {
                     $query->whereDate('date_time', '<=', $request->input('to_date'));
                 }
-
             })
             ->orderBy('id', 'desc')
             ->select();
@@ -74,17 +81,29 @@ class BranchDeliveryPaymentController extends Controller {
 
             ->editColumn('status', function ($data) {
                 switch ($data->status) {
-                    case 1:$status_name  = "Payment Request"; $class  = "success";break;
-                    case 2:$status_name  = "Payment Accept"; $class  = "success";break;
-                    case 3:$status_name  = "Payment Reject"; $class  = "danger";break;
-                    default:$status_name = "None"; $class = "success";break;
+                    case 1:
+                        $status_name  = "Payment Request";
+                        $class  = "success";
+                        break;
+                    case 2:
+                        $status_name  = "Payment Accept";
+                        $class  = "success";
+                        break;
+                    case 3:
+                        $status_name  = "Payment Reject";
+                        $class  = "danger";
+                        break;
+                    default:
+                        $status_name = "None";
+                        $class = "success";
+                        break;
                 }
                 return '<a class="text-bold text-' . $class . '" href="javascript:void(0)" style="font-size:16px;"> ' . $status_name . '</a>';
             })
 
             ->addColumn('action', function ($data) {
                 $button = '<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" parcel_delivery_payment_id="' . $data->id . '" title="View Branch Delivery Payment">
-                <i class="fa fa-eye"></i> </button>';
+                <i class="fa fa-eye"></i></button>';
                 $button .= '&nbsp; <button class="btn btn-primary print-modal btn-sm" parcel_delivery_payment_id="' . $data->id . '" title="Print Delivery Payment" >
                 <i class="fa fa-print"></i> </button>';
                 if ($data->status == 1) {
@@ -93,6 +112,10 @@ class BranchDeliveryPaymentController extends Controller {
                     $button .= '&nbsp; <button class="btn btn-danger btn-sm reject-branch-delivery-payment" data-toggle="modal" data-target="#viewModal" parcel_delivery_payment_id="' . $data->id . '" title="Reject Branch Delivery Payment">
                             <i class="far fa-window-close"></i> </button>';
                 }
+
+                $button .= '&nbsp; <a class="btn btn-info btn-sm" href=" ' . route('admin.account.excelBranchDeliveryPayment', $data->id) . '" target="_blank">
+                <i class="fas fa-file-excel"></i></a>';
+
                 return $button;
             })
             ->rawColumns(['action', 'status', 'total_payment_amount', 'total_payment_received_amount', 'date_time'])
@@ -100,7 +123,8 @@ class BranchDeliveryPaymentController extends Controller {
     }
 
     /** Branch Delivery Payment Receive List */
-    public function branchDeliveryReceivePaymentList() {
+    public function branchDeliveryReceivePaymentList()
+    {
         $data               = [];
         $data['main_menu']  = 'branch-payment';
         $data['child_menu'] = 'receivePaymentList';
@@ -110,11 +134,13 @@ class BranchDeliveryPaymentController extends Controller {
         return view('admin.account.deliveryPayment.receivePaymentList', $data);
     }
 
-    public function getBranchDeliveryReceivePaymentList(Request $request) {
+    public function getBranchDeliveryReceivePaymentList(Request $request)
+    {
 
-        $model = ParcelDeliveryPayment::with(['branch' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $model = ParcelDeliveryPayment::with([
+            'branch' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->where(function ($query) use ($request) {
                 $branch_id = $request->input('branch_id');
@@ -135,7 +161,6 @@ class BranchDeliveryPaymentController extends Controller {
                 if ($request->has('to_date') && !is_null($to_date) && $to_date != '') {
                     $query->whereDate('date_time', '<=', $request->input('to_date'));
                 }
-
             })
             ->orderBy('id', 'desc')
             ->select();
@@ -154,17 +179,29 @@ class BranchDeliveryPaymentController extends Controller {
 
             ->editColumn('status', function ($data) {
                 switch ($data->status) {
-                    case 1:$status_name  = "Payment Request"; $class  = "success";break;
-                    case 2:$status_name  = "Payment Accept"; $class  = "success";break;
-                    case 3:$status_name  = "Payment Reject"; $class  = "danger";break;
-                    default:$status_name = "None"; $class = "success";break;
+                    case 1:
+                        $status_name  = "Payment Request";
+                        $class  = "success";
+                        break;
+                    case 2:
+                        $status_name  = "Payment Accept";
+                        $class  = "success";
+                        break;
+                    case 3:
+                        $status_name  = "Payment Reject";
+                        $class  = "danger";
+                        break;
+                    default:
+                        $status_name = "None";
+                        $class = "success";
+                        break;
                 }
                 return '<a class="text-bold text-' . $class . '" href="javascript:void(0)" style="font-size:16px;"> ' . $status_name . '</a>';
             })
 
             ->addColumn('action', function ($data) {
                 $button = '<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" parcel_delivery_payment_id="' . $data->id . '" title="View Branch Delivery Payment">
-                <i class="fa fa-eye"></i> </button>';
+                <i class="fa fa-eye"></i></button>';
 
                 if ($data->status == 1) {
                     $button .= '&nbsp; <button class="btn btn-success accept-branch-delivery-payment btn-sm" data-toggle="modal" data-target="#viewModal" parcel_delivery_payment_id="' . $data->id . '" title="Accept Branch Delivery Payment">
@@ -179,21 +216,35 @@ class BranchDeliveryPaymentController extends Controller {
     }
 
 
-    public function viewBranchDeliveryPayment(Request $request, ParcelDeliveryPayment $parcelDeliveryPayment) {
+    public function viewBranchDeliveryPayment(Request $request, ParcelDeliveryPayment $parcelDeliveryPayment)
+    {
         $parcelDeliveryPayment->load('branch', 'branch_user', 'admin', 'parcel_delivery_payment_details');
         return view('admin.account.deliveryPayment.viewBranchDeliveryPayment', compact('parcelDeliveryPayment'));
     }
-    public function printBranchDeliveryPayment(Request $request, ParcelDeliveryPayment $parcelDeliveryPayment) {
+
+    public function excelBranchDeliveryPayment(Request $request, ParcelDeliveryPayment $parcelDeliveryPayment)
+    {
+        $parcelDeliveryPayment->load('branch', 'branch_user', 'admin', 'parcel_delivery_payment_details');
+
+        $fileName = 'branch_delivery_payment_list_' . now() . '.xlsx';
+
+        return Excel::download(new BranchDeliveryPayment($parcelDeliveryPayment), $fileName);
+    }
+
+    public function printBranchDeliveryPayment(Request $request, ParcelDeliveryPayment $parcelDeliveryPayment)
+    {
         $parcelDeliveryPayment->load('branch', 'branch_user', 'admin', 'parcel_delivery_payment_details');
         return view('admin.account.deliveryPayment.printBranchDeliveryPayment', compact('parcelDeliveryPayment'));
     }
 
-    public function acceptBranchDeliveryPayment(Request $request, ParcelDeliveryPayment $parcelDeliveryPayment) {
+    public function acceptBranchDeliveryPayment(Request $request, ParcelDeliveryPayment $parcelDeliveryPayment)
+    {
         $parcelDeliveryPayment->load('branch', 'branch_user', 'admin', 'parcel_delivery_payment_details');
         return view('admin.account.deliveryPayment.acceptBranchDeliveryPayment', compact('parcelDeliveryPayment'));
     }
 
-    public function confirmAcceptBranchDeliveryPayment(Request $request, ParcelDeliveryPayment $parcelDeliveryPayment) {
+    public function confirmAcceptBranchDeliveryPayment(Request $request, ParcelDeliveryPayment $parcelDeliveryPayment)
+    {
         $response = ['error' => 'Error Found'];
 
         if ($request->ajax()) {
@@ -211,9 +262,9 @@ class BranchDeliveryPaymentController extends Controller {
                     $admin_id = auth()->guard('admin')->user()->id;
 
                     $check = ParcelDeliveryPayment::where([
-                            'id' => $parcelDeliveryPayment->id,
+                        'id' => $parcelDeliveryPayment->id,
 
-                        ])
+                    ])
                         ->update([
                             'action_date_time'              => date('Y-m-d H:i:s'),
                             'total_payment_received_parcel' => $request->total_payment_received_parcel,
@@ -252,17 +303,17 @@ class BranchDeliveryPaymentController extends Controller {
                             $parcel     = Parcel::with('merchant')->where('id', $parcel_id[$i])->first();
 
                             $delivery_type = "";
-                            if($parcel->delivery_type == 1 || $parcel->delivery_type == 2){
+                            if ($parcel->delivery_type == 1 || $parcel->delivery_type == 2) {
                                 $delivery_type = "Delivered";
                             }
-                            if($parcel->delivery_type == 4){
+                            if ($parcel->delivery_type == 4) {
                                 $delivery_type = "Canceled";
                             }
 
-//                            $message    = "Dear ".$parcel->merchant->name.", ";
-//                            $message    .= "For  Parcel ID No ".$parcel->parcel_invoice."  is successfully ".$delivery_type.".";
-//                            $message    .= "Please rate your experience with us in our google play store app link.";
-//                            $this->send_sms($parcel->merchant->contact_number, $message);
+                            //                            $message    = "Dear ".$parcel->merchant->name.", ";
+                            //                            $message    .= "For  Parcel ID No ".$parcel->parcel_invoice."  is successfully ".$delivery_type.".";
+                            //                            $message    .= "Please rate your experience with us in our google play store app link.";
+                            //                            $this->send_sms($parcel->merchant->contact_number, $message);
 
 
                             $merchant_user = Merchant::find($parcel->merchant_id);
@@ -280,25 +331,25 @@ class BranchDeliveryPaymentController extends Controller {
                     } else {
                         $response = ['error' => 'Database Error Found'];
                     }
-                }
-                catch (\Exception $e){
+                } catch (\Exception $e) {
                     \DB::rollback();
                     $response = ['error' => 'Database Error'];
                 }
             }
         }
         return response()->json($response);
-
     }
 
 
-    public function rejectBranchDeliveryPayment(Request $request, ParcelDeliveryPayment $parcelDeliveryPayment) {
+    public function rejectBranchDeliveryPayment(Request $request, ParcelDeliveryPayment $parcelDeliveryPayment)
+    {
         $parcelDeliveryPayment->load('branch', 'branch_user');
         $parcelDeliveryPaymentDetails = ParcelDeliveryPaymentDetail::with('parcel')->where('parcel_delivery_payment_id', $parcelDeliveryPayment->id)->get();
         return view('admin.account.deliveryPayment.rejectBranchDeliveryPayment', compact('parcelDeliveryPayment', 'parcelDeliveryPaymentDetails'));
     }
 
-    public function confirmRejectBranchDeliveryPayment(Request $request, ParcelDeliveryPayment $parcelDeliveryPayment) {
+    public function confirmRejectBranchDeliveryPayment(Request $request, ParcelDeliveryPayment $parcelDeliveryPayment)
+    {
         $response = ['error' => 'Error Found'];
 
         if ($request->ajax()) {
@@ -314,8 +365,8 @@ class BranchDeliveryPaymentController extends Controller {
                     $admin_id = auth()->guard('admin')->user()->id;
 
                     $check = ParcelDeliveryPayment::where([
-                            'id' => $parcelDeliveryPayment->id,
-                        ])
+                        'id' => $parcelDeliveryPayment->id,
+                    ])
                         ->update([
                             'action_date_time'              => date('Y-m-d H:i:s'),
                             'note'                          => $request->note,
@@ -344,7 +395,7 @@ class BranchDeliveryPaymentController extends Controller {
 
                             $parcel = Parcel::where('id', $parcel_id[$i])->first();
                             $merchant_user = Merchant::find($parcel->merchant_id);
-                           // $merchant_user->notify(new MerchantParcelNotification($parcel));
+                            // $merchant_user->notify(new MerchantParcelNotification($parcel));
 
                             //$this->merchantDashboardCounterEvent($parcel->merchant_id);
 
@@ -359,16 +410,14 @@ class BranchDeliveryPaymentController extends Controller {
                     } else {
                         $response = ['error' => 'Database Error Found'];
                     }
-                }
-                catch (\Exception $e){
+                } catch (\Exception $e) {
                     \DB::rollback();
                     $response = ['error' => 'Database Error'];
-//                    $response = ['error' => $e->getMessage()];
+                    //                    $response = ['error' => $e->getMessage()];
                 }
             }
         }
         return response()->json($response);
-
     }
 
 
@@ -395,7 +444,7 @@ class BranchDeliveryPaymentController extends Controller {
         //dd($parcel_payment_data);
         $data['date_array'] = array();
         $data['pinvoice_array'] = array();
-        if(count($parcel_payment_data) > 0) {
+        if (count($parcel_payment_data) > 0) {
 
             foreach ($parcel_payment_data as $payment_data) {
                 $delivery_date = date("Y-m-d", strtotime($payment_data->created_at));
@@ -418,17 +467,15 @@ class BranchDeliveryPaymentController extends Controller {
         $data               = [];
         $parcel_payment_data    = ParcelDeliveryPaymentDetail::with(['parcel', 'parcel_delivery_payment'])
 
-            ->where(function($query) use ($request){
+            ->where(function ($query) use ($request) {
 
                 $from_date = $request->input('from_date');
                 $to_date   = $request->input('to_date');
 
                 $branch_id = $request->input('branch_id');
                 if ($request->has('branch_id') && !is_null($branch_id) && $branch_id != '' && $branch_id != 0) {
-                    $query->whereHas('parcel_delivery_payment', function($query)  use ($branch_id) {
-                            $query->where('branch_id', $branch_id);
-
-
+                    $query->whereHas('parcel_delivery_payment', function ($query)  use ($branch_id) {
+                        $query->where('branch_id', $branch_id);
                     });
                 }
 
@@ -445,7 +492,7 @@ class BranchDeliveryPaymentController extends Controller {
 
         $data['date_array'] = array();
         $data['pinvoice_array'] = array();
-        if(count($parcel_payment_data) > 0) {
+        if (count($parcel_payment_data) > 0) {
 
             foreach ($parcel_payment_data as $payment_data) {
                 $delivery_date = date("Y-m-d", strtotime($payment_data->created_at));
@@ -460,6 +507,4 @@ class BranchDeliveryPaymentController extends Controller {
 
         return view('admin.account.deliveryPayment.filterBranchDeliveryPaymentStatement', $data);
     }
-
-
 }

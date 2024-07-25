@@ -326,13 +326,17 @@ class DeliveryRiderRunParcelController extends Controller
 
                                 // if($parcel->delivery_rider->id!=18) {
 
-                                $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->first();
+                                // $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->first();
 
-                                $message = "Dear " . $parcel->customer_name . ", ";
-                                $message .= "Your OTP " . $parcel->parcel_code . ". \n";
-                                $message .= "Parcel from " . $parcel->merchant->company_name . " (TK " . $parcel->total_collect_amount . ")";
-                                $message .= " will be delivered by " . $parcel->delivery_rider->name . ", " . $parcel->delivery_rider->contact_number . ".\n";
-                                $message .= " Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Parceldex";
+                                // $message = "Dear " . $parcel->customer_name . ", ";
+                                // $message .= "Your OTP " . $parcel->parcel_code . ". \n";
+                                // $message .= "Parcel from " . $parcel->merchant->company_name . " (TK " . $parcel->total_collect_amount . ")";
+                                // $message .= " will be delivered by " . $parcel->delivery_rider->name . ", " . $parcel->delivery_rider->contact_number . ".\n";
+                                // $message .= " Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Parceldex";
+
+
+                                $message = $parcel->parcel_invoice . ", " . $parcel->total_collect_amount . " TK. from " . ucwords($parcel->merchant->company_name) . " is on the way to you. Rider - " . ucwords($parcel->delivery_rider->name) . ", " . $parcel->delivery_rider->contact_number;
+
                                 $this->send_sms($parcel->customer_contact_number, $message);
                             }
 

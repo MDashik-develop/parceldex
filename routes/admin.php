@@ -307,6 +307,7 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin/'], function () {
     Route::patch('account/{parcelDeliveryPayment}/confirmAcceptBranchDeliveryPayment', [App\Http\Controllers\Admin\BranchDeliveryPaymentController::class, 'confirmAcceptBranchDeliveryPayment'])->name('account.confirmAcceptBranchDeliveryPayment');
     Route::get('account/{parcelDeliveryPayment}/rejectBranchDeliveryPayment', [App\Http\Controllers\Admin\BranchDeliveryPaymentController::class, 'rejectBranchDeliveryPayment'])->name('account.rejectBranchDeliveryPayment');
     Route::patch('account/{parcelDeliveryPayment}/confirmRejectBranchDeliveryPayment', [App\Http\Controllers\Admin\BranchDeliveryPaymentController::class, 'confirmRejectBranchDeliveryPayment'])->name('account.confirmRejectBranchDeliveryPayment');
+    Route::get('account/{parcelDeliveryPayment}/excelBranchDeliveryPayment', [App\Http\Controllers\Admin\BranchDeliveryPaymentController::class, 'excelBranchDeliveryPayment'])->name('account.excelBranchDeliveryPayment');
     //================ Branch Delivery Payment  ================================
 
     Route::get('parcel/parcelPaymentRequestList', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'parcelPaymentRequestList'])->name('parcel.parcelPaymentRequestList');

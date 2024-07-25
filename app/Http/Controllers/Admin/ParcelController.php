@@ -343,7 +343,7 @@ class ParcelController extends Controller
                 $parcel_info .= '<p><strong>Parcel OTP: </strong>' . $data->parcel_code . '</p>';
                 $parcel_info .= '<p><strong>Service Type: </strong>' . optional($data->service_type)->title . '</p>';
                 $parcel_info .= '<p><strong>Item Type: </strong>' . optional($data->item_type)->title . '</p>';
-                $parcel_info .= '</span> <p><strong>Created Date: </strong>' . $date_time . '</p>';
+                $parcel_info .= '</span> <p><strong>Created: </strong>' . $date_time . '</p>';
                 return $parcel_info;
             })
             ->addColumn('print', function ($data) {

@@ -54,7 +54,6 @@
                                     <th width="10%" class="text-center"> Phone </th>
                                     <th width="10%" class="text-center"> Note </th>
                                     <th width="5%" class="text-center"> Amount to be Collect</th>
-                                    <th width="5%" class="text-center"> Collected Amount</th>
                                     <th width="5%" class="text-center"> Delivery Charge</th>
                                     <th width="5%" class="text-center">Action</th>
                                 </tr>
@@ -66,6 +65,7 @@
                                 if (count($parcels) > 0) {
                                     $i = 0;
                                     $total_collect_amount = 0;
+                                    $total_delivery_charge = 0;
                                     $total_charge = 0;
                                     foreach ($parcels as $parcel) {
                                         // dd($parcel);
@@ -103,7 +103,6 @@
                                             <td class="text-left">{{ $parcel->customer_contact_number }}</td>
                                             <td class="text-center">{{ $logs_note }}</td>
                                             <td class="text-center">{{ $parcel->total_collect_amount }}</td>
-                                            <td class="text-center">{{ $parcel->customer_collect_amount }}</td>
                                             <td class="text-center">{{ $parcel->total_charge }}</td>
                                             <td>
                                                 <button class="btn btn-primary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" parcel_id="{{$parcel->id}}" title="Parcel View">
@@ -115,14 +114,14 @@
 
                                     ?>
                                     <tr>
-                                        <td colspan="9" class="text-center">
+                                        <td colspan="10" class="text-center">
                                             <h5><b>Totals</b></h5>
                                         </td>
                                         <td class="text-center">
-                                            <h5><b>{{$total_collect_amount}} </b></h5>
+                                            <h5><b>{{ number_format($total_collect_amount, 2) }} </b></h5>
                                         </td>
                                         <td class="text-center">
-                                            <h5><b>{{$total_charge}} </b></h5>
+                                            <h5><b>{{ number_format($total_charge, 2) }} </b></h5>
                                         </td>
                                     </tr>
                                 <?php

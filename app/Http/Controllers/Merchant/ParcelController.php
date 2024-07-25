@@ -438,7 +438,7 @@ class ParcelController extends Controller
                 return '<a href="' . route('merchant.orderTracking', $data->parcel_invoice) . '"
                 title="Parcel View">
                     ' . $data->parcel_invoice . '
-                </a><br></span> <p><strong>Created Date: </strong>' . $date_time . '</p>';
+                </a><br></span> <p><strong>Created: </strong>' . $date_time . '</p>';
             })
             ->editColumn('parcel_status', function ($data) {
                 $date_time = '---';

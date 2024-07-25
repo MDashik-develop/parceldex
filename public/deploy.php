@@ -1,6 +1,6 @@
 <?php
 
-// Define your secret (if you set one in GitHub)
+// Define your secret (if you set one in GitHub & this is optional)
 $secret = 'your_secret_key';
 
 // Get the payload from GitHub

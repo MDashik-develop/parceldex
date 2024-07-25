@@ -23,7 +23,7 @@ if ($secret && $signature) {
 $data = json_decode($payload, true);
 
 // Check if the push is to the main branch
-if ($data['ref'] === 'refs/heads/main') {
+if ($data['ref'] === 'refs/heads/master') {
     // Execute the deployment script
     shell_exec('/home/outduprw/elogistics.com.bd/script.sh');
 }

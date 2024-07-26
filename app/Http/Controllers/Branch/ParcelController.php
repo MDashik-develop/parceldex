@@ -247,6 +247,20 @@ class ParcelController extends Controller
             //     margin: auto;'></span>" : "";
             // })
 
+            ->addColumn('rider_run', function ($data) {
+                $x = '';
+
+                foreach ($data->rider_run_detail as $key => $item) {
+                    if (count($data->rider_run_detail) == $key + 1) {
+                        $x .= $item->rider_run->run_invoice;
+                    } else {
+                        $x .= $item->rider_run->run_invoice . ', ';
+                    }
+                }
+
+                return $x;
+            })
+
             ->editColumn('payment_status', function ($data) {
                 $parcelStatus = returnPaymentStatusForAdmin($data->status, $data->delivery_type, $data->payment_type);
                 $status_name  = $parcelStatus['status_name'];
@@ -679,7 +693,7 @@ class ParcelController extends Controller
         $fileName = 'parcel_' . time() . '.xlsx';
         return Excel::download(new BranchParcelExport($request), $fileName);
     }
-    
+
     public function printAllRiderParcelList(Request $request)
     {
         $branch_user = auth()->guard('branch')->user();

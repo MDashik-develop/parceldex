@@ -430,8 +430,8 @@
                         {{-- <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-sync-alt"></i></span> --}}
 
                         <div class="info-box-content">
-                            <span class="info-box-number"> {{ $total_pending_parcel }} <sup><small
-                                        style="color: #007bff; font-size: 15px;">{{ ($total_pending_parcel / 100) * $counter_data['total_parcel'] }}%</small></sup></span>
+                            <span class="info-box-number"> {{ $total_pending_return }} <sup><small
+                                        style="color: #007bff; font-size: 15px;">{{ ($total_pending_return / 100) * $counter_data['total_parcel'] }}%</small></sup></span>
                             <h5 class="info-box-text">Return On Process</h5>
                             <a href="{{ route('merchant.parcel.filterList', 'pending_parcel') }}"
                                 class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
@@ -448,8 +448,8 @@
                         {{-- <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-sync-alt"></i></span> --}}
 
                         <div class="info-box-content">
-                            <span class="info-box-number"> {{ $total_pending_parcel }} <sup><small
-                                        style="color: #007bff; font-size: 15px;">{{ ($total_pending_parcel / 100) * $counter_data['total_parcel'] }}%</small></sup></span>
+                            <span class="info-box-number"> {{ $total_return }} <sup><small
+                                        style="color: #007bff; font-size: 15px;">{{ ($total_return / 100) * $counter_data['total_parcel'] }}%</small></sup></span>
                             <h5 class="info-box-text">Total Returned</h5>
                             <a href="{{ route('merchant.parcel.filterList', 'pending_parcel') }}"
                                 class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>

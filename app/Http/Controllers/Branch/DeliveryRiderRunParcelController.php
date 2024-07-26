@@ -1130,6 +1130,7 @@ class DeliveryRiderRunParcelController extends Controller
 
                                 $new_parcel = $parcel->replicate();
                                 $new_parcel->parcel_invoice = 'P-' . $parcel->parcel_invoice;
+                                $new_parcel->suborder = true;
                                 $new_parcel->delivery_type = 4;
                                 $new_parcel->status = 25;
                                 $new_parcel->total_collect_amount = $confirm_amount_to_be_collect - $confirm_customer_collect_amount;

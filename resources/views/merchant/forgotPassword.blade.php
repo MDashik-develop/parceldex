@@ -31,25 +31,25 @@
 <body class="hold-transition login-page">
 
     <div class="login-box">
-
+        <div class="login-logo" style="margin-bottom: 30px;">
+            @if (!empty($application->photo))
+                <img src="{{ asset('uploads/application/') . '/' . $application->photo }}"
+                    alt="{{ $application->name ?? config('app.name') }}" style="width: 70%" style="opacity: .8">
+            @else
+                <b>{{ $application->name ?? config('app.name') }}</b>
+            @endif
+        </div>
         <div class="card">
             <div class="card-body login-card-body">
-                <div class="login-logo">
-                    @if(!empty($application->photo))
-                        <img src="{{ asset('uploads/application/') . '/' . $application->photo }}"
-                        alt="{{ $application->name ?? config('app.name') }}" style="height: 100px; width: 100%"
-                        style="opacity: .8">
-                    @else
-                        <b>{{ $application->name ?? config('app.name') }}</b>
-                    @endif
-                </div>
+                
                 <br>
-                <p class="login-box-msg">Merchant Rest Password </p>
+                <h3 style="color: #00509D; font-weight: bold; margin-bottom: 20px;" class="login-box-msg">Merchant Rest Password
+                </h3>
                 @include('layouts.merchant_layout.merchant_session_alert')
 
                 <form action="{{ route('merchant.forgotPassword') }}" method="post">
                     @csrf
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-4">
                         <input type="email" name="email" class="form-control" placeholder="Email Address" value="{{ old('email') }}" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
@@ -59,7 +59,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary btn-block">
+                            <button type="submit" class="btn btn-block" style="background-color: #00509D; color: #fff;">
                                 Send Password Reset Link
                             </button>
                         </div>

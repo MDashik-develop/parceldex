@@ -178,6 +178,7 @@
                                     <th class="text-center"> Customer</th>
                                     <th class="text-center">Amount</th>
                                     <th class="text-center"> Remarks / Notes</th>
+                                    <th class="text-center"> Rider Run</th>
                                     <th class="text-center"> Payment Status</th>
                                     <th class="text-center"> Return Status</th>
                                     <th class="text-center"> Action</th>
@@ -264,6 +265,7 @@
                     {data: 'customer_info', name: 'customer_info'},
                     {data: 'amount', name: 'amount'},
                     {data: 'remarks', name: 'remarks'},
+                    {data: 'rider_run', name: 'rider_run'},
                     {data: 'payment_status', name: 'payment_status', searchable: false, class: "text-center"},
                     {data: 'return_status', name: 'return_status', searchable: false, class: "text-center"},
                     {data: 'action', name: 'action', orderable: false, searchable: false, class: "text-center"}

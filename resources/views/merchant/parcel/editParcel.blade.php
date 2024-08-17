@@ -206,6 +206,42 @@
                                                             <!--    </div>-->
                                                             <!--</div>-->
                                                             
+                                                            
+                                                            {{-- <div class="col-md-6 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label for="delivery_option_id"> Delivery Option <code>*</code> </label>
+                                                                    <select name="delivery_option_id" id="delivery_option_id" class="form-control select2" style="width: 100%">
+                                                                        <option value="1">Cash On Delivery</option>
+                                                                        <option value="2">Bkash </option>
+                                                                        <option value="3">Bank </option>
+                                                                        <option value="4">Card </option>
+                                                                    </select>
+                                                                </div>
+                                                            </div> --}}
+                                                            {{-- <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="product_details">Product(s) Brief <code>*</code> </label>
+                                                                    <input type="text" name="product_details" id="product_details" value="{{ $parcel->product_details }}" class="form-control" placeholder="Product Details " required>
+                                                                </div>
+                                                            </div> --}}
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="total_collect_amount">Amount to be Collect</label>
+                                                                    <input type="number" name="total_collect_amount"
+                                                                           id="total_collect_amount"
+                                                                           value="{{ $parcel->total_collect_amount }}"
+                                                                           class="form-control" placeholder="0.00">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="product_value">Product Value</label>
+                                                                    <input type="number" name="product_value"
+                                                                           id="product_value"
+                                                                           value="{{ $parcel->product_value }}"
+                                                                           class="form-control" placeholder="1200.00" min="1">
+                                                                </div>
+                                                            </div>
                                                             <div class="col-md-6 col-sm-12">
                                                                 <div class="form-group">
                                                                     <label for="weight_package_id"> Weight Package
@@ -230,42 +266,20 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            {{-- <div class="col-md-6 col-sm-12">
+                                                            <div class="col-md-6 col-sm-12">
                                                                 <div class="form-group">
-                                                                    <label for="delivery_option_id"> Delivery Option <code>*</code> </label>
-                                                                    <select name="delivery_option_id" id="delivery_option_id" class="form-control select2" style="width: 100%">
-                                                                        <option value="1">Cash On Delivery</option>
-                                                                        <option value="2">Bkash </option>
-                                                                        <option value="3">Bank </option>
-                                                                        <option value="4">Card </option>
+                                                                    <label for="weight_package_id">Exchange
+                                                                        <code>*</code> </label>
+                                                                    <select name="exchange"
+                                                                        class="form-control select2" style="width: 100%">
+                                                                        <option value="yes" {{ $parcel->exchange == 'yes' ? 'selected' : '' }}>Yes
+                                                                        </option>
+                                                                        <option {{ $parcel->exchange == 'no' ? 'selected' : '' }} value="no">No
+                                                                        </option>
                                                                     </select>
                                                                 </div>
-                                                            </div> --}}
-                                                            {{-- <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="product_details">Product(s) Brief <code>*</code> </label>
-                                                                    <input type="text" name="product_details" id="product_details" value="{{ $parcel->product_details }}" class="form-control" placeholder="Product Details " required>
-                                                                </div>
-                                                            </div> --}}
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="total_collect_amount">Total Collection
-                                                                        Amount</label>
-                                                                    <input type="number" name="total_collect_amount"
-                                                                           id="total_collect_amount"
-                                                                           value="{{ $parcel->total_collect_amount }}"
-                                                                           class="form-control" placeholder="0.00">
-                                                                </div>
                                                             </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="product_value">Product Value</label>
-                                                                    <input type="number" name="product_value"
-                                                                           id="product_value"
-                                                                           value="{{ $parcel->product_value }}"
-                                                                           class="form-control" placeholder="1200.00" min="1">
-                                                                </div>
-                                                            </div>
+
                                                             <div class="col-md-12">
                                                                 <div class="form-group">
                                                                     <label for="product_details">Product Details</label>

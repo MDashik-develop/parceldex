@@ -44,7 +44,8 @@ class MerchantDeliveryPaymentController extends Controller
     {
 
         $model = ParcelMerchantDeliveryPayment::with([
-            'parcel_merchant_delivery_payment_details.parcel', 'merchant' => function ($query) {
+            'parcel_merchant_delivery_payment_details.parcel',
+            'merchant' => function ($query) {
                 $query->select('id', 'name', 'company_name', 'contact_number', 'address');
             },
         ])
@@ -281,8 +282,8 @@ class MerchantDeliveryPaymentController extends Controller
         $data['merchants'] = Merchant::whereHas('parcel', function ($query) {
             $query->whereRaw("
                                     ((parcels.delivery_type in (1) AND parcels.payment_type in (2,6))
-                                    OR (parcels.delivery_type in (2) AND parcels.payment_type in (2,6) AND parcels.status = 36)
-                                    OR (parcels.delivery_type in (4)  AND (parcels.payment_type is NULL || parcels.payment_type in (2,6)) AND parcels.status = 36))
+                                    OR (parcels.delivery_type in (2) AND parcels.payment_type in (2,6))
+                                    OR (parcels.delivery_type in (4)  AND (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
                                 ");
         })
             ->get();
@@ -298,8 +299,8 @@ class MerchantDeliveryPaymentController extends Controller
         ])
             ->whereRaw("
                 ((parcels.delivery_type in (1) AND parcels.payment_type IN (2,6))
-                OR (parcels.delivery_type in (2) AND parcels.payment_type IN (2,6) AND parcels.status = 36)
-                OR (parcels.delivery_type in (4) AND (parcels.payment_type is NULL || parcels.payment_type in (2,6)) AND parcels.status = 36))
+                OR (parcels.delivery_type in (2) AND parcels.payment_type IN (2,6))
+                OR (parcels.delivery_type in (4) AND (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
             ")
             ->select(
                 'id',
@@ -405,8 +406,8 @@ class MerchantDeliveryPaymentController extends Controller
             ->whereIn('id', $request->parcel_invoices)
             ->whereRaw("
                     ((delivery_type in (1) and payment_type in (2,6))
-                    OR (delivery_type in (2) and payment_type in (2,6) and status = 36)
-                    OR (delivery_type in (4) and (parcels.payment_type is NULL || parcels.payment_type in (2,6)) and status = 36))
+                    OR (delivery_type in (2) and payment_type in (2,6))
+                    OR (delivery_type in (4) and (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
                 ")
             ->select(
                 'id',

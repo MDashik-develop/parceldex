@@ -37,8 +37,9 @@ class DeliveryPaymentParcelController extends Controller
         $branch_id = auth()->guard('branch')->user()->branch->id;
         $branch_user_id = auth()->guard('branch')->user()->id;
 
-        $model = ParcelDeliveryPayment::with(['admin'
-        => function ($query) {
+        $model = ParcelDeliveryPayment::with([
+            'admin'
+            => function ($query) {
                 $query->select('id', 'name');
             },
         ])
@@ -76,15 +77,15 @@ class DeliveryPaymentParcelController extends Controller
             })
             ->editColumn('status', function ($data) {
                 switch ($data->status) {
-                    case 1 :
+                    case 1:
                         $status_name = "Send Request";
                         $class = "success";
                         break;
-                    case 2 :
+                    case 2:
                         $status_name = "Accept";
                         $class = "success";
                         break;
-                    case 3 :
+                    case 3:
                         $status_name = "Reject";
                         $class = "danger";
                         break;
@@ -117,8 +118,9 @@ class DeliveryPaymentParcelController extends Controller
         $branch_user_id = auth()->guard('branch')->user()->id;
         $filter = [];
 
-        $model = ParcelDeliveryPayment::with(['admin'
-        => function ($query) {
+        $model = ParcelDeliveryPayment::with([
+            'admin'
+            => function ($query) {
                 $query->select('id', 'name');
             },
         ])
@@ -178,7 +180,7 @@ class DeliveryPaymentParcelController extends Controller
             $query->select('id', 'name', 'company_name', 'contact_number');
         },])
             // ->whereRaw('delivery_branch_id = ? and (delivery_type = 1 OR (delivery_type = 2  AND status >= 25)) and (payment_type is null OR payment_type = 3)', [$branch_id])
-             ->whereRaw('delivery_branch_id = ? and ((delivery_type = 1 AND status >= 25) OR (delivery_type = 2  AND status >= 25)) and (payment_type is null OR payment_type = 3 OR status = 24)', [$branch_id])
+            ->whereRaw('delivery_branch_id = ? and ((delivery_type = 1 AND status >= 25) OR (delivery_type = 2  AND status >= 25) OR (delivery_type = 4  AND status >= 25)) and (payment_type is null OR payment_type = 3 OR status = 24)', [$branch_id])
             ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id', 'customer_collect_amount', 'delivery_type', 'cancel_amount_collection')
             ->get();
 
@@ -196,9 +198,10 @@ class DeliveryPaymentParcelController extends Controller
 
         if (!empty($parcel_invoice_barcode) || !empty($parcel_invoice) || !empty($merchant_order_id)) {
 
-            $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-                $query->select('id', 'name', 'contact_number');
-            },
+            $data['parcels'] = Parcel::with([
+                'merchant' => function ($query) {
+                    $query->select('id', 'name', 'contact_number');
+                },
             ])
                 // ->whereRaw('delivery_branch_id = ? and  (delivery_type = 1 AND status >= 25 OR ( delivery_type = 2  AND status >= 25) and payment_type = null)', [$branch_id])
                 ->whereRaw('delivery_branch_id = ? and ((delivery_type = 1 AND status >= 25) OR (delivery_type = 2 AND status >= 25 and payment_type is null))', [$branch_id])
@@ -231,15 +234,23 @@ class DeliveryPaymentParcelController extends Controller
 
         $parcel_invoice = $request->input('parcel_invoice');
 
+        logger(4444444444444);
+        logger($request->parcel_invoices);
 
-        $parcels = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $parcels = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->whereIn('id', $request->parcel_invoices)
-            ->whereRaw('delivery_branch_id = ? and  delivery_type in (1,2) and ((delivery_type = 1  AND status >= 25) OR (delivery_type = 2  AND status >= 25))  and (payment_type is null OR payment_type = 3)', [$branch_id])
+
+            ->whereRaw('delivery_branch_id = ? and  delivery_type in (1,2,4) and 
+            ((delivery_type = 1  AND status >= 25) OR (delivery_type = 2 AND status >= 25) OR (delivery_type = 4 AND status >= 25))  and
+            (payment_type is null OR payment_type = 3)', [$branch_id])
+
             ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id', 'customer_collect_amount')
             ->get();
+
         if ($parcels->count() > 0) {
             $cart = \Cart::session($branch_id)->getContent();
             $cart = $cart->sortBy('id');
@@ -447,9 +458,10 @@ class DeliveryPaymentParcelController extends Controller
             ->select('id', 'name', 'contact_number', 'address')
             ->get();
 
-        $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $data['parcels'] = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->whereRaw('delivery_branch_id = ? and  delivery_type in (1,2) and status >= 25  and (payment_type is null OR payment_type = 3)', [$branch_id])
             ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id', 'customer_collect_amount')
@@ -566,7 +578,7 @@ class DeliveryPaymentParcelController extends Controller
                 if ($check) {
                     $riderRunDetails = RiderRunDetail::where('rider_run_id', $request->rider_run_id)->get();
                     foreach ($riderRunDetails as $riderRunDetail) {
-                        $parcel=Parcel::where('id', $riderRunDetail->parcel_id)->first();
+                        $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->first();
                         $parcel->update([
                             'status' => 17,
                             'delivery_branch_id' => $branch_id,
@@ -632,7 +644,7 @@ class DeliveryPaymentParcelController extends Controller
                 if ($check) {
                     $riderRunDetails = RiderRunDetail::where('rider_run_id', $request->rider_run_id)->get();
                     foreach ($riderRunDetails as $riderRunDetail) {
-                        $parcel=Parcel::where('id', $riderRunDetail->parcel_id)->first();
+                        $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->first();
                         $parcel->update([
                             'status' => 18,
                             'parcel_date' => date('Y-m-d'),
@@ -654,8 +666,8 @@ class DeliveryPaymentParcelController extends Controller
 
                         $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->first();
 
-//                        $merchant_user = Merchant::where('id', $parcel->merchant_id)->first();
-//                        $merchant_user->notify(new MerchantParcelNotification($parcel));
+                        //                        $merchant_user = Merchant::where('id', $parcel->merchant_id)->first();
+                        //                        $merchant_user->notify(new MerchantParcelNotification($parcel));
 
                         // $this->merchantDashboardCounterEvent($parcel->merchant_id);
 
@@ -744,14 +756,14 @@ class DeliveryPaymentParcelController extends Controller
                         ];
 
                         switch ($complete_type[$i]) {
-                            case 21 :
+                            case 21:
                                 $parcel_update_data['status'] = 25;
                                 $parcel_update_data['customer_collect_amount'] = $customer_collect_amount[$i];
                                 $parcel_update_data['delivery_type'] = 1;
                                 $parcel_log_create_data['status'] = 25;
                                 break;
 
-                            case 22 :
+                            case 22:
                                 $parcel_update_data['status'] = 25;
                                 $parcel_update_data['customer_collect_amount'] = $customer_collect_amount[$i];
                                 $parcel_update_data['delivery_type'] = 2;
@@ -759,7 +771,7 @@ class DeliveryPaymentParcelController extends Controller
                                 $parcel_log_create_data['status'] = 25;
                                 break;
 
-                            case 23 :
+                            case 23:
                                 $parcel_update_data['status'] = 25;
                                 $parcel_update_data['reschedule_parcel_date'] = $reschedule_parcel_date[$i];
                                 $parcel_update_data['delivery_type'] = 3;
@@ -768,7 +780,7 @@ class DeliveryPaymentParcelController extends Controller
                                 $parcel_log_create_data['reschedule_parcel_date'] = $reschedule_parcel_date[$i];
                                 break;
 
-                            case 24 :
+                            case 24:
                                 $parcel_update_data['status'] = 25;
                                 $parcel_update_data['delivery_type'] = 4;
                                 $parcel_log_create_data['status'] = 25;
@@ -778,8 +790,9 @@ class DeliveryPaymentParcelController extends Controller
                                 break;
                         }
                         Parcel::where('id', $parcel_id[$i])->update($parcel_update_data);
-                        $parcel=Parcel::where('id', $parcel_id[$i])->first();
-                        $parcel_log_create_data['delivery_type']=  $parcel->delivery_type;
+                        $parcel = Parcel::where('id', $parcel_id[$i])->first();
+                        $parcel_log_create_data['delivery_type'] =  $parcel->delivery_type;
+                        // Invalid Log 
                         ParcelLog::create($parcel_log_create_data);
 
                         $parcel = Parcel::where('id', $parcel_id[$i])->first();
@@ -796,7 +809,5 @@ class DeliveryPaymentParcelController extends Controller
             }
         }
         return response()->json($response);
-
     }
-
 }

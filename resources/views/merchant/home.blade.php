@@ -159,7 +159,7 @@
 
 
             <div class="row admin_client_info justify-content-center">
-                <div class="col-lg-2 col-2 text-right" style="padding: 0px 5px !important;">
+                <div class="col-lg-3 col-md-8 col-sm-8 text-right" style="padding: 0px 5px !important;">
                     <button type="button" class="btn btn-primary btn-block" href="#"
                         style="color: #0069d9;
     border: 1px solid #0069d9;
@@ -171,7 +171,7 @@
                     </button>
                 </div>
 
-                <div class="col-lg-4 col-4"
+                <div class="col-lg-3 col-md-4 col-sm-4"
                     @if ($total_pending_payment <= 0) style="font-size: large; padding: 0px; border-radius: 1.5rem;" @endif
                     style=" font-size: x-large; padding: 0px;!important; border-radius: 1.5rem;">
                     <a href="https://play.google.com/store/apps/details?id=com.parceldexltd.merchant&pcampaignid=web_share"
@@ -181,7 +181,7 @@
                         target="_blank"><img height="40" src="{{ asset('image/appstore.jpg') }}"></a>
                 </div>
 
-                <div class="col-lg-4 col-4">
+                <div class="col-lg-4 col-md-8 col-sm-8">
                     <div class="form-group">
                         <input type="text" name="parcel_invoice" id="parcel_invoice" value="{{ $parcel_invoice }}"
                             class="form-control" placeholder="Enter Parcel Invoice Or Order ID Or Customer Number"
@@ -193,7 +193,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-2 col-2" style="margin: auto;">
+                <div class="col-lg-2 col-md-4 col-sm-4" style="margin: auto;">
                     <button type="button" class="btn btn-info btn-block" onclick="return parcelResult()">
                         Search
                     </button>

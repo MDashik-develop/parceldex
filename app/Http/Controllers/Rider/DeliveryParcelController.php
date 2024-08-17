@@ -470,11 +470,18 @@ class DeliveryParcelController extends Controller
                         /*$message .= "Your OTP ".$parcel->parcel_code.", ";
                         $message .= "For  parcel ID No ".$parcel->parcel_invoice.".";
                         $message .= "Please rate your experience with us in our https://www.facebook.com/.com.bd.";*/
-                        $message .= "Dear " . $parcel->customer_name . ", ";
-                        $message .= "Your OTP " . $parcel->parcel_code . ". \n";
-                        $message .= "Parcel from " . $parcel->merchant->company_name . " (TK " . $parcel->total_collect_amount . ")";
-                        $message .= " will be delivered by " . $parcel->delivery_rider->name . ", " . $parcel->delivery_rider->contact_number . ".\n";
-                        $message .= " Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Eyecon Courier";
+
+                        // $message .= "Dear " . $parcel->customer_name . ", ";
+                        // $message .= "Your OTP " . $parcel->parcel_code . ". \n";
+                        // $message .= "Parcel from " . $parcel->merchant->company_name . " (TK " . $parcel->total_collect_amount . ")";
+                        // $message .= " will be delivered by " . $parcel->delivery_rider->name . ", " . $parcel->delivery_rider->contact_number . ".\n";
+                        // $message .= " Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Parceldex Ltd";
+
+                        // $message = "Provide this OTP: " . $parcel->parcel_otp . " to rider if you received parcel (" . $parcel->parcel_invoice . "). This OTP will be valid for 30 minutes. Parceldex Ltd.";
+
+                        $message = $parcel->parcel_invoice . ", " . $parcel->total_collect_amount . " TK. from " . ucwords($parcel->merchant->company_name) . " is on the way to you. Rider - " . ucwords($parcel->delivery_rider->name) . ", " . $parcel->delivery_rider->contact_number;
+
+
                         $this->send_sms($parcel->customer_contact_number, $message);
 
                         // send_bl_sms($parcel->customer_contact_number,$message);
@@ -850,7 +857,7 @@ class DeliveryParcelController extends Controller
 
                         if ($delivery_type == 22 || $delivery_type == 21) {
                             $message = "Dear " . $parcel->customer_name . ", ";
-                            $message .= " Your parcel is successfully delivered. To Rate your experience visit https://www.facebook.com/eyeconstar \n- Eyecon Courier";
+                            $message .= " Your parcel is successfully delivered. \n- Parceldex Ltd";
                             //  $this->send_sms($parcel->customer_contact_number, $message);
                         }
 

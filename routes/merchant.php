@@ -42,6 +42,8 @@ Route::group(['middleware' => 'merchant', 'prefix'=>'merchant/'], function (){
     Route::get('parcel/add', [App\Http\Controllers\Merchant\ParcelController::class, 'add'] )->name('parcel.add');
     Route::post('parcel/store', [App\Http\Controllers\Merchant\ParcelController::class, 'store'] )->name('parcel.store');
     Route::get('parcel/list', [App\Http\Controllers\Merchant\ParcelController::class, 'list'] )->name('parcel.list');
+    Route::get('parcel/return/list', [App\Http\Controllers\Merchant\ParcelController::class, 'returnList'] )->name('return.list');
+    Route::get('parcel/getReturnRiderRunList', [App\Http\Controllers\Merchant\ParcelController::class, 'getReturnRiderRunList'] )->name('parcel.getReturnRiderRunList');
     Route::get('parcel/getParcelList', [App\Http\Controllers\Merchant\ParcelController::class, 'getParcelList'] )->name('parcel.getParcelList');
     Route::get('parcel/printParcelList', [App\Http\Controllers\Merchant\ParcelController::class, 'printParcelList'] )->name('parcel.printParcelList');
     Route::post('parcel/printParcelMultiple', [App\Http\Controllers\Merchant\ParcelController::class, 'printParcelMultiple'] )->name('parcel.printParcelMultiple');

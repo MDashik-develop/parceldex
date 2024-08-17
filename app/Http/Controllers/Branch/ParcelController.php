@@ -76,7 +76,10 @@ class ParcelController extends Controller
         }
 
         $model = Parcel::with([
-            'district', 'upazila', 'area', 'parcel_logs',
+            'district',
+            'upazila',
+            'area',
+            'parcel_logs',
             'merchant' => function ($query) {
                 $query->select('id', 'name', 'company_name', 'contact_number', 'address');
             },
@@ -196,10 +199,12 @@ class ParcelController extends Controller
 
             ->addIndexColumn()
             ->editColumn('parcel_invoice', function ($data) {
+
+                return $data->parcel_invoice;
                 // $date_time =  $data->date . " " . date("h:i A", strtotime($data->created_at));
                 $date_time =   $data->created_at->format('Y-m-d h:i A');
 
-                return '<a href="' . route('merchant.orderTracking', $data->parcel_invoice) . '"
+                return '<a href="' . route('branch.orderTracking', $data->parcel_invoice) . '"
                  title="Parcel View">
                      ' . $data->parcel_invoice . '
                  </a><br></span> <p><strong>Created: </strong>' . $date_time . '</p>';
@@ -252,9 +257,9 @@ class ParcelController extends Controller
 
                 foreach ($data->rider_run_detail as $key => $item) {
                     if (count($data->rider_run_detail) == $key + 1) {
-                        $x .= $item->rider_run->run_invoice;
+                        $x .= $item->rider_run->run_invoice . '(' . $this->getX($item->rider_run->run_type) . ')';
                     } else {
-                        $x .= $item->rider_run->run_invoice . ', ';
+                        $x .= $item->rider_run->run_invoice . '(' . $this->getX($item->rider_run->run_type) . '), ';
                     }
                 }
 
@@ -371,6 +376,21 @@ class ParcelController extends Controller
             ->make(true);
     }
 
+    public function getX($x)
+    {
+        if ($x == 1) {
+            return 'Pickup';
+        }
+
+        if ($x == 2) {
+            return 'Delivery';
+        }
+
+        if ($x == 3) {
+            return 'Return';
+        }
+    }
+
     public function getAllRiderParcelList(Request $request)
     {
         $branch_user = auth()->guard('branch')->user();
@@ -385,7 +405,12 @@ class ParcelController extends Controller
         }
 
         $model = Parcel::with([
-            'district', 'upazila', 'area', 'pickup_rider', 'delivery_rider', 'return_rider',
+            'district',
+            'upazila',
+            'area',
+            'pickup_rider',
+            'delivery_rider',
+            'return_rider',
             'merchant'    => function ($query) {
                 $query->select('id', 'name', 'company_name', 'contact_number', 'address');
             },
@@ -605,7 +630,9 @@ class ParcelController extends Controller
         }
 
         $model = Parcel::with([
-            'district', 'upazila', 'area',
+            'district',
+            'upazila',
+            'area',
             'merchant'    => function ($query) {
                 $query->select('id', 'name', 'company_name', 'contact_number', 'address');
             },
@@ -708,7 +735,9 @@ class ParcelController extends Controller
         }
 
         $model = Parcel::with([
-            'district', 'upazila', 'area',
+            'district',
+            'upazila',
+            'area',
             'merchant'    => function ($query) {
                 $query->select('id', 'name', 'company_name', 'contact_number', 'address');
             },
@@ -1125,7 +1154,35 @@ class ParcelController extends Controller
             }*/
             $check = Parcel::where('id', $parcel->id)->update($data) ? true : false;
 
+            $x = 'Update: ';
+            $hasUpdated = false;
+
+            $parcelOld = Parcel::find($parcel->id);
+            $oldProduct_value = $parcelOld->product_value;
+            $newProduct_value = $request->input('product_value');
+
+            $oldTotal_collect_amount = $parcelOld->total_collect_amount;
+            $newTotal_collect_amount = $request->input('total_collect_amount');
+
             if ($check) {
+                if ($oldProduct_value != $newProduct_value) {
+                    $hasUpdated = true;
+                    $x .= 'Product value has been changed to ' . $oldProduct_value . ' to ' . $newProduct_value;
+                }
+
+                if ($oldTotal_collect_amount != $newTotal_collect_amount) {
+                    if ($hasUpdated) {
+                        $x .= ' & total collect amount ' . $oldTotal_collect_amount . ' to ' . $newTotal_collect_amount;
+                    } else {
+                        $x .= 'Total collect amount has been changed to ' . $oldTotal_collect_amount . ' to ' . $newTotal_collect_amount;
+                    }
+                    $hasUpdated = true;
+                }
+
+                if ($hasUpdated) {
+                    createActivityLog($x, $parcelOld);
+                }
+
                 $data = [
                     'parcel_id'             => $parcel->id,
                     'date'                  => date('Y-m-d'),

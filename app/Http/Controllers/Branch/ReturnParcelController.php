@@ -473,6 +473,7 @@ class ReturnParcelController extends Controller {
                         'status'             => 11,
                         'delivery_type' => $parcel->delivery_type,
                     ];
+                    // Invalid Log 
                     ParcelLog::create($data);
 
                     $this->adminDashboardCounterEvent();
@@ -511,6 +512,7 @@ class ReturnParcelController extends Controller {
                         'status'             => 12,
                         'delivery_type' => $parcel->delivery_type,
                     ];
+                    // Invalid Log 
                     ParcelLog::create($data);
 
 
@@ -838,6 +840,7 @@ class ReturnParcelController extends Controller {
                             'parcel_date' => date('Y-m-d'),
                         ]);
                         $parcel=Parcel::where('id', $riderRunDetail->parcel_id)->first();
+                        // Invalid Log 
                         ParcelLog::create([
                             'parcel_id'        => $riderRunDetail->parcel_id,
                             'pickup_branch_id' => auth()->guard('branch')->user()->id,
@@ -889,6 +892,7 @@ class ReturnParcelController extends Controller {
                             'parcel_date' => date('Y-m-d'),
                         ]);
                         $parcel=Parcel::where('id',  $riderRunDetail->parcel_id)->first();
+                        // Invalid Log 
                         ParcelLog::create([
                             'parcel_id'        => $riderRunDetail->parcel_id,
                             'pickup_branch_id' => auth()->guard('branch')->user()->id,
@@ -1042,6 +1046,7 @@ class ReturnParcelController extends Controller {
                 $data['delivery_branch_id'] = auth()->guard('branch')->user()->id;
             }
 
+            // Invalid Log 
             ParcelLog::create($data);
 
             $this->setMessage('Parcel Update Successfully', 'success');
@@ -1134,6 +1139,7 @@ class ReturnParcelController extends Controller {
                 $parcel=Parcel::where('id', $request->parcel_id)->first();
                 if ($parcel) {
 
+                    // Invalid Log 
                     $data = [
                         'parcel_id'        => $request->parcel_id,
                         'pickup_branch_id' => auth()->guard('branch')->user()->id,

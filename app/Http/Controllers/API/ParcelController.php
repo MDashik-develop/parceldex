@@ -89,6 +89,7 @@ class ParcelController extends Controller {
                 'status'           => $parcel_status,
                 'delivery_type' => $parcel->delivery_type,
             ];
+            // Invalid Log 
             ParcelLog::create($data);
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Observers\ParcelObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +14,6 @@ class Parcel extends Model
 
     protected $guarded = [];
 
-
     public function weight_package()
     {
         return $this->belongsTo(WeightPackage::class, 'weight_package_id')->withDefault(['name' => 'Weight Package Name']);
@@ -22,6 +22,16 @@ class Parcel extends Model
     public function merchant()
     {
         return $this->belongsTo(Merchant::class, 'merchant_id')->withDefault(['name' => 'Merchant Name'])->with('district', 'upazila', 'area');
+    }
+
+    public function merchantDeliveryPayment()
+    {
+        return $this->belongsTo(ParcelMerchantDeliveryPayment::class, 'merchant_id', 'merchant_id');
+    }
+
+    public function deliveryBranchTransferDetails()
+    {
+        return $this->belongsTo(DeliveryBranchTransferDetail::class, 'parcel_id');
     }
 
     public function merchant_shops()

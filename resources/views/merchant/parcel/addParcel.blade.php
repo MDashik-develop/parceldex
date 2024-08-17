@@ -283,19 +283,19 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-md-6 col-sm-12">
+                                                        <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="weight_package_id">Exchange
-                                                                    <code>*</code> </label>
-                                                                <select name="exchange"
-                                                                    class="form-control select2" style="width: 100%">
-                                                                    <option value="yes">Yes
-                                                                    </option>
-                                                                    <option selected value="no">No
-                                                                    </option>
-                                                                </select>
+                                                                <label for="product_value">Product
+                                                                    Value<code>*</code></label>
+                                                                <input type="number" name="product_value"
+                                                                    id="product_value"
+                                                                    value="{{ old('product_value') }}"
+                                                                    class="form-control" placeholder="1200.00" min="1"
+                                                                    required>
                                                             </div>
                                                         </div>
+
+                                                        
 
                                                         <div class="col-md-6">
                                                             <div class="form-group">
@@ -310,17 +310,20 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-6 col-sm-12">
                                                             <div class="form-group">
-                                                                <label for="product_value">Product
-                                                                    Value<code>*</code></label>
-                                                                <input type="number" name="product_value"
-                                                                    id="product_value"
-                                                                    value="{{ old('product_value') }}"
-                                                                    class="form-control" placeholder="1200.00" min="1"
-                                                                    required>
+                                                                <label for="weight_package_id">Exchange
+                                                                    <code>*</code> </label>
+                                                                <select name="exchange"
+                                                                    class="form-control select2" style="width: 100%">
+                                                                    <option value="yes">Yes
+                                                                    </option>
+                                                                    <option selected value="no">No
+                                                                    </option>
+                                                                </select>
                                                             </div>
                                                         </div>
+                                                        
 
                                                         <div class="col-md-12">
                                                             <div class="form-group">

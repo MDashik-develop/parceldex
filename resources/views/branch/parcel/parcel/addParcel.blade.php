@@ -275,19 +275,7 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-md-6 col-sm-12">
-                                                                <div class="form-group">
-                                                                    <label for="weight_package_id"> Weight Package
-                                                                        <code>*</code></label>
-                                                                    <select name="weight_package_id"
-                                                                        id="weight_package_id"
-                                                                        class="form-control select2" style="width: 100%"
-                                                                        disabled>
-                                                                        <option value="0" data-charge="0">Select
-                                                                            Weight Package </option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
+
                                                             {{-- <div class="col-md-6 col-sm-12">
                                                                 <div class="form-group">
                                                                     <label for="delivery_option_id"> Delivery Option  <code>*</code></label>
@@ -307,8 +295,8 @@
                                                             </div> --}}
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
-                                                                    <label for="total_collect_amount">Total Collection
-                                                                        Amount</label>
+                                                                    <label for="total_collect_amount">Amount to be
+                                                                        Collect</label>
                                                                     <input type="number" name="total_collect_amount"
                                                                         id="total_collect_amount"
                                                                         value="{{ old('total_collect_amount') }}"
@@ -324,6 +312,19 @@
                                                                         value="{{ old('product_value') }}"
                                                                         class="form-control" placeholder="1200.00"
                                                                         min="1" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label for="weight_package_id"> Weight Package
+                                                                        <code>*</code></label>
+                                                                    <select name="weight_package_id"
+                                                                        id="weight_package_id"
+                                                                        class="form-control select2" style="width: 100%"
+                                                                        disabled>
+                                                                        <option value="0" data-charge="0">Select
+                                                                            Weight Package </option>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
@@ -912,7 +913,7 @@
                 var weight_package_name = $("#weight_package_id option:selected").text();
                 var charge = returnNumber($("#weight_package_id option:selected").attr('data-charge'));
                 var merchant_service_area_charge = returnNumber($("#confirm_merchant_service_area_charge")
-                .val());
+                    .val());
 
                 // $("#confirm_weight_package_charge").val(charge);
                 // if(merchant_service_area_charge == 0){

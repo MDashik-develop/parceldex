@@ -5,24 +5,26 @@ namespace App\Http\Controllers\Merchant;
 
 use DataTables;
 use App\Models\Area;
+use App\Models\Rider;
 use App\Models\Parcel;
 use App\Models\Upazila;
 use App\Models\District;
 use App\Models\ItemType;
 use App\Models\Merchant;
+use App\Models\RiderRun;
 use App\Models\ParcelLog;
 use App\Models\ServiceType;
 use App\Models\MerchantShop;
 use Illuminate\Http\Request;
 use App\Models\WeightPackage;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\MerchantParcelExport;
 use App\Imports\MerchantBulkParcelImport;
 use App\Models\MerchantServiceAreaCharge;
 use Illuminate\Support\Facades\Validator;
-use App\Models\MerchantServiceAreaReturnCharge;
 use App\Models\MerchantServiceAreaCodCharge;
-use App\Exports\MerchantParcelExport;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Models\MerchantServiceAreaReturnCharge;
 
 class ParcelController extends Controller
 {
@@ -280,6 +282,138 @@ class ParcelController extends Controller
         return view('merchant.parcel.parcelList', $data);
     }
 
+    public function returnList()
+    {
+        $data = [];
+        $data['main_menu'] = 'return';
+        $data['child_menu'] = 'returnList';
+        $data['page_title'] = 'Return List';
+        $data['collapse']   = 'sidebar-collapse';
+        $data['riders']     = Rider::where([
+            'status'    => 1
+        ])
+            ->select('id', 'name', 'contact_number', 'address')
+            ->get();
+
+        $data['riderRun'] = RiderRun::with('rider_run_details')->where('run_type', 3)->get();
+
+        return view('merchant.parcel.returnList', $data);
+    }
+
+    public function getReturnRiderRunList(Request $request)
+    {
+        $model = RiderRun::with([
+            'rider:id,name,contact_number,address',
+            'rider_run_details.parcel'
+        ])
+            // ->whereHas('rider_run_details.parcel', function ($query) {
+            //     $query->where('merchant_id', auth()->guard('merchant')->user()->id);
+            // })
+            ->where('run_type', 3)
+            ->orderByDesc('id')
+            ->select();
+        // $model = RiderRun::with([
+        //     'rider' => function ($query) {
+        //         $query->select('id', 'name', 'contact_number', 'address');
+        //     },
+        //     'rider_run_details.parcel'
+        // ])
+        //     ->whereHas('rider_run_details.parcel', function ($query) {
+        //         $query->where('merchant_id', auth()->guard('merchant')->user()->id);
+        //     })
+        //     ->where('run_type', 3)
+        //     ->orderBy('id', 'desc')
+        //     ->select();
+
+        //dd($model->get());
+        if ($request->has('run_status') && ! is_null($request->get('run_status')) && $request->get('run_status') != 0) {
+            $model->where('status', $request->get('run_status'));
+        } elseif ($request->get('run_status') == '') {
+            $model->whereIn('status', [1, 2]);
+        } else {
+            $model->whereIn('status', [1, 2, 3, 4]);
+        }
+
+        if ($request->has('rider_id') && ! is_null($request->get('rider_id')) && $request->get('rider_id') != 0) {
+            $model->where('rider_id', $request->get('rider_id'));
+        }
+        if ($request->has('from_date') && ! is_null($request->get('from_date')) && $request->get('from_date') != 0) {
+            $model->whereDate('create_date_time', '>=', $request->get('from_date'));
+        }
+        if ($request->has('to_date') && ! is_null($request->get('to_date')) && $request->get('to_date') != 0) {
+            $model->whereDate('create_date_time', '<=', $request->get('to_date'));
+        }
+
+        return DataTables::of($model)
+            ->addIndexColumn()
+            ->editColumn('create_date_time', function ($data) {
+                return date('d-m-Y H:i:s', strtotime($data->create_date_time));
+            })
+            ->editColumn('start_date_time', function ($data) {
+                return ($data->start_date_time) ? date('d-m-Y H:i:s', strtotime($data->start_date_time)) : "";
+            })
+            ->editColumn('cancel_date_time', function ($data) {
+                return ($data->cancel_date_time) ? date('d-m-Y H:i:s', strtotime($data->cancel_date_time)) : "";
+            })
+            ->editColumn('complete_date_time', function ($data) {
+                //    return auth()->guard('merchant')->user()->id;
+                // return $data->rider_run_details->first()->parcel->merchant_id;
+                return ($data->complete_date_time) ? date('d-m-Y H:i:s', strtotime($data->complete_date_time)) : "";
+            })
+
+            ->editColumn('status', function ($data) {
+                switch ($data->status) {
+                    case 1:
+                        $status_name  = "Run Create";
+                        $class  = "success";
+                        break;
+                    case 2:
+                        $status_name  = "Run Start";
+                        $class  = "success";
+                        break;
+                    case 3:
+                        $status_name  = "Run Cancel";
+                        $class  = "danger";
+                        break;
+                    case 4:
+                        $status_name  = "Run Complete";
+                        $class  = "success";
+                        break;
+                    default:
+                        $status_name = "None";
+                        $class = "success";
+                        break;
+                }
+                return '<a class="text-bold text-' . $class . '" href="javascript:void(0)" style="font-size:16px;"> ' . $status_name . '</a>';
+            })
+
+            ->addColumn('action', function ($data) {
+                // $button = '<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" rider_run_id="' . $data->id . '" >
+                // <i class="fa fa-eye"></i> </button>';
+
+                // $button .= '&nbsp; <a href="' . route('branch.parcel.printReturnRiderRun', $data->id) . '" class="btn btn-success btn-sm" title="Print Return Rider Run" target="_blank">
+                //     <i class="fas fa-print"></i> </a>';
+
+                // if ($data->status == 1) {
+                //     $button .= '&nbsp; <button class="btn btn-success btn-sm run-start-btn" rider_run_id="' . $data->id . '" title="Return Run Start">
+                //     <i class="far fa-play-circle"></i> </button>';
+
+                //     $button .= '&nbsp; <button class="btn btn-warning btn-sm run-cancel-btn" rider_run_id="' . $data->id . '" title="Return Run Cancel">
+                //     <i class="far fa-window-close"></i> </button>';
+
+                //     $button .= '&nbsp; <a href="' . route('branch.parcel.editReturnRiderRun', $data->id) . '" class="btn btn-info btn-sm" title="Edit Return Run" >
+                //         <i class="fas fa-edit"></i> </a>';
+                // }
+                // if ($data->status == 2) {
+                //     $button .= '&nbsp; <button class="btn btn-success rider-run-reconciliation btn-sm" data-toggle="modal" data-target="#viewModal" rider_run_id="' . $data->id . '" title="Reconciliation Return Run">
+                //     <i class="fa fa-check"></i> </button> ';
+                // }
+                //return $button;
+            })
+            ->rawColumns(['action', 'status', 'create_date_time', 'start_date_time', 'cancel_date_time', 'complete_date_time'])
+            ->make(true);
+    }
+
     public function getParcelList(Request $request)
     {
         $merchant_id = auth()->guard('merchant')->user()->id;
@@ -432,7 +566,7 @@ class ParcelController extends Controller
         return DataTables::of($model)
             ->addIndexColumn()
             ->editColumn('parcel_invoice', function ($data) {
-               // $date_time =  $data->date . " " . date("h:i A", strtotime($data->created_at));
+                // $date_time =  $data->date . " " . date("h:i A", strtotime($data->created_at));
                 $date_time =   $data->created_at->format('Y-m-d h:i A');
 
                 return '<a href="' . route('merchant.orderTracking', $data->parcel_invoice) . '"
@@ -451,7 +585,7 @@ class ParcelController extends Controller
                 } elseif ($data->status == 11 || $data->status == 13 || $data->status == 15) {
                     $date_time = date("Y-m-d", strtotime($data->pickup_branch_date));
                 } else {
-                   // $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
+                    // $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
                     $date_time = $data->date;
                 }
                 $parcelStatus = returnParcelStatusNameForMerchant($data->status, $data->delivery_type, $data->payment_type);
@@ -940,69 +1074,96 @@ class ParcelController extends Controller
             return redirect()->back()->withInput()->withErrors($validator);
         }
         \DB::beginTransaction();
-        try {
+        // try {
 
-            $merchant = auth()->guard('merchant')->user();
+        $merchant = auth()->guard('merchant')->user();
+
+        $data = [
+            'merchant_order_id' => $request->input('merchant_order_id'),
+            'shop_id' => $request->input('shop_id'),
+            'pickup_address' => $request->input('pickup_address'),
+            'customer_name' => $request->input('customer_name'),
+            'customer_address' => $request->input('customer_address'),
+            'customer_contact_number' => $request->input('customer_contact_number'),
+            'product_details' => $request->input('product_details'),
+            'district_id' => $request->input('district_id'),
+            // 'upazila_id'                   => $request->input('upazila_id'),
+            'upazila_id' => 0,
+            'area_id' => $request->input('area_id') ?? 0,
+            'weight_package_id' => $request->input('weight_package_id'),
+            'delivery_charge' => $request->input('delivery_charge'),
+            'weight_package_charge' => $request->input('weight_package_charge'),
+            'merchant_service_area_charge' => $request->input('merchant_service_area_charge'),
+            'merchant_service_area_return_charge' => $request->input('merchant_service_area_return_charge'),
+            'total_collect_amount' => $request->input('total_collect_amount') ?? 0,
+            'cod_percent' => $request->input('cod_percent'),
+            'cod_charge' => $request->input('cod_charge'),
+            'total_charge' => $request->input('total_charge'),
+            'delivery_option_id' => $request->input('delivery_option_id'),
+            'product_value' => $request->input('product_value'),
+            'parcel_note' => $request->input('parcel_note'),
+            'pickup_branch_id' => $merchant->branch_id,
+            'service_type_id' => $request->input('service_type_id') == 0 ? null : $request->input('service_type_id'),
+            'item_type_id' => $request->input('item_type_id') == 0 ? null : $request->input('item_type_id'),
+            'item_type_charge' => $request->input('item_type_charge'),
+            'service_type_charge' => $request->input('service_type_charge'),
+            'status' => 1,
+        ];
+
+        $x = 'Update: ';
+        $hasUpdated = false;
+
+        $parcelOld = Parcel::find($parcel->id);
+        $oldProduct_value = $parcelOld->product_value;
+        $newProduct_value = $request->input('product_value');
+
+        $oldTotal_collect_amount = $parcelOld->total_collect_amount;
+        $newTotal_collect_amount = $request->input('total_collect_amount');
+
+        $check = Parcel::where('id', $parcel->id)->update($data);
+
+        if ($check) {
+            if ($oldProduct_value != $newProduct_value) {
+                $hasUpdated = true;
+                $x .= 'Product value has been changed to ' . $oldProduct_value . ' to ' . $newProduct_value;
+            }
+
+            if ($oldTotal_collect_amount != $newTotal_collect_amount) {
+                if ($hasUpdated) {
+                    $x .= ' & total collect amount ' . $oldTotal_collect_amount . ' to ' . $newTotal_collect_amount;
+                } else {
+                    $x .= 'Total collect amount has been changed to ' . $oldTotal_collect_amount . ' to ' . $newTotal_collect_amount;
+                }
+                $hasUpdated = true;
+            }
+
+            if ($hasUpdated) {
+                createActivityLog($x, $parcelOld);
+            }
 
             $data = [
-                'merchant_order_id' => $request->input('merchant_order_id'),
-                'shop_id' => $request->input('shop_id'),
-                'pickup_address' => $request->input('pickup_address'),
-                'customer_name' => $request->input('customer_name'),
-                'customer_address' => $request->input('customer_address'),
-                'customer_contact_number' => $request->input('customer_contact_number'),
-                'product_details' => $request->input('product_details'),
-                'district_id' => $request->input('district_id'),
-                // 'upazila_id'                   => $request->input('upazila_id'),
-                'upazila_id' => 0,
-                'area_id' => $request->input('area_id') ?? 0,
-                'weight_package_id' => $request->input('weight_package_id'),
-                'delivery_charge' => $request->input('delivery_charge'),
-                'weight_package_charge' => $request->input('weight_package_charge'),
-                'merchant_service_area_charge' => $request->input('merchant_service_area_charge'),
-                'merchant_service_area_return_charge' => $request->input('merchant_service_area_return_charge'),
-                'total_collect_amount' => $request->input('total_collect_amount') ?? 0,
-                'cod_percent' => $request->input('cod_percent'),
-                'cod_charge' => $request->input('cod_charge'),
-                'total_charge' => $request->input('total_charge'),
-                'delivery_option_id' => $request->input('delivery_option_id'),
-                'product_value' => $request->input('product_value'),
-                'parcel_note' => $request->input('parcel_note'),
+                'parcel_id' => $parcel->id,
+                'merchant_id' => $merchant->id,
                 'pickup_branch_id' => $merchant->branch_id,
-                'service_type_id' => $request->input('service_type_id') == 0 ? null : $request->input('service_type_id'),
-                'item_type_id' => $request->input('item_type_id') == 0 ? null : $request->input('item_type_id'),
-                'item_type_charge' => $request->input('item_type_charge'),
-                'service_type_charge' => $request->input('service_type_charge'),
+                'date' => date('Y-m-d'),
+                'time' => date('H:i:s'),
                 'status' => 1,
             ];
+            ParcelLog::create($data);
 
-            $check = Parcel::where('id', $parcel->id)->update($data);
+            \DB::commit();
 
-
-            if ($check) {
-                $data = [
-                    'parcel_id' => $parcel->id,
-                    'merchant_id' => $merchant->id,
-                    'pickup_branch_id' => $merchant->branch_id,
-                    'date' => date('Y-m-d'),
-                    'time' => date('H:i:s'),
-                    'status' => 1,
-                ];
-                ParcelLog::create($data);
-
-                \DB::commit();
-
-                $this->setMessage('Parcel Update Successfully', 'success');
-                return redirect()->route('merchant.parcel.list');
-            } else {
-                $this->setMessage('Parcel Update Failed', 'danger');
-                return redirect()->back()->withInput();
-            }
-        } catch (\Exception $e) {
-            \DB::rollback();
-            $this->setMessage('Database Error Found', 'danger');
+            $this->setMessage('Parcel Update Successfully', 'success');
+            return redirect()->route('merchant.parcel.list');
+        } else {
+            $this->setMessage('Parcel Update Failed', 'danger');
             return redirect()->back()->withInput();
         }
+        // } catch (\Exception $e) {
+        //     \DB::rollback();
+        //     $this->setMessage('Database Error Found', 'danger');
+        //     return redirect()->back()->withInput();
+        // }
     }
 
 

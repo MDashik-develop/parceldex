@@ -156,6 +156,7 @@ class DeliveryBranchTransferParcelController extends Controller
                                 'status' => 13,
                                 'parcel_date' => date('Y-m-d'),
                             ]);
+                            // Invalid Log 
                             ParcelLog::create([
                                 'parcel_id' => $deliveryBranchTransferDetail->parcel_id,
                                 'pickup_branch_id' => auth()->guard('branch')->user()->branch->id,
@@ -470,6 +471,7 @@ class DeliveryBranchTransferParcelController extends Controller
                             'delivery_branch_id' => $request->input('branch_id'),
                         ]);
 
+                        // Invalid Log 
                         ParcelLog::create([
                             'parcel_id' => $parcel_id,
                             'pickup_branch_id' => $branch_id,
@@ -689,6 +691,7 @@ class DeliveryBranchTransferParcelController extends Controller
                             'delivery_branch_id' => $request->input('branch_id'),
                         ]);
 
+                        // Invalid Log 
                         ParcelLog::create([
                             'parcel_id' => $parcel_id,
                             'pickup_branch_id' => $branch_id,

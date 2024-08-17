@@ -1351,7 +1351,7 @@ class PickupRiderRunParcelController extends Controller
                             //     // $this->send_sms($parcel->customer_contact_number, $c_message);
                             // }
 
-                            $message = "Dear " . ucwords($parcel->customer_name) . ", Track your parcel from " . ucwords($parcel->merchant->company_name) . ". " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Foring";
+                            $message = "Dear " . ucwords($parcel->customer_name) . ", Track your parcel from " . ucwords($parcel->merchant->company_name) . ". " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Parceldex Ltd";
 
                             $this->send_sms($parcel->customer_contact_number, $message);
 

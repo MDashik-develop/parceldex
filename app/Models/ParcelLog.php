@@ -13,50 +13,64 @@ class ParcelLog extends Model
 
     protected $guarded  = [];
 
-    public function merchant() {
+    public function merchant()
+    {
         return $this->belongsTo(Merchant::class, 'merchant_id')->withDefault(['name' => 'Merchant Name']);
     }
 
-    public function pickup_branch() {
+    public function pickup_branch()
+    {
         return $this->belongsTo(Branch::class, 'pickup_branch_id');
     }
 
-    public function delivery_branch() {
+    public function delivery_branch()
+    {
         return $this->belongsTo(Branch::class, 'delivery_branch_id');
     }
 
-    public function pickup_rider() {
+    public function pickup_rider()
+    {
         return $this->belongsTo(Rider::class, 'pickup_rider_id');
     }
 
-    public function delivery_rider() {
+    public function delivery_rider()
+    {
         return $this->belongsTo(Rider::class, 'delivery_rider_id');
     }
 
-    public function return_branch() {
+    public function return_branch()
+    {
         return $this->belongsTo(Branch::class, 'return_branch_id');
     }
 
-    public function return_rider() {
+    public function return_rider()
+    {
         return $this->belongsTo(Rider::class, 'return_rider_id');
     }
 
-    public function pickup_branch_user() {
+    public function pickup_branch_user()
+    {
         return $this->belongsTo(BranchUser::class, 'pickup_branch_user_id');
     }
 
-    public function delivery_branch_user() {
+    public function delivery_branch_user()
+    {
         return $this->belongsTo(BranchUser::class, 'delivery_branch_user_id');
     }
 
 
-    public function return_branch_user() {
+    public function return_branch_user()
+    {
         return $this->belongsTo(BranchUser::class, 'return_branch_user_id');
     }
 
-    public function admin() {
+    public function admin()
+    {
         return $this->belongsTo(Admin::class, 'admin_id');
     }
 
-
+    public function parcel()
+    {
+        return $this->belongsTo(Parcel::class, 'parcel_id');
+    }
 }

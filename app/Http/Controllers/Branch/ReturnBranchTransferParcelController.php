@@ -14,9 +14,11 @@ use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ReturnBranchTransferParcelController extends Controller {
+class ReturnBranchTransferParcelController extends Controller
+{
 
-    public function returnBranchTransferList() {
+    public function returnBranchTransferList()
+    {
         $data               = [];
         $data['main_menu']  = 'returnParcel';
         $data['child_menu'] = 'returnBranchTransferList';
@@ -25,7 +27,8 @@ class ReturnBranchTransferParcelController extends Controller {
         return view('branch.parcel.deliveryParcel.returnBranchTransferList', $data);
     }
 
-    public function getReturnBranchTransferList(Request $request) {
+    public function getReturnBranchTransferList(Request $request)
+    {
         $branch_user_id = auth()->guard('branch')->user()->id;
         $branch_id      = auth()->guard('branch')->user()->branch->id;
 
@@ -43,11 +46,26 @@ class ReturnBranchTransferParcelController extends Controller {
             ->addIndexColumn()
             ->editColumn('status', function ($data) {
                 switch ($data->status) {
-                    case 1 : $status_name  = "Return Request"; $class  = "success";break;
-                    case 2 : $status_name  = "Return Request Cancel"; $class  = "danger";break;
-                    case 3 : $status_name  = "Return Request Accept"; $class  = "success";break;
-                    case 4 : $status_name  = "Return Request Reject"; $class  = "danger";break;
-                    default:$status_name = "None"; $class = "success";break;
+                    case 1:
+                        $status_name  = "Return Request";
+                        $class  = "success";
+                        break;
+                    case 2:
+                        $status_name  = "Return Request Cancel";
+                        $class  = "danger";
+                        break;
+                    case 3:
+                        $status_name  = "Return Request Accept";
+                        $class  = "success";
+                        break;
+                    case 4:
+                        $status_name  = "Return Request Reject";
+                        $class  = "danger";
+                        break;
+                    default:
+                        $status_name = "None";
+                        $class = "success";
+                        break;
                 }
                 return '<p class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</p>';
             })
@@ -79,7 +97,8 @@ class ReturnBranchTransferParcelController extends Controller {
             ->make(true);
     }
 
-    public function printReturnBranchTransferList(Request $request) {
+    public function printReturnBranchTransferList(Request $request)
+    {
         $branch_user_id = auth()->guard('branch')->user()->id;
         $branch_id      = auth()->guard('branch')->user()->branch->id;
 
@@ -97,7 +116,8 @@ class ReturnBranchTransferParcelController extends Controller {
         return view('branch.parcel.deliveryParcel.printReturnBranchTransferList', compact('returnBranchTransfers'));
     }
 
-    public function viewReturnBranchTransfer(Request $request, ReturnBranchTransfer $returnBranchTransfer) {
+    public function viewReturnBranchTransfer(Request $request, ReturnBranchTransfer $returnBranchTransfer)
+    {
         $returnBranchTransfer->load([
             'from_branch' => function ($query) {
                 $query->select('id', 'name', 'contact_number', 'address');
@@ -109,7 +129,8 @@ class ReturnBranchTransferParcelController extends Controller {
         ]);
         return view('branch.parcel.deliveryParcel.viewReturnBranchTransfer', compact('returnBranchTransfer'));
     }
-    public function printReturnBranchTransfer(Request $request, ReturnBranchTransfer $returnBranchTransfer) {
+    public function printReturnBranchTransfer(Request $request, ReturnBranchTransfer $returnBranchTransfer)
+    {
         $returnBranchTransfer->load([
             'from_branch' => function ($query) {
                 $query->select('id', 'name', 'contact_number', 'address');
@@ -122,7 +143,8 @@ class ReturnBranchTransferParcelController extends Controller {
         return view('branch.parcel.deliveryParcel.printReturnBranchTransfer', compact('returnBranchTransfer'));
     }
 
-    public function cancelReturnBranchTransfer(Request $request) {
+    public function cancelReturnBranchTransfer(Request $request)
+    {
         $response = ['error' => 'Error Found'];
 
         if ($request->ajax()) {
@@ -148,7 +170,7 @@ class ReturnBranchTransferParcelController extends Controller {
                             'delivery_branch_id'      => auth()->guard('branch')->user()->branch->id,
                             'parcel_date'             => date('Y-m-d'),
                         ]);
-                        $parcel=Parcel::where('id', $returnBranchTransferDetail->parcel_id)->first();
+                        $parcel = Parcel::where('id', $returnBranchTransferDetail->parcel_id)->first();
                         ParcelLog::create([
                             'parcel_id'               => $returnBranchTransferDetail->parcel_id,
                             'delivery_branch_user_id' => auth()->guard('branch')->user()->id,
@@ -178,7 +200,8 @@ class ReturnBranchTransferParcelController extends Controller {
         return response()->json($response);
     }
 
-    public function returnBranchTransferGenerate() {
+    public function returnBranchTransferGenerate()
+    {
         $branch_id      = auth()->guard('branch')->user()->branch->id;
         $branch_user_id = auth()->guard('branch')->user()->id;
 
@@ -196,21 +219,22 @@ class ReturnBranchTransferParcelController extends Controller {
             ->get();
 
         $data['parcels'] = Parcel::with([
-                'merchant:id,name,company_name,contact_number',
-                'area:id,name'
-            ])
+            'merchant:id,name,company_name,contact_number',
+            'area:id,name'
+        ])
             ->where([
                 'delivery_branch_id' => $branch_id,
             ])
             ->whereIn('status', [25, 27, 29])
-            ->whereIn('delivery_type', [2, 4])
+            ->whereIn('delivery_type', [4])
             ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id', 'area_id')
             ->get();
 
         return view('branch.parcel.deliveryParcel.returnBranchTransferGenerate', $data);
     }
 
-    public function returnReturnBranchTransferParcel(Request $request) {
+    public function returnReturnBranchTransferParcel(Request $request)
+    {
 
         $branch_id      = auth()->guard('branch')->user()->branch->id;
         $branch_user_id = auth()->guard('branch')->user()->id;
@@ -221,13 +245,13 @@ class ReturnBranchTransferParcelController extends Controller {
         if (!empty($parcel_invoice) || !empty($merchant_order_id)) {
 
             $data['parcels'] = Parcel::with([
-                    'merchant' => function ($query) {
-                        $query->select('id', 'name', 'contact_number');
-                    },
-                    'area'     => function ($query) {
-                        $query->select('id', 'name');
-                    },
-                ])
+                'merchant' => function ($query) {
+                    $query->select('id', 'name', 'contact_number');
+                },
+                'area'     => function ($query) {
+                    $query->select('id', 'name');
+                },
+            ])
                 ->where([
                     'delivery_branch_id' => $branch_id,
                 ])
@@ -244,7 +268,6 @@ class ReturnBranchTransferParcelController extends Controller {
                             'merchant_order_id' => $merchant_order_id,
                         ]);
                     }
-
                 })
                 ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id', 'area_id')
                 ->get();
@@ -255,7 +278,8 @@ class ReturnBranchTransferParcelController extends Controller {
         return view('branch.parcel.deliveryParcel.returnBranchTransferParcel', $data);
     }
 
-    public function returnBranchTransferParcelClearCart() {
+    public function returnBranchTransferParcelClearCart()
+    {
         try {
             $branch_id      = auth()->guard('branch')->user()->branch->id;
             $branch_user_id = auth()->guard('branch')->user()->id;
@@ -274,19 +298,20 @@ class ReturnBranchTransferParcelController extends Controller {
                 'error'     => "",
             ];
             return view('branch.parcel.deliveryParcel.returnBranchTransferParcelCart', $data);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return $exception->getMessage();
         }
-
     }
 
-    public function returnBranchTransferParcelAddCart(Request $request) {
+    public function returnBranchTransferParcelAddCart(Request $request)
+    {
         $branch_id      = auth()->guard('branch')->user()->branch->id;
         $branch_user_id = auth()->guard('branch')->user()->id;
 
-        $parcels = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $parcels = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
 
             ->whereIn('id', $request->parcel_invoices)
@@ -334,7 +359,6 @@ class ReturnBranchTransferParcelController extends Controller {
                         'associatedModel' => $parcel,
                     ]);
                 }
-
             }
 
             $error     = "";
@@ -342,7 +366,7 @@ class ReturnBranchTransferParcelController extends Controller {
             $cart      = $cart->sortBy('id');
             $totalItem = \Cart::session($branch_id)->getTotalQuantity();
             $getTotal  = \Cart::session($branch_id)->getTotal();
-        } else{
+        } else {
             $error     = "Parcel Invoice Not Found";
             $cart      = \Cart::session($branch_id)->getContent();
             $cart      = $cart->sortBy('id');
@@ -359,7 +383,8 @@ class ReturnBranchTransferParcelController extends Controller {
         return view('branch.parcel.deliveryParcel.returnBranchTransferParcelCart', $data);
     }
 
-    public function returnBranchTransferParcelDeleteCart(Request $request) {
+    public function returnBranchTransferParcelDeleteCart(Request $request)
+    {
         $branch_id      = auth()->guard('branch')->user()->branch->id;
         $branch_user_id = auth()->guard('branch')->user()->id;
         \Cart::session($branch_id)->remove($request->input('itemId'));
@@ -374,7 +399,8 @@ class ReturnBranchTransferParcelController extends Controller {
         return view('branch.parcel.deliveryParcel.returnBranchTransferParcelCart', $data);
     }
 
-    public function confirmReturnBranchTransferGenerate(Request $request) {
+    public function confirmReturnBranchTransferGenerate(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'total_transfer_parcel' => 'required',
             'branch_id'             => 'required',
@@ -404,7 +430,7 @@ class ReturnBranchTransferParcelController extends Controller {
                     'note'                           => $request->input('note'),
                     'status'                         => 3,
                 ];
-            } else{
+            } else {
                 $data = [
                     'return_transfer_invoice' => $this->returnUniqueReturnTransferInvoice(),
                     'from_branch_id'          => $branch_id,
@@ -440,7 +466,7 @@ class ReturnBranchTransferParcelController extends Controller {
                             'return_branch_id'          => $request->input('branch_id'),
                             'return_branch_user_id'     => $branch_user_id,
                         ]);
-                        $parcel=Parcel::where('id', $parcel_id)->first();
+                        $parcel = Parcel::where('id', $parcel_id)->first();
                         ParcelLog::create([
                             'parcel_id'                 => $parcel_id,
                             'delivery_branch_user_id'   => $branch_user_id,
@@ -452,7 +478,6 @@ class ReturnBranchTransferParcelController extends Controller {
                             'status'                    => 28,
                             'delivery_type' => $parcel->delivery_type,
                         ]);
-
                     } else {
                         ReturnBranchTransferDetail::create([
                             'return_branch_transfer_id' => $returnBranchTransfer->id,
@@ -466,7 +491,7 @@ class ReturnBranchTransferParcelController extends Controller {
                             'delivery_branch_id'      => $branch_id,
                             'return_branch_id'          => $request->input('branch_id'),
                         ]);
-                        $parcel=Parcel::where('id', $parcel_id)->first();
+                        $parcel = Parcel::where('id', $parcel_id)->first();
                         ParcelLog::create([
                             'parcel_id'                 => $parcel_id,
                             'delivery_branch_user_id'   => $branch_user_id,
@@ -486,7 +511,7 @@ class ReturnBranchTransferParcelController extends Controller {
 
                     // $this->merchantDashboardCounterEvent($parcel->merchant_id);
 
-//                    $this->branchDashboardCounterEvent($parcel->delivery_branch_id);
+                    //                    $this->branchDashboardCounterEvent($parcel->delivery_branch_id);
                     // $this->branchDashboardCounterEvent($parcel->return_branch_id);
                 }
 
@@ -499,9 +524,7 @@ class ReturnBranchTransferParcelController extends Controller {
                 $this->setMessage('Delivery Branch Transfer Insert Failed', 'danger');
                 return redirect()->back()->withInput();
             }
-
-        }
-        catch (\Exception $e){
+        } catch (\Exception $e) {
             \DB::rollback();
             $this->setMessage('Database Error Found', 'danger');
             return redirect()->back()->withInput();
@@ -510,7 +533,8 @@ class ReturnBranchTransferParcelController extends Controller {
 
 
 
-    public function returnBranchTransferGenerateEdit(Request $request, ReturnBranchTransfer $returnBranchTransfer) {
+    public function returnBranchTransferGenerateEdit(Request $request, ReturnBranchTransfer $returnBranchTransfer)
+    {
         $branch_id      = auth()->guard('branch')->user()->branch->id;
         $branch_user_id = auth()->guard('branch')->user()->id;
 
@@ -567,13 +591,13 @@ class ReturnBranchTransferParcelController extends Controller {
             ->get();
 
         $data['parcels'] = Parcel::with([
-                'merchant' => function ($query) {
-                    $query->select('id', 'name', 'contact_number');
-                },
-                'area'     => function ($query) {
-                    $query->select('id', 'name');
-                },
-            ])
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number');
+            },
+            'area'     => function ($query) {
+                $query->select('id', 'name');
+            },
+        ])
             ->where([
                 'delivery_branch_id' => $branch_id,
             ])
@@ -587,7 +611,8 @@ class ReturnBranchTransferParcelController extends Controller {
 
 
 
-    public function confirmReturnBranchTransferGenerateEdit(Request $request, ReturnBranchTransfer $returnBranchTransfer) {
+    public function confirmReturnBranchTransferGenerateEdit(Request $request, ReturnBranchTransfer $returnBranchTransfer)
+    {
 
         $validator = Validator::make($request->all(), [
             'total_transfer_parcel' => 'required',
@@ -615,7 +640,7 @@ class ReturnBranchTransferParcelController extends Controller {
                     'note'                           => $request->input('note'),
                     'status'                         => 3,
                 ];
-            } else{
+            } else {
                 $data = [
                     'from_branch_id'          => $branch_id,
                     'from_branch_user_id'     => $branch_user_id,
@@ -634,7 +659,7 @@ class ReturnBranchTransferParcelController extends Controller {
                 $cart = $cart->sortBy('id');
                 $returnBranchTransferDetails = ReturnBranchTransferDetail::where('return_branch_transfer_id', $returnBranchTransfer->id)->get();
 
-                foreach($returnBranchTransferDetails as $returnBranchTransferDetail){
+                foreach ($returnBranchTransferDetails as $returnBranchTransferDetail) {
                     Parcel::where('id', $returnBranchTransferDetail->parcel_id)->update([
                         'status'  => 25,
                     ]);
@@ -658,7 +683,7 @@ class ReturnBranchTransferParcelController extends Controller {
                             'return_branch_user_id'   => $request->input('branch_id'),
                             'return_branch_user_id'   => $branch_user_id,
                         ]);
-                        $parcel=Parcel::where('id', $parcel_id)->first();
+                        $parcel = Parcel::where('id', $parcel_id)->first();
                         ParcelLog::create([
                             'parcel_id'               => $parcel_id,
                             'delivery_branch_user_id' => $branch_user_id,
@@ -670,7 +695,7 @@ class ReturnBranchTransferParcelController extends Controller {
                             'status'                  => 28,
                             'delivery_type' => $parcel->delivery_type,
                         ]);
-                    } else{
+                    } else {
                         ReturnBranchTransferDetail::create([
                             'return_branch_transfer_id' => $returnBranchTransfer->id,
                             'parcel_id'                 => $parcel_id,
@@ -683,7 +708,7 @@ class ReturnBranchTransferParcelController extends Controller {
                             'delivery_branch_id'      => $branch_id,
                             'return_branch_user_id'   => $request->input('branch_id'),
                         ]);
-                        $parcel=Parcel::where('id', $parcel_id)->first();
+                        $parcel = Parcel::where('id', $parcel_id)->first();
                         ParcelLog::create([
                             'parcel_id'               => $parcel_id,
                             'delivery_branch_user_id' => $branch_user_id,
@@ -715,14 +740,10 @@ class ReturnBranchTransferParcelController extends Controller {
                 $this->setMessage('Delivery Branch Transfer Insert Failed', 'danger');
                 return redirect()->back()->withInput();
             }
-
-        }
-        catch (\Exception $e){
+        } catch (\Exception $e) {
             \DB::rollback();
             $this->setMessage('Database Error Found', 'danger');
             return redirect()->back()->withInput();
         }
     }
-
-
 }

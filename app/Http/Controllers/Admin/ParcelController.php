@@ -211,107 +211,52 @@ class ParcelController extends Controller
         //        dd($model->toSql());
         return DataTables::of($model)
             ->addIndexColumn()
-            /*->editColumn('date_time', function ($data) {
-                $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
-                return $date_time;
-            })
-            ->editColumn('merchant.company_name', function ($data) {
-                $company_name = ($data->merchant) ? $data->merchant->company_name : "Default";
-
-                return $company_name;
-            })
-            ->editColumn('merchant.contact_number', function ($data) {
-                $contact_number = ($data->merchant) ? $data->merchant->contact_number : "Not Provide";
-
-                return $contact_number;
-            })
-            ->editColumn('log_notes', function ($data) {
-                $logs_note = "";
-                if ($data->parcel_logs) {
-                    foreach ($data->parcel_logs as $parcel_log) {
-                        if ("" != $logs_note) {
-                            $logs_note .= ",<br>";
-                        }
-                        $logs_note .= $parcel_log->note;
-                    }
-                }
-                return $logs_note;
-            })
-            ->editColumn('customer_district', function ($data) {
-                $district = "";
-                if ($data->district) {
-                    $district = $data->district->name;
-                }
-                return $district;
-            })
-            ->editColumn('customer_upazila', function ($data) {
-                $upazila = "";
-                if ($data->upazila) {
-                    $upazila = $data->upazila->name;
-                }
-                return $upazila;
-            })
-            ->editColumn('customer_area', function ($data) {
-                $area = "";
-                if ($data->area) {
-                    $area = $data->area->name;
-                }
-                return $area;
-            })
-            ->editColumn('parcel_color', function ($data) {
-                $parcelStatus = returnParcelStatusForAdmin($data->status, $data->delivery_type, $data->payment_type);
-                $class = $parcelStatus['class'];
-                return $class;
-            })
-            ->editColumn('service_type', function ($data) {
-                return optional($data->service_type)->title;
-            })
-            ->editColumn('item_type', function ($data) {
-                return optional($data->item_type)->title;
-            })*/
-
             ->editColumn('parcel_invoice', function ($data) {
+                // $date_time =  $data->date . " " . date("h:i A", strtotime($data->created_at));
+                $date_time =   $data->created_at->format('Y-m-d h:i A');
+
                 return '<a href="' . route('admin.parcel.orderTracking', $data->parcel_invoice) . '"
                 title="Parcel View">
                     ' . $data->parcel_invoice . '
-                </a>';
+                </a><br></span> <p><strong>Created: </strong>' . $date_time . '</p>';
             })
             ->editColumn('parcel_status', function ($data) {
                 $date_time = '---';
                 if ($data->status >= 25) {
                     if ($data->delivery_type == 3) {
                         $date_time = date("Y-m-d", strtotime($data->reschedule_parcel_date));
-                    } elseif ($data->delivery_type == 1 || $data->delivery_type == 2) {
+                    } elseif ($data->delivery_type == 1 || $data->delivery_type == 2 || $data->delivery_type == 4) {
                         $date_time = date("Y-m-d", strtotime($data->delivery_date));
-                    } elseif ($data->delivery_type == 4) {
-                        $date_time = date("Y-m-d", strtotime($data->delivery_rider_date));
                     }
                 } elseif ($data->status == 11 || $data->status == 13 || $data->status == 15) {
                     $date_time = date("Y-m-d", strtotime($data->pickup_branch_date));
                 } else {
-                    $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
+                    // $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
+                    $date_time = $data->date;
                 }
                 $parcelStatus = returnParcelStatusForAdmin($data->status, $data->delivery_type, $data->payment_type);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
-
-                return ((date("Y-m-d H:i:s") >= date("Y-m-d H:i:s", strtotime("+24 hours", strtotime($data->created_at)))) && ($data->status < 25)) ? '<span class="text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong>Date: </strong>' . $date_time . '</p><p style="    background: #e55555;
-                margin: auto;
-                margin-top: 10px;
-                width: fit-content;
-                padding: 4px 12px;
-                border-radius: 15px;
-                color: #fff;">' . '24 hours exceed & <br>  delivery not complete'
-
-                    . '</p>' : '<span class="text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong>Date: </strong>' . $date_time . '</p>';
-                // return '<span class="  text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong>Date: </strong>' . $date_time . '</p>';
+                return '<span class="  text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong>Date: </strong>' . $date_time . '</p>';
             })
             ->editColumn('payment_status', function ($data) {
+                // $return = "";
+                // $parcelStatus = returnPaymentStatusForAdmin($data->status, $data->delivery_type, $data->payment_type);
+                // $status_name = $parcelStatus['status_name'];
+                // $class = $parcelStatus['class'];
+                // $return .= '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <br>';
+
+
+                // $parcelStatus = returnReturnStatusForAdmin($data->status, $data->delivery_type, $data->payment_type);
+                // $status_name = $parcelStatus['status_name'];
+                // $class = $parcelStatus['class'];
+                // $return .= '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
                 $parcelStatus = returnPaymentStatusForAdmin($data->status, $data->delivery_type, $data->payment_type);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
             })
+
             ->editColumn('return_status', function ($data) {
                 $parcelStatus = returnReturnStatusForAdmin($data->status, $data->delivery_type, $data->payment_type);
                 $status_name = $parcelStatus['status_name'];
@@ -319,42 +264,53 @@ class ParcelController extends Controller
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
             })
             ->addColumn('action', function ($data) {
-
                 $button = '<a href="' . route('parcel.printParcel', $data->id) . '" class="btn btn-success btn-sm" title="Print Pickup Parcel" target="_blank">
-                    <i class="fas fa-print"></i> </a>';
+                <i class="fas fa-print"></i> </a>';
 
-                $button .= '&nbsp; <button class="btn btn-secondary btn-sm view-modal" data-toggle="modal" data-target="#viewModal" parcel_id="' . $data->id . '}" >
+                $button .= '<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" parcel_id="' . $data->id . '"  title="Parcel View">
                 <i class="fa fa-eye"></i> </button>';
 
-                if (auth()->guard('admin')->user()->type == 1) {
-                    $button .= '&nbsp; <a href="' . route('admin.parcel.editParcel', $data->id) . '" class="btn btn-success btn-sm"> <i class="fa fa-edit"></i> </a>';
-                }
+                if ($data->status != 3) {
+                    if ($data->status == 1 || $data->status == 4) {
+                        $button .= '&nbsp; <button class="btn btn-warning pickup-hold btn-sm" parcel_id="' . $data->id . '" title="Hold Parcel Processing">
+                        <i class="far fa-pause-circle"></i></button>';
+                    } elseif ($data->status == 2) {
+                        $button .= '&nbsp; <button class="btn btn-success pickup-start btn-sm" parcel_id="' . $data->id . '" title="Start Parcel Processing" >
+                            <i class="far fa-play-circle"></i>
+                        </button>';
+                    }
 
-                if (auth()->guard('admin')->user()->type == 1 && $data->status < 11) {
-                    $button .= '&nbsp; <button class="btn btn-danger btn-sm delete-btn" parcel_id="' . $data->id . '" >
-                <i class="fa fa-trash"></i> </button>';
-                }
+                    if ($data->status < 10) {
+                        $button .= '&nbsp; <button class="btn btn-danger pickup-cancel btn-sm" parcel_id="' . $data->id . '" title="Parcel Cancel">
+                                        <i class="far fa-window-close"></i>
+                                    </button>';
 
+                        $button .= '&nbsp;  <a class="btn btn-secondary btn-sm" href="' . route('admin.parcel.editParcel', $data->id) . '"   title="Parcel Edit">
+                                        <i class="fas fa-pencil-alt"></i>
+                                </a>';
+                    }
+                }
                 return $button;
             })
             ->addColumn('parcel_info', function ($data) {
-                $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
                 $parcel_info = '<p><strong>Merchant Order ID: </strong>' . $data->merchant_order_id . '</p>';
                 $parcel_info .= '<p><strong>Parcel OTP: </strong>' . $data->parcel_code . '</p>';
                 $parcel_info .= '<p><strong>Service Type: </strong>' . optional($data->service_type)->title . '</p>';
                 $parcel_info .= '<p><strong>Item Type: </strong>' . optional($data->item_type)->title . '</p>';
-                $parcel_info .= '</span> <p><strong>Created: </strong>' . $date_time . '</p>';
+                $parcel_info .= '<p><strong>Exchange: </strong>' . $data->exchange . '</p>';
+                $parcel_info .= '<p><strong>Product Details: </strong>' . $data->product_details . '</p>';
+
                 return $parcel_info;
             })
-            ->addColumn('print', function ($data) {
-                return '<input type="checkbox" class="print-check" id="" value="' . $data->id . '"/>';
-            })
+
             ->addColumn('company_info', function ($data) {
                 $company_info = '<p><strong>Name: </strong>' . $data->merchant->company_name . '</p>';
                 $company_info .= '<p><strong>Phone: </strong>' . $data->merchant->contact_number . '</p>';
                 //                $company_info .= '<span><strong>Address: </strong>'.$data->merchant->address.'</span>';
                 return $company_info;
             })
+
+
             ->addColumn('customer_info', function ($data) {
                 $district = "---";
                 if ($data->district) {
@@ -364,8 +320,15 @@ class ParcelController extends Controller
                 if ($data->area) {
                     $area = $data->area->name;
                 }
+
+                $customer_contact_number2 = "---";
+                if ($data->customer_contact_number2) {
+                    $customer_contact_number2 = $data->customer_contact_number2;
+                }
+
                 $customer_info = '<p><strong>Name: </strong>' . $data->customer_name . '</p>';
                 $customer_info .= '<p><strong>Number: </strong>' . $data->customer_contact_number . '</p>';
+                $customer_info .= '<p><strong>Alternative: </strong>' . $customer_contact_number2 . '</p>';
                 $customer_info .= '<p><strong>District: </strong>' . $district . '</p>';
                 $customer_info .= '<p><strong>Area: </strong>' . $area . '</p>';
                 $customer_info .= '<span><strong>Address: </strong>' . $data->customer_address . '</span>';
@@ -373,11 +336,15 @@ class ParcelController extends Controller
                 return $customer_info;
             })
             ->addColumn('amount', function ($data) {
-                $amount = '<p><strong>Collection: </strong>' . $data->total_collect_amount . '</p>';
-                $amount .= '<p><strong>Collected: </strong>' . $data->customer_collect_amount . '</p>';
-                $amount .= '<p><strong>Total Charge: </strong>' . $data->total_charge . '</p>';
-                $amount .= '<p><strong>COD Charge: </strong>' . $data->cod_charge . '</p>';
+                $amount = '<p><strong>Amount to be Collect: ৳ </strong>' . $data->total_collect_amount . '</p>';
+                $amount .= '<p><strong>Collected: ৳ </strong>' . $data->customer_collect_amount . '</p>';
+                $amount .= '<p><strong>Delivery Charge:  ৳ </strong>' . $data->delivery_charge . '</p>';
+                // $amount .= '<p><strong>Delivery Charge: </strong>'.$data->total_charge.'</p>';
+                // $amount .= '<p><strong>COD Charge: </strong>'.$data->cod_charge.'</p>';
                 return $amount;
+            })
+            ->addColumn('print', function ($data) {
+                return '<input type="checkbox" class="print-check" id="" value="' . $data->id . '"/>';
             })
             ->addColumn('remarks', function ($data) {
                 $logs_note = "";
@@ -393,6 +360,7 @@ class ParcelController extends Controller
                 $remarks .= '<span><strong>Notes: </strong>' . $logs_note . '</span>';
                 return $remarks;
             })
+
             ->rawColumns([
                 'parcel_invoice',
                 'parcel_status',
@@ -659,7 +627,35 @@ class ParcelController extends Controller
 
         $check = Parcel::where('id', $parcel->id)->update($data) ? true : false;
 
+        $x = 'Update: ';
+        $hasUpdated = false;
+
+        $parcelOld = Parcel::find($parcel->id);
+        $oldProduct_value = $parcelOld->product_value;
+        $newProduct_value = $request->input('product_value');
+
+        $oldTotal_collect_amount = $parcelOld->total_collect_amount;
+        $newTotal_collect_amount = $request->input('total_collect_amount');
+
         if ($check) {
+            if ($oldProduct_value != $newProduct_value) {
+                $hasUpdated = true;
+                $x .= 'Product value has been changed to ' . $oldProduct_value . ' to ' . $newProduct_value;
+            }
+
+            if ($oldTotal_collect_amount != $newTotal_collect_amount) {
+                if ($hasUpdated) {
+                    $x .= ' & total collect amount ' . $oldTotal_collect_amount . ' to ' . $newTotal_collect_amount;
+                } else {
+                    $x .= 'Total collect amount has been changed to ' . $oldTotal_collect_amount . ' to ' . $newTotal_collect_amount;
+                }
+                $hasUpdated = true;
+            }
+
+            if ($hasUpdated) {
+                createActivityLog($x, $parcelOld);
+            }
+
             $data = [
                 'parcel_id' => $parcel->id,
                 'admin_id' => auth()->guard('admin')->user()->id,

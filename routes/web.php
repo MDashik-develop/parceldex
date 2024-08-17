@@ -1,12 +1,68 @@
 <?php
 
+use App\Models\RiderRun;
 use App\Mail\WelcomeMail;
+use App\Models\ParcelLog;
 use App\Models\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
-Route::get('/clear', function() {
+Route::get('/log', function () {
+    if (Auth::guard('admin')->check()) {
+        return "admin";
+    } elseif (Auth::guard('branch')->check()) {
+        return "branch";
+    } elseif (Auth::guard('merchant')->check()) {
+        return "merchant";
+    } elseif (Auth::guard('warehouse')->check()) {
+        return "warehouse";
+    } else {
+        return 'nai';
+    }
+
+    $model = RiderRun::with([
+        'rider' => function ($query) {
+            $query->select('id', 'name', 'contact_number', 'address');
+        },
+        'rider_run_details.parcel'
+    ])
+        // ->whereHas('rider_run_details.parcel', function ($query) {
+        //     $query->where('merchant_id', auth()->guard('merchant')->user()->id);
+        // })
+        ->where('run_type', 3)
+        ->orderBy('id', 'desc')
+        ->select();
+
+    dd($model->get());
+
+    $logs = ParcelLog::where('parcel_id', 9076)->get()->map(function ($log) {
+        $name = '';
+
+        if ($log->pickup_branch_user) {
+            $name = $log->pickup_branch_user->name;
+        } elseif ($log->delivery_branch_user) {
+            $name = $log->delivery_branch_user->name;
+        } else if ($log->return_branch_user) {
+            $name = $log->return_branch_user->name;
+        }
+
+        return [
+            'id' => $log->id,
+            'parcel_id' => $log->parcel_id,
+            'status' => $log->status,
+            'action_by' => $name,
+            'admin_id' => $log->admin_id,
+            'merchant_id' => $log->merchant_id,
+            'action_at' => $log->date . ' ' . $log->time,
+        ];
+    });
+
+    return response()->json($logs);
+});
+
+Route::get('/clear', function () {
     Artisan::call('cache:clear');
     Artisan::call('view:clear');
     Artisan::call('route:clear');
@@ -15,12 +71,13 @@ Route::get('/clear', function() {
     Artisan::call('clear-compiled');
     return "Clear";
 });
-Route::get('/queue-listen', function() {
+
+Route::get('/queue-listen', function () {
     Artisan::call('queue:listen');
     return "done";
 });
 
-Route::match(['post', 'get'],'/', [App\Http\Controllers\Frontend\HomeController::class, 'index'])->name('frontend.home');
+Route::match(['post', 'get'], '/', [App\Http\Controllers\Frontend\HomeController::class, 'index'])->name('frontend.home');
 
 Route::get('/test_sms', [App\Http\Controllers\Frontend\HomeController::class, 'test_sms']);
 
@@ -47,30 +104,30 @@ Route::post('/merchant-registration', [App\Http\Controllers\Admin\MerchantContro
 
 Route::post('/privacypolicy', [App\Http\Controllers\Frontend\HomeController::class, 'privacypolicy'])->name('frontend.privacypolicy');
 
-Route::post('/returnWeightPackageOptionAndCharge', [\App\Http\Controllers\Frontend\HomeController::class, 'returnWeightPackageOptionAndCharge'] )->name('returnWeightPackageOptionAndCharge');
+Route::post('/returnWeightPackageOptionAndCharge', [\App\Http\Controllers\Frontend\HomeController::class, 'returnWeightPackageOptionAndCharge'])->name('returnWeightPackageOptionAndCharge');
 
-Route::get('/otp-merchant-registration', [App\Http\Controllers\AuthController::class, 'otp_merchant_registration_login'] )->name('frontend.otp_merchant_registration_login');
-Route::post('/otp-merchant-registration', [App\Http\Controllers\AuthController::class, 'otp_merchant_registration_check'] )->name('frontend.otp_merchant_registration_check');
-
-
-Route::post('district/districtByDivision', [App\Http\Controllers\Admin\DistrictController::class, 'districtByDivision'] )->name('district.districtByDivision');
-Route::post('ItemCategory/getItemByCategory', [App\Http\Controllers\Admin\ItemCategoryController::class, 'getItemByCategory'] )->name('ItemCategory.getItemByCategory');
-
-Route::post('upazila/districtOption', [App\Http\Controllers\Admin\UpazilaController::class, 'districtOption'] )->name('upazila.districtOption');
-Route::post('area/districtWiseAreaOption', [App\Http\Controllers\Admin\AreaController::class, 'districtWiseAreaOption'] )->name('area.districtWiseAreaOption');
-Route::post('area/areaOption', [App\Http\Controllers\Admin\AreaController::class, 'areaOption'] )->name('area.areaOption');
-Route::post('weightPackage/weightPackageOption', [App\Http\Controllers\Admin\WeightPackageController::class, 'weightPackageOption'] )->name('weightPackage.weightPackageOption');
-
-Route::post('branch/branchResult', [App\Http\Controllers\Admin\BranchController::class, 'branchResult'] )->name('branch.branchResult');
-
-Route::post('rider/riderResult', [App\Http\Controllers\Admin\RiderController::class, 'riderResult'] )->name('rider.riderResult');
-Route::post('rider/riderOption', [App\Http\Controllers\Admin\RiderController::class, 'riderOption'] )->name('rider.riderOption');
+Route::get('/otp-merchant-registration', [App\Http\Controllers\AuthController::class, 'otp_merchant_registration_login'])->name('frontend.otp_merchant_registration_login');
+Route::post('/otp-merchant-registration', [App\Http\Controllers\AuthController::class, 'otp_merchant_registration_check'])->name('frontend.otp_merchant_registration_check');
 
 
-Route::post('merchant/serviceAreaCharge', [App\Http\Controllers\Admin\MerchantController::class, 'serviceAreaCharge'] )->name('merchant.serviceAreaCharge');
+Route::post('district/districtByDivision', [App\Http\Controllers\Admin\DistrictController::class, 'districtByDivision'])->name('district.districtByDivision');
+Route::post('ItemCategory/getItemByCategory', [App\Http\Controllers\Admin\ItemCategoryController::class, 'getItemByCategory'])->name('ItemCategory.getItemByCategory');
 
-Route::post('merchant/returnMerchantUpazilaWeightPackageOptionAndCharge', [App\Http\Controllers\Admin\MerchantController::class, 'returnMerchantUpazilaWeightPackageOptionAndCharge'] )->name('merchant.returnMerchantUpazilaWeightPackageOptionAndCharge');
-Route::get('parcel/{parcel}/printParcel', [App\Http\Controllers\Admin\ParcelController::class, 'printParcel'] )->name('parcel.printParcel');
+Route::post('upazila/districtOption', [App\Http\Controllers\Admin\UpazilaController::class, 'districtOption'])->name('upazila.districtOption');
+Route::post('area/districtWiseAreaOption', [App\Http\Controllers\Admin\AreaController::class, 'districtWiseAreaOption'])->name('area.districtWiseAreaOption');
+Route::post('area/areaOption', [App\Http\Controllers\Admin\AreaController::class, 'areaOption'])->name('area.areaOption');
+Route::post('weightPackage/weightPackageOption', [App\Http\Controllers\Admin\WeightPackageController::class, 'weightPackageOption'])->name('weightPackage.weightPackageOption');
+
+Route::post('branch/branchResult', [App\Http\Controllers\Admin\BranchController::class, 'branchResult'])->name('branch.branchResult');
+
+Route::post('rider/riderResult', [App\Http\Controllers\Admin\RiderController::class, 'riderResult'])->name('rider.riderResult');
+Route::post('rider/riderOption', [App\Http\Controllers\Admin\RiderController::class, 'riderOption'])->name('rider.riderOption');
+
+
+Route::post('merchant/serviceAreaCharge', [App\Http\Controllers\Admin\MerchantController::class, 'serviceAreaCharge'])->name('merchant.serviceAreaCharge');
+
+Route::post('merchant/returnMerchantUpazilaWeightPackageOptionAndCharge', [App\Http\Controllers\Admin\MerchantController::class, 'returnMerchantUpazilaWeightPackageOptionAndCharge'])->name('merchant.returnMerchantUpazilaWeightPackageOptionAndCharge');
+Route::get('parcel/{parcel}/printParcel', [App\Http\Controllers\Admin\ParcelController::class, 'printParcel'])->name('parcel.printParcel');
 
 
 
@@ -79,10 +136,10 @@ Route::post('getPathaoArea', [App\Http\Controllers\Branch\PathaoController::clas
 
 
 
-Route::get('/login', [App\Http\Controllers\AuthController::class, 'login'] )->name('frontend.login');
+Route::get('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('frontend.login');
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login_check'])->name('frontend.login');
-Route::get('/otp-login', [App\Http\Controllers\AuthController::class, 'otp_login'] )->name('frontend.otp_login');
-Route::post('/otp-login', [App\Http\Controllers\AuthController::class, 'otp_check'] )->name('frontend.otp_login');
+Route::get('/otp-login', [App\Http\Controllers\AuthController::class, 'otp_login'])->name('frontend.otp_login');
+Route::post('/otp-login', [App\Http\Controllers\AuthController::class, 'otp_check'])->name('frontend.otp_login');
 
 
 // Admin Route
@@ -106,7 +163,7 @@ Route::get('booking_parcel/export', [\App\Http\Controllers\BookingParcelExportCo
 
 
 /** For EventS */
-Route::get('/event-test', function() {
+Route::get('/event-test', function () {
 
 
     //new Ratchet\WebSocket\WsServer('127.0.0.1');
@@ -116,8 +173,8 @@ Route::get('/event-test', function() {
     return "Hi, Event Test";
 });
 
-Route::get('/php-ini', function(){
-echo phpinfo();
+Route::get('/php-ini', function () {
+    echo phpinfo();
 });
 Route::get('/admin-event-test', [\App\Http\Controllers\Controller::class, 'adminDashboardCounterEvent'])->name('admin_dashboard_counter');
 
@@ -129,7 +186,7 @@ Route::get('/merchant-event-test/{id}', [\App\Http\Controllers\Controller::class
 Route::get('/merchant-registration-notification/markasread', [\App\Http\Controllers\MerchantRegisterNotificationController::class, 'notificationRead'])->name('notificationRead');
 
 
-Route::get('/notification-test', function() {
+Route::get('/notification-test', function () {
 
     $admin_user = \App\Models\Admin::first();
 
@@ -138,7 +195,7 @@ Route::get('/notification-test', function() {
     return "Hi, Notification Test";
 });
 
-Route::get('/merchant-notification-test', function() {
+Route::get('/merchant-notification-test', function () {
 
     $admin_user = \App\Models\Merchant::where('id', 5)->first();
     $parcel_data = \App\Models\Parcel::where('merchant_id', $admin_user->id)->first();

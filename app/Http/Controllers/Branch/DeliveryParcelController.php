@@ -941,6 +941,7 @@ class DeliveryParcelController extends Controller
                         'status' => 11,
                         'delivery_type' => $parcel->delivery_type,
                     ];
+                    // Invalid Log 
                     ParcelLog::create($data);
 
                     /** Parcel Notification */
@@ -991,6 +992,7 @@ class DeliveryParcelController extends Controller
                         'status' => 12,
                         'delivery_type' => $parcel->delivery_type,
                     ];
+                    // Invalid Log 
                     ParcelLog::create($data);
 
                     $parcel = Parcel::where('id', $request->parcel_id)->first();
@@ -1279,6 +1281,7 @@ class DeliveryParcelController extends Controller
                     'delivery_rider_id' => $request->input('rider_id'),
                 ]);
 
+                // Invalid Log 
                 ParcelLog::create([
                     'parcel_id' => $parcel_id,
                     'delivery_rider_id' => $request->input('rider_id'),
@@ -1329,6 +1332,7 @@ class DeliveryParcelController extends Controller
                             'status' => 14,
                             'parcel_date' => date('Y-m-d'),
                         ]);
+                        // Invalid Log 
                         ParcelLog::create([
                             'parcel_id' => $riderRunDetail->parcel_id,
                             'pickup_branch_id' => auth()->guard('branch')->user()->id,
@@ -1384,6 +1388,7 @@ class DeliveryParcelController extends Controller
                             'status' => 15,
                             'parcel_date' => date('Y-m-d'),
                         ]);
+                        // Invalid Log 
                         ParcelLog::create([
                             'parcel_id' => $riderRunDetail->parcel_id,
                             'pickup_branch_id' => auth()->guard('branch')->user()->id,
@@ -1541,6 +1546,7 @@ class DeliveryParcelController extends Controller
                 $data['delivery_branch_id'] = auth()->guard('branch')->user()->id;
             }
 
+            // Invalid Log 
             ParcelLog::create($data);
 
             $this->setMessage('Parcel Update Successfully', 'success');
@@ -1596,6 +1602,7 @@ class DeliveryParcelController extends Controller
                         'status' => 3,
                         'delivery_type' => $parcel->delivery_type,
                     ];
+                    // Invalid Log 
                     ParcelLog::create($data);
 
                     $parcel = Parcel::where('id', $request->parcel_id)->first();
@@ -1646,6 +1653,7 @@ class DeliveryParcelController extends Controller
                         'status' => 6,
                         'delivery_type' => $parcel->delivery_type,
                     ];
+                    // Invalid Log 
                     ParcelLog::create($data);
 
                     $parcel = Parcel::where('id', $request->parcel_id)->first();
@@ -1709,6 +1717,7 @@ class DeliveryParcelController extends Controller
                         'status' => 10,
                         'delivery_type' => $parcel->delivery_type,
                     ];
+                    // Invalid Log 
                     ParcelLog::create($data);
 
                     $parcel = Parcel::where('id', $request->parcel_id)->first();

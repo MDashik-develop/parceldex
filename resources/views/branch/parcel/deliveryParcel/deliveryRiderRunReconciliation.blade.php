@@ -142,12 +142,12 @@
                                         <th width="10%" class="text-center">M.Company</th>
                                         <th width="15%" class="text-center">Customer Name</th>
                                         <th width="10%" class="text-center">Amount to be Collect</th>
-                                        @if ($riderRun->rider->id == 1)
+                                        {{-- @if ($riderRun->rider->id == 1)
                                             <th class="text-center">Pathao Info</th>
-                                        @endif
+                                        @endif --}}
                                         <th width="15%" class="text-center">Status</th>
                                         <th width="10%" class="text-center">Delivery Type</th>
-                                        <th width="10%" class="text-center"></th>
+                                        <th width="10%" class="text-center">Collected</th>
                                         <th width="30%" class="text-center">Complete Note</th>
                                     </tr>
                                 </thead>
@@ -304,7 +304,7 @@
                                                     <input type="number" name="cancel_amount_collection[]"
                                                         class="form-control cancel_amount_collection"
                                                         id="cancel_amount_collection{{ $rider_run_detail->id }}"
-                                                        value="0">
+                                                        value="{{ $rider_run_detail->parcel->cancel_amount_collection }}">
                                                 </div>
                                             </td>
                                             <td class="text-center">

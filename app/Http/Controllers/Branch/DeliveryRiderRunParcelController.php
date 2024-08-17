@@ -13,6 +13,7 @@ use App\Models\ParcelLog;
 use Illuminate\Http\Request;
 use App\Models\RiderRunDetail;
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Validator;
 use App\Models\MerchantServiceAreaReturnCharge;
 use App\Notifications\MerchantParcelNotification;
@@ -457,7 +458,8 @@ class DeliveryRiderRunParcelController extends Controller
             ->get();
 
         $parcels = Parcel::with([
-            'rider_run_detail.rider_run', 'merchant' => function ($query) {
+            'rider_run_detail.rider_run',
+            'merchant' => function ($query) {
                 $query->select('id', 'name', 'company_name', 'contact_number');
             },
         ])
@@ -494,7 +496,8 @@ class DeliveryRiderRunParcelController extends Controller
 
 
             $parcels = Parcel::with([
-                'rider_run_detail.rider_run', 'merchant' => function ($query) {
+                'rider_run_detail.rider_run',
+                'merchant' => function ($query) {
                     $query->select('id', 'name', 'company_name', 'contact_number');
                 },
             ])
@@ -547,7 +550,8 @@ class DeliveryRiderRunParcelController extends Controller
         $parcel_invoice = $request->input('parcel_invoice');
 
         $parcels = Parcel::with([
-            'rider_run_detail.rider_run', 'merchant' => function ($query) {
+            'rider_run_detail.rider_run',
+            'merchant' => function ($query) {
                 $query->select('id', 'name', 'contact_number', 'address');
             },
         ])
@@ -635,7 +639,8 @@ class DeliveryRiderRunParcelController extends Controller
 
         $parcel_invoice = $request->input('parcel_invoice');
         $parcels = Parcel::with([
-            'rider_run_detail.rider_run', 'merchant' => function ($query) {
+            'rider_run_detail.rider_run',
+            'merchant' => function ($query) {
                 $query->select('id', 'name', 'contact_number', 'address');
             },
         ])
@@ -998,8 +1003,6 @@ class DeliveryRiderRunParcelController extends Controller
 
     public function confirmDeliveryRiderRunReconciliation(Request $request)
     {
-        logger($request->all());
-        dd(5445);
         $response = ['error' => 'Error Found'];
         if ($request->ajax()) {
             $validator = Validator::make($request->all(), [
@@ -1115,7 +1118,7 @@ class DeliveryRiderRunParcelController extends Controller
                                 $sms_delivery_type = "Delivered";
 
                                 $area = Area::with('district')->where('id', $parcel->area_id)->first();
-                                $service_area_id = $area->district->service_area_id;
+                                $service_area_id = $area?->district?->service_area_id;
 
                                 $merchantServiceAreaReturnCharge = MerchantServiceAreaReturnCharge::where([
                                     'service_area_id' => $service_area_id,
@@ -1141,8 +1144,21 @@ class DeliveryRiderRunParcelController extends Controller
                                 $new_parcel->total_charge = 0;
                                 $new_parcel->customer_collect_amount = 0;
                                 $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                $new_parcel->delivery_date = now()->toDateString();
                                 $new_parcel->created_at = now();
-                                $new_parcel->save();
+                                $new =  $new_parcel->save();
+
+                                $new_parcel_log = [
+                                    'parcel_id' => $new->parcel_invoice,
+                                    'delivery_branch_id' => auth()->guard('branch')->user()->id,
+                                    'date' => date('Y-m-d'),
+                                    'note' => 'Related Consignment: #' . $parcel_id[$i],
+                                    'time' => date('H:i:s'),
+                                    'status' => 25,
+                                    'delivery_type' => 4,
+                                ];
+
+                                ParcelLog::create($new_parcel_log);
 
                                 break;
 
@@ -1178,6 +1194,7 @@ class DeliveryRiderRunParcelController extends Controller
                         Parcel::where('id', $parcel_id[$i])->update($parcel_update_data);
                         $parcel = Parcel::where('id', $parcel_id[$i])->first();
                         $parcel_log_create_data['delivery_type'] = $parcel->delivery_type;
+                        // Invalid Log 
                         ParcelLog::create($parcel_log_create_data);
 
                         //                            if ($sms_delivery_status == 1) {

@@ -997,8 +997,11 @@ class ParcelController extends Controller
 
     public function viewParcel(Request $request, Parcel $parcel)
     {
+        $parcelLogs = ParcelLog::with('pickup_branch', 'pickup_rider', 'delivery_branch', 'delivery_rider', 'admin', 'merchant')
+            ->where('parcel_id', $parcel->id)->orderBy('id', 'desc')->get();
+
         $parcel->load('district', 'upazila', 'area', 'merchant', 'merchant_shops', 'weight_package', 'pickup_branch', 'pickup_rider', 'delivery_branch', 'delivery_rider');
-        return view('merchant.parcel.viewParcel', compact('parcel'));
+        return view('merchant.parcel.viewParcel', compact('parcel', 'parcelLogs'));
     }
 
     public function edit(Request $request, Parcel $parcel)

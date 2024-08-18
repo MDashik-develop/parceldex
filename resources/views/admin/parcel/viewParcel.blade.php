@@ -529,7 +529,7 @@
                 @endphp
                 <div>
                     <h4 class="font-weight-bold">Delivery Status - {{ $deliveryStatus[$parcel->delivery_type] }}</h4>
-                    <h5>Action Date - {{ \Carbon\Carbon::parse($deliveryStatusDate->date)->format('d/m/Y') }}</h5>
+                    <h5>Action Date - {{ \Carbon\Carbon::parse($deliveryStatusDate?->date)->format('d/m/Y') }}</h5>
                 </div>
                 <div>
                     <h4 class="font-weight-bold">Payment Status - {{ $parcel->payment_type == 5 ? 'Paid' : 'Unpaid' }}
@@ -752,7 +752,7 @@
                 </button>
             </div> --}}
 
-            <div class="section6">
+            <div class="section6 mt-3">
                 <h5 class="fs-1 font-weight-bold">Share Tracking Details</h5>
                 <div class="d-flex flex-wrap justify-content-between w-100 " style="gap: 30px;">
                     <div id="" class="d-flex flex-column  justify-content-center  w-100"

@@ -499,6 +499,7 @@ class ParcelController extends Controller
             ->orderBy('id', 'DESC')
             ->with('parcel_merchant_delivery_payment')
             ->get();
+            
         return view('admin.parcel.viewParcel', compact('parcel', 'parcelLogs', 'parcelBranchPaymentDeltails', 'parcelMerchantPaymentDeltails'));
     }
 

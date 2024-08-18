@@ -2,36 +2,38 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Http\Controllers\Controller;
-use App\Models\AboutPoint;
 use App\Models\Area;
 use App\Models\Blog;
-use App\Models\Content;
-use App\Models\CustomerFeedback;
-use App\Models\DeliveryService;
-use App\Models\District;
-use App\Models\Feature;
-use App\Models\FrequentlyAskQuestion;
-use App\Models\ItemType;
-use App\Models\Merchant;
-use App\Models\NewsLetter;
-use App\Models\Objective;
+use App\Models\Branch;
 use App\Models\Office;
-use App\Models\PageContent;
-use App\Models\ParcelStep;
+use App\Models\Parcel;
+use App\Models\Slider;
+use App\Models\Content;
+use App\Models\Feature;
 use App\Models\Partner;
 use App\Models\Service;
+use App\Models\District;
+use App\Models\ItemType;
+use App\Models\Merchant;
+use App\Models\Objective;
+use App\Models\ParcelLog;
+use App\Models\AboutPoint;
+use App\Models\NewsLetter;
+use App\Models\ParcelStep;
+use App\Models\TeamMember;
+use App\Models\PageContent;
 use App\Models\ServiceArea;
 use App\Models\ServiceType;
-use App\Models\Slider;
-use App\Models\TeamMember;
-use App\Models\VisitorMessage;
-use App\Models\WeightPackage;
 use Illuminate\Http\Request;
+use App\Models\WeightPackage;
+use App\Models\VisitorMessage;
+use App\Models\DeliveryService;
+use App\Models\CustomerFeedback;
+use App\Http\Controllers\Controller;
+use App\Models\FrequentlyAskQuestion;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Parcel;
-use App\Models\Branch;
-use App\Models\ParcelLog;
+use App\Models\ParcelDeliveryPaymentDetail;
+use App\Models\ParcelMerchantDeliveryPaymentDetail;
 
 class HomeController extends Controller
 {
@@ -66,16 +68,16 @@ class HomeController extends Controller
 
         return view('frontend.home', $data);
     }
-    
+
     public function test_sms()
     {
-        $company_name='Humayun';
-        $otp_token='128759';
-         $message = "Dear {$company_name}, ";
-                $message .= "Your OTP is {$otp_token} From STITBD SMS Test. Please Confirm your account and keep it secret";
-     $res = $this->send_sms("01852148425", $message);
-    //  $res = send_bl_sms("01609550979", "test");
-    // dd($res);
+        $company_name = 'Humayun';
+        $otp_token = '128759';
+        $message = "Dear {$company_name}, ";
+        $message .= "Your OTP is {$otp_token} From STITBD SMS Test. Please Confirm your account and keep it secret";
+        $res = $this->send_sms("01852148425", $message);
+        //  $res = send_bl_sms("01609550979", "test");
+        // dd($res);
     }
 
     public function about()
@@ -270,7 +272,6 @@ class HomeController extends Controller
         } else {
             return response()->json(['error' => "Message Send Successfully.."]);
         }
-
     }
 
     public function newsLetter(Request $request)
@@ -293,48 +294,66 @@ class HomeController extends Controller
         } else {
             return response()->json(['error' => "Subscribe Email Successfully.."]);
         }
-
     }
 
     public function orderTracking(Request $request)
     {
+        $parcel = Parcel::with('district', 'upazila', 'area', 'merchant', 'weight_package', 'pickup_branch', 'pickup_rider', 'delivery_branch', 'delivery_rider')->where('parcel_invoice', $request->input('trackingBox'))->first();
 
-        $data = [];
-        $data['sliders'] = Slider::where('status', 1)->get();
-        $data['parcelSteps'] = ParcelStep::where('status', 1)->get();
-        $data['aboutPoints'] = AboutPoint::where('status', 1)->get();
-        $data['partners'] = Partner::where('status', 1)->get();
-        $data['services'] = Service::where([['status', '=', '1'], ['icon', '!=', null]])->get();
-        $data['customerFeedbacks'] = CustomerFeedback::where('status', 1)->get();
-        $data['blogs'] = Blog::where('status', 1)->get();
-        $data['parcel'] = [];
-        $data['trackingBox'] = $request->input('trackingBox')??'';
-        $trackingOrder = $request->input('trackingBox');
-
-        if (!is_null($trackingOrder) && $trackingOrder != '') {
-            $parcel = Parcel::with('district', 'upazila', 'area', 'merchant',
-                'weight_package', 'pickup_branch', 'pickup_rider',
-                'delivery_branch', 'delivery_rider')
-                ->where(function ($query) use ($trackingOrder) {
-                    $query->where('parcel_invoice', 'like', "%$trackingOrder");
-                    $query->orWhere('merchant_order_id', 'like', "%$trackingOrder");
-                })
-                ->first();
-
-
-            if ($parcel) {
-                $parcelLogs = ParcelLog::with('pickup_branch', 'pickup_rider', 'delivery_branch',
-                    'delivery_rider', 'admin', 'merchant')
-                    ->where('parcel_id', $parcel->id)
-                    ->orderBy('id', 'desc')
-                    ->get();
-
-                $data['parcel'] = $parcel;
-                $data['parcelLogs'] = $parcelLogs;
-            }
+        if (! $parcel) {
+            return view('frontend.orderTracking', compact('parcel'));
         }
-//dd($parcelLogs);
-        return view('frontend.orderTracking', $data);
+
+        $parcelLogs = ParcelLog::with('pickup_branch', 'pickup_branch_user', 'pickup_rider', 'delivery_branch', 'delivery_branch_user', 'delivery_rider', 'admin', 'merchant')
+            ->where('parcel_id', $parcel->id)->orderBy('id', 'DESC')->get();
+
+        $parcelBranchPaymentDeltails = ParcelDeliveryPaymentDetail::where('parcel_id', $parcel->id)
+            ->orderBy('id', 'DESC')
+            ->with('parcel_delivery_payment')
+            ->get();
+        $parcelMerchantPaymentDeltails = ParcelMerchantDeliveryPaymentDetail::where('parcel_id', $parcel->id)
+            ->orderBy('id', 'DESC')
+            ->with('parcel_merchant_delivery_payment')
+            ->get();
+
+        return view('frontend.orderTracking', compact('parcel', 'parcelLogs', 'parcelBranchPaymentDeltails', 'parcelMerchantPaymentDeltails'));
+
+        //         $data = [];
+        //         $data['sliders'] = Slider::where('status', 1)->get();
+        //         $data['parcelSteps'] = ParcelStep::where('status', 1)->get();
+        //         $data['aboutPoints'] = AboutPoint::where('status', 1)->get();
+        //         $data['partners'] = Partner::where('status', 1)->get();
+        //         $data['services'] = Service::where([['status', '=', '1'], ['icon', '!=', null]])->get();
+        //         $data['customerFeedbacks'] = CustomerFeedback::where('status', 1)->get();
+        //         $data['blogs'] = Blog::where('status', 1)->get();
+        //         $data['parcel'] = [];
+        //         $data['trackingBox'] = $request->input('trackingBox')??'';
+        //         $trackingOrder = $request->input('trackingBox');
+
+        //         if (!is_null($trackingOrder) && $trackingOrder != '') {
+        //             $parcel = Parcel::with('district', 'upazila', 'area', 'merchant',
+        //                 'weight_package', 'pickup_branch', 'pickup_rider',
+        //                 'delivery_branch', 'delivery_rider')
+        //                 ->where(function ($query) use ($trackingOrder) {
+        //                     $query->where('parcel_invoice', 'like', "%$trackingOrder");
+        //                     $query->orWhere('merchant_order_id', 'like', "%$trackingOrder");
+        //                 })
+        //                 ->first();
+
+
+        //             if ($parcel) {
+        //                 $parcelLogs = ParcelLog::with('pickup_branch', 'pickup_rider', 'delivery_branch',
+        //                     'delivery_rider', 'admin', 'merchant')
+        //                     ->where('parcel_id', $parcel->id)
+        //                     ->orderBy('id', 'desc')
+        //                     ->get();
+
+        //                 $data['parcel'] = $parcel;
+        //                 $data['parcelLogs'] = $parcelLogs;
+        //             }
+        //         }
+        // //dd($parcelLogs);
+        //         return view('frontend.orderTracking', $data);
     }
 
     public function merchantRegistration()
@@ -350,10 +369,7 @@ class HomeController extends Controller
         return view('frontend.merchantRegistration', $data);
     }
 
-    public function privacypolicy()
-    {
-
-    }
+    public function privacypolicy() {}
 
 
     public function getPrivacyPolicy()
@@ -391,7 +407,7 @@ class HomeController extends Controller
 
                 if (!empty($serviceArea)) {
                     $charge = $serviceArea->default_charge;
-//                    $charge = null;
+                    //                    $charge = null;
                     if (!$charge) {
                         $charge = 60;
                     }
@@ -434,11 +450,8 @@ class HomeController extends Controller
                     'itemTypeOption' => $itemTypeOption,
                 ];
             }
-
         }
 
         return response()->json($response);
     }
-
-
 }

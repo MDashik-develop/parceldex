@@ -126,6 +126,14 @@ class Controller extends BaseController
 
     function returnUniqueParcelInvoice()
     {
+        do {
+            // Generate a random 13-digit number
+            $invoiceNumber = mt_rand(1000000000000000, 9999999999999999);
+        } while (DB::table('parcels')->where('parcel_invoice', $invoiceNumber)->exists());
+
+        return $invoiceNumber;
+
+
         $lastParcel = Parcel::orderBy('id', 'desc')->first();
         $currentDate = date("ymd");
         if (!empty($lastParcel)) {

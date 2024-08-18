@@ -349,10 +349,13 @@
                         ->where('delivery_type', $parcel->delivery_type)
                         ->first();
                 @endphp
-                <div>
-                    <h4 class="font-weight-bold">Delivery Status - {{ $deliveryStatus[$parcel->delivery_type] }}</h4>
-                    <h5>Action Date - {{ \Carbon\Carbon::parse($deliveryStatusDate?->date)->format('d/m/Y') }}</h5>
-                </div>
+                @if ($parcel->delivery_type)
+                    <div>
+                        <h4 class="font-weight-bold">Delivery Status - {{ $deliveryStatus[$parcel->delivery_type] }}
+                        </h4>
+                        <h5>Action Date - {{ \Carbon\Carbon::parse($deliveryStatusDate?->date)->format('d/m/Y') }}</h5>
+                    </div>
+                @endif
                 <div>
                     <h4 class="font-weight-bold">Payment Status - {{ $parcel->payment_type == 5 ? 'Paid' : 'Unpaid' }}
                         </h3>
@@ -392,7 +395,7 @@
                     </div>
 
                     <div class="d-flex">
-                        <div style="width: 250px;">
+                        <div class="xxx">
                             <h5 class="d-flex justify-content-between">Exchange Parcel <span class="px-4">:</span>
                             </h5>
                         </div>
@@ -402,7 +405,7 @@
                     </div>
 
                     <div class="d-flex">
-                        <div style="width: 250px;">
+                        <div class="xxx">
                             <h5 class="d-flex justify-content-between">Product Weight <span class="px-4">:</span>
                             </h5>
                         </div>
@@ -412,7 +415,7 @@
                     </div>
 
                     <div class="d-flex">
-                        <div style="width: 250px;">
+                        <div class="xxx">
                             <h5 class="d-flex justify-content-between">Amount to be Collect <span
                                     class="px-4">:</span></h5>
                         </div>
@@ -422,7 +425,7 @@
                     </div>
 
                     <div class="d-flex">
-                        <div style="width: 250px;">
+                        <div class="xxx">
                             <h5 class="d-flex justify-content-between">Collected Amount <span class="px-4">:</span>
                             </h5>
                         </div>
@@ -547,7 +550,7 @@
                         @endphp
 
                         <div class="d-flex flex-wrap align-items-center py-2 px-3 w-100"
-                            style="background-color: rgb(211, 204, 194); border: 2px solid #a2a2a2;">
+                            style="background-color: #e7e6e6; border: 1px solid #b4b4b4;">
                             <div class="d-flex align-items-center flex-wrap section4-card">
                                 <h5>{{ \Carbon\Carbon::parse($item->time)->format('h:i A') }}</h5>
                                 <div>
@@ -577,10 +580,10 @@
             <div class="section6 mt-3">
                 <h5 class="fs-1 font-weight-bold">Share Tracking Details</h5>
                 <div class="d-flex flex-wrap justify-content-between w-100 " style="gap: 30px;">
-                    <div id="" class="d-flex flex-column  justify-content-center  w-100"
-                        style=" border: 2px dotted #f87326; background-color: #eac0a8; padding: 10px;">
+                    <div id="" class="d-flex flex-column  justify-content-center"
+                        style=" border: 2px dotted #f87326; background-color: #eac0a8; padding: 10px; width: 86%">
                         <p id="trackingText" class="p-0 m-0 font-weight-bold fs-1">
-                            {{ route('frontend.orderTracking') . '?trackingBox=' . $parcel->parcel_invoice }}</p>
+                            {{ route('frontend.orderTracking') . '?trackingBox=' . $parcel['parcel_invoice'] }}</p>
                     </div>
                     <button id="copyButton" class="text-white font-weight-bolder py-2 px-4 border-0"
                         style="background-color: #f87326; font-size: 18px; border-radius: 5px;">COPY</button>
@@ -674,6 +677,10 @@
         border-radius: 10px;
     }
 
+    .xxx {
+        width: 250px;
+    }
+
     .section1 {
         border-radius: 20px;
         border: 2px solid #f87326;
@@ -708,7 +715,7 @@
     }
 
     .section3-card {
-        width: 280px;
+        width: 185px;
     }
 
     .parcel-log {
@@ -780,6 +787,10 @@
     }
 
     @media (max-width: 768px) {
+        .xxx {
+            width: 200px;
+        }
+
         .title {
             width: 100% !important;
         }

@@ -47,12 +47,11 @@ class MerchantBulkParcelImport implements
 {
     use Importable, SkipsErrors, SkipsFailures, RegistersEventListeners;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function collection(Collection $rows)
     {
+      // session()->flush();
         if (count($rows)) {
             $merchant_id = auth()->guard('merchant')->user()->id;
 
@@ -79,7 +78,6 @@ class MerchantBulkParcelImport implements
                 $customer_contact_number = isset($row['phone']) ? $row['phone'] : null;
                 $customer_contact_number2 = isset($row['alternative_phone']) ? $row['alternative_phone'] : null;
                 $customer_address = isset($row['address']) ? $row['address'] : null;
-                $exchange = isset($row['exchange']) ? $row['exchange'] : 'no';
                 $area_name = isset($row['area']) ? $row['area'] : null;
                 $product_details = isset($row['product_details']) ? $row['product_details'] : null;
                 $weight = isset($row['weight']) ? $row['weight'] : null;
@@ -89,6 +87,7 @@ class MerchantBulkParcelImport implements
                 // $service = isset($row['service_type']) ? $row['service_type'] : null;
                 // dd($item,$service);
 
+                $exchange = isset($row['exchange']) ? $row['exchange'] : null;
                 $remark = isset($row['remark']) ? $row['remark'] : null;
                 $collection_amount = isset($row['collection_amount']) ? $row['collection_amount'] : null;
                 $merchant = Merchant::where('id', $merchant_id)->first();
@@ -236,7 +235,7 @@ class MerchantBulkParcelImport implements
 
 
 
-                        $import_parcel = \session()->has('import_parcel') ? \session()->get('import_parcel') : [];
+                      //  $import_parcel = \session()->has('import_parcel') ? \session()->get('import_parcel') : [];
 
                         //  dd($import_parcel);
 
@@ -252,6 +251,7 @@ class MerchantBulkParcelImport implements
                             'customer_address' => $customer_address,
                             'customer_contact_number' => $customer_contact_number,
                             'customer_contact_number2' => $customer_contact_number2,
+                            'exchange' => $exchange,
                             'product_details' => $product_details,
                             'district_id' => $district_id,
                             'area_id' => $area_id,
@@ -262,7 +262,6 @@ class MerchantBulkParcelImport implements
 
                             'total_collect_amount' => $collection_amount ?? 0,
                             'parcel_note' => $remark,
-                            'exchange' => $exchange,
                             'delivery_option_id' => 1,
                             'pickup_branch_id' => $merchant->branch_id,
                         ];
@@ -310,11 +309,7 @@ class MerchantBulkParcelImport implements
         return 1000;
     }
 
-    public static function afterImport(AfterImport $event)
-    {
-    }
+    public static function afterImport(AfterImport $event) {}
 
-    public function onFailure(Failure ...$failure)
-    {
-    }
+    public function onFailure(Failure ...$failure) {}
 }

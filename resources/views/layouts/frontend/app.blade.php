@@ -120,12 +120,6 @@
 
 	@yield('content')
 
-
-
-
-
-
-    <div class="py-5"></div>
     
     @include("layouts.frontend.footer")
     <!-- End Footer-->

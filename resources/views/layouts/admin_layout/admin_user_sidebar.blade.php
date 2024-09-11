@@ -1,8 +1,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="{{ route('admin.home') }}" class="brand-link">
         <img src="{{ asset('uploads/application/') . '/' . session()->get('company_photo') }}"
-             alt="{{ session()->get('company_name') ?? config('app.name') }}" class="brand-image"
-             style="opacity: .8">
+            alt="{{ session()->get('company_name') ?? config('app.name') }}" class="brand-image" style="opacity: .8">
         <br>
 
     </a>
@@ -10,15 +9,15 @@
 
     <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 text-center">
-            @if(!empty(auth()->guard('admin')->user()->photo))
+            @if (!empty(auth()->guard('admin')->user()->photo))
                 <div class="image">
                     <img src="{{ asset('uploads/admin/' . auth()->guard('admin')->user()->photo) }} "
-                         class="img-thumbnail elevation-2" alt="Admin Photo">
+                        class="img-thumbnail elevation-2" alt="Admin Photo">
                 </div>
             @else
                 <div class="image">
                     <img src="{{ asset('image/admin_layout/avatar5.png') }} " class="img-thumbnail elevation-2"
-                         alt="Admin Photo">
+                        alt="Admin Photo">
                 </div>
             @endif
             <br>
@@ -30,8 +29,8 @@
         </div>
 
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column"
-                data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                data-accordion="false">
                 <li class="nav-item">
                     <a href="{{ route('admin.home') }}" class="nav-link {{ $main_menu == 'home' ? 'active' : '' }}">
                         <i class="fas fa-home fa-lg "></i>
@@ -53,7 +52,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.slider.index') }}"
-                               class="nav-link {{ $child_menu == 'slider' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'slider' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Slider</p>
                             </a>
@@ -62,7 +61,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.designation.index') }}"
-                               class="nav-link {{ $child_menu == 'designation' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'designation' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Designation</p>
                             </a>
@@ -71,7 +70,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.teamMember.index') }}"
-                               class="nav-link {{ $child_menu == 'teamMember' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'teamMember' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Team Member</p>
                             </a>
@@ -80,7 +79,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.partner.index') }}"
-                               class="nav-link {{ $child_menu == 'partner' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'partner' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Partner</p>
                             </a>
@@ -89,7 +88,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.customerFeedback.index') }}"
-                               class="nav-link {{ $child_menu == 'customerFeedback' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'customerFeedback' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Customer Feedback</p>
                             </a>
@@ -98,7 +97,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.frequentlyAskQuestion.index') }}"
-                               class="nav-link {{ $child_menu == 'frequentlyAskQuestion' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'frequentlyAskQuestion' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Frequently Ask Question</p>
                             </a>
@@ -107,7 +106,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.objective.index') }}"
-                               class="nav-link {{ $child_menu == 'objective' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'objective' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Objective</p>
                             </a>
@@ -117,7 +116,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.service.index') }}"
-                               class="nav-link {{ $child_menu == 'service' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'service' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Service</p>
                             </a>
@@ -127,7 +126,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.deliveryService.index') }}"
-                               class="nav-link {{ $child_menu == 'deliveryService' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'deliveryService' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Delivery Service</p>
                             </a>
@@ -137,7 +136,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.feature.index') }}"
-                               class="nav-link {{ $child_menu == 'feature' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'feature' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Feature</p>
                             </a>
@@ -147,7 +146,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.blog.index') }}"
-                               class="nav-link {{ $child_menu == 'blog' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'blog' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Blog</p>
                             </a>
@@ -157,7 +156,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.socialLink.index') }}"
-                               class="nav-link {{ $child_menu == 'socialLink' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'socialLink' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Social Link</p>
                             </a>
@@ -166,7 +165,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.parcelStep.index') }}"
-                               class="nav-link {{ $child_menu == 'parcelStep' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'parcelStep' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Parcel Step</p>
                             </a>
@@ -175,7 +174,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.aboutPoint.index') }}"
-                               class="nav-link {{ $child_menu == 'aboutPoint' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'aboutPoint' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>About Point</p>
                             </a>
@@ -184,7 +183,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.pageContent.index') }}"
-                               class="nav-link {{ $child_menu == 'pageContent' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'pageContent' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Page Content</p>
                             </a>
@@ -193,7 +192,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.visitorMessage.index') }}"
-                               class="nav-link {{ $child_menu == 'visitorMessage' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'visitorMessage' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Visitor Message</p>
                             </a>
@@ -202,7 +201,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.newsLetter.index') }}"
-                               class="nav-link {{ $child_menu == 'newsLetter' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'newsLetter' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>News Letter</p>
                             </a>
@@ -211,7 +210,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.office.index') }}"
-                               class="nav-link {{ $child_menu == 'office' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'office' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Office</p>
                             </a>
@@ -221,7 +220,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.becomeMerchant') }}"
-                               class="nav-link {{ $child_menu == 'becomeMerchant' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'becomeMerchant' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Become Merchant</p>
                             </a>
@@ -231,7 +230,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.becomeFranchisee') }}"
-                               class="nav-link {{ $child_menu == 'becomeFranchisee' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'becomeFranchisee' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Become Franchisee</p>
                             </a>
@@ -251,7 +250,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.branch.index') }}"
-                               class="nav-link {{ $child_menu == 'branch' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'branch' ? 'active' : '' }}">
                                 <i class="fas fa-building"></i>
                                 <p>Branch</p>
                             </a>
@@ -260,7 +259,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.branchUser.index') }}"
-                               class="nav-link {{ $child_menu == 'branchUser' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'branchUser' ? 'active' : '' }}">
                                 <i class="fas fa-user-plus"></i>
                                 <p>Branch User</p>
                             </a>
@@ -270,7 +269,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.merchant.index') }}"
-                               class="nav-link {{ $child_menu == 'merchant' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'merchant' ? 'active' : '' }}">
                                 <i class="fa fa-user-circle"></i>
                                 <p>Merchant</p>
                             </a>
@@ -280,7 +279,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.rider.index') }}"
-                               class="nav-link {{ $child_menu == 'rider' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'rider' ? 'active' : '' }}">
                                 <i class="fas fa-motorcycle"></i>
                                 <p>Rider</p>
                             </a>
@@ -305,8 +304,85 @@
                     <!--        </a>-->
                     <!--    </li>-->
                     <!--</ul>-->
-                    
 
+
+                </li>
+
+                <li class="nav-item has-treeview {{ $main_menu == 'branch-payment' ? 'menu-open' : '' }} ">
+                    <a href="#" class="nav-link {{ $main_menu == 'branch-payment' ? 'active' : '' }}">
+                        <i class="fa fa-university fa-lg text-success"></i>
+                        <p>
+                            Branch Payment
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.account.branchDeliveryPaymentList') }}"
+                                class="nav-link {{ $child_menu == 'branchDeliveryPaymentList' ? 'active' : '' }}">
+                                <i class="fas fa-flask"></i>
+                                <p>Branch Delivery Payment List </p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.account.branchDeliveryReceivePaymentList') }}"
+                                class="nav-link {{ $child_menu == 'receivePaymentList' ? 'active' : '' }}">
+                                <i class="fas fa-hourglass-half"></i>
+                                <p>Received Payment List</p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.account.branchDeliveryPaymentStatement') }}"
+                                class="nav-link {{ $child_menu == 'branchPaymentStatement' ? 'active' : '' }}">
+                                <i class="fas fa-tags"></i>
+                                <p>Statement</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+                <li class="nav-item has-treeview {{ $main_menu == 'merchant-payment' ? 'menu-open' : '' }} ">
+                    <a href="#" class="nav-link {{ $main_menu == 'merchant-payment' ? 'active' : '' }}">
+                        <i class="fa fa-users fa-lg text-success"></i>
+                        <p>
+                            Merchant Payment
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.account.merchantPaymentDeliveryGenerate') }}"
+                                class="nav-link {{ $child_menu == 'merchantPaymentDeliveryGenerate' ? 'active' : '' }}">
+                                <i class="fas fa-flask"></i>
+                                <p>Merchant Delivery Payment </p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.account.merchantPaymentDeliveryList') }}"
+                                class="nav-link {{ $child_menu == 'merchantPaymentDeliveryList' ? 'active' : '' }}">
+                                <i class="fas fa-hourglass-half"></i>
+                                <p>Merchant Delivery Payment List </p>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.account.merchantPaymentDeliveryStatement') }}"
+                                class="nav-link {{ $child_menu == 'merchantPaymentStatement' ? 'active' : '' }}">
+                                <i class="fas fa-tags"></i>
+                                <p>Statement</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <li class="nav-item has-treeview {{ $main_menu == 'parcel' ? 'menu-open' : '' }} ">
@@ -319,22 +395,22 @@
                     </a>
 
                     <ul class="nav nav-treeview">
-                        {{--<li class="nav-item">--}}
-                        {{--<a href="{{ route('admin.parcel.list') }}" class="nav-link {{ $child_menu == 'parcelList' ? 'active' : '' }}">--}}
-                        {{--<i class="fas fa-tags"></i>--}}
-                        {{--<p>Parcel List </p>--}}
-                        {{--</a>--}}
-                        {{--</li>--}}
+                        {{-- <li class="nav-item"> --}}
+                        {{-- <a href="{{ route('admin.parcel.list') }}" class="nav-link {{ $child_menu == 'parcelList' ? 'active' : '' }}"> --}}
+                        {{-- <i class="fas fa-tags"></i> --}}
+                        {{-- <p>Parcel List </p> --}}
+                        {{-- </a> --}}
+                        {{-- </li> --}}
                         <li class="nav-item">
                             <a href="{{ route('admin.parcel.allParcelList') }}"
-                               class="nav-link {{ $child_menu == 'allParcelList' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'allParcelList' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>All Parcel List </p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.parcel.orderTracking') }}"
-                               class="nav-link {{ $child_menu == 'orderTracking' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'orderTracking' ? 'active' : '' }}">
                                 <i class="fas fa-map-marker"></i>
                                 <p>Order Tracking </p>
                             </a>
@@ -344,18 +420,18 @@
 
                 <li class="nav-item">
                     <a href="{{ route('admin.report') }}"
-                       class="nav-link {{ $child_menu == 'report' ? 'active' : '' }}">
+                        class="nav-link {{ $child_menu == 'report' ? 'active' : '' }}">
                         <i class="fas fa-tags text-success"></i>
                         <p>Parcel Report</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                            <a href="{{ route('admin.merchant.pickup.parcelReport') }}"
-                                class="nav-link {{ $child_menu == 'merchant-pickup-parcel-report' ? 'active' : '' }}">
-                                <i class="fas fa-tags"></i>
-                                <p>Merchant Pickup Parcel Report</p>
-                            </a>
-                        </li>
+                    <a href="{{ route('admin.merchant.pickup.parcelReport') }}"
+                        class="nav-link {{ $child_menu == 'merchant-pickup-parcel-report' ? 'active' : '' }}">
+                        <i class="fas fa-tags"></i>
+                        <p>Merchant Pickup Parcel Report</p>
+                    </a>
+                </li>
                 <li class="nav-item has-treeview {{ $main_menu == 'report' ? 'menu-open' : '' }} ">
                     <a href="#" class="nav-link {{ $main_menu == 'report' ? 'active' : '' }}">
                         <i class="fas fa-book fa-lg text-success"></i>
@@ -366,15 +442,15 @@
                     </a>
 
                     <ul class="nav nav-treeview">
-                        {{--<li class="nav-item">--}}
-                        {{--<a href="{{ route('admin.parcel.list') }}" class="nav-link {{ $child_menu == 'parcelList' ? 'active' : '' }}">--}}
-                        {{--<i class="fas fa-tags"></i>--}}
-                        {{--<p>Parcel List </p>--}}
-                        {{--</a>--}}
-                        {{--</li>--}}
+                        {{-- <li class="nav-item"> --}}
+                        {{-- <a href="{{ route('admin.parcel.list') }}" class="nav-link {{ $child_menu == 'parcelList' ? 'active' : '' }}"> --}}
+                        {{-- <i class="fas fa-tags"></i> --}}
+                        {{-- <p>Parcel List </p> --}}
+                        {{-- </a> --}}
+                        {{-- </li> --}}
                         <li class="nav-item">
                             <a href="{{ route('admin.merchant.parcelReport') }}"
-                               class="nav-link {{ $child_menu == 'merchant-parcel-report' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'merchant-parcel-report' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Merchant Parcel Report</p>
                             </a>
@@ -382,7 +458,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('admin.rider.deliveryParcelReport') }}"
-                               class="nav-link {{ $child_menu == 'rider-delivery-parcel-report' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'rider-delivery-parcel-report' ? 'active' : '' }}">
                                 <i class="fas fa-motorcycle"></i>
                                 <p>Rider Delivery Parcel Report</p>
                             </a>
@@ -399,11 +475,11 @@
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-                    
+
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.serviceArea.index') }}"
-                               class="nav-link {{ $child_menu == 'serviceArea' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'serviceArea' ? 'active' : '' }}">
                                 <i class="fas fa-street-view"></i>
                                 <p>Service Area</p>
                             </a>
@@ -413,17 +489,17 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.weightPackage.index') }}"
-                               class="nav-link {{ $child_menu == 'weightPackage' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'weightPackage' ? 'active' : '' }}">
                                 <i class="fas fa-cube"></i>
                                 <p>Weight Package</p>
                             </a>
                         </li>
                     </ul>
-                    
+
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.serviceAreaSetting.index') }}"
-                               class="nav-link {{ $child_menu == 'serviceAreaSetting' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'serviceAreaSetting' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p> Weight Custom Charge</p>
                             </a>
@@ -432,7 +508,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.service.type') }}"
-                               class="nav-link {{ $child_menu == 'service-type-list' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'service-type-list' ? 'active' : '' }}">
                                 <i class="fas fa-sitemap"></i>
                                 <p>Service Type</p>
                             </a>
@@ -441,7 +517,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.item.type') }}"
-                               class="nav-link {{ $child_menu == 'item-type-list' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'item-type-list' ? 'active' : '' }}">
                                 <i class="fas fa-shopping-bag"></i>
                                 <p>Item Type</p>
                             </a>
@@ -450,7 +526,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.district.index') }}"
-                               class="nav-link {{ $child_menu == 'district' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'district' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>District</p>
                             </a>
@@ -468,7 +544,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.area.index') }}"
-                               class="nav-link {{ $child_menu == 'area' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'area' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>Area</p>
                             </a>
@@ -544,11 +620,12 @@
 
 
                 <!--</li>-->
-                
-                
-                
+
+
+
                 <li class="nav-item">
-                    <a href="{{ route('admin.notice.index') }}" class="nav-link {{ $child_menu == 'noticeList' ? 'active' : '' }}" >
+                    <a href="{{ route('admin.notice.index') }}"
+                        class="nav-link {{ $child_menu == 'noticeList' ? 'active' : '' }}">
                         <i class="fas fa-bullhorn fa-lg text-success"></i>
                         <p>
                             Notice OR News
@@ -568,7 +645,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.admin.index') }}"
-                               class="nav-link {{ $child_menu == 'admin' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'admin' ? 'active' : '' }}">
                                 <i class="fas fa-users"></i>
                                 <p>Admin User</p>
                             </a>
@@ -577,7 +654,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.application.index') }}"
-                               class="nav-link {{ $child_menu == 'application' ? 'active' : '' }}">
+                                class="nav-link {{ $child_menu == 'application' ? 'active' : '' }}">
                                 <i class="fas fa-anchor"></i>
                                 <p>Application</p>
                             </a>

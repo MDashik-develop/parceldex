@@ -35,10 +35,10 @@ class MerchantParcelExport implements
      */
     public function collection()
     {
-        $request=$this->request;
+        $request = $this->request;
 
 
-         $merchant_id = auth()->guard('merchant')->user()->id;
+        $merchant_id = auth()->guard('merchant')->user()->id;
 
         $model = Parcel::with([
             'service_type',
@@ -66,14 +66,13 @@ class MerchantParcelExport implements
                     || ($request->has('ex_from_date') && !is_null($from_date))
                     || ($request->has('ex_to_date') && !is_null($to_date))
                 ) {
-                    if ((!is_null($parcel_invoice))
-                    ) {
-                    
-            $query->where('parcel_invoice','like', "{$parcel_invoice}");
-            $query->orWhere('merchant_order_id','like', "{$parcel_invoice}");
-            $query->orWhere('customer_contact_number','like', "{$parcel_invoice}");
-                        
-                        
+                    if ((!is_null($parcel_invoice))) {
+
+                        $query->where('parcel_invoice', 'like', "{$parcel_invoice}");
+                        $query->orWhere('merchant_order_id', 'like', "{$parcel_invoice}");
+                        $query->orWhere('customer_contact_number', 'like', "{$parcel_invoice}");
+
+
                         /*if (!is_null($parcel_invoice) && !is_null($parcel_invoice)) {
                             $query->where('parcel_invoice', 'like', "%$parcel_invoice");
                         } elseif (!is_null($merchant_order_id) && !is_null($merchant_order_id)) {
@@ -101,11 +100,11 @@ class MerchantParcelExport implements
                                 $query->whereRaw('status = ? and delivery_type in (?)', [36, 4]);
                             } elseif ($parcel_status == 7) {
                                 $query->whereRaw('status in (1) and delivery_type IS NULL or delivery_type = ""');
-                            }elseif ($parcel_status == 8) {
+                            } elseif ($parcel_status == 8) {
                                 $query->whereRaw('status >= 25 and delivery_type in(3)');
                             }
                         }
-                       /* if ($request->has('from_date') && !is_null($from_date)) {
+                        /* if ($request->has('from_date') && !is_null($from_date)) {
                             $query->whereDate('date', '>=', $from_date);
                         }
                         if ($request->has('to_date') && !is_null($to_date)) {
@@ -140,10 +139,9 @@ class MerchantParcelExport implements
                                 $query->whereDate('date', '<=', $request->get('ex_to_date'));
                             }
                         }
-
                     }
                 }
-               /* else {
+                /* else {
                     $query->where('status', '!=', 3);
                 }*/
             })
@@ -152,7 +150,7 @@ class MerchantParcelExport implements
 
         $parcels = $model->get();
         $data_parcel_array  = [];
-        if(count($parcels) > 0) {
+        if (count($parcels) > 0) {
             foreach ($parcels as $key => $parcel) {
                 $parcelStatus = returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type);
                 $status_name = $parcelStatus['status_name'];
@@ -170,6 +168,8 @@ class MerchantParcelExport implements
                     }
                 }
 
+                $totalCharge = $parcel->weight_package_charge + $parcel->cod_charge + $parcel->delivery_charge + $parcel->return_charge;
+
                 $data_parcel_array[] = (object)[
                     'serial' => $key + 1,
                     'parcel_invoice' => $parcel->parcel_invoice,
@@ -180,15 +180,19 @@ class MerchantParcelExport implements
                     'company_name' => $parcel->merchant->company_name,
                     'customer_name' => $parcel->customer_name,
                     'customer_contact_number' => $parcel->customer_contact_number,
+                    'customer_contact_number2' => $parcel->customer_contact_number2,
                     'customer_address' => $parcel->customer_address,
                     'district_name' => $parcel->district->name,
                     'area_name' => $parcel->area->name,
                     'service_type' => optional($parcel->service_type)->title,
                     'item_type' => optional($parcel->item_type)->title,
-                    'total_collect_amount' => $parcel->total_collect_amount,
-                    'customer_collect_amount' => $parcel->customer_collect_amount,
-                    'cod_charge' => $parcel->cod_charge,
-                    'total_charge' => $parcel->total_charge,
+                    'total_collect_amount' => $parcel->total_collect_amount != 0 ? $parcel->total_collect_amount : 0,
+                    'customer_collect_amount' => $parcel->cancel_amount_collection != 0 ? $parcel->cancel_amount_collection : ($parcel->customer_collect_amount != 0 ? $parcel->customer_collect_amount : '0'),
+                    'weight_charge' => $parcel->weight_package_charge != 0 ? $parcel->weight_package_charge : '0',
+                    'cod_charge' => $parcel->cod_charge != 0 ? $parcel->cod_charge : '0',
+                    'delivery_charge' => $parcel->delivery_charge != 0 ? $parcel->delivery_charge : '0',
+                    'return_charge' => $parcel->return_charge != 0 ? $parcel->return_charge : '0',
+                    'total_charge' => $totalCharge != 0 ? $totalCharge : '0',
                     'parcel_note' => $parcel->parcel_note,
                     'logs_note' => $logs_note,
                     'payment_status_name' => $payment_status_name,
@@ -199,8 +203,6 @@ class MerchantParcelExport implements
 
 
         return new Collection($data_parcel_array);
-
-
     }
 
     public function map($row): array
@@ -215,6 +217,7 @@ class MerchantParcelExport implements
             // $row->company_name,
             $row->customer_name,
             $row->customer_contact_number,
+            $row->customer_contact_number2,
             $row->customer_address,
             $row->district_name,
             $row->area_name,
@@ -222,7 +225,10 @@ class MerchantParcelExport implements
             $row->item_type,
             $row->total_collect_amount,
             $row->customer_collect_amount,
+            $row->weight_charge,
             $row->cod_charge,
+            $row->delivery_charge,
+            $row->return_charge,
             $row->total_charge,
             $row->parcel_note,
             $row->logs_note,
@@ -243,6 +249,7 @@ class MerchantParcelExport implements
             // 'company_name',
             'Customer Name',
             'Customer Contact Number',
+            'Alternative Number',
             'Customer Address',
             'District Name',
             'Area Name',
@@ -250,7 +257,10 @@ class MerchantParcelExport implements
             'Item Type',
             'Amount To be Collect',
             'Collected',
+            'Weight Charge',
             'Cod charge',
+            'Delivery charge',
+            'Return charge',
             'Total Charge',
             'Parcel Note',
             'Logs Note',
@@ -262,15 +272,15 @@ class MerchantParcelExport implements
     public function properties(): array
     {
         return [
-//            'creator'        => 'Patrick Brouwers',
-//            'lastModifiedBy' => 'Patrick Brouwers',
+            //            'creator'        => 'Patrick Brouwers',
+            //            'lastModifiedBy' => 'Patrick Brouwers',
             'title'             => 'Admin Parcel List',
-//            'description'    => 'Latest Invoices',
-//            'subject'        => 'Invoices',
-//            'keywords'       => 'invoices,export,spreadsheet',
-//            'category'       => 'Invoices',
-//            'manager'        => 'Patrick Brouwers',
-//            'company'        => 'Maatwebsite',
+            //            'description'    => 'Latest Invoices',
+            //            'subject'        => 'Invoices',
+            //            'keywords'       => 'invoices,export,spreadsheet',
+            //            'category'       => 'Invoices',
+            //            'manager'        => 'Patrick Brouwers',
+            //            'company'        => 'Maatwebsite',
         ];
     }
 
@@ -278,7 +288,7 @@ class MerchantParcelExport implements
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class    => function (AfterSheet $event) {
 
                 $event->sheet->getStyle('A1:Z1')->applyFromArray([
                     'font'  => [
@@ -286,34 +296,33 @@ class MerchantParcelExport implements
                     ]
                 ]);
 
-//                $event->sheet->getStyle('A'.$this->count.':K'.$this->count)->applyFromArray([
-//                    'font'  => [
-//                        'bold'  => true,
-//                    ]
-//                ]);
+                //                $event->sheet->getStyle('A'.$this->count.':K'.$this->count)->applyFromArray([
+                //                    'font'  => [
+                //                        'bold'  => true,
+                //                    ]
+                //                ]);
 
-                if('pdf' == "pdf") {
+                if ('pdf' == "pdf") {
 
-                    foreach(range('B','Z') as $columnID) {
+                    foreach (range('B', 'Z') as $columnID) {
                         $event->sheet->getDelegate()->getColumnDimension($columnID)->setAutoSize(true);
                     }
 
                     $event->sheet->getDelegate()->getPageSetup()
                         ->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
-
                 }
 
-//                $event->sheet->getStyle(
-//                    'B2:G8',
-//                    [
-//                        'borders' => [
-//                            'outline' => [
-//                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
-//                                'color' => ['argb' => 'FFFF0000'],
-//                            ],
-//                        ]
-//                    ]
-//                );
+                //                $event->sheet->getStyle(
+                //                    'B2:G8',
+                //                    [
+                //                        'borders' => [
+                //                            'outline' => [
+                //                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                //                                'color' => ['argb' => 'FFFF0000'],
+                //                            ],
+                //                        ]
+                //                    ]
+                //                );
 
             },
         ];

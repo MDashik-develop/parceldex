@@ -634,7 +634,7 @@ class ControllerOld extends BaseController
 
 
 
-        $data['total_collect_amount']    = Parcel::where('merchant_id', $merchant_id)
+        $data['total_collect_amount']    =  Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25,1,2,5])
             ->sum('merchant_paid_amount');
 

@@ -137,18 +137,20 @@
                             <table class="table table-style table-striped">
                                 <thead>
                                     <tr>
-                                        <th width="10%" class="text-center">Order ID</th>
+                                        <th width="5%" class="text-center">Order ID</th>
                                         <th width="10%" class="text-center">Run Status</th>
                                         <th width="10%" class="text-center">M.Company</th>
                                         <th width="15%" class="text-center">Customer Name</th>
+                                        {{-- <th width="15%" class="text-center">Address</th> --}}
+                                        <th width="5%" class="text-center">Area</th>
                                         <th width="10%" class="text-center">Amount to be Collect</th>
                                         {{-- @if ($riderRun->rider->id == 1)
                                             <th class="text-center">Pathao Info</th>
                                         @endif --}}
-                                        <th width="15%" class="text-center">Status</th>
-                                        <th width="10%" class="text-center">Delivery Type</th>
+                                        <th width="5%" class="text-center">Status</th>
+                                        <th width="5%" class="text-center">Delivery Type</th>
                                         <th width="10%" class="text-center">Collected</th>
-                                        <th width="30%" class="text-center">Complete Note</th>
+                                        <th width="25%" class="text-center">Complete Note</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -157,7 +159,7 @@
                                             <td class="text-center"> {{ $rider_run_detail->parcel->parcel_invoice }}
                                             </td>
                                             <td class="text-center">
-                                                @switch($rider_run_detail->status)
+                                                {{-- @switch($rider_run_detail->status)
                                                     @case(1)
                                                         Run Create
                                                     @break
@@ -189,12 +191,27 @@
                                                     <br>
                                                     {{ \Carbon\Carbon::parse($rider_run_detail->complete_date_time)->format('d/m/Y H:i:s') }}
                                                     <br>
-                                                @endif
+                                                @endif --}}
+                                                @php
+                                                        $parcelStatus = returnParcelStatusNameForMerchant(
+                                                            $rider_run_detail->parcel->status,
+                                                            $rider_run_detail->parcel
+                                                                ->delivery_type,
+                                                            $rider_run_detail->parcel
+                                                                ->payment_type,
+                                                        );
+
+                                                    @endphp
+                                                    {{ $parcelStatus['status_name'] }}
                                             </td>
                                             <td class="text-center">
                                                 {{ $rider_run_detail->parcel->merchant ? $rider_run_detail->parcel->merchant->company_name : '' }}
                                             </td>
                                             <td class="text-center"> {{ $rider_run_detail->parcel->customer_name }}
+                                            </td>
+                                            {{-- <td class="text-center"> {{ $rider_run_detail->parcel->customer_address }}
+                                            </td> --}}
+                                            <td class="text-center"> {{ $rider_run_detail?->parcel?->area?->name }}
                                             </td>
                                             <td class="text-center">
 
@@ -517,6 +534,12 @@
         $(".customer_collect_amount").each(function() {
             sum += returnNumber($(this).val());
         });
+        
+        $(".cancel_amount_collection").each(function() {
+            sum += returnNumber($(this).val());
+        });
+
+
         $(".total_complete_collection_amount span").text(sum);
     }, 500);
 </script>

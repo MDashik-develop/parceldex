@@ -45,7 +45,7 @@ class AdminParcelExport implements
             'upazila:id,name',
             'area:id,name',
             'weight_package:id,name',
-            'merchant:id,name,company_name,address',
+            'merchant:id,m_id,name,company_name,address',
             'parcel_logs' => function ($query) {
                 $query->select('id', 'note');
             },
@@ -145,17 +145,21 @@ class AdminParcelExport implements
                     }
                 }
 
+                $totalCharge = $parcel->weight_package_charge + $parcel->cod_charge + $parcel->delivery_charge + $parcel->return_charge;
+                $x = $parcel->cancel_amount_collection != 0 ? $parcel->cancel_amount_collection : ($parcel->customer_collect_amount != 0 ? $parcel->customer_collect_amount : 0);
+
                 $data_parcel_array[] = (object)[
-                    // 'serial' => $key + 1,
+                    'serial' => $key + 1,
                     'parcel_invoice' => $parcel->parcel_invoice,
                     'merchant_order_id' => $parcel->merchant_order_id,
-                    'date' => date('d M Y', strtotime($parcel->date)),
+                    'date' => $parcel->date,
                     'status' => $status_name,
-                    'parcel_date' => date('d M Y', strtotime($parcel->parcel_date)),
-                    //                    'parcel_code' => $parcel->parcel_code,
+                    'parcel_date' => $parcel->parcel_date,
                     'company_name' => $parcel->merchant->company_name,
+                    'm_id' => $parcel->merchant->m_id,
                     'customer_name' => $parcel->customer_name,
                     'customer_contact_number' => $parcel->customer_contact_number,
+                    'customer_contact_number2' => $parcel->customer_contact_number2,
                     'customer_address' => $parcel->customer_address,
                     'district_name' => $parcel->district->name,
                     'area_name' => $parcel->area->name,
@@ -163,16 +167,19 @@ class AdminParcelExport implements
                     'delivery_branch' => optional($parcel->delivery_branch)->name,
                     'delivery_rider' => optional($parcel->delivery_rider)->name,
                     'item_type' => optional($parcel->item_type)->title,
-                    'total_collect_amount' => $parcel->total_collect_amount,
-                    'customer_collect_amount' => $parcel->customer_collect_amount,
-                    'weight_package_charge' => $parcel->weight_package_charge,
-                    'cod_charge' => $parcel->cod_charge,
-                    'delivery_charge' => $parcel->delivery_charge,
-                    'return_charge' => $parcel->return_charge,
-                    'total_charge' => $parcel->total_charge,
+                    'total_collect_amount' => $parcel->total_collect_amount != 0 ? $parcel->total_collect_amount : 0,
+                    'customer_collect_amount' => $parcel->cancel_amount_collection != 0 ? $parcel->cancel_amount_collection : ($parcel->customer_collect_amount != 0 ? $parcel->customer_collect_amount : '0'),
+                    'weight_charge' => $parcel->weight_package_charge != 0 ? $parcel->weight_package_charge : '0',
+                    'cod_charge' => $parcel->cod_charge != 0 ? $parcel->cod_charge : '0',
+                    'delivery_charge' => $parcel->delivery_charge != 0 ? $parcel->delivery_charge : '0',
+                    'return_charge' => $parcel->return_charge != 0 ? $parcel->return_charge : '0',
+                    'total_charge' => $totalCharge != 0 ? $totalCharge : '0',
                     'parcel_note' => $parcel->parcel_note,
                     'logs_note' => $logs_note,
                     'payment_status_name' => $payment_status_name,
+                    'paid_amount' => $x - $totalCharge,
+                    'payment_date' => $parcel?->merchantDeliveryPayment?->action_date_time ?? '',
+                    'payment_invoice_id' => $parcel?->merchantDeliveryPayment?->merchant_payment_invoice ?? '',
                     'return_status_name' => $return_status_name,
                 ];
             }
@@ -185,16 +192,17 @@ class AdminParcelExport implements
     public function map($row): array
     {
         return [
-            // $row->serial,
+            $row->serial,
             $row->parcel_invoice,
             $row->merchant_order_id,
             $row->date,
             $row->status,
             $row->parcel_date,
-            //            $row->parcel_code,
             $row->company_name,
+            $row->m_id,
             $row->customer_name,
             $row->customer_contact_number,
+            $row->customer_contact_number2,
             $row->customer_address,
             $row->district_name,
             $row->area_name,
@@ -204,7 +212,7 @@ class AdminParcelExport implements
             $row->item_type,
             $row->total_collect_amount,
             $row->customer_collect_amount,
-            $row->weight_package_charge,
+            $row->weight_charge,
             $row->cod_charge,
             $row->delivery_charge,
             $row->return_charge,
@@ -212,6 +220,9 @@ class AdminParcelExport implements
             $row->parcel_note,
             $row->logs_note,
             $row->payment_status_name,
+            $row->paid_amount,
+            $row->payment_date,
+            $row->payment_invoice_id,
             $row->return_status_name,
 
         ];
@@ -220,16 +231,17 @@ class AdminParcelExport implements
     public function headings(): array
     {
         return [
-            // 'serial',
+            'serial',
             'Parcel Invoice',
-            'Merchant Order Id',
+            'Merchant Order ID',
             'Parcel Date',
             'Status',
             'Last Update Date',
-            //            'parcel_code',
-            'Company Name',
+            'company_name',
+            'Merchant ID',
             'Customer Name',
             'Customer Contact Number',
+            'Alternative Number',
             'Customer Address',
             'District Name',
             'Area Name',
@@ -237,17 +249,20 @@ class AdminParcelExport implements
             'Delivery Branch',
             'Delivery Rider',
             'Item Type',
-            'Amount to be Collect',
+            'Amount To be Collect',
             'Collected',
             'Weight Charge',
-            'COD Charge',
-            'Delivery Charge',
-            'Return Charge',
+            'Cod charge',
+            'Delivery charge',
+            'Return charge',
             'Total Charge',
             'Parcel Note',
             'Logs Note',
-            'Payment status',
-            'Return Status',
+            'Payment Status Name',
+            'Paid Amount',
+            'Payment Date',
+            'Payment Invoice Id',
+            'Return Status Name',
         ];
     }
 

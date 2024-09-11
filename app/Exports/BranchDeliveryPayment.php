@@ -40,25 +40,34 @@ class BranchDeliveryPayment implements
         $data_parcel_array  = [];
         if (count($parcel_delivery_payment_details) > 0) {
             foreach ($parcel_delivery_payment_details as $key => $parcel_delivery_payment_detail) {
-                $status_name = '';
 
-                if ($parcel_delivery_payment_detail->status == 1) {
-                    $status_name = 'Send Request';
-                } else if ($parcel_delivery_payment_detail->status == 2) {
-                    $status_name = 'Request Accepted';
-                } else if ($parcel_delivery_payment_detail->status == 3) {
-                    $status_name = 'Request Rejected';
-                }
+                $status = returnParcelStatusNameForBranch(
+                    $parcel_delivery_payment_detail?->parcel?->status,
+                    $parcel_delivery_payment_detail?->parcel?->delivery_type,
+                    $parcel_delivery_payment_detail?->parcel?->payment_type,
+                );
+
+                $status_name = $status['status_name'];
+
+                // if ($parcel_delivery_payment_detail->status == 1) {
+                //     $status_name = 'Send Request';
+                // } else if ($parcel_delivery_payment_detail->status == 2) {
+                //     $status_name = 'Request Accepted';
+                // } else if ($parcel_delivery_payment_detail->status == 3) {
+                //     $status_name = 'Request Rejected';
+                // }
 
                 $data_parcel_array[] = (object)[
                     'invoice' => $parcel_delivery_payment_detail->parcel->parcel_invoice,
                     'order_id' => $parcel_delivery_payment_detail->parcel->merchant_order_id ?? "---",
                     'status' => $status_name,
                     'company_name' => $parcel_delivery_payment_detail->parcel->merchant->company_name,
-                    'merchant_number' => $parcel_delivery_payment_detail->parcel->merchant->contact_number,
-                    'merchant_address' => $parcel_delivery_payment_detail->parcel->merchant->address,
+                    // 'merchant_number' => $parcel_delivery_payment_detail->parcel->merchant->contact_number,
+                    // 'merchant_address' => $parcel_delivery_payment_detail->parcel->merchant->address,
                     'customer_name' => $parcel_delivery_payment_detail->parcel->customer_name,
-                    'amount' => number_format($parcel_delivery_payment_detail->parcel->customer_collect_amount, 2)
+                    'customer_contact_number' => $parcel_delivery_payment_detail->parcel->customer_name,
+                    'total_collect_amount' => number_format($parcel_delivery_payment_detail->parcel->total_collect_amount, 2),
+                    'collected' => number_format($parcel_delivery_payment_detail->parcel->cancel_amount_collection != 0 ? $parcel_delivery_payment_detail->parcel->cancel_amount_collection :  $parcel_delivery_payment_detail->parcel->customer_collect_amount, 2),
                 ];
             }
         }
@@ -73,10 +82,12 @@ class BranchDeliveryPayment implements
             $row->order_id,
             $row->status,
             $row->company_name,
-            $row->merchant_number,
-            $row->merchant_address,
+            // $row->merchant_number,
+            // $row->merchant_address,
             $row->customer_name,
-            $row->amount,
+            $row->customer_contact_number,
+            $row->total_collect_amount,
+            $row->collected,
 
         ];
     }
@@ -88,10 +99,12 @@ class BranchDeliveryPayment implements
             'Order Id',
             'Status',
             'Company Name',
-            'Merchant Number',
-            'Merchant Address',
+            // 'Merchant Number',
+            // 'Merchant Address',
             'Customer Name',
-            'Amount'
+            'Customer Phone Number',
+            'Amount to be Collect',
+            'Collected',
         ];
     }
 

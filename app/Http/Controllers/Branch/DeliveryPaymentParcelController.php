@@ -181,7 +181,6 @@ class DeliveryPaymentParcelController extends Controller
         },])
             // ->whereRaw('delivery_branch_id = ? and (delivery_type = 1 OR (delivery_type = 2  AND status >= 25)) and (payment_type is null OR payment_type = 3)', [$branch_id])
             ->whereRaw('delivery_branch_id = ? and ((delivery_type = 1 AND status >= 25) OR (delivery_type = 2  AND status >= 25) OR (delivery_type = 4  AND status >= 25)) and (payment_type is null OR payment_type = 3 OR status = 24)', [$branch_id])
-            ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id', 'customer_collect_amount', 'delivery_type', 'cancel_amount_collection')
             ->get();
 
         return view('branch.parcel.deliveryPayment.deliveryPaymentGenerate', $data);
@@ -248,8 +247,10 @@ class DeliveryPaymentParcelController extends Controller
             ((delivery_type = 1  AND status >= 25) OR (delivery_type = 2 AND status >= 25) OR (delivery_type = 4 AND status >= 25))  and
             (payment_type is null OR payment_type = 3)', [$branch_id])
 
-            ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id', 'customer_collect_amount')
+            // ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id', 'customer_collect_amount')
             ->get();
+
+        //session()->flush();
 
         if ($parcels->count() > 0) {
             $cart = \Cart::session($branch_id)->getContent();
@@ -268,10 +269,17 @@ class DeliveryPaymentParcelController extends Controller
                 }
 
                 if ($flag == 0) {
+                    $customer_collect_amount = 0;
+                    if ($parcel->status == 25 && $parcel->delivery_type == 4)
+                        $customer_collect_amount += $parcel->cancel_amount_collection;
+                    elseif ($parcel->status == 25 && $parcel->delivery_type == 1 || $parcel->delivery_type == 2) {
+                        $customer_collect_amount += $parcel->customer_collect_amount;
+                    }
+
                     \Cart::session($branch_id)->add([
                         'id' => $cart_id,
                         'name' => $parcel->merchant->name,
-                        'price' => $parcel->customer_collect_amount,
+                        'price' => $customer_collect_amount,
                         'quantity' => 1,
                         'target' => 'subtotal',
                         'attributes' => [
@@ -279,7 +287,9 @@ class DeliveryPaymentParcelController extends Controller
                             'customer_name' => $parcel->customer_name,
                             'customer_address' => $parcel->customer_address,
                             'customer_contact_number' => $parcel->customer_contact_number,
-                            'customer_collect_amount' => $parcel->customer_collect_amount,
+
+                            'customer_collect_amount' => $customer_collect_amount,
+
                             'merchant_name' => $parcel->merchant->name,
                             'merchant_contact_number' => $parcel->merchant->contact_number,
                             'option' => [],

@@ -52,9 +52,12 @@ class BranchParcelExport implements
         }
 
         $model = Parcel::with([
-            'district', 'upazila', 'area', 'parcel_logs',
+            'district',
+            'upazila',
+            'area',
+            'parcel_logs',
             'merchant' => function ($query) {
-                $query->select('id', 'name', 'company_name', 'contact_number', 'address');
+                $query->select('id', 'name', 'm_id', 'company_name', 'contact_number', 'address');
             },
         ])
             ->whereRaw($where_condition)
@@ -164,17 +167,17 @@ class BranchParcelExport implements
                 }
 
                 $data_parcel_array[] = (object)[
-                    // 'serial' => $key + 1,
+                    'serial' => $key + 1,
                     'parcel_invoice' => $parcel->parcel_invoice,
                     'merchant_order_id' => $parcel->merchant_order_id,
-                    'date' => date('d M Y', strtotime($parcel->date)),
-                    // 'date' => $parcel->date,
+                    'date' => $parcel->date,
                     'status' => $status_name,
-                    'parcel_date' => date('d M Y', strtotime($parcel->parcel_date)),
-                    //                    'parcel_code' => $parcel->parcel_code,
+                    'parcel_date' => $parcel->parcel_date,
                     'company_name' => $parcel->merchant->company_name,
+                    'm_id' => $parcel->merchant->m_id,
                     'customer_name' => $parcel->customer_name,
                     'customer_contact_number' => $parcel->customer_contact_number,
+                    'customer_contact_number2' => $parcel->customer_contact_number2,
                     'customer_address' => $parcel->customer_address,
                     'district_name' => $parcel->district->name,
                     'area_name' => $parcel->area->name,
@@ -182,10 +185,8 @@ class BranchParcelExport implements
                     'delivery_branch' => optional($parcel->delivery_branch)->name,
                     'delivery_rider' => optional($parcel->delivery_rider)->name,
                     'item_type' => optional($parcel->item_type)->title,
-                    'total_collect_amount' => $parcel->total_collect_amount,
-                    'customer_collect_amount' => $parcel->customer_collect_amount,
-                    'cod_charge' => $parcel->cod_charge,
-                    'total_charge' => $parcel->total_charge,
+                    'total_collect_amount' => $parcel->total_collect_amount != 0 ? $parcel->total_collect_amount : 0,
+                    'customer_collect_amount' => $parcel->cancel_amount_collection != 0 ? $parcel->cancel_amount_collection : ($parcel->customer_collect_amount != 0 ? $parcel->customer_collect_amount : '0'),
                     'parcel_note' => $parcel->parcel_note,
                     'logs_note' => $logs_note,
                     'payment_status_name' => $payment_status_name,
@@ -201,16 +202,17 @@ class BranchParcelExport implements
     public function map($row): array
     {
         return  [
-            // $row->serial,
+            $row->serial,
             $row->parcel_invoice,
             $row->merchant_order_id,
             $row->date,
             $row->status,
             $row->parcel_date,
-            //            $row->parcel_code,
             $row->company_name,
+            $row->m_id,
             $row->customer_name,
             $row->customer_contact_number,
+            $row->customer_contact_number2,
             $row->customer_address,
             $row->district_name,
             $row->area_name,
@@ -220,8 +222,6 @@ class BranchParcelExport implements
             $row->item_type,
             $row->total_collect_amount,
             $row->customer_collect_amount,
-            $row->cod_charge,
-            $row->total_charge,
             $row->parcel_note,
             $row->logs_note,
             $row->payment_status_name,
@@ -232,16 +232,17 @@ class BranchParcelExport implements
     public function headings(): array
     {
         return [
-            // 'Serial',
+            'serial',
             'Parcel Invoice',
-            'Merchant Order Id',
+            'Merchant Order ID',
             'Parcel Date',
-            'status',
+            'Status',
             'Last Update Date',
-            //            'parcel_code',
-            'Company Name',
+            'company_name',
+            'Merchant ID',
             'Customer Name',
             'Customer Contact Number',
+            'Alternative Number',
             'Customer Address',
             'District Name',
             'Area Name',
@@ -249,14 +250,12 @@ class BranchParcelExport implements
             'Delivery Branch',
             'Delivery Rider',
             'Item Type',
-            'Amount to be Collect',
+            'Amount To be Collect',
             'Collected',
-            'COD Charge',
-            'Total Charge',
             'Parcel Note',
             'Logs Note',
-            'Payment status',
-            'Return Status',
+            'Payment Status Name',
+            'Return Status Name',
         ];
     }
 

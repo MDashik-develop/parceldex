@@ -1,85 +1,138 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    @if(!empty($application->photo))
-        <link rel="icon" type="image/png" href="{{ asset('uploads/application/') . '/' . $application->photo }}" alt="{{ $application->name ?? config('app.name', 'Inventory') }}" >
-        <link rel="shortcut icon" type="image/png" href="{{ asset('uploads/application/') . '/' . $application->photo }}" alt="{{ $application->name ?? config('app.name', 'Inventory') }}" >
-    @endif
+@extends('layouts.frontend.app')
 
-    <title>{{ $application->name ?? config('app.name', 'Flier Express') }}</title>
+@section('content')
+    <div class="container-fluid" style="margin-top: 100px">
+        <div class="row">
+            <div class="col-lg-7 col-md-7 col-sm-12">
+                <img class="auth-image" src="{{ asset('image/reset.png') }}" style="max-width: 100%;">
+            </div>
 
-    <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/admin_css/adminlte.min.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-    <style>
-        .login-box, .register-box{
-            width: 422px !important;
-        }
+            <div class="col-md-5 col-md-5 col-sm-12">
+                <div class="hold-transition login-page">
+                    <div class="login-box">
+                        <div class="login-logo" style="margin-bottom: 30px;">
+                        </div>
+                        <div class="text-center">
+                            <div class="login-card-body">
+                                <h3 style="color: #00509D; font-weight: bold; margin-bottom: 20px;" class="login-box-msg">
+                                    Forgot Password?
+                                </h3>
+                                <p style="color: #00509D; font-weight: bold; margin-bottom: 20px;" class="login-box-msg">
+                                    Please enter the email address associated
+                                    with your account, and we'll send you
+                                    instructions to reset your password.
 
-        .login-card-body, .register-card-body {
-            padding: 30px !important;
-        }
-    </style>
-</head>
+                                </p>
+                                @include('layouts.merchant_layout.merchant_session_alert')
 
-<body class="hold-transition login-page">
-
-    <div class="login-box">
-        <div class="login-logo" style="margin-bottom: 30px;">
-            @if (!empty($application->photo))
-                <img src="{{ asset('uploads/application/') . '/' . $application->photo }}"
-                    alt="{{ $application->name ?? config('app.name') }}" style="width: 70%" style="opacity: .8">
-            @else
-                <b>{{ $application->name ?? config('app.name') }}</b>
-            @endif
-        </div>
-        <div class="card">
-            <div class="card-body login-card-body">
-                
-                <br>
-                <h3 style="color: #00509D; font-weight: bold; margin-bottom: 20px;" class="login-box-msg">Merchant Rest Password
-                </h3>
-                @include('layouts.merchant_layout.merchant_session_alert')
-
-                <form action="{{ route('merchant.forgotPassword') }}" method="post">
-                    @csrf
-                    <div class="input-group mb-4">
-                        <input type="email" name="email" class="form-control" placeholder="Email Address" value="{{ old('email') }}" required>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
+                                <form action="{{ route('merchant.forgotPassword') }}" method="post">
+                                    @csrf
+                                    <div class="input-group mb-4">
+                                        <input type="email" name="email" class="form-control"
+                                            placeholder="Enter your register email" value="{{ old('email') }}" required>
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <span class="fas fa-envelope"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-block"
+                                                style="background-color: #00509D; color: #fff;">
+                                                Reset Password
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-block" style="background-color: #00509D; color: #fff;">
-                                Send Password Reset Link
-                            </button>
+
+                        <div style="text-align: center;">
+                            <strong style="color: #00509D">Download Our App</strong> &nbsp; &nbsp; <a
+                                href="https://play.google.com/store/apps/details?id=com.parceldexltd.merchant&pcampaignid=web_share"
+                                target="_blank"><img height="30" width="100"
+                                    src="{{ asset('image/playstore.jpg') }}"></a>
+
+                            <a href="https://play.google.com/store/apps/details?id=com.parceldexltd.merchant&pcampaignid=web_share"
+                                target="_blank"><img height="30" width="100"
+                                    src="{{ asset('image/appstore.jpg') }}"></a>
                         </div>
                     </div>
-                </form>
-
+                </div>
             </div>
         </div>
     </div>
+@endsection
+<style>
+    .remember-me-container {
+        display: inline-flex;
+        align-items: center;
+    }
 
-    <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('js/admin_js/adminlte.min.js') }}"></script>
+    .remember-me-container input {
+        margin-right: 5px;
+        /* Adds a small space between the checkbox and the label */
+    }
 
+
+    .login-box,
+    .register-box {
+        width: 500px !important;
+    }
+
+    .login-card-body,
+    .register-card-body {
+        padding: 30px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 22px !important;
+    }
+
+    .login-page {
+        display: flex;
+        justify-content: center;
+        /* Centers horizontally */
+        align-items: center;
+        /* Centers vertically */
+        height: 100vh;
+        /* Makes the container take the full height of the viewport */
+    }
+
+    @media only screen and (max-width: 600px) {
+        .auth-image {
+            height: 200px !important;
+            min-width: 100%;
+        }
+
+        .login-page {
+            height: auto;
+        }
+    }
+</style>
+
+@push('script_js')
     <script>
         $('.alert').delay(5000).slideUp('slow', function() {
             $(this).alert('close');
         });
+        $(function() {
+            if ($(".select2").length > 0) $('.select2').select2();
+        });
 
+
+        $("#togglePassword").on("click", function() {
+            $(this).toggleClass("active");
+            if ($(this).hasClass("active")) {
+                $('#icon').removeClass('fa-eye')
+                $('#icon').addClass('fa-eye-slash')
+                $(this).prev("input").attr("type", "text");
+            } else {
+                $(this).prev("input").attr("type", "password");
+                $('#icon').addClass('fa-eye')
+                $('#icon').removeClass('fa-eye-slash')
+            }
+        });
     </script>
-</body>
-
-</html>
+@endpush

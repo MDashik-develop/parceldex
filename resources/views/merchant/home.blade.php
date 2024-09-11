@@ -9,7 +9,6 @@
             margin: 20px 0;
         }
 
-
         .info-box-content2 {
             flex: 1;
             padding: 5px 20px !important;
@@ -61,8 +60,8 @@
         }
 
         /* .d-flex:hover{
-                      background: red !important;
-                  } */
+                                              background: red !important;
+                                          } */
 
 
         .info-box-content:hover {
@@ -135,43 +134,16 @@
                 </div>
             </div>
 
-            {{-- <div class="row mb-4"> --}}
-            {{-- <div class="col-lg-3 col-6"> --}}
-            {{-- <a class="btn btn-warning btn-block" href="{{ route('merchant.parcel.parcelPickupRequest') }}"> --}}
-            {{-- Pickup Request --}}
-            {{-- </a> --}}
-            {{-- </div> --}}
-            {{-- <div class="col-lg-3 col-6" @if ($total_pending_payment <= 0) style="pointer-events:  none;" @endif> --}}
-            {{-- <a class="btn btn-success btn-block" href="{{ route('merchant.parcel.parcelPaymentRequest') }}"> --}}
-            {{-- Payment Request --}}
-            {{-- </a> --}}
-            {{-- </div> --}}
-            {{-- <div class="col-lg-3 col-6"> --}}
-            {{-- <a class="btn btn-info btn-block" href="{{ route('merchant.parcel.parcelReturnRequest') }}"> --}}
-            {{-- Return Request --}}
-            {{-- </a> --}}
-            {{-- </div> --}}
-
-
-
-            <!-- //New By Humayun -->
-
-
 
             <div class="row admin_client_info justify-content-center">
-                <div class="col-lg-3 col-md-8 col-sm-8 text-right" style="padding: 0px 5px !important;">
+                <div class="col-lg-2 col-md-4" style="padding: 0px 5px !important;">
                     <button type="button" class="btn btn-primary btn-block" href="#"
-                        style="color: #0069d9;
-    border: 1px solid #0069d9;
-    background: #fff;
-    font-size: large;
-    border-radius: 0.5rem; margin-right: 10px;
-    padding: 5px 0px !important;">
+                        style=" border-radius: 4px; background-color: transparent; border: 1px solid #ccc; color: inherit; font-weight: bold !important; padding: 7px 0 !important;">
                         Available Balance ( {{ number_format($total_pending_payment, 2, '.', '') }})
                     </button>
                 </div>
 
-                <div class="col-lg-3 col-md-4 col-sm-4"
+                <div class="col-lg-2 col-md-4 col-sm-4 text-center"
                     @if ($total_pending_payment <= 0) style="font-size: large; padding: 0px; border-radius: 1.5rem;" @endif
                     style=" font-size: x-large; padding: 0px;!important; border-radius: 1.5rem;">
                     <a href="https://play.google.com/store/apps/details?id=com.parceldexltd.merchant&pcampaignid=web_share"
@@ -181,7 +153,8 @@
                         target="_blank"><img height="40" src="{{ asset('image/appstore.jpg') }}"></a>
                 </div>
 
-                <div class="col-lg-4 col-md-8 col-sm-8">
+
+                <div class="col-lg-5 col-md-8 col-sm-8">
                     <div class="form-group">
                         <input type="text" name="parcel_invoice" id="parcel_invoice" value="{{ $parcel_invoice }}"
                             class="form-control" placeholder="Enter Parcel Invoice Or Order ID Or Customer Number"
@@ -193,27 +166,19 @@
                     </div>
                 </div>
 
-                <div class="col-lg-2 col-md-4 col-sm-4" style="margin: auto;">
+                <div class="col-lg-2 col-md-4 col-sm-4" style="margin: auto 0; text-align: left;">
                     <button type="button" class="btn btn-info btn-block" onclick="return parcelResult()">
                         Search
                     </button>
                 </div>
+            </div>
 
-                {{-- <div class="col-lg-3 col-6 d-flex align-items-center justify-content-center" 
-                @if ($total_pending_payment <= 0) style="font-size: large; padding: 0px; border-radius: 1.5rem;" @endif style=" font-size: x-large; padding: 0px;!important; border-radius: 1.5rem;">
-          <a href="{{ route('merchant.parcel.parcelPaymentRequest') }}" ><div class="float-left mr-sm-3 mr-2"><svg xmlns="https://www.w3.org/2000/svg" width="45" height="20" viewBox="0 0 890.5 890.5">
-              <path d="M208.1,180.56l355-96.9l-18.8-38c-12.3-24.7-42.3-34.9-67-22.6l-317.8,157.5H208.1z" fill="#FFFFFF"></path>
-              <path d="M673.3,86.46c-4.399,0-8.8,0.6-13.2,1.8l-83.399,22.8L322,180.56h289.1h126l-15.6-57.2    C715.5,101.06,695.3,86.46,673.3,86.46z" fill="#FFFFFF"></path>
-              <path d="M789.2,215.56h-11.4h-15.5h-15.5H628.5H193.8h-57h-48h-8.9H50.1c-15.8,0-29.9,7.3-39.1,18.8c-4.2,5.3-7.4,11.4-9.2,18.1    c-1.1,4.2-1.8,8.6-1.8,13.1v6v57v494.1c0,27.601,22.4,50,50,50h739.1c27.601,0,50-22.399,50-50v-139.5H542.4    c-46.9,0-85-38.1-85-85v-45.8v-15.5v-15.5v-34.4c0-23,9.199-43.899,24.1-59.199c13.2-13.601,30.9-22.801,50.7-25.101    c3.3-0.399,6.7-0.6,10.1-0.6h255.2H813h15.5h10.6v-136.5C839.2,237.96,816.8,215.56,789.2,215.56z" fill="#FFFFFF"></path>
-              <path d="M874.2,449.86c-5-4.6-10.9-8.1-17.5-10.4c-5.101-1.699-10.5-2.699-16.2-2.699h-1.3h-1h-15.5h-55.9H542.4    c-27.601,0-50,22.399-50,50v24.899v15.5v15.5v55.4c0,27.6,22.399,50,50,50h296.8h1.3c5.7,0,11.1-1,16.2-2.7    c6.6-2.2,12.5-5.8,17.5-10.4c10-9.1,16.3-22.3,16.3-36.899v-111.3C890.5,472.16,884.2,458.959,874.2,449.86z M646.8,552.36    c0,13.8-11.2,25-25,25h-16.6c-13.8,0-25-11.2-25-25v-16.6c0-8,3.7-15.101,9.6-19.601c4.3-3.3,9.601-5.399,15.4-5.399h4.2H621.8    c13.8,0,25,11.199,25,25V552.36L646.8,552.36z" fill="#FFFFFF"></path>
-            </svg></div> <span class="font-xs-12 text-white">Payment Request</span></a>
+            <div class="col-md-12" id="show_order_tracking_result">
 
-            <a href="https://play.google.com/store/apps/details?id=com.parceldexltd.merchant&pcampaignid=web_share" target="_blank"><img src="{{ asset('image/playstore.png') }}"></a>
-        </div> --}}
             </div>
 
             <!-- Info boxes -->
-            
+
             <div class="row" style="margin-top: 20px;">
 
 
@@ -263,7 +228,7 @@
                             <span
                                 class="info-box-number">{{ $counter_data['today_total_partial_delivery_complete_parcel'] }}</span>
                             <h5 class="info-box-text">Today's Partial Delivered</h5>
-                            <a href="{{ route('merchant.parcel.filterList', 'today_total_delivery_parcel') }}"
+                            <a href="{{ route('merchant.parcel.filterList', 'today_total_partial_delivery_parcel') }}"
                                 class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
 
                         </div>
@@ -320,7 +285,10 @@
 
                         <div class="info-box-content">
                             <span class="info-box-number"> {{ $total_pending_parcel }} <sup><small
-                                        style="color: #007bff; font-size: 15px;">{{ ($total_pending_parcel / 100) * $counter_data['total_parcel'] }}%</small></sup></span>
+                                        style="color: #007bff; font-size: 15px;">{{
+                                            
+                                            number_format(($total_pending_parcel * 100) / $counter_data['total_parcel'], 2)
+                                            }}%</small></sup></span>
                             <h5 class="info-box-text">Parcel On Process</h5>
                             <a href="{{ route('merchant.parcel.filterList', 'pending_parcel') }}"
                                 class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
@@ -332,13 +300,14 @@
                     <!-- /.info-box -->
                 </div>
 
-                
+
                 <div class="col-sm-6 col-md-3">
                     <div class="info-box mb-3" style="text-align: center">
                         {{-- <span class="info-box-icon bg-warning elevation-1"><i class="fa fa-hourglass-start"></i></span> --}}
 
                         <div class="info-box-content">
-                            <span class="info-box-number"> {{ $total_pickup_pending }}</span>
+                            {{-- <span class="info-box-number"> {{ $total_pickup_pending }}</span> --}}
+                            <span class="info-box-number"> {{ $today_total_pickup }}</span>
                             <h5 class="info-box-text">Pickup Request</h5>
 
                             <a href="{{ route('merchant.parcel.filterList', 'pickup_pending') }}"
@@ -351,7 +320,7 @@
                     <!-- /.info-box -->
                 </div>
 
-                
+
                 <!-- /.col -->
 
                 <!-- /.col -->
@@ -362,7 +331,7 @@
                 {{-- <div class="row" style="margin-top: 20px;"> --}}
 
 
-              
+
 
                 <!-- /.col -->
                 <div class="col-sm-6 col-md-3" style="text-align: center">
@@ -372,7 +341,10 @@
                         <div class="info-box-content">
                             <span class="info-box-number">{{ $counter_data['total_delivery_complete_parcel'] }}
                                 <sup><small
-                                        style="color: #007bff; font-size: 15px;">{{ ($counter_data['total_delivery_complete_parcel'] / 100) * $counter_data['total_parcel'] }}%</small></sup>
+                                        style="color: #007bff; font-size: 15px;">{{ 
+                                                                                
+                                        number_format(( $counter_data['total_delivery_complete_parcel'] * 100) / $counter_data['total_parcel'], 2)
+                                        }}%</small></sup>
                             </span>
                             <h5 class="info-box-text">Total Delivered</h5>
                             <a href="{{ route('merchant.parcel.filterList', 'delivered_parcel') }}"
@@ -390,9 +362,14 @@
                         <div class="info-box-content">
                             <span class="info-box-number">{{ $counter_data['total_partial_delivery_complete_parcel'] }}
                                 <sup><small
-                                        style="color: #007bff; font-size: 15px;">{{ ($counter_data['total_partial_delivery_complete_parcel'] / 100) * $counter_data['total_parcel'] }}%</small></sup></span>
+                                        style="color: #007bff; font-size: 15px;">{{ 
+                                                                                
+                                        
+                                        number_format(($counter_data['total_partial_delivery_complete_parcel'] * 100) /  $counter_data['total_parcel'], 2)
+                                        
+                                        }}%</small></sup></span>
                             <h5 class="info-box-text">Total Partial Delivered</h5>
-                            <a href="{{ route('merchant.parcel.filterList', 'delivered_parcel') }}"
+                            <a href="{{ route('merchant.parcel.filterList', 'p_delivered_parcel') }}"
                                 class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
 
                         </div>
@@ -411,7 +388,7 @@
 
                         <div class="info-box-content">
                             <span class="info-box-number"> {{ $total_cancel_parcel }} <sup><small
-                                        style="color: #007bff; font-size: 15px;">{{ ($total_cancel_parcel / 100) * $counter_data['total_parcel'] }}%</small></sup></span>
+                                        style="color: #007bff; font-size: 15px;">{{ number_format(($total_cancel_parcel * 100) / $counter_data['total_parcel'], 2) }}%</small></sup></span>
                             <h5 class="info-box-text">Total Cancelled</h5>
                             <a href="{{ route('merchant.parcel.filterList', 'cancelled_parcel') }}"
                                 class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
@@ -423,7 +400,7 @@
                     <!-- /.info-box -->
                 </div>
                 <!-- /.col -->
-                
+
 
                 <div class="col-sm-6 col-md-3" style="text-align: center">
                     <div class="info-box mb-3">
@@ -431,9 +408,13 @@
 
                         <div class="info-box-content">
                             <span class="info-box-number"> {{ $total_pending_return }} <sup><small
-                                        style="color: #007bff; font-size: 15px;">{{ ($total_pending_return / 100) * $counter_data['total_parcel'] }}%</small></sup></span>
+                                        style="color: #007bff; font-size: 15px;">{{ number_format(($total_pending_return * 100) / $total_cancel_parcel, 2)
+                                        
+                                        
+                                        
+                                         }}%</small></sup></span>
                             <h5 class="info-box-text">Return On Process</h5>
-                            <a href="{{ route('merchant.parcel.filterList', 'pending_parcel') }}"
+                            <a href="{{ route('merchant.parcel.filterList', 'return_process') }}"
                                 class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
 
                         </div>
@@ -449,7 +430,11 @@
 
                         <div class="info-box-content">
                             <span class="info-box-number"> {{ $total_return }} <sup><small
-                                        style="color: #007bff; font-size: 15px;">{{ ($total_return / 100) * $counter_data['total_parcel'] }}%</small></sup></span>
+                                        style="color: #007bff; font-size: 15px;">{{ 
+                                            
+                                            number_format(($total_return * 100) / $total_cancel_parcel, 2)
+                                            
+                                             }}%</small></sup></span>
                             <h5 class="info-box-text">Total Returned</h5>
                             <a href="{{ route('merchant.parcel.filterList', 'pending_parcel') }}"
                                 class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
@@ -470,16 +455,11 @@
 
                     <!-- TABLE: LATEST ORDERS -->
                     <div class="card">
-                        <div class="card-header border-transparent">
+                        <div class="card-header border-transparent" style="background: #0069d9; color: #fff">
+
                             <h3 class="card-title">Latest Orders</h3>
 
                             <div class="card-tools">
-                                <!--<button type="button" class="btn btn-tool" data-card-widget="collapse">-->
-                                <!--  <i class="fas fa-minus"></i>-->
-                                <!--</button>-->
-                                <!--<button type="button" class="btn btn-tool" data-card-widget="remove">-->
-                                <!--  <i class="fas fa-times"></i>-->
-                                <!--</button>-->
                             </div>
                         </div>
                         <!-- /.card-header -->
@@ -545,80 +525,93 @@
                 <!-- /.card -->
 
                 <!-- /.col -->
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-header border-transparent" style="background: #0069d9; color: #fff">
 
-                <div class="col-md-3">
-                    <div class="info-box mb-3">
-                        {{-- <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span> --}}
+                                <h3 class="card-title">Paymet Summary</h3>
 
-                        <div class="info-box-content2 info-box-content" style="text-align: center">
-                            <span class="info-box-number2" style="font-size: 36px;">
-                                {{ number_format($counter_data['total_pending_collect_amount'], 2) }} TK</span>
-                            <span class="info-box-text" style="font-size: 16px;">Ready for Payment</span>
+                                <div class="card-tools">
+                                </div>
+                            </div>
                         </div>
-                        <!-- /.info-box-content -->
-                    </div>
-                    <div class="info-box mb-3">
-                        {{-- <span class="info-box-icon"><i class="fa fa-credit-card"></i></span> --}}
+                        <div class="col-md-6">
+                            <div class="info-box mb-3">
+                                {{-- <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span> --}}
 
-                        <div class="info-box-content2 info-box-content" style="text-align: center">
-                            <span class="info-box-number2"
-                                style="font-size: 36px;">{{ number_format($total_customer_collect_amount_due, 2) }}
-                                TK</span>
-                            <span class="info-box-text" style="font-size: 16px;">Awaiting payment</span>
+                                <div class="info-box-content2 info-box-content" style="text-align: center">
+                                    <span class="info-box-number2" style="font-size: 36px;">
+                                        {{ number_format($counter_data['total_pending_collect_amount'], 2) }} TK</span>
+                                    <span class="info-box-text" style="font-size: 16px;">Ready for Payment</span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <div class="info-box mb-3">
+                                {{-- <span class="info-box-icon"><i class="fa fa-credit-card"></i></span> --}}
 
-                            <!--<span class="info-box-number2">{{ number_format($total_customer_collect_amount_due, 2) }} TK </span>-->
+                                <div class="info-box-content2 info-box-content" style="text-align: center">
+                                    <span class="info-box-number2"
+                                        style="font-size: 36px;">{{ number_format($total_customer_collect_amount_due, 2) }}
+                                        TK</span>
+                                    <span class="info-box-text" style="font-size: 16px;">Awaiting payment</span>
+
+                                    <!--<span class="info-box-number2">{{ number_format($total_customer_collect_amount_due, 2) }} TK </span>-->
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <div class="info-box mb-3">
+                                {{-- <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span> --}}
+
+                                <div class="info-box-content2 info-box-content" style="text-align: center">
+                                    <span class="info-box-number2" style="font-size: 36px;">
+                                        {{ number_format($total_to_be_collected, 2) }} TK</span>
+                                    <span class="info-box-text" style="font-size: 16px;">To Be Collected</span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
                         </div>
-                        <!-- /.info-box-content -->
-                    </div>
-                    <div class="info-box mb-3">
-                        {{-- <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span> --}}
+                        <!-- /.col -->
+                        <div class="col-md-6">
 
-                        <div class="info-box-content2 info-box-content" style="text-align: center">
-                            <span class="info-box-number2" style="font-size: 36px;">
-                                {{ number_format($total_to_be_collected, 2) }} TK</span>
-                            <span class="info-box-text" style="font-size: 16px;">To Be Collected</span>
+                            <div class="info-box mb-3">
+                                {{-- <span class="info-box-icon"><i class="fas fa-tag"></i></span> --}}
+
+                                <div class="info-box-content2 info-box-content" style="text-align: center">
+                                    <span class="info-box-number2"
+                                        style="font-size: 36px;">{{ number_format($total_customer_collected_amount, 2) }}
+                                        TK</span>
+                                    <span class="info-box-text" style="font-size: 16px;">Total Collected</span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <div class="info-box mb-3">
+                                {{-- <span class="info-box-icon"><i class="fa fa-credit-card"></i></span> --}}
+
+                                <div class="info-box-content2 info-box-content" style="text-align: center">
+                                    <span class="info-box-number2"
+                                        style="font-size: 36px;">{{ number_format($counter_data['total_collect_amount'], 2) }}
+                                        TK
+                                    </span>
+                                    <span class="info-box-text" style="font-size: 16px;">Total Paid</span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <div class="info-box mb-3">
+                                {{-- <span class="info-box-icon"><i class="fas fa-tag"></i></span> --}}
+
+                                <div class="info-box-content2 info-box-content" style="text-align: center">
+                                    <span class="info-box-number2"
+                                        style="font-size: 36px;">{{ number_format($total_service_charge, 2) }} TK</span>
+                                    <span class="info-box-text" style="font-size: 16px;">Total Service Charge</span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+
                         </div>
-                        <!-- /.info-box-content -->
                     </div>
                 </div>
-                <!-- /.col -->
-                <div class="col-md-3">
 
-                    <div class="info-box mb-3">
-                        {{-- <span class="info-box-icon"><i class="fas fa-tag"></i></span> --}}
-
-                        <div class="info-box-content2 info-box-content" style="text-align: center">
-                            <span class="info-box-number2"
-                                style="font-size: 36px;">{{ number_format($total_customer_collected_amount, 2) }}
-                                TK</span>
-                            <span class="info-box-text" style="font-size: 16px;">Total Collected</span>
-                        </div>
-                        <!-- /.info-box-content -->
-                    </div>
-                    <div class="info-box mb-3">
-                        {{-- <span class="info-box-icon"><i class="fa fa-credit-card"></i></span> --}}
-
-                        <div class="info-box-content2 info-box-content" style="text-align: center">
-                            <span class="info-box-number2"
-                                style="font-size: 36px;">{{ number_format($counter_data['total_collect_amount'], 2) }}
-                                TK
-                            </span>
-                            <span class="info-box-text" style="font-size: 16px;">Total Paid</span>
-                        </div>
-                        <!-- /.info-box-content -->
-                    </div>
-                    <div class="info-box mb-3">
-                        {{-- <span class="info-box-icon"><i class="fas fa-tag"></i></span> --}}
-
-                        <div class="info-box-content2 info-box-content" style="text-align: center">
-                            <span class="info-box-number2"
-                                style="font-size: 36px;">{{ number_format($total_service_charge, 2) }} TK</span>
-                            <span class="info-box-text" style="font-size: 16px;">Total Service Charge</span>
-                        </div>
-                        <!-- /.info-box-content -->
-                    </div>
-
-                </div>
 
             </div>
             <div class="content">
@@ -855,15 +848,6 @@
                             <div class="card card-danger">
                                 <div class="card-header">
                                     <h3 class="card-title">Parcel Statistics</h3>
-
-                                    <!--<div class="card-tools">-->
-                                    <!--  <button type="button" class="btn btn-tool" data-card-widget="collapse">-->
-                                    <!--    <i class="fas fa-minus"></i>-->
-                                    <!--  </button>-->
-                                    <!--  <button type="button" class="btn btn-tool" data-card-widget="remove">-->
-                                    <!--    <i class="fas fa-times"></i>-->
-                                    <!--  </button>-->
-                                    <!--</div>-->
                                 </div>
                                 <div class="card-body">
                                     <canvas id="donutChart"

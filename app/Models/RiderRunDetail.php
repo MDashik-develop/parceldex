@@ -19,16 +19,22 @@ class RiderRunDetail extends Model
     ];
 
 
-    public function rider_run() {
+    public function rider_run()
+    {
         return $this->belongsTo(RiderRun::class, 'rider_run_id')->withDefault(['name' => 'Rider Run Name']);
     }
 
-    public function parcel() {
+    public function delivery_rider_run()
+    {
+        return $this->belongsTo(RiderRun::class, 'rider_run_id')->where('run_type', 2)->withDefault(['name' => 'Rider Run Name']);
+    }
+
+    public function parcel()
+    {
         return $this->belongsTo(Parcel::class, 'parcel_id')->withDefault(['name' => 'Parcel'])->with('merchant', 'area');
     }
     public function PathaoOrderDetail()
     {
         return $this->hasOne(PathaoOrderDetail::class);
     }
-
 }

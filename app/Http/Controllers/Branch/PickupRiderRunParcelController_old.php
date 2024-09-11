@@ -1001,7 +1001,6 @@ class PickupRiderRunParcelController extends Controller
         return view('branch.parcel.pickupParcel.pickupRiderRunReconciliation', compact('riderRun'));
     }
 
-
     public function confirmPickupRiderRunReconciliation(Request $request, RiderRun $riderRun)
     {
         $response = ['error' => 'Error Found'];

@@ -272,6 +272,7 @@ class PickupRiderRunParcelController extends Controller
         $data['areas'] = Area::all();
         $data['weight_packages'] = WeightPackage::all();
         $data['import_parcels'] = $import_parcels;
+
         if (count($import_parcels) > 0) {
             return view('branch.parcel.pickupParcel.merchantBulkParcelImportCheck', $data);
         }
@@ -439,7 +440,7 @@ class PickupRiderRunParcelController extends Controller
 
                             // Insert Parcel
                             $data = [
-                                'parcel_invoice' => $parcel_invoice,
+                                'parcel_invoice' => $this->returnUniqueParcelInvoice(),
                                 'merchant_id' => $merchant->id,
                                 'pickup_address' => $merchant->address,
 

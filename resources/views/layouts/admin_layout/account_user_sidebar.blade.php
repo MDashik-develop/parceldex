@@ -178,6 +178,7 @@
                         </li>
                     </ul>
                 </li>
+                
                 <li class="nav-item has-treeview {{ $main_menu == 'salary' || $main_menu == 'team'  ? 'menu-open' : '' }} ">
                     <a href="#" class="nav-link {{ $main_menu == 'salary' || $main_menu == 'team' ? 'active' : '' }}">
                         <i class="fa fa-database fa-lg text-success"></i>

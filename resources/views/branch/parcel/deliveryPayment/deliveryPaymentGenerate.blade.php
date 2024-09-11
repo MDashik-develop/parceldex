@@ -73,7 +73,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12 text-center">
-                                        <button type="submit" class="btn btn-success">Generate</button>
+                                        <button type="submit" class="btn btn-success" id="PRRGenerate">Generate</button>
                                         <button type="reset" class="btn btn-primary">Reset</button>
                                     </div>
                                 </fieldset>
@@ -130,14 +130,31 @@
                                                 <th width="15%" class="text-center">Company Name</th>
                                                 <th width="10%" class="text-center">Customer Name</th>
                                                 <th width="10%" class="text-center">Customer Number</th>
-                                                <th width="10%" class="text-center">Amount to be Collect</th>
+                                                <th width="10%" class="text-center">Rider Name</th>
                                                 <th width="10%" class="text-center">Delivery Status</th>
-                                                <th width="10%" class="text-center">Amount</th>
+                                                <th width="10%" class="text-center">Amount to be Collect</th>
+                                                <th width="10%" class="text-center">Collected</th>
                                             </tr>
                                         </thead>
                                         <tbody id="show_parcel">
                                             @if ($parcels->count() > 0)
+                                                @php
+                                                    $x = 0;
+                                                    $y = 0;
+                                                @endphp
                                                 @foreach ($parcels as $parcel)
+                                                    @php
+                                                        $x += $parcel->total_collect_amount;
+
+                                                        if ($parcel->status == 25 && $parcel->delivery_type == 4) {
+                                                            $y += $parcel->cancel_amount_collection;
+                                                        } elseif (
+                                                            ($parcel->status == 25 && $parcel->delivery_type == 1) ||
+                                                            $parcel->delivery_type == 2
+                                                        ) {
+                                                            $y += $parcel->customer_collect_amount;
+                                                        }
+                                                    @endphp
                                                     <tr style="background-color: #f4f4f4;">
                                                         <td class="text-center">
                                                             <input type="checkbox" id="checkItem" class="parcelId"
@@ -159,7 +176,7 @@
                                                             {{ $parcel->customer_contact_number }}
                                                         </td>
                                                         <td class="text-center">
-                                                            {{ $parcel->cancel_amount_collection }}
+                                                            {{ App\Models\Parcel::find($parcel->id)->delivery_rider->name }}
                                                         </td>
                                                         <td class="text-center">
                                                             @if ($parcel->delivery_type == 1)
@@ -172,11 +189,26 @@
                                                                 <div class="badge badge-danger">Returned</div>
                                                             @endif
                                                         </td>
+                                                        <td class="text-center">
+                                                            {{ $parcel->total_collect_amount }}
+                                                        </td>
+
                                                         <td class="text-right">
-                                                            {{ number_format($parcel->customer_collect_amount, 2) }}
+                                                            @if ($parcel->status == 25 && $parcel->delivery_type == 4)
+                                                                {{ number_format($parcel->cancel_amount_collection, 2) }}
+                                                            @elseif($parcel->status == 25 && ($parcel->delivery_type == 1 || $parcel->delivery_type == 2))
+                                                                {{ number_format($parcel->customer_collect_amount, 2) }}
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                 @endforeach
+                                                <tr>
+                                                    <td colspan="8"></td>
+                                                    <td class="text-right" style="font-weight: bold">
+                                                        {{ number_format($x, 2) }}</td>
+                                                    <td class="text-right text-weight-bold" style="font-weight: bold">
+                                                        {{ number_format($y, 2) }}</td>
+                                                </tr>
                                             @endif
                                         </tbody>
                                     </table>
@@ -304,6 +336,7 @@
 
 
         function createForm() {
+            $('#PRRGenerate').attr('disabled', true);
             let total_payment_parcel = returnNumber($('#total_payment_parcel').val());
             if (total_payment_parcel == 0) {
                 toastr.error("Please Enter Delivery Payment Parcel..");

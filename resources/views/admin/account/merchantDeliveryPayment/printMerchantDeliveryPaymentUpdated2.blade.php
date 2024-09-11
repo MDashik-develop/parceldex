@@ -17,14 +17,14 @@
         body {
             font-size: 10px !important;
             font-family: Arial, sans-serif;
-            background: url('{{ public_path('image/invoice-bg.png') }}') no-repeat center center fixed;
-            background-size: cover;
+            /* background: url('{{ public_path('image/invoice-bg.png') }}') no-repeat center center fixed; */
+            /* background-size: cover; */
         }
 
         .container {
             background-color: rgba(255, 255, 255, 0.9);
             /* Slightly transparent background */
-            padding: 20px;
+            /* padding: 20px; */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             width: 100%;
@@ -83,32 +83,23 @@
         td {
             border: 1px solid black;
             text-align: left;
-            padding: 8px;
+            padding: 4px;
         }
 
         th,
         td {
-            width: 12%;
-        }
-
-        .signature {
-            display: inline-block;
-            width: 30%;
-            margin-top: 50px;
-            text-align: center;
-            vertical-align: top;
-        }
-
-        .signature div {
-            text-align: center !important;
-            margin-top: 40px;
-            border-top: 1px solid black;
+            width: 8%;
         }
     </style>
 </head>
 
 <body>
-    <div class="container" style="margin-top: 200px;">
+    <div class="container">
+        <section
+            style="text-align: center; font-size: 26px; font-weight: bold; color: #00509d; margin-top: 2rem; margin-bottom: 2rem;">
+            Parceldex Payment
+            Statement</section>
+
         <div class="section">
             <h2>Payment Info</h2>
             <table>
@@ -157,24 +148,24 @@
         </div>
 
         @if ($parcelMerchantDeliveryPayment->parcel_merchant_delivery_payment_details->count() > 0)
-            <table class="table table-bordered" width="97%"
-                style="margin-top: 3rem; margin-left: auto; margin-right: auto;">
+            <table class="table table-bordered" width="100%"
+                style="margin-top: 2rem; margin-left: auto; margin-right: auto;">
                 <thead>
                     <tr>
-                        <th width="2%" class="text-center"> SL</th>
-                        <th width="10%" class="text-center">Invoice</th>
-                        <th width="10%" class="text-center">Order ID</th>
-                        <th width="10%" class="text-center">Status</th>
-                        <th width="10%" class="text-center">Customer Name</th>
-                        <th width="10%" class="text-center">Customer Number</th>
-                        <th width="8%" class="text-center">Amount to be Collect</th>
-                        <th width="10%" class="text-center">Collected</th>
-                        <th width="10%" class="text-center"> Weight Charge</th>
-                        <th width="10%" class="text-center"> COD Charge</th>
-                        <th width="10%" class="text-center">Delivery</th>
-                        <th width="10%" class="text-center">Return</th>
-                        <th width="10%" class="text-center">Total Charge</th>
-                        <th width="10%" class="text-center">Paid Amount</th>
+                        <th class="text-center"> SL</th>
+                        <th class="text-center">Invoice</th>
+                        <th class="text-center">Order ID</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Customer Name</th>
+                        <th class="text-center">Customer Number</th>
+                        <th class="text-center">Amount to be Collect</th>
+                        <th class="text-center">Collected</th>
+                        <th class="text-center"> Weight Charge</th>
+                        <th class="text-center"> COD Charge</th>
+                        <th class="text-center">Delivery</th>
+                        <th class="text-center">Return</th>
+                        <th class="text-center">Total Charge</th>
+                        <th class="text-center">Paid Amount</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -267,26 +258,6 @@
                         <th class="text-center">{{ number_format($total_return_charge) }}</th>
                         <th class="text-center">{{ number_format($total_charge) }}</th>
                         <th class="text-center">{{ number_format($total_paid_amount) }}</th>
-                    </tr>
-                </tbody>
-            </table>
-
-            <table class="table" width="100%" style="border: none;">
-                <tbody style="border: none;">
-                    <tr style="border: none;">
-                        <th width="33%" class="text-center" style="border: none;">
-                            <br><br><br>
-                            <span style="border-top:2px solid black; font-weight:bold ">
-                                &nbsp;&nbsp;&nbsp; Merchant Signature &nbsp;&nbsp;&nbsp;
-                            </span>
-                        </th>
-                        <th width="33%" class="text-center" style="border: none;"></th>
-                        <th width="33%" class="text-center" style="border: none; float: right;">
-                            <br><br><br>
-                            <span style="border-top:2px solid black; font-weight:bold ">
-                                &nbsp;&nbsp;&nbsp; Authority &nbsp;&nbsp;&nbsp;
-                            </span>
-                        </th>
                     </tr>
                 </tbody>
             </table>

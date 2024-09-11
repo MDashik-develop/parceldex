@@ -316,11 +316,11 @@ class ReturnBranchTransferParcelController extends Controller
 
             ->whereIn('id', $request->parcel_invoices)
             ->orWhereIn('parcel_invoice', $request->parcel_invoices)
-            ->where([
-                'delivery_branch_id' => $branch_id,
-                'pickup_branch_id'   => $request->branch_id,
-            ])
-            ->whereIn('status', [25, 27, 29])
+            // ->where([
+            //     'delivery_branch_id' => $branch_id,
+            //     'pickup_branch_id'   => $request->branch_id,
+            // ])
+            ->whereIn('status', [25, 27, 29, 28])
             ->whereIn('delivery_type', [2, 4])
             ->get();
 

@@ -73,6 +73,7 @@ class HomeController extends Controller
         $data['total_return_complete_parcel'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('status = ? and delivery_type in (?,?)', [36, 2, 4])
             ->count();
+            
 
         $data['total_pending_collect_amount'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25, 1, 2, 4])

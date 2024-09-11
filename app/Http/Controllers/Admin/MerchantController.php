@@ -2,33 +2,35 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Imports\MerchantBulkImport;
-use App\Mail\VerifyMerchantEmail;
-use App\Models\Admin;
-use App\Models\Application;
+use DataTables;
 use App\Models\Area;
+use App\Models\Admin;
 use App\Models\Branch;
+use App\Models\Upazila;
 use App\Models\District;
-use App\Models\EmailVerification;
 use App\Models\ItemType;
 use App\Models\Merchant;
-use App\Models\MerchantServiceAreaCharge;
-use App\Models\MerchantServiceAreaReturnCharge;
+use App\Models\Application;
 use App\Models\ServiceArea;
 use App\Models\ServiceType;
-use App\Models\Upazila;
-use App\Models\WeightPackage;
-use App\Notifications\MerchantRegisterNotification;
 use App\Traits\UploadTrait;
-use DataTables;
 use Illuminate\Http\Request;
-use Illuminate\Notifications\Notification;
+use App\Models\WeightPackage;
+use App\Mail\VerifyMerchantEmail;
+use App\Models\EmailVerification;
 use Illuminate\Support\Facades\DB;
+use App\Imports\MerchantBulkImport;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
+use App\Notifications\SendRegisterOtp;
+use App\Models\MerchantServiceAreaCharge;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Notifications\Notification;
 use App\Models\MerchantServiceAreaCodCharge;
+use App\Models\MerchantServiceAreaReturnCharge;
+use App\Notifications\MerchantRegisterNotification;
+use App\Notifications\MerchantRegistrationNotification;
 
 class MerchantController extends Controller
 {
@@ -1073,6 +1075,8 @@ class MerchantController extends Controller
                 $message = "Dear {$company_name}, ";
                 // $message .= "Your OTP is {$otp_token} From Parceldex Ltd. Please Confirm your account and keep it secret";
                 $message .= "Please Use this OTP {$otp_token} to complete your Sign Up procedures and verify your account";
+
+                $merchant->notify(new MerchantRegistrationNotification($message));
 
                 $this->send_reg_sms($contact_number, $message);
 

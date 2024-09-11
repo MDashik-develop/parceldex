@@ -23,8 +23,8 @@
     justify-content: center;
 }
 </style>
-<footer class="main-footer mt-5 pt-5">
-    <div class="footer-road">
+<footer class="main-footer">
+    {{-- <div class="footer-road">
         <div class="container position-relative" data-aos="fade-right">
 
             @if(!empty($application->logo))
@@ -33,9 +33,9 @@
                 <img class="position-absolute footer-logo" height="90" src="{{ asset('uploads/application/'.$application->photo) }}" alt="Road">
             @endif
 
-            {{--<img class="position-absolute footer-logo" height="90" src="{{ asset('assets/img/flyerlogo.jpg') }}" alt="Road">--}}
+            <img class="position-absolute footer-logo" height="90" src="{{ asset('assets/img/flyerlogo.jpg') }}" alt="Road">
         </div>
-    </div>
+    </div> --}}
     <div class="footer-container text-light"  style="background: #053574;" >
         <div class="container text-center text-sm-left">
 

@@ -479,7 +479,7 @@ class DeliveryParcelController extends Controller
 
                         // $message = "Provide this OTP: " . $parcel->parcel_otp . " to rider if you received parcel (" . $parcel->parcel_invoice . "). This OTP will be valid for 30 minutes. Parceldex Ltd.";
 
-                        $message = $parcel->parcel_invoice . ", " . $parcel->total_collect_amount . " TK. from " . ucwords($parcel->merchant->company_name) . " is on the way to you. Rider - " . ucwords($parcel->delivery_rider->name) . ", " . $parcel->delivery_rider->contact_number;
+                        $message = $parcel->parcel_invoice . ", " . $parcel->total_collect_amount . " TK. from " . ucwords($parcel->merchant->company_name) . " is on the way to you. Rider - " . ucwords($parcel->delivery_rider->name) . ", " . $parcel->delivery_rider->contact_number . ". Parceldex Ltd.";
 
 
                         $this->send_sms($parcel->customer_contact_number, $message);
@@ -623,7 +623,8 @@ class DeliveryParcelController extends Controller
                     ], 400);
                 }
             } elseif ($request->send_to == 'merchant') {
-                $message = "Provide this OTP: " . $parcel->parcel_otp . " to rider if you received parcel (" . $parcel->parcel_invoice . "). This OTP will be valid for 30 minutes. Parceldex Ltd.";
+
+                $message = "Provide this OTP: " . $parcel->parcel_otp . " to rider if you approve partial ID (" . $parcel->parcel_invoice . "). This OTP will be valid for 30 minutes. Parceldex Ltd.";
 
                 if ($this->send_sms($parcel->merchant->contact_number, $message)) {
                     return response()->json([

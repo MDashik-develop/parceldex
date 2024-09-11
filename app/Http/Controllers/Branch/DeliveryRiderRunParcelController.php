@@ -335,8 +335,7 @@ class DeliveryRiderRunParcelController extends Controller
                                 // $message .= " will be delivered by " . $parcel->delivery_rider->name . ", " . $parcel->delivery_rider->contact_number . ".\n";
                                 // $message .= " Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Parceldex";
 
-
-                                $message = $parcel->parcel_invoice . ", " . $parcel->total_collect_amount . " TK. from " . ucwords($parcel->merchant->company_name) . " is on the way to you. Rider - " . ucwords($parcel->delivery_rider->name) . ", " . $parcel->delivery_rider->contact_number;
+                                $message = "Your parcel ID-" . $parcel->parcel_invoice . " from " . ucwords($parcel->merchant->company_name) . " is on the way to you. COD- " . $parcel->total_collect_amount . " TK. Rider - " . ucwords($parcel->delivery_rider->name) . ", " . $parcel->delivery_rider->contact_number . ". parceldex Ltd.";
 
                                 $this->send_sms($parcel->customer_contact_number, $message);
                             }
@@ -1132,8 +1131,8 @@ class DeliveryRiderRunParcelController extends Controller
                                 }
 
                                 $new_parcel = $parcel->replicate();
-                                $new_parcel->parcel_invoice = 'P-' . $parcel->parcel_invoice;
-                                $new_parcel->suborder = true;
+                                $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
+                                $new_parcel->suborder = $parcel->parcel_invoice;
                                 $new_parcel->delivery_type = 4;
                                 $new_parcel->status = 25;
                                 $new_parcel->total_collect_amount = $confirm_amount_to_be_collect - $confirm_customer_collect_amount;
@@ -1141,18 +1140,23 @@ class DeliveryRiderRunParcelController extends Controller
                                 $new_parcel->merchant_service_area_charge = 0;
                                 $new_parcel->cod_percent = 0;
                                 $new_parcel->cod_charge = 0;
-                                $new_parcel->total_charge = 0;
+                                $new_parcel->weight_package_charge = 0;
+                                $new_parcel->return_charge = $parcel->return_charge;
+                                $new_parcel->total_charge = $parcel->total_charge;
                                 $new_parcel->customer_collect_amount = 0;
                                 $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
                                 $new_parcel->delivery_date = now()->toDateString();
                                 $new_parcel->created_at = now();
-                                $new =  $new_parcel->save();
+                                $new_parcel->save();
+
+                                $parcel->merchant_service_area_return_charge = 0;
+                                $parcel->save();
 
                                 $new_parcel_log = [
-                                    'parcel_id' => $new->parcel_invoice,
+                                    'parcel_id' => $new_parcel->id,
                                     'delivery_branch_id' => auth()->guard('branch')->user()->id,
                                     'date' => date('Y-m-d'),
-                                    'note' => 'Related Consignment: #' . $parcel_id[$i],
+                                    'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
                                     'time' => date('H:i:s'),
                                     'status' => 25,
                                     'delivery_type' => 4,

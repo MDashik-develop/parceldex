@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Parcel;
 use App\Models\ParcelLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -296,40 +297,40 @@ function returnParcelStatusNameForAdmin($status, $delivery_type, $payment_type)
     }
 
     /** For Partial Delivery Return */
-    elseif ($status == 26 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Transfer";
-        $class        = "success";
-    } elseif ($status == 27 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Transfer Cancel";
-        $class        = "success";
-    } elseif ($status == 28 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Transfer Complete";
-        $class        = "success";
-    } elseif ($status == 29 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Transfer Reject";
-        $class        = "success";
-    } elseif ($status == 30 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Return Run Create";
-        $class        = "success";
-    } elseif ($status == 31 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Return Run start";
-        $class        = "success";
-    } elseif ($status == 32 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Return Run Cancel";
-        $class        = "success";
-    } elseif ($status == 33 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Return Rider Accept";
-        $class        = "success";
-    } elseif ($status == 34 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Return Rider Reject";
-        $class        = "success";
-    } elseif ($status == 35 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Return Run Complete";
-        $class        = "success";
-    } elseif ($status == 36 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Return Complete";
-        $class        = "success";
-    }
+    // elseif ($status == 26 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Transfer";
+    //     $class        = "success";
+    // } elseif ($status == 27 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Transfer Cancel";
+    //     $class        = "success";
+    // } elseif ($status == 28 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Transfer Complete";
+    //     $class        = "success";
+    // } elseif ($status == 29 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Transfer Reject";
+    //     $class        = "success";
+    // } elseif ($status == 30 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Return Run Create";
+    //     $class        = "success";
+    // } elseif ($status == 31 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Return Run start";
+    //     $class        = "success";
+    // } elseif ($status == 32 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Return Run Cancel";
+    //     $class        = "success";
+    // } elseif ($status == 33 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Return Rider Accept";
+    //     $class        = "success";
+    // } elseif ($status == 34 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Return Rider Reject";
+    //     $class        = "success";
+    // } elseif ($status == 35 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Return Run Complete";
+    //     $class        = "success";
+    // } elseif ($status == 36 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Return Complete";
+    //     $class        = "success";
+    // }
 
     /** For Return Parcel */
     elseif ($status == 26 && $delivery_type == 4) {
@@ -391,25 +392,25 @@ function returnParcelStatusNameForAdmin($status, $delivery_type, $payment_type)
 
 
     /** For Partial Payment Status */
-    if ($delivery_type == 2 && $status == 25 && $payment_type == 1) {
-        $status_name  = "Branch Delivery Exchange Payment Request";
-        $class        = "primary";
-    } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 2) {
-        $status_name  = "Accounts Delivery Exchange Accept Payment";
-        $class        = "success";
-    } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 3) {
-        $status_name  = "Accounts Delivery Exchange Reject Payment";
-        $class        = "warning";
-    } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 4) {
-        $status_name  = "Accounts Delivery Exchange Payment Request";
-        $class        = "primary";
-    } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 5) {
-        $status_name  = "Accounts Delivery Exchange Payment Done";
-        $class        = "success";
-    } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 6) {
-        $status_name  = "Merchant Delivery Exchange Payment Reject";
-        $class        = "warning";
-    }
+    // if ($delivery_type == 2 && $status == 25 && $payment_type == 1) {
+    //     $status_name  = "Branch Delivery Exchange Payment Request";
+    //     $class        = "primary";
+    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 2) {
+    //     $status_name  = "Accounts Delivery Exchange Accept Payment";
+    //     $class        = "success";
+    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 3) {
+    //     $status_name  = "Accounts Delivery Exchange Reject Payment";
+    //     $class        = "warning";
+    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 4) {
+    //     $status_name  = "Accounts Delivery Exchange Payment Request";
+    //     $class        = "primary";
+    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 5) {
+    //     $status_name  = "Accounts Delivery Exchange Payment Done";
+    //     $class        = "success";
+    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 6) {
+    //     $status_name  = "Merchant Delivery Exchange Payment Reject";
+    //     $class        = "warning";
+    // }
 
     return [
         'status_name'   => $status_name,
@@ -705,16 +706,16 @@ function returnParcelStatusNameForBranch($status, $delivery_type, $payment_type)
         $class        = "danger";
     } elseif ($status == 21) {
         //            $status_name  = "Delivery Rider Complete Delivery";
-        $status_name  = "Complete Delivery";
+        $status_name  = "Delivered";
         $class        = "success";
     } elseif ($status == 22) {
-        $status_name  = "Partially Delivered";
+        $status_name  = "Partial Delivered";
         $class        = "success";
     } elseif ($status == 23) {
         $status_name  = "Rescheduled";
         $class        = "success";
     } elseif ($status == 24) {
-        $status_name  = "Delivery Rider Return";
+        $status_name  = "Cancel";
         $class        = "warning";
     } elseif ($status >= 25 && $delivery_type == 1) {
         $status_name  = "Delivered";
@@ -731,40 +732,40 @@ function returnParcelStatusNameForBranch($status, $delivery_type, $payment_type)
     }
 
     /** For Partial Delivery Return */
-    elseif ($status == 26 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Transfer";
-        $class        = "success";
-    } elseif ($status == 27 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Transfer Cancel";
-        $class        = "success";
-    } elseif ($status == 28 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Transfer Complete";
-        $class        = "success";
-    } elseif ($status == 29 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Transfer Reject";
-        $class        = "success";
-    } elseif ($status == 30 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Return Run Create";
-        $class        = "success";
-    } elseif ($status == 31 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Return Run start";
-        $class        = "success";
-    } elseif ($status == 32 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Return Run Cancel";
-        $class        = "success";
-    } elseif ($status == 33 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Return Rider Accept";
-        $class        = "success";
-    } elseif ($status == 34 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Return Rider Reject";
-        $class        = "success";
-    } elseif ($status == 35 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Return Run Complete";
-        $class        = "success";
-    } elseif ($status == 36 && $delivery_type == 2) {
-        $status_name  = "Delivery Exchange Return Complete";
-        $class        = "success";
-    }
+    // elseif ($status == 26 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Transfer";
+    //     $class        = "success";
+    // } elseif ($status == 27 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Transfer Cancel";
+    //     $class        = "success";
+    // } elseif ($status == 28 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Transfer Complete";
+    //     $class        = "success";
+    // } elseif ($status == 29 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Transfer Reject";
+    //     $class        = "success";
+    // } elseif ($status == 30 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Return Run Create";
+    //     $class        = "success";
+    // } elseif ($status == 31 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Return Run start";
+    //     $class        = "success";
+    // } elseif ($status == 32 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Return Run Cancel";
+    //     $class        = "success";
+    // } elseif ($status == 33 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Return Rider Accept";
+    //     $class        = "success";
+    // } elseif ($status == 34 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Return Rider Reject";
+    //     $class        = "success";
+    // } elseif ($status == 35 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Return Run Complete";
+    //     $class        = "success";
+    // } elseif ($status == 36 && $delivery_type == 2) {
+    //     $status_name  = "Delivery Exchange Return Complete";
+    //     $class        = "success";
+    // }
 
     /** For Return Parcel */
     elseif ($status == 26 && $delivery_type == 4) {
@@ -826,25 +827,25 @@ function returnParcelStatusNameForBranch($status, $delivery_type, $payment_type)
 
 
     /** For Partial Payment Status */
-    if ($delivery_type == 2 && $status == 25 && $payment_type == 1) {
-        $status_name  = "Branch Delivery Exchange Payment Request";
-        $class        = "primary";
-    } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 2) {
-        $status_name  = "Accounts Delivery Exchange Accept Payment";
-        $class        = "success";
-    } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 3) {
-        $status_name  = "Accounts Delivery Exchange Reject Payment";
-        $class        = "warning";
-    } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 4) {
-        $status_name  = "Accounts Delivery Exchange Payment Request";
-        $class        = "primary";
-    } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 5) {
-        $status_name  = "Accounts Delivery Exchange Payment Done";
-        $class        = "success";
-    } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 6) {
-        $status_name  = "Merchant Delivery Exchange Payment Reject";
-        $class        = "warning";
-    }
+    // if ($delivery_type == 2 && $status == 25 && $payment_type == 1) {
+    //     $status_name  = "Branch Delivery Exchange Payment Request";
+    //     $class        = "primary";
+    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 2) {
+    //     $status_name  = "Accounts Delivery Exchange Accept Payment";
+    //     $class        = "success";
+    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 3) {
+    //     $status_name  = "Accounts Delivery Exchange Reject Payment";
+    //     $class        = "warning";
+    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 4) {
+    //     $status_name  = "Accounts Delivery Exchange Payment Request";
+    //     $class        = "primary";
+    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 5) {
+    //     $status_name  = "Accounts Delivery Exchange Payment Done";
+    //     $class        = "success";
+    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 6) {
+    //     $status_name  = "Merchant Delivery Exchange Payment Reject";
+    //     $class        = "warning";
+    // }
 
     return [
         'status_name'   => $status_name,
@@ -946,7 +947,9 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
     } elseif ($status == 25 && $delivery_type == 4) {
         $status_name  = "Cancelled";
 
-        if ($parcel_invoice && str_contains($parcel_invoice, 'P-')) {
+        $parcel = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+
+        if ($parcel && $parcel->suborder) {
             $status_name  = "Partial Delivery Cancel";
         }
 
@@ -954,10 +957,10 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
     }
 
     /** For Partial Delivery Return */
-    elseif ($status >= 26 && $status <= 36 && $delivery_type == 2) {
-        $status_name  = "Delivery with Exchange";
-        $class        = "success";
-    }
+    // elseif ($status >= 26 && $status <= 36 && $delivery_type == 2) {
+    //     $status_name  = "Delivery with Exchange";
+    //     $class        = "success";
+    // }
 
     /** For Return Parcel */
     elseif ($status >= 26 && $status <= 35 && $delivery_type == 4) {
@@ -966,6 +969,12 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
     } elseif ($status == 36 && $delivery_type == 4) {
         $status_name  = "Returned";
         $class        = "danger";
+
+        $parcel = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+
+        if ($parcel && $parcel->suborder) {
+            $status_name  = "Partial Delivery Returned";
+        }
     }
 
     // /** For Payment Status */
@@ -1407,11 +1416,11 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type)
         } elseif ($parcelLog->delivery_branch) {
             $to_user    = !empty($parcelLog->delivery_branch) ? "Delivery Branch : " . $parcelLog?->delivery_branch?->name : "";
         }
-        $x = $parcelLog->parcel->parcel_invoice;
+        $x = $parcelLog->parcel;
 
         $status_name  = "Delivery Cancel";
 
-        if (str_contains($x, 'P-')) {
+        if ($x->suborder) {
             $status_name  = "Partial Delivery Cancel";
         }
 
@@ -1588,7 +1597,7 @@ function createActivityLog($difference, $parcel)
 
     $data = [
         'parcel_id' => $parcel->id,
-        'admin_id' => auth()->guard('admin')->user()->id,
+        // 'admin_id' => auth()->guard('admin')->user()->id,
         'date' => date('Y-m-d'),
         'time' => date('H:i:s'),
         'status' => 100,

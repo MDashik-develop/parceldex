@@ -228,10 +228,10 @@ class DeliveryBranchTransferParcelController extends Controller
                 $query->select('id', 'name');
             },
         ])
-            ->whereRaw("(pickup_branch_id = ? AND status in (11, 13, 15)) OR (delivery_branch_id = ? AND status in (11))", [$branch_id,$branch_id])
+            ->whereRaw("(pickup_branch_id = ? AND status in (11, 13, 15)) OR (delivery_branch_id = ? AND status in (11))", [$branch_id, $branch_id])
             // ->whereRaw("(pickup_branch_id = ? AND status in (11, 12 , 13, 15)) OR (delivery_branch_id = ? AND status in (14,20) or (delivery_branch_id = ? AND status in (25,28) AND delivery_type in (3,4)))", [$branch_id, $branch_id, $branch_id])
-          
-            ->select('id', 'parcel_invoice', 'merchant_order_id','product_details', 'customer_name', 'customer_contact_number', 'merchant_id', 'district_id', 'upazila_id', 'area_id')
+
+            ->select('id', 'parcel_invoice', 'merchant_order_id', 'product_details', 'customer_name', 'customer_contact_number', 'merchant_id', 'district_id', 'upazila_id', 'area_id')
             ->get();
 
         return view('branch.parcel.pickupParcel.deliveryBranchTransferGenerate', $data);
@@ -277,7 +277,6 @@ class DeliveryBranchTransferParcelController extends Controller
                 })
                 ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id', 'district_id', 'upazila_id', 'area_id')
                 ->get();
-
         } else {
             $data['parcels'] = [];
         }
@@ -450,6 +449,7 @@ class DeliveryBranchTransferParcelController extends Controller
                             'pickup_branch_id' => $branch_id,
                             'pickup_branch_user_id' => $branch_user_id,
                             'delivery_branch_id' => $request->input('branch_id'),
+                            'delivery_branch_user_id' => $branch_user_id,
                             'date' => date('Y-m-d'),
                             'time' => date('H:i:s'),
                             'status' => 14,
@@ -476,6 +476,7 @@ class DeliveryBranchTransferParcelController extends Controller
                             'parcel_id' => $parcel_id,
                             'pickup_branch_id' => $branch_id,
                             'delivery_branch_id' => $request->input('branch_id'),
+                            'delivery_branch_user_id' => $branch_user_id,
                             'date' => date('Y-m-d'),
                             'time' => date('H:i:s'),
                             'status' => 12,
@@ -674,9 +675,9 @@ class DeliveryBranchTransferParcelController extends Controller
                             'status' => 14,
                             'delivery_type' => $parcel->delivery_type,
                         ]);
-                      
-                       // $message = "Hello this is your code $parcel_code. Please keep it screate. Faster logistics ltd";
-                      //  $this->send_sms($item->attributes->customer_contact_number, $message);
+
+                        // $message = "Hello this is your code $parcel_code. Please keep it screate. Faster logistics ltd";
+                        //  $this->send_sms($item->attributes->customer_contact_number, $message);
 
                     } else {
                         DeliveryBranchTransferDetail::create([
@@ -728,6 +729,4 @@ class DeliveryBranchTransferParcelController extends Controller
             return redirect()->back()->withInput();
         }
     }
-
-
 }

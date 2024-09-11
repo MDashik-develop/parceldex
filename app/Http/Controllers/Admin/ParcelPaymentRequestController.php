@@ -13,9 +13,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
-class ParcelPaymentRequestController extends Controller {
+class ParcelPaymentRequestController extends Controller
+{
 
-    public function parcelPaymentRequestList() {
+    public function parcelPaymentRequestList()
+    {
         $data               = [];
         $data['main_menu']  = 'request';
         $data['child_menu'] = 'parcelPaymentRequestList';
@@ -24,36 +26,36 @@ class ParcelPaymentRequestController extends Controller {
         return view('admin.parcelPaymentRequest.parcelPaymentRequestList', $data);
     }
 
-    public function getParcelPaymentRequestList(Request $request) {
+    public function getParcelPaymentRequestList(Request $request)
+    {
 
         $model  = ParcelPaymentRequest::with(['merchant'])->where(function ($query) use ($request) {
-                $status    = $request->input('status');
-                $from_date = $request->input('from_date');
-                $to_date   = $request->input('to_date');
+            $status    = $request->input('status');
+            $from_date = $request->input('from_date');
+            $to_date   = $request->input('to_date');
 
-                if (($request->has('status') && !is_null($status))
-                    || ($request->has('from_date') && !is_null($from_date))
-                    || ($request->has('to_date') && !is_null($to_date))
-                ) {
+            if (($request->has('status') && !is_null($status))
+                || ($request->has('from_date') && !is_null($from_date))
+                || ($request->has('to_date') && !is_null($to_date))
+            ) {
 
-                    if ($request->has('status') && !is_null($status)) {
-                        $query->where('status', $status);
-                    }
-
-                    if ($request->has('from_date') && !is_null($from_date)) {
-                        $query->whereDate('date', '>=', $from_date);
-                    }
-
-                    if ($request->has('to_date') && !is_null($to_date)) {
-                        $query->whereDate('date', '<=', $to_date);
-                    }
-
+                if ($request->has('status') && !is_null($status)) {
+                    $query->where('status', $status);
                 }
-//                else {
-//                    $query->whereDate('date', '=', date('Y-m-d'));
-//                }
 
-            })
+                if ($request->has('from_date') && !is_null($from_date)) {
+                    $query->whereDate('date', '>=', $from_date);
+                }
+
+                if ($request->has('to_date') && !is_null($to_date)) {
+                    $query->whereDate('date', '<=', $to_date);
+                }
+            }
+            //                else {
+            //                    $query->whereDate('date', '=', date('Y-m-d'));
+            //                }
+
+        })
             ->orderBy('id', 'desc')->select();
 
         return DataTables::of($model)
@@ -77,17 +79,24 @@ class ParcelPaymentRequestController extends Controller {
                 $status = "";
 
                 switch ($data->status) {
-                case 1:$status = "<span class='text-bold text-warning' style='font-size:16px;'>Requested</span>";
-                    break;
-                case 2:$status = "<span class='text-bold text-success' style='font-size:16px;'>Accepted</span>";
-                    break;
-                case 3:$status = "<span class='text-bold text-danger' style='font-size:16px;'>Rejected</span>";
-                    break;
-                case 4:$status = "<span class='text-bold text-primary' style='font-size:16px;'>Payment Generated</span>";
-                    break;
-                case 5:$status = "<span class='text-bold text-success' style='font-size:16px;'>Paid</span>";
-                    break;
-                default:$status = "";break;
+                    case 1:
+                        $status = "<span class='text-bold text-warning' style='font-size:16px;'>Requested</span>";
+                        break;
+                    case 2:
+                        $status = "<span class='text-bold text-success' style='font-size:16px;'>Accepted</span>";
+                        break;
+                    case 3:
+                        $status = "<span class='text-bold text-danger' style='font-size:16px;'>Rejected</span>";
+                        break;
+                    case 4:
+                        $status = "<span class='text-bold text-primary' style='font-size:16px;'>Payment Generated</span>";
+                        break;
+                    case 5:
+                        $status = "<span class='text-bold text-success' style='font-size:16px;'>Paid</span>";
+                        break;
+                    default:
+                        $status = "";
+                        break;
                 }
 
                 return $status;
@@ -106,8 +115,8 @@ class ParcelPaymentRequestController extends Controller {
                             </button>';
                 }
 
-                if($data->status == 2) {
-                    $button .= '&nbsp; <a href="'.route('admin.parcel.paymentGenerate', $data->id).'" class="btn btn-primary payment-request-generate btn-sm" parcel_payment_request_id="' . $data->id . '" title="Parcel Payment Generate">
+                if ($data->status == 2) {
+                    $button .= '&nbsp; <a href="' . route('admin.parcel.paymentGenerate', $data->id) . '" class="btn btn-primary payment-request-generate btn-sm" parcel_payment_request_id="' . $data->id . '" title="Parcel Payment Generate">
                                 Payment Generate
                             </a>';
                 }
@@ -118,12 +127,14 @@ class ParcelPaymentRequestController extends Controller {
             ->make(true);
     }
 
-    public function viewParcelPaymentRequest(Request $request, ParcelPaymentRequest $parcelPaymentRequest) {
+    public function viewParcelPaymentRequest(Request $request, ParcelPaymentRequest $parcelPaymentRequest)
+    {
         $parcelPaymentRequest->load('merchant', 'merchant.branch');
         return view('admin.parcelPaymentRequest.viewParcelPaymentRequest', compact('parcelPaymentRequest'));
     }
 
-    public function acceptPaymentRequestParcel(Request $request) {
+    public function acceptPaymentRequestParcel(Request $request)
+    {
         $response = ['error' => 'Error Found'];
 
         if ($request->ajax()) {
@@ -146,15 +157,14 @@ class ParcelPaymentRequestController extends Controller {
                 } else {
                     $response = ['error' => 'Database Error Found'];
                 }
-
             }
-
         }
 
         return response()->json($response);
     }
 
-    public function rejectPaymentRequestParcel(Request $request) {
+    public function rejectPaymentRequestParcel(Request $request)
+    {
         $response = ['error' => 'Error Found'];
 
         if ($request->ajax()) {
@@ -177,9 +187,7 @@ class ParcelPaymentRequestController extends Controller {
                 } else {
                     $response = ['error' => 'Database Error Found'];
                 }
-
             }
-
         }
 
         return response()->json($response);
@@ -205,27 +213,39 @@ class ParcelPaymentRequestController extends Controller {
 
         $data['parcelPaymentRequest']   = $request_data;
 
-//        dd($request_data->merchant_id);
+        //        dd($request_data->merchant_id);
 
-        $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'company_name', 'contact_number');
-        },
+        $data['parcels'] = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'company_name', 'contact_number');
+            },
             'weight_package' => function ($query) {
                 $query->select('id', 'name');
-            }])
+            }
+        ])
             ->where('merchant_id', $request_data->merchant_id)
             ->whereRaw('delivery_type in (1,2) and payment_type in (2,4,6) ')
-            ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name',
-                'customer_contact_number', 'merchant_id','weight_package_id',
-                'customer_collect_amount', 'weight_package_charge',  'delivery_charge', 'total_charge', 'cod_charge'
+            ->select(
+                'id',
+                'parcel_invoice',
+                'merchant_order_id',
+                'customer_name',
+                'customer_contact_number',
+                'merchant_id',
+                'weight_package_id',
+                'customer_collect_amount',
+                'weight_package_charge',
+                'delivery_charge',
+                'total_charge',
+                'cod_charge'
             )
             ->get();
         return view('admin.parcelPaymentRequest.merchantPaymentGenerate', $data);
-
     }
 
 
-    public function confirmParcelPaymentGenerate(Request $request) {
+    public function confirmParcelPaymentGenerate(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'merchant_id'           => 'required',
             'total_payment_parcel'  => 'required',
@@ -256,7 +276,7 @@ class ParcelPaymentRequestController extends Controller {
                 'total_payment_amount'  => $total_payment_amount,
                 'transfer_reference'    => $request->input('transfer_reference'),
                 'note'                  => $request->input('note'),
-                'payment_request_status'=> 1,
+                'payment_request_status' => 1,
                 'status'                => 1,
             ];
             $parcelMerchantDeliveryPayment = ParcelMerchantDeliveryPayment::create($data);
@@ -295,60 +315,55 @@ class ParcelPaymentRequestController extends Controller {
                     $merchant_user = Merchant::find($merchant_id);
                     $merchant_user->notify(new MerchantParcelNotification($parcel));
 
-//                    $this->merchantDashboardCounterEvent($merchant_id);
+                    //                    $this->merchantDashboardCounterEvent($merchant_id);
                 }
-//                $merchant     = Merchant::where('id', $merchant_id)->first();
-//                $message    = "Dear ".$merchant->name.". ";
-//                $message    .= "Your payment amount ".$total_payment_amount."  is successfully done.";
-//                $message    .= "Your payment ID No ".$merchant_payment_invoice."   Thank you.";
-//                $this->send_sms($merchant->contact_number, $message);
+                //                $merchant     = Merchant::where('id', $merchant_id)->first();
+                //                $message    = "Dear ".$merchant->name.". ";
+                //                $message    .= "Your payment amount ".$total_payment_amount."  is successfully done.";
+                //                $message    .= "Your payment ID No ".$merchant_payment_invoice."   Thank you.";
+                //                $this->send_sms($merchant->contact_number, $message);
 
                 \DB::commit();
 
-//                $this->adminDashboardCounterEvent();
+                //                $this->adminDashboardCounterEvent();
 
                 $this->setMessage('Merchant Parcel Payment Insert Successfully', 'success');
                 return redirect()->route('admin.parcel.merchantPaymentDeliveryList');
-            }
-            else{
+            } else {
                 $this->setMessage('Merchant Parcel Payment Insert Failed', 'danger');
-//                return redirect()->back()->withInput();
+                //                return redirect()->back()->withInput();
             }
-        }
-        catch (\Exception $e){
+        } catch (\Exception $e) {
             \DB::rollback();
 
-//            return $e->getMessage();
+            //            return $e->getMessage();
 
             $this->setMessage($e->getMessage(), 'danger');
-//            $this->setMessage('Merchant Parcel Payment Insert Failed', 'danger');
+            //            $this->setMessage('Merchant Parcel Payment Insert Failed', 'danger');
             return redirect()->back()->withInput();
         }
     }
 
 
-    public function merchantDeliveryPaymentParcelAddCart(Request $request) {
+    public function merchantDeliveryPaymentParcelAddCart(Request $request)
+    {
         $admin_id         = auth()->guard('admin')->user()->id;
 
         $parcel_invoice = $request->input('parcel_invoice');
-        $parcels        = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $parcels        = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
             'weight_package' => function ($query) {
                 $query->select('id', 'name');
             }
         ])
             ->whereIn('id', $request->parcel_invoices)
-//            ->whereRaw('delivery_type in (1,2) and  payment_type in (2,6) and merchant_id = ?', $request->merchant_id)
+            //            ->whereRaw('delivery_type in (1,2) and  payment_type in (2,6) and merchant_id = ?', $request->merchant_id)
             ->whereRaw('delivery_type in (1,2) and
                             payment_type in (2,6) and
                             payment_request_status = 1 and
                             merchant_id = ?', $request->merchant_id)
-
-            ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name',
-                'customer_contact_number', 'merchant_id', 'weight_package_id',
-                'customer_collect_amount', 'delivery_charge', 'weight_package_charge', 'total_charge', 'cod_charge'
-            )
             ->get();
 
         if ($parcels->count() > 0) {
@@ -399,8 +414,7 @@ class ParcelPaymentRequestController extends Controller {
             $cart      = $cart->sortBy('id');
             $totalItem = \Cart::session($admin_id)->getTotalQuantity();
             $getTotal  = \Cart::session($admin_id)->getTotal();
-        }
-        else {
+        } else {
             $error = "Parcel Invoice Not Found";
 
             $cart = \Cart::session($admin_id)->getContent();
@@ -421,7 +435,8 @@ class ParcelPaymentRequestController extends Controller {
     }
 
 
-    public function merchantPaymentDeliveryList() {
+    public function merchantPaymentDeliveryList()
+    {
         $data               = [];
         $data['main_menu']  = 'request';
         $data['child_menu'] = 'parcelPaymentGenerateList';
@@ -434,45 +449,45 @@ class ParcelPaymentRequestController extends Controller {
     }
 
 
-    public function getMerchantPaymentDeliveryList(Request $request) {
+    public function getMerchantPaymentDeliveryList(Request $request)
+    {
 
         $model = ParcelMerchantDeliveryPayment::with(['merchant' => function ($query) {
             $query->select('id', 'name', 'company_name', 'contact_number', 'address');
         },])->where(function ($query) use ($request) {
-                $merchant_id = $request->input('merchant_id');
-                $status    = $request->input('status');
-                $from_date = $request->input('from_date');
-                $to_date   = $request->input('to_date');
+            $merchant_id = $request->input('merchant_id');
+            $status    = $request->input('status');
+            $from_date = $request->input('from_date');
+            $to_date   = $request->input('to_date');
 
-                if(($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0)
-                    || ($request->has('status') && !is_null($status) && $status != '' && $status != 0)
-                    || ($request->has('from_date') && !is_null($from_date) && $from_date != '')
-                    || ($request->has('to_date') && !is_null($to_date) && $to_date != '')
-                ){
-                    if ($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0) {
-                        $query->where('merchant_id', $request->input('merchant_id'));
-                    }
-
-                    if ($request->has('status') && !is_null($status) && $status != '' && $status != 0) {
-                        $query->where('status', $request->input('status'));
-                    }
-
-
-                    if ($request->has('from_date') && !is_null($from_date) && $from_date != '') {
-                        $query->whereDate('date_time', '>=', $request->input('from_date'));
-                    }
-
-                    if ($request->has('to_date') && !is_null($to_date) && $to_date != '') {
-                        $query->whereDate('date_time', '<=', $request->input('to_date'));
-                    }
+            if (($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0)
+                || ($request->has('status') && !is_null($status) && $status != '' && $status != 0)
+                || ($request->has('from_date') && !is_null($from_date) && $from_date != '')
+                || ($request->has('to_date') && !is_null($to_date) && $to_date != '')
+            ) {
+                if ($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0) {
+                    $query->where('merchant_id', $request->input('merchant_id'));
                 }
-                else{
-//                    $query->whereDate('date_time', '>=', date('Y-m-d'));
-//                    $query->whereDate('date_time', '<=', date('Y-m-d'));
-//                    $query->where('payment_request_status', 1);
-//                    $query->where('status', '!=', '3');
+
+                if ($request->has('status') && !is_null($status) && $status != '' && $status != 0) {
+                    $query->where('status', $request->input('status'));
                 }
-            })
+
+
+                if ($request->has('from_date') && !is_null($from_date) && $from_date != '') {
+                    $query->whereDate('date_time', '>=', $request->input('from_date'));
+                }
+
+                if ($request->has('to_date') && !is_null($to_date) && $to_date != '') {
+                    $query->whereDate('date_time', '<=', $request->input('to_date'));
+                }
+            } else {
+                //                    $query->whereDate('date_time', '>=', date('Y-m-d'));
+                //                    $query->whereDate('date_time', '<=', date('Y-m-d'));
+                //                    $query->where('payment_request_status', 1);
+                //                    $query->where('status', '!=', '3');
+            }
+        })
             ->orderBy('id', 'desc')
             ->select();
 
@@ -489,10 +504,22 @@ class ParcelPaymentRequestController extends Controller {
             })
             ->editColumn('status', function ($data) {
                 switch ($data->status) {
-                    case 1:$status_name  = "Payment Request"; $class  = "success";break;
-                    case 2:$status_name  = "Payment Accept"; $class  = "success";break;
-                    case 3:$status_name  = "Payment Reject"; $class  = "danger";break;
-                    default:$status_name = "None"; $class = "success";break;
+                    case 1:
+                        $status_name  = "Payment Request";
+                        $class  = "success";
+                        break;
+                    case 2:
+                        $status_name  = "Payment Accept";
+                        $class  = "success";
+                        break;
+                    case 3:
+                        $status_name  = "Payment Reject";
+                        $class  = "danger";
+                        break;
+                    default:
+                        $status_name = "None";
+                        $class = "success";
+                        break;
                 }
                 return '<a class="text-bold text-' . $class . '" href="javascript:void(0)" style="font-size:16px;"> ' . $status_name . '</a>';
             })
@@ -507,8 +534,8 @@ class ParcelPaymentRequestController extends Controller {
                     $button .= '&nbsp; <button class="btn btn-success merchant-delivery-payment-accept btn-sm" data-toggle="modal" data-target="#viewModal" parcel_delivery_payment_id="' . $data->id . '" title="Confirmed Merchant Delivery Payment">
                     <i class="fa fa-check"></i>  </button>';
 
-//                    $button .= '&nbsp; <a href="' . route('admin.account.merchantPaymentDeliveryGenerateEdit', $data->id) . '" class="btn btn-info btn-sm" title="Edit Merchant Delivery Payment " >
-//                        <i class="fas fa-edit"></i> </a>';
+                    //                    $button .= '&nbsp; <a href="' . route('admin.account.merchantPaymentDeliveryGenerateEdit', $data->id) . '" class="btn btn-info btn-sm" title="Edit Merchant Delivery Payment " >
+                    //                        <i class="fas fa-edit"></i> </a>';
 
                     $button .= '&nbsp; <button class="btn btn-danger btn-sm delete-btn" merchant_payment_id="' . $data->id . '">
                     <i class="fa fa-trash"></i> </button>';
@@ -520,25 +547,29 @@ class ParcelPaymentRequestController extends Controller {
     }
 
 
-    public function viewMerchantDeliveryPayment(Request $request, ParcelMerchantDeliveryPayment $parcelMerchantDeliveryPayment) {
+    public function viewMerchantDeliveryPayment(Request $request, ParcelMerchantDeliveryPayment $parcelMerchantDeliveryPayment)
+    {
         $parcelMerchantDeliveryPayment->load('admin', 'merchant', 'parcel_merchant_delivery_payment_details');
         return view('admin.parcelPaymentRequest.viewMerchantDeliveryPayment', compact('parcelMerchantDeliveryPayment'));
     }
 
-    public function printMerchantDeliveryPayment(Request $request, ParcelMerchantDeliveryPayment $parcelMerchantDeliveryPayment) {
+    public function printMerchantDeliveryPayment(Request $request, ParcelMerchantDeliveryPayment $parcelMerchantDeliveryPayment)
+    {
         $parcelMerchantDeliveryPayment->load('admin', 'merchant', 'parcel_merchant_delivery_payment_details');
         return view('admin.parcelPaymentRequest.printMerchantDeliveryPayment', compact('parcelMerchantDeliveryPayment'));
     }
 
 
     /** For Merchant Payment Confirmed */
-    public function merchantDeliveryPaymentAccept(Request $request, ParcelMerchantDeliveryPayment $parcelMerchantDeliveryPayment) {
+    public function merchantDeliveryPaymentAccept(Request $request, ParcelMerchantDeliveryPayment $parcelMerchantDeliveryPayment)
+    {
         $parcelMerchantDeliveryPayment->load('admin', 'merchant', 'parcel_merchant_delivery_payment_details');
         return view('admin.parcelPaymentRequest.merchantDeliveryPaymentAccept', compact('parcelMerchantDeliveryPayment'));
     }
 
 
-    public function merchantDeliveryPaymentAcceptConfirm(Request $request, ParcelMerchantDeliveryPayment $parcelMerchantDeliveryPayment) {
+    public function merchantDeliveryPaymentAcceptConfirm(Request $request, ParcelMerchantDeliveryPayment $parcelMerchantDeliveryPayment)
+    {
 
         $response = ['error' => 'Error Found'];
 
@@ -560,7 +591,7 @@ class ParcelPaymentRequestController extends Controller {
                         'status'      => 2,
                         'action_date_time' => date('Y-m-d H:i:s'),
                     ];
-                    $check = ParcelMerchantDeliveryPayment::where('id',$parcelMerchantDeliveryPayment->id)->update($data);
+                    $check = ParcelMerchantDeliveryPayment::where('id', $parcelMerchantDeliveryPayment->id)->update($data);
 
                     $payment_request    = ParcelPaymentRequest::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)->first();
 
@@ -569,7 +600,7 @@ class ParcelPaymentRequestController extends Controller {
                         $ParcelMerchantDeliveryPaymentDetails =  ParcelMerchantDeliveryPaymentDetail::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)->get();
 
 
-                        foreach($ParcelMerchantDeliveryPaymentDetails as $ParcelMerchantDeliveryPaymentDetail){
+                        foreach ($ParcelMerchantDeliveryPaymentDetails as $ParcelMerchantDeliveryPaymentDetail) {
                             Parcel::where('id', $ParcelMerchantDeliveryPaymentDetail->parcel_id)->update([
                                 'payment_type' => 5
                             ]);
@@ -585,7 +616,7 @@ class ParcelPaymentRequestController extends Controller {
                             'action_admin_id'   => auth('admin')->user()->id
                         ]);
 
-                        ParcelMerchantDeliveryPaymentDetail::where('parcel_merchant_delivery_payment_id',$parcelMerchantDeliveryPayment->id)
+                        ParcelMerchantDeliveryPaymentDetail::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)
                             ->update([
                                 'status'      => 2,
                                 'date_time'   => date('Y-m-d H:i:s'),
@@ -597,10 +628,10 @@ class ParcelPaymentRequestController extends Controller {
 
                         /** For SMS */
                         $merchant     = Merchant::where('id', $parcelMerchantDeliveryPayment->merchant_id)->first();
-                        $message    = "Dear ".$merchant->name.". ";
-                        $message    .= "Your payment amount ".$parcelMerchantDeliveryPayment->total_payment_amount."  is successfully done.";
-                        $message    .= "Your payment ID No ".$parcelMerchantDeliveryPayment->merchant_payment_invoice."   Thank you.";
-                      //  $this->send_sms($merchant->contact_number, $message);
+                        $message    = "Dear " . $merchant->name . ". ";
+                        $message    .= "Your payment amount " . $parcelMerchantDeliveryPayment->total_payment_amount . "  is successfully done.";
+                        $message    .= "Your payment ID No " . $parcelMerchantDeliveryPayment->merchant_payment_invoice . "   Thank you.";
+                        //  $this->send_sms($merchant->contact_number, $message);
 
                         // $this->adminDashboardCounterEvent();
 
@@ -608,8 +639,7 @@ class ParcelPaymentRequestController extends Controller {
                     } else {
                         $response = ['error' => 'Database Error Found'];
                     }
-                }
-                catch (\Exception $e){
+                } catch (\Exception $e) {
                     \DB::rollback();
                     $response = ['error' => 'Database Error Found'];
                 }
@@ -626,20 +656,20 @@ class ParcelPaymentRequestController extends Controller {
     {
         $response = ['error' => 'Error Found 1'];
 
-        if($request->ajax()) {
+        if ($request->ajax()) {
 
             $validator = Validator::make($request->all(), [
                 'parcel_delivery_payment_id' => 'required',
             ]);
 
-            if($validator->fails()) {
+            if ($validator->fails()) {
                 $response = ['error' => 'Error Found 2'];
-            }else{
+            } else {
 
                 $merchantDeliveryPayment    = ParcelMerchantDeliveryPayment::where('id', $request->get('parcel_delivery_payment_id'))->first();
                 $merchantDeliveryPaymentDetail = $merchantDeliveryPayment->parcel_merchant_delivery_payment_details;
                 $parcel_ids = [];
-                if($merchantDeliveryPaymentDetail) {
+                if ($merchantDeliveryPaymentDetail) {
                     foreach ($merchantDeliveryPaymentDetail as $mpdetail) {
 
                         $parcel_ids[]   = $mpdetail->parcel_id;
@@ -651,13 +681,13 @@ class ParcelPaymentRequestController extends Controller {
                 $payment_request    = ParcelPaymentRequest::where('parcel_merchant_delivery_payment_id', $request->get('parcel_delivery_payment_id'))->first();
 
                 \DB::beginTransaction();
-                try{
+                try {
 
 
                     $merchantDeliveryPayment->parcel_merchant_delivery_payment_details()->delete();
                     $merchantDeliveryPayment->delete();
 
-                    if($payment_request){
+                    if ($payment_request) {
                         $payment_request->update([
                             'status'    => 2,
                             'action_admin_id' => auth('admin')->user()->id
@@ -675,13 +705,11 @@ class ParcelPaymentRequestController extends Controller {
                     $this->adminDashboardCounterEvent();
 
                     $response = ['success' => 'Merchant Delivery Payment Delete Successfully!'];
-                }
-                catch (\Exception $e){
+                } catch (\Exception $e) {
                     \DB::rollback();
                     $response = ['error' => $e->getMessage()];
-//                    $response = ['error' => 'Database error found!'];
+                    //                    $response = ['error' => 'Database error found!'];
                 }
-
             }
         }
         return $response;
@@ -689,9 +717,11 @@ class ParcelPaymentRequestController extends Controller {
 
 
     /** Print Booking Parcel List */
-    public function printMerchantDeliveryPaymentList(Request $request){
+    public function printMerchantDeliveryPaymentList(Request $request)
+    {
 
-        $merchantDeliveryPaymentList = ParcelMerchantDeliveryPayment::with(['merchant' => function ($query) {
+        $merchantDeliveryPaymentList = ParcelMerchantDeliveryPayment::with([
+            'merchant' => function ($query) {
                 $query->select('id', 'name', 'company_name', 'contact_number', 'address');
             },
         ])
@@ -701,11 +731,11 @@ class ParcelPaymentRequestController extends Controller {
                 $from_date = $request->input('from_date');
                 $to_date   = $request->input('to_date');
 
-                if(($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0)
+                if (($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0)
                     || ($request->has('status') && !is_null($status) && $status != '' && $status != 0)
                     || ($request->has('from_date') && !is_null($from_date) && $from_date != '')
                     || ($request->has('to_date') && !is_null($to_date) && $to_date != '')
-                ){
+                ) {
                     if ($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0) {
                         $query->where('merchant_id', $request->input('merchant_id'));
                     }
@@ -722,20 +752,16 @@ class ParcelPaymentRequestController extends Controller {
                     if ($request->has('to_date') && !is_null($to_date) && $to_date != '') {
                         $query->whereDate('date_time', '<=', $request->input('to_date'));
                     }
-                }
-                else{
-//                    $query->whereDate('date_time', '>=', date('Y-m-d'));
-//                    $query->whereDate('date_time', '<=', date('Y-m-d'));
+                } else {
+                    //                    $query->whereDate('date_time', '>=', date('Y-m-d'));
+                    //                    $query->whereDate('date_time', '<=', date('Y-m-d'));
                     $query->where('payment_request_status', 1);
                     $query->where('status', '!=', '3');
                 }
-
-
             })
             ->orderBy('id', 'desc')
             ->get();
 
         return view('admin.parcelPaymentRequest.printMerchantDeliveryPaymentList', compact('merchantDeliveryPaymentList'));
     }
-
 }

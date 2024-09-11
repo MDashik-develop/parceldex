@@ -1,5 +1,5 @@
 <div class="modal-header bg-default">
-    <h4 class="modal-title">Merchant Delivery Payment Information View </h4>
+    <h4 class="modal-title">Merchant Delivery Payment Information View</h4>
     <button type="button" class="close bg-danger" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>

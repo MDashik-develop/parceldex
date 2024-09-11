@@ -198,11 +198,11 @@
                                                             </div> --}}
                                                             <div class="col-md-6 col-sm-12">
                                                                 <div class="form-group">
-                                                                    <label for="area_id"> Area <code></code> </label>
+                                                                    <label for="area_id"> Area <code>*</code> </label>
                                                                     <select name="area_id" id="area_id"
                                                                         class="form-control select2" style="width: 100%"
                                                                         disabled>
-                                                                        <option value="0">Select Area</option>
+                                                                        <option value="">Select Area</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -514,7 +514,7 @@
 
             $.ajax({
                 type: "GET",
-                url: ("{{ route('merchant.customer.info') }}"),
+                url: ("{{ route('branch.customer.info') }}"),
                 data: {
                     phone: phone,
                 },
@@ -527,6 +527,8 @@
                         $('#cancel').html("");
                         $('#p_cancel').html("");
                         $('#complete').html("New Customer");
+                        $('#district_id').val(0).change();
+                        $('#area_id').val(0).change();
                     } else {
                         $('#complete').html(response.totalDeliveryComplete);
                         $('#p_complete').html(response.percenrtComplete);
@@ -537,7 +539,11 @@
                     }
                     $('#customer_name').val(response.customer.customer_name);
                     $('#customer_address').val(response.customer.customer_address);
+                    $('#district_id').val(response.customer.district_id).change();
                     $('#customer_details').removeClass('d-none');
+                    setTimeout(function() {
+                        $('#area_id').val(response.customer.area_id).change();
+                    }, 500);
 
 
                 }
@@ -551,7 +557,7 @@
 
             $.ajax({
                 type: "GET",
-                url: ("{{ route('merchant.customer.info') }}"),
+                url: ("{{ route('branch.customer.info') }}"),
                 data: {
                     phone2: phone,
                 },
@@ -585,6 +591,83 @@
                 }
             });
         });
+        // $('#customer_contact_number').on('input', function() {
+
+        //     var phone = $("#customer_contact_number").val();
+
+        //     $.ajax({
+        //         type: "GET",
+        //         url: ("{{ route('branch.customer.info') }}"),
+        //         data: {
+        //             phone: phone,
+        //         },
+        //         success: function(response) {
+
+        //             if (response.customerParcel == 0) {
+        //                 $('#p_complete').html("");
+        //                 $('#pending').html("");
+        //                 $('#p_pending').html("");
+        //                 $('#cancel').html("");
+        //                 $('#p_cancel').html("");
+        //                 $('#complete').html("New Customer");
+        //             } else {
+        //                 $('#complete').html(response.totalDeliveryComplete);
+        //                 $('#p_complete').html(response.percenrtComplete);
+        //                 $('#pending').html(response.totalDeliveryPending);
+        //                 $('#p_pending').html(response.percenrtPending);
+        //                 $('#cancel').html(response.totalDeliveryCancel);
+        //                 $('#p_cancel').html(response.percenrtCancel);
+        //             }
+        //             $('#customer_name').val(response.customer.customer_name);
+        //             $('#customer_address').val(response.customer.customer_address);
+        //             $('#customer_details').removeClass('d-none');
+
+
+        //         }
+        //     });
+        // });
+
+
+        // $('#customer_contact_number2').on('input', function() {
+
+        //     var phone = $("#customer_contact_number2").val();
+
+        //     $.ajax({
+        //         type: "GET",
+        //         url: ("{{ route('branch.customer.info') }}"),
+        //         data: {
+        //             phone2: phone,
+        //         },
+        //         success: function(response) {
+
+        //             if (response.customerParcel == 0) {
+        //                 $('#p_complete2').html("");
+        //                 $('#pending2').html("");
+        //                 $('#p_pending2').html("");
+        //                 $('#cancel2').html("");
+        //                 $('#p_cancel2').html("");
+        //                 $('#complete2').html("New Customer");
+        //                 //   $('#district_id2').val(0).change();
+        //                 //   $('#area_id2').val(0).change();
+        //             } else {
+        //                 $('#complete2').html(response.totalDeliveryComplete);
+        //                 $('#p_complete2').html(response.percenrtComplete);
+        //                 $('#pending2').html(response.totalDeliveryPending);
+        //                 $('#p_pending2').html(response.percenrtPending);
+        //                 $('#cancel2').html(response.totalDeliveryCancel);
+        //                 $('#p_cancel2').html(response.percenrtCancel);
+        //             }
+
+        //             // $('#customer_name').val(response.customer.customer_name);
+        //             // $('#customer_address').val(response.customer.customer_address);
+        //             // $('#district_id').val(response.customer.district_id).change();
+        //             // $('#customer_details').removeClass('d-none');
+        //             // setTimeout(function() {
+        //             //     $('#area_id').val(response.customer.area_id).change();
+        //             // }, 500);
+        //         }
+        //     });
+        // });
     </script>
     <!-- For getting customer Info -->
 
@@ -608,7 +691,7 @@
                 !--type: "GET",
                 -- >
                 <
-                !--url: ("{{ route('merchant.customer.info') }}"),
+                !--url: ("{{ route('branch.customer.info') }}"),
                 -- >
                 <
                 !--data: {
@@ -967,8 +1050,15 @@
 
         function createForm() {
             let district_id = $('#district_id').val();
+            let area_id = $('#area_id').val();
+
             if (district_id == '0') {
                 toastr.error("Please Select District..");
+                return false;
+            }
+
+            if (area_id == '0') {
+                toastr.error("Please Select Area..");
                 return false;
             }
 

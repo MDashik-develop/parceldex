@@ -765,7 +765,7 @@
         function createForm(event) {
 
             var trackingInputBox = $('#trackingBox').val();
-            if (trackingInputBox.length < 5) {
+            if (trackingInputBox.length < 4) {
                 toastMessage("Please Enter Valid Order Number", 'Error', 'error');
                 return false;
             }

@@ -212,13 +212,17 @@ class ParcelController extends Controller
         return DataTables::of($model)
             ->addIndexColumn()
             ->editColumn('parcel_invoice', function ($data) {
+                $x = '';
+
+                if ($data->suborder) {
+                    $x = '<br>Main Order:<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" parcel_id="' . $data->id . '"  title="Parcel View">
+                ' . $data->suborder . ' </button>';
+                }
                 // $date_time =  $data->date . " " . date("h:i A", strtotime($data->created_at));
                 $date_time =   $data->created_at->format('Y-m-d h:i A');
 
-                return '<a href="' . route('admin.parcel.orderTracking', $data->parcel_invoice) . '"
-                title="Parcel View">
-                    ' . $data->parcel_invoice . '
-                </a><br></span> <p><strong>Created: </strong>' . $date_time . '</p>';
+                return '<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" parcel_id="' . $data->id . '"  title="Parcel View">
+                ' . $data->parcel_invoice . ' </button><br></span> <p><strong></strong>' . $date_time . '</p>' . $x;
             })
             ->editColumn('parcel_status', function ($data) {
                 $date_time = '---';
@@ -237,7 +241,7 @@ class ParcelController extends Controller
                 $parcelStatus = returnParcelStatusForAdmin($data->status, $data->delivery_type, $data->payment_type);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
-                return '<span class="  text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong>Date: </strong>' . $date_time . '</p>';
+                return '<span class="  text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong></strong>' . $date_time . '</p>';
             })
             ->editColumn('payment_status', function ($data) {
                 // $return = "";
@@ -280,21 +284,25 @@ class ParcelController extends Controller
                         </button>';
                     }
 
-                    if ($data->status < 10) {
-                        $button .= '&nbsp; <button class="btn btn-danger pickup-cancel btn-sm" parcel_id="' . $data->id . '" title="Parcel Cancel">
-                                        <i class="far fa-window-close"></i>
-                                    </button>';
+                    // if (auth()->guard('admin')->user()->type == 1) {
+                        $button .= '&nbsp; <a href="' . route('admin.parcel.editParcel', $data->id) . '" class="btn btn-success btn-sm"> <i class="fa fa-edit"></i> </a>';
+                    // }
+                    // if ($data->status < 10) {
+                    //     $button .= '&nbsp; <button class="btn btn-danger pickup-cancel btn-sm" parcel_id="' . $data->id . '" title="Parcel Cancel">
+                    //                     <i class="far fa-window-close"></i>
+                    //                 </button>';
 
-                        $button .= '&nbsp;  <a class="btn btn-secondary btn-sm" href="' . route('admin.parcel.editParcel', $data->id) . '"   title="Parcel Edit">
-                                        <i class="fas fa-pencil-alt"></i>
-                                </a>';
-                    }
+                    //     $button .= '&nbsp;  <a class="btn btn-secondary btn-sm" href="' . route('admin.parcel.editParcel', $data->id) . '"   title="Parcel Edit">
+                    //                     <i class="fas fa-pencil-alt"></i>
+                    //             </a>';
+                    // }
                 }
                 return $button;
             })
             ->addColumn('parcel_info', function ($data) {
                 $parcel_info = '<p><strong>Merchant Order ID: </strong>' . $data->merchant_order_id . '</p>';
-                $parcel_info .= '<p><strong>Parcel OTP: </strong>' . $data->parcel_code . '</p>';
+                // $parcel_info .= '<p><strong>Parcel OTP: </strong>' . $data->parcel_code . '</p>';
+                $parcel_info .= '<p><strong>OTP: </strong>' . $data->parcel_otp . '</p>';
                 $parcel_info .= '<p><strong>Service Type: </strong>' . optional($data->service_type)->title . '</p>';
                 $parcel_info .= '<p><strong>Item Type: </strong>' . optional($data->item_type)->title . '</p>';
                 $parcel_info .= '<p><strong>Exchange: </strong>' . $data->exchange . '</p>';
@@ -337,11 +345,37 @@ class ParcelController extends Controller
             })
             ->addColumn('amount', function ($data) {
                 $amount = '<p><strong>Amount to be Collect: ৳ </strong>' . $data->total_collect_amount . '</p>';
-                $amount .= '<p><strong>Collected: ৳ </strong>' . $data->customer_collect_amount . '</p>';
+
+                if ($data->status == 21 || $data->status == 22) {
+                    $amount .= '<p><strong>Collected: ৳ </strong>' . $data->customer_collect_amount . '</p>';
+                }
+
+                if ($data->status == 25) {
+
+                    if ($data->delivery_type == 1 || $data->delivery_type == 2) {
+                        $amount .= '<p><strong>Collected: ৳ </strong>' . $data->customer_collect_amount . '</p>';
+                    }
+
+                    if ($data->delivery_type == 4) {
+                        $amount .= '<p><strong>Collected: ৳ </strong>' . $data->cancel_amount_collection . '</p>';
+                    }
+                }
+
+                if ($data->status == 24) {
+                    $amount .= '<p><strong>Collected: ৳ </strong>' . $data->cancel_amount_collection . '</p>';
+                }
+
                 $amount .= '<p><strong>Delivery Charge:  ৳ </strong>' . $data->delivery_charge . '</p>';
                 // $amount .= '<p><strong>Delivery Charge: </strong>'.$data->total_charge.'</p>';
                 // $amount .= '<p><strong>COD Charge: </strong>'.$data->cod_charge.'</p>';
                 return $amount;
+
+                // $amount = '<p><strong>Amount to be Collect: ৳ </strong>' . $data->total_collect_amount . '</p>';
+                // $amount .= '<p><strong>Collected: ৳ </strong>' . $data->customer_collect_amount . '</p>';
+                // $amount .= '<p><strong>Delivery Charge:  ৳ </strong>' . $data->delivery_charge . '</p>';
+                // // $amount .= '<p><strong>Delivery Charge: </strong>'.$data->total_charge.'</p>';
+                // // $amount .= '<p><strong>COD Charge: </strong>'.$data->cod_charge.'</p>';
+                // return $amount;
             })
             ->addColumn('print', function ($data) {
                 return '<input type="checkbox" class="print-check" id="" value="' . $data->id . '"/>';
@@ -499,7 +533,7 @@ class ParcelController extends Controller
             ->orderBy('id', 'DESC')
             ->with('parcel_merchant_delivery_payment')
             ->get();
-            
+
         return view('admin.parcel.viewParcel', compact('parcel', 'parcelLogs', 'parcelBranchPaymentDeltails', 'parcelMerchantPaymentDeltails'));
     }
 
@@ -625,18 +659,18 @@ class ParcelController extends Controller
         ];
         //        dd($data);
 
+        $parcelOld = Parcel::find($parcel->id);
 
         $check = Parcel::where('id', $parcel->id)->update($data) ? true : false;
 
         $x = 'Update: ';
         $hasUpdated = false;
 
-        $parcelOld = Parcel::find($parcel->id);
-        $oldProduct_value = $parcelOld->product_value;
-        $newProduct_value = $request->input('product_value');
+        $oldProduct_value = floatval($parcelOld->product_value);
+        $newProduct_value = floatval($request->input('product_value'));
 
-        $oldTotal_collect_amount = $parcelOld->total_collect_amount;
-        $newTotal_collect_amount = $request->input('total_collect_amount');
+        $oldTotal_collect_amount = floatval($parcelOld->total_collect_amount);
+        $newTotal_collect_amount = floatval($request->input('total_collect_amount'));
 
         if ($check) {
             if ($oldProduct_value != $newProduct_value) {

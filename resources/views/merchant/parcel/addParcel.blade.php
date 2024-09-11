@@ -1,81 +1,86 @@
 @extends('layouts.merchant_layout.merchant_layout')
 
 @section('content')
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Add Parcel</h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('merchant.home') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Add Parcel</li>
-                </ol>
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Add Parcel</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ route('merchant.home') }}">Home</a></li>
+                        <li class="breadcrumb-item active">Add Parcel</li>
+                    </ol>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 mb-2">
-                <a href="{{ route('merchant.parcel.merchantBulkParcelImport') }}" class="btn btn-success float-right"
-                    style="margin-right: 20px;">
-                    <i class="fas fa-file-excel"></i> Merchant Bulk Parcel Import
-                </a>
-            </div>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 mb-2">
+                    <a href="{{ route('merchant.parcel.merchantBulkParcelImport') }}" class="btn btn-success float-right"
+                        style="margin-right: 20px;">
+                        <i class="fas fa-file-excel"></i> Merchant Bulk Parcel Import
+                    </a>
+                </div>
 
-            <div class="col-md-12">
-                <div class="card card-info">
-                    <div class="card-header">
-                        <h3 class="card-title">Add New Parcel </h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                                    class="fas fa-minus"></i>
-                            </button>
+                <div class="col-md-12">
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Add New Parcel </h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                        class="fas fa-minus"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="col-md-12">
-                            <form role="form" action="{{ route('merchant.parcel.store') }}" method="POST"
-                                enctype="multipart/form-data" onsubmit="return createForm()">
-                                @csrf
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="col-md-12">
-                                                <fieldset>
-                                                    <legend>Customer Information</legend>
-                                                    <div class="row">
+                        <div class="card-body">
+                            <div class="col-md-12">
+                                <form role="form" action="{{ route('merchant.parcel.store') }}" method="POST"
+                                    enctype="multipart/form-data" onsubmit="return createForm()">
+                                    @csrf
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="col-md-12">
+                                                    <fieldset>
+                                                        <legend>Customer Information</legend>
+                                                        <div class="row">
 
-                                                        <div class="col-md-12">
-                                                            <div class="form-group">
-                                                                <label for="customer_contact_number">Customer
-                                                                    Contact Number <code>*</code></label>
-                                                                <input type="text" name="customer_contact_number"
-                                                                    id="customer_contact_number"
-                                                                    value="{{ old('customer_contact_number') }}"
-                                                                    class="form-control"
-                                                                    placeholder="Customer Contact Number" required>
-                                                            </div>
-                                                        </div>
-
-                                                        <span class="font-weight-bold text-success" id="complete"
-                                                            style="margin-right: 5px; margin-left: 20px;"> </span> <span class="font-weight-bold text-success"
-                                                            id="p_complete" style="margin-right: 10px;"></span>
-
-                                                        <span class="font-weight-bold text-warning" id="pending" style="margin-right: 5px;"></span> <span class="font-weight-bold text-warning"
-                                                            id="p_pending" style="margin-right: 10px;"></span>
-
-                                                        <span class="font-weight-bold text-danger" id="cancel" style="margin-right: 5px;"></span> <span class="font-weight-bold text-danger"
-                                                            id="p_cancel"></span>
-
-                                                        
                                                             <div class="col-md-12">
                                                                 <div class="form-group">
-                                                                    <label for="customer_contact_number2">Customer Alternative
+                                                                    <label for="customer_contact_number">Customer
+                                                                        Contact Number <code>*</code></label>
+                                                                    <input type="text" name="customer_contact_number"
+                                                                        id="customer_contact_number"
+                                                                        value="{{ old('customer_contact_number') }}"
+                                                                        class="form-control"
+                                                                        placeholder="Customer Contact Number" required>
+                                                                </div>
+                                                            </div>
+
+                                                            <span class="font-weight-bold text-success" id="complete"
+                                                                style="margin-right: 5px; margin-left: 20px;"> </span> <span
+                                                                class="font-weight-bold text-success" id="p_complete"
+                                                                style="margin-right: 10px;"></span>
+
+                                                            <span class="font-weight-bold text-warning" id="pending"
+                                                                style="margin-right: 5px;"></span> <span
+                                                                class="font-weight-bold text-warning" id="p_pending"
+                                                                style="margin-right: 10px;"></span>
+
+                                                            <span class="font-weight-bold text-danger" id="cancel"
+                                                                style="margin-right: 5px;"></span> <span
+                                                                class="font-weight-bold text-danger" id="p_cancel"></span>
+
+
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="customer_contact_number2">Customer
+                                                                        Alternative
                                                                         Contact Number</label>
                                                                     <input type="text" name="customer_contact_number2"
                                                                         id="customer_contact_number2"
@@ -84,60 +89,64 @@
                                                                         placeholder="Customer Alternative Contact Number">
                                                                 </div>
                                                             </div>
-    
+
                                                             <span class="font-weight-bold text-success" id="complete2"
-                                                            style="margin-right: 5px; margin-left: 20px;"> </span> <span class="font-weight-bold text-success"
-                                                            id="p_complete2" style="margin-right: 10px;"></span>
+                                                                style="margin-right: 5px; margin-left: 20px;"> </span> <span
+                                                                class="font-weight-bold text-success" id="p_complete2"
+                                                                style="margin-right: 10px;"></span>
 
-                                                            <span class="font-weight-bold text-warning" id="pending2" style="margin-right: 5px;"></span> <span class="font-weight-bold text-warning"
-                                                            id="p_pending2" style="margin-right: 10px;"></span>
+                                                            <span class="font-weight-bold text-warning" id="pending2"
+                                                                style="margin-right: 5px;"></span> <span
+                                                                class="font-weight-bold text-warning" id="p_pending2"
+                                                                style="margin-right: 10px;"></span>
 
-                                                            <span class="font-weight-bold text-danger" id="cancel2" style="margin-right: 5px;"></span> <span class="font-weight-bold text-danger"
-                                                            id="p_cancel2"></span>
+                                                            <span class="font-weight-bold text-danger" id="cancel2"
+                                                                style="margin-right: 5px;"></span> <span
+                                                                class="font-weight-bold text-danger" id="p_cancel2"></span>
 
 
 
 
 
-                                                        <div class="col-md-12">
-                                                            <div class="form-group">
-                                                                <label for="customer_name">Customer Name
-                                                                    <code>*</code></label>
-                                                                <input type="text" name="customer_name"
-                                                                    id="customer_name"
-                                                                    value="{{ old('customer_name') }}"
-                                                                    class="form-control" placeholder="Customer Name"
-                                                                    required>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="customer_name">Customer Name
+                                                                        <code>*</code></label>
+                                                                    <input type="text" name="customer_name"
+                                                                        id="customer_name"
+                                                                        value="{{ old('customer_name') }}"
+                                                                        class="form-control" placeholder="Customer Name"
+                                                                        required>
+                                                                </div>
                                                             </div>
-                                                        </div>
 
 
-                                                        <div class="col-md-12">
-                                                            <div class="form-group">
-                                                                <label for="customer_address">Customer Address
-                                                                    <code>*</code></label>
-                                                                <input type="text" name="customer_address"
-                                                                    id="customer_address"
-                                                                    value="{{ old('customer_address') }}"
-                                                                    class="form-control" placeholder="Customer Address"
-                                                                    required>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="customer_address">Customer Address
+                                                                        <code>*</code></label>
+                                                                    <input type="text" name="customer_address"
+                                                                        id="customer_address"
+                                                                        value="{{ old('customer_address') }}"
+                                                                        class="form-control"
+                                                                        placeholder="Customer Address" required>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-md-6 col-sm-12">
-                                                            <div class="form-group">
-                                                                <label for="district_id"> Districts <code>*</code>
-                                                                </label>
-                                                                <select name="district_id" id="district_id"
-                                                                    class="form-control select2" style="width: 100%">
-                                                                    <option value="0">Select District</option>
-                                                                    @foreach ($districts as $district)
-                                                                    <option value="{{ $district->id }}">{{
-                                                                        $district->name }}</option>
-                                                                    @endforeach
-                                                                </select>
+                                                            <div class="col-md-6 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label for="district_id"> Districts <code>*</code>
+                                                                    </label>
+                                                                    <select name="district_id" id="district_id"
+                                                                        class="form-control select2" style="width: 100%">
+                                                                        <option value="0">Select District</option>
+                                                                        @foreach ($districts as $district)
+                                                                            <option value="{{ $district->id }}">
+                                                                                {{ $district->name }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        {{-- <div class="col-md-4 col-sm-12">
+                                                            {{-- <div class="col-md-4 col-sm-12">
                                                             <div class="form-group">
                                                                 <label for="upazila_id"> Thana/Upazila <code>*</code>
                                                                 </label>
@@ -148,20 +157,147 @@
                                                                 </select>
                                                             </div>
                                                         </div> --}}
-                                                        <div class="col-md-6 col-sm-12">
-                                                            <div class="form-group">
-                                                                <label for="area_id"> Area <code></code></label>
-                                                                <select name="area_id" id="area_id"
-                                                                    class="form-control select2" style="width: 100%"
-                                                                    disabled>
-                                                                    <option value="0">Select Area</option>
-                                                                </select>
+                                                            <div class="col-md-6 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label for="area_id"> Area <code>*</code></label>
+                                                                    <select name="area_id" id="area_id"
+                                                                        class="form-control select2" style="width: 100%"
+                                                                        disabled>
+                                                                        <option value="">Select Area</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </fieldset>
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <fieldset>
+                                                        <input type="hidden" id="merchant_full_address"
+                                                            value="{{ $merchant->address }}">
+                                                        <input type="hidden" id="merchant_business_address"
+                                                            value="{{ $merchant->business_address }}">
+                                                        <legend>Parcel Charge</legend>
+                                                        <table class="table ">
+                                                           
+                                                            <tr>
+                                                                <th style="width: 40%">Weight Package</th>
+                                                                <td style="width: 10%"> :</td>
+                                                                <td style="width: 50%">
+                                                                    <span id="view_weight_package">Not Confirm </span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="width: 40%">Service Type</th>
+                                                                <td style="width: 10%"> :</td>
+                                                                <td style="width: 50%">
+                                                                    <span id="view_service_type">Not Confirm </span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="width: 40%">Item Type</th>
+                                                                <td style="width: 10%"> :</td>
+                                                                <td style="width: 50%">
+                                                                    <span id="view_item_type">Not Confirm </span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="width: 40%">Collection Amount</th>
+                                                                <td style="width: 10%"> :</td>
+                                                                <td style="width: 50%">
+                                                                    <span id="view_collection_amount">0.00</span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="width: 40%">Cod Percent</th>
+                                                                <td style="width: 10%"> :</td>
+                                                                <td style="width: 50%">
+                                                                    <span id="view_cod_percent">
+                                                                        @php
+                                                                            $cod_percent = $merchant->cod_charge
+                                                                                ? $merchant->cod_charge
+                                                                                : 0;
+                                                                        @endphp
+                                                                        0 %
+                                                                    </span>
+                                                                    <input type="hidden" id="confirm_cod_percent"
+                                                                        name="cod_percent" value="0">
+                                                                    <input type="hidden" id="confirm_merchant_cod_percent"
+                                                                        value="{{ $cod_percent }}">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="width: 40%">Weight Charge</th>
+                                                                <td style="width: 10%"> :</td>
+                                                                <td style="width: 50%">
+                                                                    <span id="view_weight_package_charge">0.00</span>
+                                                                    <input type="hidden" id="confirm_weight_package_charge"
+                                                                        name="weight_package_charge" value="0">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="width: 40%">Cod Charge</th>
+                                                                <td style="width: 10%"> :</td>
+                                                                <td style="width: 50%">
+                                                                    <span id="view_cod_charge">0.00</span>
+                                                                    <input type="hidden" id="confirm_cod_charge"
+                                                                        name="cod_charge" value="0">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="width: 40%">Delivery Charge</th>
+                                                                <td style="width: 10%"> :</td>
+                                                                <td style="width: 50%">
+                                                                    <span id="view_delivery_charge">0.00</span>
+                                                                    <input type="hidden" id="confirm_delivery_charge"
+                                                                        name="delivery_charge" value="0">
+                                                                    <input type="hidden"
+                                                                        id="confirm_merchant_service_area_charge"
+                                                                        name="merchant_service_area_charge" value="0">
+                                                                    <input type="hidden"
+                                                                        id="confirm_merchant_service_area_return_charge"
+                                                                        name="merchant_service_area_return_charge"
+                                                                        value="0">
+                                                                    <input type="hidden"
+                                                                        id="only_merchant_service_area_charge"
+                                                                        name="only_merchant_service_area_charge"
+                                                                        value="0">
+    
+                                                                    <input type="hidden" id="item_type_charge"
+                                                                        name="item_type_charge" value="0">
+                                                                    <input type="hidden" id="service_type_charge"
+                                                                        name="service_type_charge" value="0">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="width: 40%">Total Charge</th>
+                                                                <td style="width: 10%"> :</td>
+                                                                <td style="width: 50%">
+                                                                    <span id="view_total_charge">0.00</span>
+                                                                    <input type="hidden" id="confirm_total_charge"
+                                                                        name="total_charge" value="0">
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </fieldset>
+    
+                                                </div>
+                                                <div class="col-md-12 text-center">
+                                                    <input type="hidden" name="select_pickup_address"
+                                                        id="select_pickup_address" value="1">
+                                                    <input type="hidden" name="delivery_option_id"
+                                                        id="delivery_option_id" value="1">
+                                                    <input type="hidden" name="pickup_address" id="pickup_address"
+                                                        value="{{ $merchant->address }}">
+
+                                                    <button type="submit" class="btn btn-success">Submit</button>
+                                                    <button type="reset" class="btn btn-primary">Reset</button>
+                                                </div>
                                             </div>
-                                            <div class="col-md-12">
+
+                                            <div class="col-md-6">
+                                               
+
+
                                                 <fieldset>
                                                     <legend>Parcel Information</legend>
                                                     <div class="row">
@@ -177,105 +313,10 @@
                                                             </div>
                                                         </div>
 
-
-                                                        <!--<div class="col-md-6">-->
-                                                        <!--    <div class="form-group">-->
-                                                        <!--        <label for="shop_id"> Select Shop <code></code>-->
-                                                        <!--        </label>-->
-                                                        <!--        <select name="shop_id" id="shop_id"-->
-                                                        <!--                class="form-control select2"-->
-                                                        <!--                style="width: 100%">-->
-                                                        <!--            <option value="0">---- Select ----</option>-->
-                                                        <!--            @if(count($merchantShops) > 0)-->
-                                                        <!--                @foreach ($merchantShops as $shop)-->
-                                                        <!--                    <option value="{{ $shop->id }}"-->
-                                                        <!--                            data-shop_address="{{ $shop->shop_address }}">{{ $shop->shop_name }}</option>-->
-                                                        <!--                @endforeach-->
-                                                        <!--            @endif-->
-                                                        <!--        </select>-->
-
-                                                        <!--    </div>-->
-                                                        <!--</div>-->
-
-                                                        {{-- <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="select_pickup_address"> Select Pickup
-                                                                    Address </label>
-                                                                <select name="select_pickup_address"
-                                                                    id="select_pickup_address"
-                                                                    class="form-control select2" style="width: 100%">
-                                                                    <option value="0">---- Select ----</option>
-                                                                    <option value="1">Business Address</option>
-                                                                    <option value="2">Full Address </option>
-                                                                </select>
-                                                            </div>
-                                                        </div> --}}
-
-                                                        {{-- <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="pickup_address">Pickup Address </label>
-                                                                <input type="text" name="pickup_address"
-                                                                    id="pickup_address"
-                                                                    value="{{ old('pickup_address') }}"
-                                                                    class="form-control" placeholder="Pickup Address"
-                                                                    required>
-                                                            </div>
-                                                        </div> --}}
-
-
-                                                        <!--<div class="col-md-12 col-sm-12">-->
-                                                        <!--    <div class="form-group">-->
-                                                        <!--        <label for="service_type_id"> Service Type-->
-                                                        <!--            <code></code></label>-->
-                                                        <!--        <select name="service_type_id" id="service_type_id"-->
-                                                        <!--                class="form-control select2"-->
-                                                        <!--                style="width: 100%" disabled>-->
-                                                        <!--            <option value="0">Select Service Type</option>-->
-                                                        <!--        </select>-->
-                                                        <!--    </div>-->
-                                                        <!--</div>-->
-                                                        <!--<div class="col-md-6 col-sm-12">-->
-                                                        <!--    <div class="form-group">-->
-                                                        <!--        <label for="item_type_id"> Item Type-->
-                                                        <!--            <code>*</code></label>-->
-                                                        <!--        <select name="item_type_id" id="item_type_id"-->
-                                                        <!--                class="form-control select2"-->
-                                                        <!--                style="width: 100%" disabled>-->
-                                                        <!--            <option value="0">Select Item Type</option>-->
-                                                        <!--        </select>-->
-                                                        <!--    </div>-->
-                                                        <!--</div>-->
-
-                                                        
-                                                        {{-- <div class="col-md-6 col-sm-12">
-                                                            <div class="form-group">
-                                                                <label for="delivery_option_id"> Delivery Option
-                                                                    <code>*</code> </label>
-                                                                <select name="delivery_option_id"
-                                                                    id="delivery_option_id" class="form-control select2"
-                                                                    style="width: 100%">
-                                                                    <option value="1">Cash On Delivery</option>
-                                                                    <option value="2">Bkash </option>
-                                                                    <option value="3">Bank </option>
-                                                                    <option value="4">Card </option>
-                                                                </select>
-                                                            </div>
-                                                        </div> --}}
-                                                        {{-- <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="product_details">Product(s) Brief
-                                                                    <code>*</code> </label>
-                                                                <input type="text" name="product_details"
-                                                                    id="product_details"
-                                                                    value="{{ old('product_details') }}"
-                                                                    class="form-control" placeholder="Product Details "
-                                                                    required>
-                                                            </div>
-                                                        </div> --}}
-                                                        
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="total_collect_amount">Amount to be  Collect<code>*</code></label>
+                                                                <label for="total_collect_amount">Amount to be
+                                                                    Collect<code>*</code></label>
                                                                 <input type="number" name="total_collect_amount"
                                                                     id="total_collect_amount"
                                                                     value="{{ old('total_collect_amount') }}"
@@ -290,21 +331,23 @@
                                                                 <input type="number" name="product_value"
                                                                     id="product_value"
                                                                     value="{{ old('product_value') }}"
-                                                                    class="form-control" placeholder="1200.00" min="1"
-                                                                    required>
+                                                                    class="form-control" placeholder="1200.00"
+                                                                    min="1" required>
                                                             </div>
                                                         </div>
 
-                                                        
+
 
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="weight_package_id">Product Weight
                                                                     <code>*</code> </label>
-                                                                <select name="weight_package_id" id="weight_package_id"
+                                                                <select name="weight_package_id"
+                                                                    id="weight_package_id"
                                                                     class="form-control select2" style="width: 100%"
                                                                     disabled>
-                                                                    <option value="0" data-charge="0">Select Product Weight
+                                                                    <option value="0" data-charge="0">Select
+                                                                        Product Weight
                                                                     </option>
                                                                 </select>
                                                             </div>
@@ -312,10 +355,10 @@
 
                                                         <div class="col-md-6 col-sm-12">
                                                             <div class="form-group">
-                                                                <label for="weight_package_id">Exchange
+                                                                <label for="">Exchange
                                                                     <code>*</code> </label>
-                                                                <select name="exchange"
-                                                                    class="form-control select2" style="width: 100%">
+                                                                <select name="exchange" class="form-control select2"
+                                                                    style="width: 100%">
                                                                     <option value="yes">Yes
                                                                     </option>
                                                                     <option selected value="no">No
@@ -323,7 +366,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        
+
 
                                                         <div class="col-md-12">
                                                             <div class="form-group">
@@ -331,297 +374,198 @@
                                                                 <input type="text" name="product_details"
                                                                     id="product_details"
                                                                     value="{{ old('product_details') }}"
-                                                                    class="form-control" placeholder="product details">
+                                                                    class="form-control"
+                                                                    placeholder="product details">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="form-group">
                                                                 <label for="parcel_note">Remark</label>
-                                                                <textarea name="parcel_note" id="parcel_note"
-                                                                    class="form-control"
-                                                                    placeholder="Parcel Remark"></textarea>
+                                                                <textarea name="parcel_note" id="parcel_note" class="form-control" placeholder="Parcel Remark"></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </fieldset>
+                                                
                                             </div>
-                                            <div class="col-md-12 text-center">
-                                                <input type="hidden" name="select_pickup_address"
-                                                    id="select_pickup_address" value="1">
-                                                <input type="hidden" name="delivery_option_id" id="delivery_option_id"
-                                                    value="1">
-                                                <input type="hidden" name="pickup_address" id="pickup_address"
-                                                    value="{{ $merchant->address }}">
-
-                                                <button type="submit" class="btn btn-success">Submit</button>
-                                                <button type="reset" class="btn btn-primary">Reset</button>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <fieldset>
-                                                <input type="hidden" id="merchant_full_address"
-                                                    value="{{ $merchant->address }}">
-                                                <input type="hidden" id="merchant_business_address"
-                                                    value="{{ $merchant->business_address }}">
-                                                <legend>Parcel Charge</legend>
-                                                <table class="table ">
-                                                    {{-- <tr>
-                                                        <th style="width: 40%">Branch </th>
-                                                        <td style="width: 10%"> : </td>
-                                                        <td style="width: 50%"> {{ $merchant->branch->name }} </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="width: 40%">Branch Contact Number</th>
-                                                        <td style="width: 10%"> : </td>
-                                                        <td style="width: 50%"> {{ $merchant->branch->contact_number }}
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="width: 40%">Branch Address</th>
-                                                        <td style="width: 10%"> : </td>
-                                                        <td style="width: 50%"> {{ $merchant->branch->address }} </td>
-                                                    </tr> --}}
-                                                    <tr>
-                                                        <th style="width: 40%">Weight Package</th>
-                                                        <td style="width: 10%"> :</td>
-                                                        <td style="width: 50%">
-                                                            <span id="view_weight_package">Not Confirm </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="width: 40%">Service Type</th>
-                                                        <td style="width: 10%"> :</td>
-                                                        <td style="width: 50%">
-                                                            <span id="view_service_type">Not Confirm </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="width: 40%">Item Type</th>
-                                                        <td style="width: 10%"> :</td>
-                                                        <td style="width: 50%">
-                                                            <span id="view_item_type">Not Confirm </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="width: 40%">Collection Amount</th>
-                                                        <td style="width: 10%"> :</td>
-                                                        <td style="width: 50%">
-                                                            <span id="view_collection_amount">0.00</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="width: 40%">Cod Percent</th>
-                                                        <td style="width: 10%"> :</td>
-                                                        <td style="width: 50%">
-                                                            <span id="view_cod_percent">
-                                                                @php
-                                                                $cod_percent = ($merchant->cod_charge )?
-                                                                $merchant->cod_charge :0;
-                                                                @endphp
-                                                                0 %
-                                                            </span>
-                                                            <input type="hidden" id="confirm_cod_percent"
-                                                                name="cod_percent" value="0">
-                                                            <input type="hidden" id="confirm_merchant_cod_percent"
-                                                                value="{{ $cod_percent }}">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="width: 40%">Weight Charge</th>
-                                                        <td style="width: 10%"> :</td>
-                                                        <td style="width: 50%">
-                                                            <span id="view_weight_package_charge">0.00</span>
-                                                            <input type="hidden" id="confirm_weight_package_charge"
-                                                                name="weight_package_charge" value="0">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="width: 40%">Cod Charge</th>
-                                                        <td style="width: 10%"> :</td>
-                                                        <td style="width: 50%">
-                                                            <span id="view_cod_charge">0.00</span>
-                                                            <input type="hidden" id="confirm_cod_charge"
-                                                                name="cod_charge" value="0">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="width: 40%">Delivery Charge</th>
-                                                        <td style="width: 10%"> :</td>
-                                                        <td style="width: 50%">
-                                                            <span id="view_delivery_charge">0.00</span>
-                                                            <input type="hidden" id="confirm_delivery_charge"
-                                                                name="delivery_charge" value="0">
-                                                            <input type="hidden"
-                                                                id="confirm_merchant_service_area_charge"
-                                                                name="merchant_service_area_charge" value="0">
-                                                            <input type="hidden"
-                                                                id="confirm_merchant_service_area_return_charge"
-                                                                name="merchant_service_area_return_charge" value="0">
-                                                            <input type="hidden" id="only_merchant_service_area_charge"
-                                                                name="only_merchant_service_area_charge" value="0">
-
-                                                            <input type="hidden" id="item_type_charge"
-                                                                name="item_type_charge" value="0">
-                                                            <input type="hidden" id="service_type_charge"
-                                                                name="service_type_charge" value="0">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="width: 40%">Total Charge</th>
-                                                        <td style="width: 10%"> :</td>
-                                                        <td style="width: 50%">
-                                                            <span id="view_total_charge">0.00</span>
-                                                            <input type="hidden" id="confirm_total_charge"
-                                                                name="total_charge" value="0">
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </fieldset>
                                         </div>
                                     </div>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @push('style_css')
-<style>
-    .table td,
-    .table th {
-        padding: .1rem !important;
-    }
-</style>
-<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    <style>
+        .table td,
+        .table th {
+            padding: .1rem !important;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endpush
 
 @push('script_js')
-<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 
 
-<!-- For getting customer Info -->
-<script>
-    $('#customer_contact_number').on('input', function () {
-                
-                var phone = $("#customer_contact_number").val();
-                
-                $.ajax({
-                    type: "GET",
-                    url: ("{{route('merchant.customer.info')}}"),
-                    data: {
-                        phone: phone,
-                    },
-                    success: function (response) {
-                      
-                        if(response.customerParcel==0){
-                          $('#p_complete').html("");
-                          $('#pending').html("");
-                          $('#p_pending').html("");
-                          $('#cancel').html("");
-                          $('#p_cancel').html("");
-                          $('#complete').html("New Customer");
-                          $('#district_id').val(0).change();
-                          $('#area_id').val(0).change();
-                        }else{
-                            $('#complete').html(response.totalDeliveryComplete);
-                            $('#p_complete').html(response.percenrtComplete);
-                            $('#pending').html(response.totalDeliveryPending);
-                            $('#p_pending').html(response.percenrtPending);
-                            $('#cancel').html(response.totalDeliveryCancel);
-                            $('#p_cancel').html(response.percenrtCancel);
-                        }
-                            $('#customer_name').val(response.customer.customer_name);
-                            $('#customer_address').val(response.customer.customer_address);
-                            $('#district_id').val(response.customer.district_id).change();
-                            $('#customer_details').removeClass('d-none');
-                            setTimeout(function() {
-                                $('#area_id').val(response.customer.area_id).change();
-                            }, 500);
-                    
-                        
+    <!-- For getting customer Info -->
+    <script>
+        $('#customer_contact_number').on('input', function() {
+
+            var phone = $("#customer_contact_number").val();
+
+            $.ajax({
+                type: "GET",
+                url: ("{{ route('merchant.customer.info') }}"),
+                data: {
+                    phone: phone,
+                },
+                success: function(response) {
+
+                    if (response.customerParcel == 0) {
+                        $('#p_complete').html("");
+                        $('#pending').html("");
+                        $('#p_pending').html("");
+                        $('#cancel').html("");
+                        $('#p_cancel').html("");
+                        $('#complete').html("New Customer");
+                        $('#district_id').val(0).change();
+                        $('#area_id').val(0).change();
+                    } else {
+                        $('#complete').html(response.totalDeliveryComplete);
+                        $('#p_complete').html(response.percenrtComplete);
+                        $('#pending').html(response.totalDeliveryPending);
+                        $('#p_pending').html(response.percenrtPending);
+                        $('#cancel').html(response.totalDeliveryCancel);
+                        $('#p_cancel').html(response.percenrtCancel);
                     }
-                });
+                    $('#customer_name').val(response.customer.customer_name);
+                    $('#customer_address').val(response.customer.customer_address);
+                    $('#district_id').val(response.customer.district_id).change();
+                    $('#customer_details').removeClass('d-none');
+                    setTimeout(function() {
+                        $('#area_id').val(response.customer.area_id).change();
+                    }, 500);
+
+
+                }
             });
+        });
 
 
-            $('#customer_contact_number2').on('input', function () {
-                
-                var phone = $("#customer_contact_number2").val();
-                
-                $.ajax({
-                    type: "GET",
-                    url: ("{{route('merchant.customer.info')}}"),
-                    data: {
-                        phone2: phone,
-                    },
-                    success: function (response) {
-                      
-                        if (response.customerParcel==0) {
-                          $('#p_complete2').html("");
-                          $('#pending2').html("");
-                          $('#p_pending2').html("");
-                          $('#cancel2').html("");
-                          $('#p_cancel2').html("");
-                          $('#complete2').html("New Customer");
+        $('#customer_contact_number2').on('input', function() {
+
+            var phone = $("#customer_contact_number2").val();
+
+            $.ajax({
+                type: "GET",
+                url: ("{{ route('merchant.customer.info') }}"),
+                data: {
+                    phone2: phone,
+                },
+                success: function(response) {
+
+                    if (response.customerParcel == 0) {
+                        $('#p_complete2').html("");
+                        $('#pending2').html("");
+                        $('#p_pending2').html("");
+                        $('#cancel2').html("");
+                        $('#p_cancel2').html("");
+                        $('#complete2').html("New Customer");
                         //   $('#district_id2').val(0).change();
                         //   $('#area_id2').val(0).change();
-                        } else {
-                            $('#complete2').html(response.totalDeliveryComplete);
-                            $('#p_complete2').html(response.percenrtComplete);
-                            $('#pending2').html(response.totalDeliveryPending);
-                            $('#p_pending2').html(response.percenrtPending);
-                            $('#cancel2').html(response.totalDeliveryCancel);
-                            $('#p_cancel2').html(response.percenrtCancel);
-                        }
-
-                        // $('#customer_name').val(response.customer.customer_name);
-                        // $('#customer_address').val(response.customer.customer_address);
-                        // $('#district_id').val(response.customer.district_id).change();
-                        // $('#customer_details').removeClass('d-none');
-                        // setTimeout(function() {
-                        //     $('#area_id').val(response.customer.area_id).change();
-                        // }, 500);
+                    } else {
+                        $('#complete2').html(response.totalDeliveryComplete);
+                        $('#p_complete2').html(response.percenrtComplete);
+                        $('#pending2').html(response.totalDeliveryPending);
+                        $('#p_pending2').html(response.percenrtPending);
+                        $('#cancel2').html(response.totalDeliveryCancel);
+                        $('#p_cancel2').html(response.percenrtCancel);
                     }
-                });
+
+                    // $('#customer_name').val(response.customer.customer_name);
+                    // $('#customer_address').val(response.customer.customer_address);
+                    // $('#district_id').val(response.customer.district_id).change();
+                    // $('#customer_details').removeClass('d-none');
+                    // setTimeout(function() {
+                    //     $('#area_id').val(response.customer.area_id).change();
+                    // }, 500);
+                }
             });
-</script>
-<!-- For getting customer Info -->
+        });
+    </script>
+    <!-- For getting customer Info -->
 
 
 
-<!-- For getting customer Info -->
-<!--<script>-->
-<!--    $('#customer_contact_number').on('change', function () {-->
+    <!-- For getting customer Info -->
+    <!--<script>
+        -- >
+        <
+        !--$('#customer_contact_number').on('change', function() {
+            -- >
 
-<!--            var phone = $("#customer_contact_number").val();-->
+            <
+            !--
+            var phone = $("#customer_contact_number").val();
+            -- >
 
-<!--            $.ajax({-->
-<!--                type: "GET",-->
-<!--                url: ("{{route('merchant.customer.info')}}"),-->
-<!--                data: {-->
-<!--                    phone: phone,-->
-<!--                },-->
-<!--                success: function (response) {-->
-<!--                    $('#customer_name').val(response.customer_name);-->
-<!--                    $('#customer_address').val(response.customer_address);-->
-<!--                }-->
-<!--            });-->
-<!--        });-->
-<!--</script>-->
-<!-- For getting customer Info -->
+            <
+            !--$.ajax({
+                -- >
+                <
+                !--type: "GET",
+                -- >
+                <
+                !--url: ("{{ route('merchant.customer.info') }}"),
+                -- >
+                <
+                !--data: {
+                    -- >
+                    <
+                    !--phone: phone,
+                    -- >
+                    <
+                    !--
+                },
+                -- >
+                <
+                !--success: function(response) {
+                        -- >
+                        <
+                        !--$('#customer_name').val(response.customer_name);
+                        -- >
+                        <
+                        !--$('#customer_address').val(response.customer_address);
+                        -- >
+                        <
+                        !--
+                    }-- >
+                    <
+                    !--
+            });
+            -- >
+            <
+            !--
+        });
+        -- >
+        <
+        !--
+    </script>-->
+    <!-- For getting customer Info -->
 
 
 
-<script>
-    window.onload = function () {
-            $('#district_id').on('change', function () {
+    <script>
+        window.onload = function() {
+            $('#district_id').on('change', function() {
                 $("#view_delivery_charge").html(0);
                 $("#delivery_charge").val(0);
                 $("#confirm_weight_package_charge").val(0);
@@ -647,29 +591,35 @@
                         district_id: district_id,
                         _token: "{{ csrf_token() }}"
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         alert("An error occurred: " + xhr.status + " " + xhr.statusText);
                     },
                     url: "{{ route('merchant.returnMerchantUpazilaWeightPackageOptionAndCharge') }}",
-                    success: function (response) {
+                    success: function(response) {
                         if (response.success) {
                             // $("#upazila_id").html(response.upazilaOption).attr('disabled', false);
                             $("#area_id").html(response.areaOption).attr('disabled', false);
-                            $("#service_type_id").html(response.serviceTypeOption).attr('disabled', false);
-                            $("#item_type_id").html(response.itemTypeOption).attr('disabled', false);
-                            $("#weight_package_id").html(response.weightPackageOption).attr('disabled', false);
+                            $("#service_type_id").html(response.serviceTypeOption).attr('disabled',
+                                false);
+                            $("#item_type_id").html(response.itemTypeOption).attr('disabled',
+                                false);
+                            $("#weight_package_id").html(response.weightPackageOption).attr(
+                                'disabled', false);
 
                             // Delivery Charge Comes from Service Area default_charge Or Merchant Set Service Charge
                             $("#confirm_merchant_service_area_charge").val(response.charge);
-                            $("#confirm_merchant_service_area_return_charge").val(response.return_charge);
+                            $("#confirm_merchant_service_area_return_charge").val(response
+                                .return_charge);
 
                             // Delivery Charge Comes from Service Area default_charge Or Merchant Set Service Charge
                             $("#only_merchant_service_area_charge").val(response.charge);
                             $("#confirm_delivery_charge").val(response.charge);
-                            $("#view_delivery_charge").html(returnNumber(response.charge).toFixed(2));
+                            $("#view_delivery_charge").html(returnNumber(response.charge).toFixed(
+                                2));
                             // console.log((merchant_cod_percent != "" || merchant_cod_percent != "0") && response.cod_charge != 0);
 
-                            if (merchant_cod_percent != "" && merchant_cod_percent != "0" && response.cod_charge != 0) {
+                            if (merchant_cod_percent != "" && merchant_cod_percent != "0" &&
+                                response.cod_charge != 0) {
                                 $("#confirm_cod_percent").val(merchant_cod_percent);
                                 $("#view_cod_percent").html(merchant_cod_percent + "%");
                             } else {
@@ -705,7 +655,7 @@
             // });
 
             /** Pickup Address */
-            $("#shop_id").on("change", function () {
+            $("#shop_id").on("change", function() {
                 var shop_id = $(this).val();
                 var address = $("#shop_id option:selected").data("shop_address");
 
@@ -717,7 +667,7 @@
                 }
             });
 
-            $("#select_pickup_address").on("change", function () {
+            $("#select_pickup_address").on("change", function() {
 
                 var address_id = $(this).val();
                 var full_address = $("#merchant_full_address").val();
@@ -737,12 +687,13 @@
 
             });
 
-            $('#service_type_id').on('change', function () {
+            $('#service_type_id').on('change', function() {
                 var service_type_id = $("#service_type_id option:selected").val();
 
                 var old_delivery_charge = returnNumber($("#only_merchant_service_area_charge").val());
                 var item_type_charge = returnNumber($("#item_type_id option:selected").attr('data-charge'));
-                var service_type_charge = returnNumber($("#service_type_id option:selected").attr('data-charge'));
+                var service_type_charge = returnNumber($("#service_type_id option:selected").attr(
+                    'data-charge'));
                 var service_type_title = $("#service_type_id option:selected").text();
 
                 var charge = old_delivery_charge + item_type_charge + service_type_charge;
@@ -752,7 +703,7 @@
                 $("#item_type_charge").val(item_type_charge);
 
                 $("#view_service_type").html(service_type_title);
-                if (service_type_id==0){
+                if (service_type_id == 0) {
                     $("#view_service_type").html("Not Confirm");
                 }
 
@@ -762,11 +713,12 @@
                 calculate_total_charge();
             });
 
-            $('#item_type_id').on('change', function () {
+            $('#item_type_id').on('change', function() {
                 var item_type_id = $("#item_type_id option:selected").val();
                 var old_delivery_charge = returnNumber($("#only_merchant_service_area_charge").val());
                 var item_type_charge = returnNumber($("#item_type_id option:selected").attr('data-charge'));
-                var service_type_charge = returnNumber($("#service_type_id option:selected").attr('data-charge'));
+                var service_type_charge = returnNumber($("#service_type_id option:selected").attr(
+                    'data-charge'));
                 var item_type_title = $("#item_type_id option:selected").text();
 
                 var charge = old_delivery_charge + item_type_charge + service_type_charge;
@@ -777,18 +729,19 @@
                 $("#item_type_charge").val(item_type_charge);
 
                 $("#view_item_type").html(item_type_title);
-                if (item_type_id==0){
+                if (item_type_id == 0) {
                     $("#view_item_type").html("Not Confirm");
                 }
 
                 calculate_total_charge();
             });
 
-            $('#weight_package_id').on('change', function () {
+            $('#weight_package_id').on('change', function() {
                 var weight_package_id = $("#weight_package_id option:selected").val();
                 var weight_package_name = $("#weight_package_id option:selected").text();
                 var charge = returnNumber($("#weight_package_id option:selected").attr('data-charge'));
-                var merchant_service_area_charge = returnNumber($("#confirm_merchant_service_area_charge").val());
+                var merchant_service_area_charge = returnNumber($("#confirm_merchant_service_area_charge")
+                    .val());
 
                 // $("#confirm_weight_package_charge").val(charge);
                 // if(merchant_service_area_charge == 0){
@@ -809,7 +762,7 @@
             });
 
 
-            $('#total_collect_amount').keyup(function () {
+            $('#total_collect_amount').keyup(function() {
                 calculate_total_charge();
             });
         }
@@ -842,12 +795,22 @@
 
         function createForm() {
             let district_id = $('#district_id').val();
+            let area_id = $('#area_id').val();
+
             if (district_id == '0') {
                 toastr.error("Please Select District..");
                 $("#select2-district_id-container").parent().css('border-color', 'red');
                 return false;
             } else {
                 $("#select2-district_id-container").parent().css('border-color', '#ced4da');
+            }
+
+            if (area_id == '0') {
+                toastr.error("Please Select Area..");
+                $("#select2-area_id-container").parent().css('border-color', 'red');
+                return false;
+            } else {
+                $("#select2-area_id-container").parent().css('border-color', '#ced4da');
             }
 
 
@@ -889,5 +852,5 @@
                 $("#select2-district_id-container").parent().css('border-color', '#ced4da');
             }
         }
-</script>
+    </script>
 @endpush

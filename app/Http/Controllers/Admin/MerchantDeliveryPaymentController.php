@@ -141,14 +141,14 @@ class MerchantDeliveryPaymentController extends Controller
             ->addColumn('total_collect_amount', function ($data) {
                 $total_collect_amount = 0;
                 foreach ($data->parcel_merchant_delivery_payment_details as $v_data) {
-                    $total_collect_amount += $v_data->parcel->total_collect_amount;
+                    $total_collect_amount += $v_data?->parcel?->total_collect_amount;
                 }
                 return $total_collect_amount;
             })
             ->addColumn('customer_collect_amount', function ($data) {
                 $customer_collect_amount = 0;
                 foreach ($data->parcel_merchant_delivery_payment_details as $v_data) {
-                    $customer_collect_amount += $v_data->parcel->customer_collect_amount;
+                    $customer_collect_amount += $v_data?->parcel?->customer_collect_amount;
                 }
                 return $customer_collect_amount;
             })
@@ -156,8 +156,8 @@ class MerchantDeliveryPaymentController extends Controller
                 $total_charge = 0;
                 $total_return_charge = 0;
                 foreach ($data->parcel_merchant_delivery_payment_details as $v_data) {
-                    $total_charge += $v_data->parcel->total_charge;
-                    $total_return_charge += $v_data->parcel->return_charge;
+                    $total_charge += $v_data?->parcel?->total_charge;
+                    $total_return_charge += $v_data?->parcel?->return_charge;
                 }
                 return number_format($total_charge + $total_return_charge, 2);
                 // return $total_charge;
@@ -165,7 +165,7 @@ class MerchantDeliveryPaymentController extends Controller
             ->addColumn('return_charge', function ($data) {
                 $total_return_charge = 0;
                 foreach ($data->parcel_merchant_delivery_payment_details as $v_data) {
-                    $total_return_charge += $v_data->parcel->return_charge;
+                    $total_return_charge += $v_data?->parcel?->return_charge;
                 }
                 return number_format($total_return_charge, 2);
             })
@@ -256,6 +256,23 @@ class MerchantDeliveryPaymentController extends Controller
 
                         // $this->adminDashboardCounterEvent();
 
+                        $merchant_payment_invoice = $this->returnUniqueMerchantDeliveryPaymentInvoice();
+
+                        set_time_limit(1800);
+
+                        $parcelMerchantDeliveryPayment->load('admin', 'merchant', 'parcel_merchant_delivery_payment_details');
+                        $path = 'invoice_pdf/' . $merchant_payment_invoice  . '_' . now()->format('m-d-Y') . '.pdf';
+                        $pdfPath = storage_path($path);
+
+                        Pdf::loadView('admin.account.merchantDeliveryPayment.printMerchantDeliveryPaymentUpdated2', compact('parcelMerchantDeliveryPayment'))->save($pdfPath)->stream('download.pdf');
+
+
+                        Mail::to($merchant_user->email)->send(new MerchantPaymentInvoice($merchant_user, $parcelMerchantDeliveryPayment->total_payment_amount, $merchant_payment_invoice, $pdfPath));
+
+                        $message = "Dear valued Merchant, A Payment invoice " . $merchant_payment_invoice . " has been generated on " . now()->format('m-d-Y') . " and invoiced amount Tk " . $parcelMerchantDeliveryPayment->total_payment_amount . " has been paid. parceldex Ltd.";
+
+                        $this->send_sms($merchant_user->contact_number, $message);
+
                         $response = ['success' => 'Payment Confirmed Successfully'];
                     } else {
                         $response = ['error' => 'Database Error Found'];
@@ -281,13 +298,14 @@ class MerchantDeliveryPaymentController extends Controller
         $data['collapse'] = 'sidebar-collapse';
         $data['merchants'] = Merchant::whereHas('parcel', function ($query) {
             $query->whereRaw("
-                                    ((parcels.delivery_type in (1) AND parcels.payment_type in (2,6))
-                                    OR (parcels.delivery_type in (2) AND parcels.payment_type in (2,6))
-                                    OR (parcels.delivery_type in (4)  AND (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
-                                ");
+            ((parcels.delivery_type in (1) AND parcels.payment_type in (2,6))
+            OR (parcels.delivery_type in (2) AND parcels.payment_type in (2,6))
+            OR (parcels.delivery_type in (4)  AND (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
+            ");
         })
             ->get();
 
+        //session()->forget($admin_id);
 
         $data['parcels'] = Parcel::with([
             'merchant' => function ($query) {
@@ -302,23 +320,8 @@ class MerchantDeliveryPaymentController extends Controller
                 OR (parcels.delivery_type in (2) AND parcels.payment_type IN (2,6))
                 OR (parcels.delivery_type in (4) AND (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
             ")
-            ->select(
-                'id',
-                'parcel_invoice',
-                'merchant_order_id',
-                'customer_name',
-                'customer_contact_number',
-                'merchant_id',
-                'weight_package_id',
-                'customer_collect_amount',
-                'weight_package_charge',
-                'delivery_charge',
-                'delivery_type',
-                'merchant_service_area_return_charge',
-                'total_charge',
-                'cod_charge'
-            )
             ->get();
+
         return view('admin.account.merchantDeliveryPayment.merchantPaymentDeliveryGenerate', $data);
     }
 
@@ -409,22 +412,6 @@ class MerchantDeliveryPaymentController extends Controller
                     OR (delivery_type in (2) and payment_type in (2,6))
                     OR (delivery_type in (4) and (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
                 ")
-            ->select(
-                'id',
-                'parcel_invoice',
-                'merchant_order_id',
-                'customer_name',
-                'customer_contact_number',
-                'merchant_id',
-                'weight_package_id',
-                'customer_collect_amount',
-                'delivery_charge',
-                'delivery_type',
-                'merchant_service_area_return_charge',
-                'weight_package_charge',
-                'total_charge',
-                'cod_charge'
-            )
             ->get();
 
         if ($parcels->count() > 0) {
@@ -449,7 +436,8 @@ class MerchantDeliveryPaymentController extends Controller
                         if ($parcel->delivery_type == 4 || $parcel->delivery_type == 2) {
                             $returnCharge = $parcel_return_charges[$sl];
                         }
-                        $payable_amount = $parcel->customer_collect_amount - $parcel->weight_package_charge - $parcel->delivery_charge - $parcel_cod_charges[$sl] - $returnCharge;
+
+                        $payable_amount = ($parcel->customer_collect_amount + $parcel->cancel_amount_collection) - ($parcel->weight_package_charge + $parcel->delivery_charge + $parcel_cod_charges[$sl] + $returnCharge);
 
                         \Cart::session($admin_id)->add([
                             'id' => $cart_id,
@@ -600,11 +588,11 @@ class MerchantDeliveryPaymentController extends Controller
 
             set_time_limit(1800);
 
-            $parcelMerchantDeliveryPayment->load('admin', 'merchant', 'parcel_merchant_delivery_payment_details');
-            $path = 'invoice_pdf/' . $merchant_payment_invoice  . '_' . now()->format('Y-m-d') . '.pdf';
-            $pdfPath = storage_path($path);
+            // $parcelMerchantDeliveryPayment->load('admin', 'merchant', 'parcel_merchant_delivery_payment_details');
+            // $path = 'invoice_pdf/' . $merchant_payment_invoice  . '_' . now()->format('Y-m-d') . '.pdf';
+            // $pdfPath = storage_path($path);
 
-            Pdf::loadView('admin.account.merchantDeliveryPayment.printMerchantDeliveryPaymentUpdated2', compact('parcelMerchantDeliveryPayment'))->save($pdfPath)->stream('download.pdf');
+            // Pdf::loadView('admin.account.merchantDeliveryPayment.printMerchantDeliveryPaymentUpdated2', compact('parcelMerchantDeliveryPayment'))->save($pdfPath)->stream('download.pdf');
 
             // $pdf = PDF::loadView('admin.account.merchantDeliveryPayment.printMerchantDeliveryPayment', ['parcelMerchantDeliveryPayment' => $parcelMerchantDeliveryPayment]);
 
@@ -616,7 +604,7 @@ class MerchantDeliveryPaymentController extends Controller
             // return $this->markdown('admin.account.merchantDeliveryPayment.printMerchantDeliveryPayment', compact('parcelMerchantDeliveryPayment'));
 
             //Mail::to($merchant->email)->send(new MerchantPaymentInvoice($parcelMerchantDeliveryPayment));
-            Mail::to($merchant->email)->send(new MerchantPaymentInvoice($merchant, $total_payment_amount, $merchant_payment_invoice, $pdfPath));
+            // Mail::to($merchant->email)->send(new MerchantPaymentInvoice($merchant, $total_payment_amount, $merchant_payment_invoice, $pdfPath));
 
             $this->adminDashboardCounterEvent();
 

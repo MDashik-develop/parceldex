@@ -10,9 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
-class AuthController extends Controller {
+class AuthController extends Controller
+{
 
-    public function login() {
+    public function login()
+    {
 
         if (auth()->guard('merchant')->check()) {
             $this->setMessage('Login Successfully', 'success');
@@ -23,17 +25,21 @@ class AuthController extends Controller {
         return view('merchant.login', compact('application'));
     }
 
-    public function login_check(Request $request) {
-        $Validator = Validator::make($request->all(), [
-            'email'    => 'required|email',
-            'password' => 'required|min:5',
-        ],
+    public function login_check(Request $request)
+    {
+        $Validator = Validator::make(
+            $request->all(),
+            [
+                'email'    => 'required|email',
+                'password' => 'required|min:5',
+            ],
             [
                 'email.required'    => 'Email is Required',
                 'email.email'       => 'Email is Required',
                 'password.required' => 'Password is Required',
                 'password.min'      => 'Password is Required',
-            ]);
+            ]
+        );
 
         if ($Validator->fails()) {
             return redirect()->back()->withInput()->withErrors($Validator);
@@ -61,7 +67,8 @@ class AuthController extends Controller {
         return redirect()->route('merchant.home');
     }
 
-    public function forgotPassword() {
+    public function forgotPassword()
+    {
 
         if (auth()->guard('merchant')->check()) {
             $this->setMessage('Merchant Login Successfully', 'success');
@@ -72,10 +79,13 @@ class AuthController extends Controller {
         return view('merchant.forgotPassword', compact('application'));
     }
 
-    public function confirmForgotPassword(Request $request) {
-        $Validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-        ],
+    public function confirmForgotPassword(Request $request)
+    {
+        $Validator = Validator::make(
+            $request->all(),
+            [
+                'email' => 'required|email',
+            ],
             [
                 'email.required' => 'Email is Required',
                 'email.email'    => 'Email is not Valid Email',
@@ -116,10 +126,11 @@ class AuthController extends Controller {
             return redirect()->back()->withInput();
         }
 
-        return redirect()->back();
+        return redirect()->route('frontend.login');
     }
 
-    public function resetPassword(Request $request, $token) {
+    public function resetPassword(Request $request, $token)
+    {
 
         if (auth()->guard('merchant')->check()) {
             $this->setMessage('Login Successfully', 'success');
@@ -139,17 +150,21 @@ class AuthController extends Controller {
         return redirect()->route('frontend.home');
     }
 
-    public function confirmResetPassword(Request $request) {
-        $Validator = Validator::make($request->all(), [
-            'email'    => 'required|email',
-            'password' => 'required|min:5',
-        ],
+    public function confirmResetPassword(Request $request)
+    {
+        $Validator = Validator::make(
+            $request->all(),
+            [
+                'email'    => 'required|email',
+                'password' => 'required|min:5',
+            ],
             [
                 'email.required'    => 'Email is Required',
                 'email.email'       => 'Email is Required',
                 'password.required' => 'Password is Required',
                 'password.min'      => 'Password is minimum 5 Digit Required',
-            ]);
+            ]
+        );
 
         if ($Validator->fails()) {
             return redirect()->back()->withInput()->withErrors($Validator);
@@ -182,12 +197,10 @@ class AuthController extends Controller {
                     ]);
 
                 return redirect()->route('merchant.home');
-
             } else {
                 $this->setMessage('Login Failed', 'danger');
                 return redirect()->back()->withInput();
             }
-
         } else {
             $this->setMessage('This email not valid Merchant..', 'danger');
             return redirect()->back()->withInput();
@@ -196,18 +209,19 @@ class AuthController extends Controller {
         return redirect()->back();
     }
 
-    public function logout() {
+    public function logout()
+    {
         auth()->guard('merchant')->logout();
         $this->setMessage('Merchant Logout Successfully', 'success');
         return redirect()->route('frontend.login');
     }
 
-    public function home() {
+    public function home()
+    {
         $data               = [];
         $data['main_menu']  = 'home';
         $data['child_menu'] = 'home';
         $data['page_title'] = 'Home';
         return view('merchant.home', $data);
     }
-
 }

@@ -301,10 +301,11 @@ class ParcelController extends Controller
                 return $button;
             })
             ->addColumn('parcel_info', function ($data) {
+                $abc = is_null($data->parcel_otp) ? 'N/A' : $data->parcel_otp;
                 $date_time   = $data->date . " " . date("h:i A", strtotime($data->created_at));
                 $parcel_info = '<p><strong>Merchant Order ID: </strong>' . $data->merchant_order_id . '</p>';
                 // $parcel_info .= '<p><strong>Parcel OTP: </strong>' . $data->parcel_code . '</p>';
-                $parcel_info .= '<p><strong>OTP: </strong>' . $data->parcel_otp . '</p>';
+                $parcel_info .= '<p><strong>OTP: </strong>' . $abc . '</p>';
                 $parcel_info .= '<p><strong>Service Type: </strong>' . optional($data->service_type)->title . '</p>';
                 $parcel_info .= '<p><strong>Item Type: </strong>' . optional($data->item_type)->title . '</p>';
                 $parcel_info .= '<p><strong>Exchange: </strong>' . $data->exchange . '</p>';
@@ -571,10 +572,11 @@ class ParcelController extends Controller
                 return $button;
             })
             ->addColumn('parcel_info', function ($data) {
+                $abc = is_null($data->parcel_otp) ? 'N/A' : $data->parcel_otp;
                 $date_time   = $data->date . " " . date("h:i A", strtotime($data->created_at));
                 $parcel_info = '<p><strong>Merchant Order ID: </strong>' . $data->merchant_order_id . '</p>';
                 // $parcel_info .= '<p><strong>Parcel OTP: </strong>' . $data->parcel_code . '</p>';
-                $parcel_info .= '<p><strong>OTP: </strong>' . $data->parcel_otp . '</p>';
+                $parcel_info .= '<p><strong>OTP: </strong>' . $abc . '</p>';
                 $parcel_info .= '<p><strong>Service Type: </strong>' . optional($data->service_type)->title . '</p>';
                 $parcel_info .= '<p><strong>Item Type: </strong>' . optional($data->item_type)->title . '</p>';
                 $parcel_info .= '</span> <p><strong>Created: </strong>' . $date_time . '</p>';

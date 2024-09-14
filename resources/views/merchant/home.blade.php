@@ -284,11 +284,22 @@
                         {{-- <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-sync-alt"></i></span> --}}
 
                         <div class="info-box-content">
-                            <span class="info-box-number"> {{ $total_pending_parcel }} <sup><small
-                                        style="color: #007bff; font-size: 15px;">{{
+                            <span class="info-box-number"> {{ $total_pending_parcel }} 
+                                @if ( $counter_data['total_parcel'] > 0)
+                                <sup><small
+                                    style="color: #007bff; font-size: 15px;">{{
+                                        
+                                        number_format(($total_pending_parcel * 100) / $counter_data['total_parcel'], 2)
+                                        }}%</small></sup>
+                                @else
+                                <sup><small
+                                    style="color: #007bff; font-size: 15px;">{{
+                                        number_format(0, 2)
+                                        }}%</small></sup>
+                                @endif
                                             
-                                            number_format(($total_pending_parcel * 100) / $counter_data['total_parcel'], 2)
-                                            }}%</small></sup></span>
+                                        
+                                </span>
                             <h5 class="info-box-text">Parcel On Process</h5>
                             <a href="{{ route('merchant.parcel.filterList', 'pending_parcel') }}"
                                 class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
@@ -340,11 +351,20 @@
 
                         <div class="info-box-content">
                             <span class="info-box-number">{{ $counter_data['total_delivery_complete_parcel'] }}
+                                @if ($counter_data['total_parcel'] > 0)
                                 <sup><small
-                                        style="color: #007bff; font-size: 15px;">{{ 
-                                                                                
-                                        number_format(( $counter_data['total_delivery_complete_parcel'] * 100) / $counter_data['total_parcel'], 2)
-                                        }}%</small></sup>
+                                    style="color: #007bff; font-size: 15px;">{{ 
+                                                                            
+                                    number_format(($counter_data['total_delivery_complete_parcel'] * 100) / $counter_data['total_parcel'], 2)
+                                    }}%</small></sup>
+                                @else
+                                <sup><small
+                                    style="color: #007bff; font-size: 15px;">{{ 
+                                                                            
+                                    number_format(0, 2)}}%</small></sup>
+                                @endif
+                               
+
                             </span>
                             <h5 class="info-box-text">Total Delivered</h5>
                             <a href="{{ route('merchant.parcel.filterList', 'delivered_parcel') }}"
@@ -361,13 +381,26 @@
 
                         <div class="info-box-content">
                             <span class="info-box-number">{{ $counter_data['total_partial_delivery_complete_parcel'] }}
-                                <sup><small
-                                        style="color: #007bff; font-size: 15px;">{{ 
-                                                                                
-                                        
-                                        number_format(($counter_data['total_partial_delivery_complete_parcel'] * 100) /  $counter_data['total_parcel'], 2)
-                                        
-                                        }}%</small></sup></span>
+                               @if ($counter_data['total_parcel'] > 0)
+                               <sup><small
+                                style="color: #007bff; font-size: 15px;">{{ 
+                                                                        
+                                
+                                number_format(($counter_data['total_partial_delivery_complete_parcel'] * 100) /  $counter_data['total_parcel'], 2)
+                                
+                                }}%</small></sup></span>
+                               @else
+                               <sup><small
+                                style="color: #007bff; font-size: 15px;">{{ 
+                                                                        
+                                
+                                number_format(0, 2)
+                                
+                                }}%</small></sup></span> 
+                               @endif
+                                
+
+
                             <h5 class="info-box-text">Total Partial Delivered</h5>
                             <a href="{{ route('merchant.parcel.filterList', 'p_delivered_parcel') }}"
                                 class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
@@ -387,8 +420,19 @@
                         {{-- class="fa fa-exclamation-triangle"></i></span> --}}
 
                         <div class="info-box-content">
-                            <span class="info-box-number"> {{ $total_cancel_parcel }} <sup><small
-                                        style="color: #007bff; font-size: 15px;">{{ number_format(($total_cancel_parcel * 100) / $counter_data['total_parcel'], 2) }}%</small></sup></span>
+
+                            <span class="info-box-number"> {{ $total_cancel_parcel }}
+                                @if ($counter_data['total_parcel'] > 0)
+                                <sup><small
+                                    style="color: #007bff; font-size: 15px;">{{ number_format(( $total_cancel_parcel * 100) / $counter_data['total_parcel'], 2) }}%</small></sup>
+                                @else
+                                <sup><small
+                                    style="color: #007bff; font-size: 15px;">{{ number_format(0, 2) }}%</small></sup>
+                                @endif
+                                    
+                                    
+                                </span>
+
                             <h5 class="info-box-text">Total Cancelled</h5>
                             <a href="{{ route('merchant.parcel.filterList', 'cancelled_parcel') }}"
                                 class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
@@ -407,12 +451,25 @@
                         {{-- <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-sync-alt"></i></span> --}}
 
                         <div class="info-box-content">
-                            <span class="info-box-number"> {{ $total_pending_return }} <sup><small
-                                        style="color: #007bff; font-size: 15px;">{{ number_format(($total_pending_return * 100) / $total_cancel_parcel, 2)
+                            <span class="info-box-number"> {{ $total_pending_return }} 
+                                @if ($total_cancel_parcel > 0)
+                                <sup><small
+                                    style="color: #007bff; font-size: 15px;">{{ number_format(($total_pending_return * 100) / $total_cancel_parcel, 2)
+                                    
+                                
+                                     }}%</small></sup> 
+                                @else
+                                <sup><small
+                                    style="color: #007bff; font-size: 15px;">{{number_format(0, 2)
+                                    
+                                
+                                     }}%</small></sup>
+                                @endif
+                                
+                                         
                                         
                                         
-                                        
-                                         }}%</small></sup></span>
+                                        </span>
                             <h5 class="info-box-text">Return On Process</h5>
                             <a href="{{ route('merchant.parcel.filterList', 'return_process') }}"
                                 class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
@@ -429,12 +486,27 @@
                         {{-- <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-sync-alt"></i></span> --}}
 
                         <div class="info-box-content">
-                            <span class="info-box-number"> {{ $total_return }} <sup><small
-                                        style="color: #007bff; font-size: 15px;">{{ 
+                            <span class="info-box-number"> {{ $total_return }} 
+                                @if ($total_cancel_parcel > 0)
+                                <sup><small
+                                    style="color: #007bff; font-size: 15px;">{{ 
+                                        
+                                        number_format(($total_return * 100) / $total_cancel_parcel, 2)
+                                        
+                                         }}%</small></sup> 
+                                @else
+                                <sup><small
+                                    style="color: #007bff; font-size: 15px;">{{ 
+                                        
+                                        number_format(0, 2)
+                                        
+                                         }}%</small></sup>
+                                @endif
+                               
+                                             
                                             
-                                            number_format(($total_return * 100) / $total_cancel_parcel, 2)
                                             
-                                             }}%</small></sup></span>
+                                </span>
                             <h5 class="info-box-text">Total Returned</h5>
                             <a href="{{ route('merchant.parcel.filterList', 'pending_parcel') }}"
                                 class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>

@@ -1141,8 +1141,8 @@ class DeliveryRiderRunParcelController extends Controller
                                 $new_parcel->cod_percent = 0;
                                 $new_parcel->cod_charge = 0;
                                 $new_parcel->weight_package_charge = 0;
-                                $new_parcel->return_charge = $parcel->return_charge;
-                                $new_parcel->total_charge = $parcel->total_charge;
+                                $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
                                 $new_parcel->customer_collect_amount = 0;
                                 $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
                                 $new_parcel->delivery_date = now()->toDateString();

@@ -274,22 +274,28 @@ class HomeController extends Controller
         $p = Parcel::where('merchant_id', $merchant_id)
             ->where('status', '>=', 25)
             ->whereIn('delivery_type', [1, 2, 4])
-            ->whereIn('payment_type', [1, 2, 3, 6])
+            ->where(function ($query) {
+                $query->whereIn('payment_type', [1, 2, 3, 6])->orWhereNull('payment_type');
+            })
             ->sum('customer_collect_amount');
 
         $q = Parcel::where('merchant_id', $merchant_id)
             ->where('status', '>=', 25)
             ->whereIn('delivery_type', [1, 2, 4])
-            ->whereIn('payment_type', [1, 2, 3, 6])
+            ->where(function ($query) {
+                $query->whereIn('payment_type', [1, 2, 3, 6])->orWhereNull('payment_type');
+            })
             ->sum('cancel_amount_collection');
 
         $r = Parcel::where('merchant_id', $merchant_id)
             ->where('status', '>=', 25)
             ->whereIn('delivery_type', [1, 2, 4])
-            ->whereIn('payment_type', [1, 2, 3, 6])
+            ->where(function ($query) {
+                $query->whereIn('payment_type', [1, 2, 3, 6])->orWhereNull('payment_type');
+            })
             ->sum('total_charge');
 
-        $data['total_customer_collect_amount_due'] = ($p + $q) + $r;
+        $data['total_customer_collect_amount_due'] = ($p + $q) - $r;
 
         $data['total_to_be_collected']     = Parcel::where('merchant_id', $merchant_id)
             // ->whereNull('suborder')
@@ -356,7 +362,8 @@ class HomeController extends Controller
             ->count();
 
         $data['today_cancel_parcel']    = Parcel::where('merchant_id', $merchant_id)
-            ->whereRaw('delivery_type = ? and status in (?,?)', [4, 24, 25])
+            ->where('delivery_type', '4')
+            ->where('status', '>=', 24)
             ->whereRaw('delivery_branch_date = ? ', [date("Y-m-d")])
             ->whereNull('suborder')
             ->count();
@@ -397,18 +404,20 @@ class HomeController extends Controller
             ->where('status', 3)
             ->count();
 
-        // $data['total_pickup_pending']    = Parcel::where('merchant_id', $merchant_id)
-        //     ->whereNull('suborder')
-        //     ->whereIn('status', [1, 2, 4, 5, 6, 7, 8, 9])
-        //     ->count();
-
         $data['total_pickup_pending']    = Parcel::where('merchant_id', $merchant_id)
             ->whereNull('suborder')
-            ->whereRaw('status >= ? AND status <= ? AND status != ?', [1, 9, 3])
+            ->whereIn('status', [1, 2, 4, 5, 6, 7, 8, 9, 10])
+            ->count();
+
+
+        $data['today_total_picked_up']    = Parcel::where('merchant_id', $merchant_id)
+            ->where('pickup_branch_date', '=', now()->format('Y-m-d'))
+            ->whereNull('suborder')
             ->count();
 
         $data['today_total_pickup']    = Parcel::where('merchant_id', $merchant_id)
-            // ->whereRaw('pickup_branch_date = ? ', [date("Y-m-d")])
+            //->whereRaw('pickup_branch_date = ? ', [date("Y-m-d")])
+            ->where('pickup_branch_date', '=', now()->format('Y-m-d'))
             ->whereIn('status', [1, 2, 4])
             ->whereNull('suborder')
             ->count();
@@ -417,7 +426,7 @@ class HomeController extends Controller
             ->where('status', '>=', 25)
             ->whereIn('payment_type', [5])
             ->whereIn('delivery_type', [1, 2, 4])
-            ->whereNull('suborder')
+           // ->whereNull('suborder')
             ->sum('total_charge');
 
         $data['total_service_charge']      =  $minus1;

@@ -15,7 +15,10 @@ class HomeController extends Controller
         $merchant_id = auth()->guard('merchant_api')->user()->id;
 
         $data = [];
-        $data['total_parcel'] = Parcel::where('merchant_id', $merchant_id)
+        $data['total_pending_payment'] = Parcel::where('merchant_id', $merchant_id)
+            ->count();
+            
+            $data['total_parcel'] = Parcel::where('merchant_id', $merchant_id)
             ->count();
 
         $data['total_cancel_parcel'] = Parcel::where('merchant_id', $merchant_id)

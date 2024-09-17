@@ -9,6 +9,9 @@ Route::post('/merchant/confirmContactNumber', [App\Http\Controllers\API\Merchant
 Route::post('/merchant/forgotPassword', [App\Http\Controllers\API\Merchant\AuthController::class, 'forgotPassword'])->name('forgotPassword');
 Route::post('/merchant/confirmForgotPassword', [App\Http\Controllers\API\Merchant\AuthController::class, 'confirmForgotPassword'])->name('confirmForgotPassword');
 
+Route::post('/merchant/login', [App\Http\Controllers\API\Merchant\AuthController::class, 'login'])->name('login');
+
+
 
 Route::group(['middleware' => 'jwt', 'prefix' => 'merchant/'], function () {
     Route::post('/', [App\Http\Controllers\API\Merchant\AuthController::class, 'me']);
@@ -20,6 +23,13 @@ Route::group(['middleware' => 'jwt', 'prefix' => 'merchant/'], function () {
 
 
     Route::post('profileUpdate', [App\Http\Controllers\API\Merchant\AuthController::class, 'profileUpdate']);
+
+
+    //
+    Route::post('v1/addParcel', [App\Http\Controllers\API\Merchant\ParcelController::class, 'addParcel2']);
+    Route::post('v1/viewParcel', [App\Http\Controllers\API\Merchant\ParcelController::class, 'viewParcel2']);
+
+
 
 
     //================ Parcel ================================

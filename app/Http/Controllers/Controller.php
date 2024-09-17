@@ -952,14 +952,14 @@ class Controller extends BaseController
             ->where('status', '>=', 25)
             ->whereIn('payment_type', [5])
             ->whereIn('delivery_type', [1, 2, 4])
-            ->whereNull('suborder')
+            // ->whereNull('suborder')
             ->sum('customer_collect_amount');
 
         $plus2 = Parcel::where('merchant_id', $merchant_id)
             ->where('status', '>=', 25)
             ->whereIn('payment_type', [5])
             ->whereIn('delivery_type', [1, 2, 4])
-            ->whereNull('suborder')
+            // ->whereNull('suborder')
             ->sum('cancel_amount_collection');
 
 
@@ -967,7 +967,7 @@ class Controller extends BaseController
             ->where('status', '>=', 25)
             ->whereIn('payment_type', [5])
             ->whereIn('delivery_type', [1, 2, 4])
-            ->whereNull('suborder')
+            // ->whereNull('suborder')
             ->sum('total_charge');
 
         $data['total_collect_amount'] = ($plus1 + $plus2) - $minus1;

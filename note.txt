@@ -9,3 +9,9 @@ new migration:
 
 ---------------------------
 fix link for all panel from parcel list data table
+
+----------------
+will be nullable from parcel table
+
+customer_name
+ALTER TABLE `parcels` CHANGE `customer_name` `customer_name` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;

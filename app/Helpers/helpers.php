@@ -1140,7 +1140,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type)
             //$to_user    = "Pickup Branch : ".$parcelLog->pickup_branch->name;
         }
     } elseif ($status == 8) {
-        $sub_title = $parcelLog?->delivery_rider?->name . ' ' . $parcelLog->delivery_rider->r_id . '-' . $parcelLog->delivery_rider->branch->name . '-' . $parcelLog->delivery_rider->contact_number;
+        $sub_title = $parcelLog?->delivery_rider?->name . ' ' . $parcelLog->delivery_rider?->r_id . '-' . $parcelLog->delivery_rider?->branch?->name . '-' . $parcelLog->delivery_rider?->contact_number;
 
         $status_name  = "Rider Assigned for Pickup";
         //$status_name  = "On the way to Pickup";
@@ -1291,7 +1291,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type)
     } elseif ($status == 19) {
         $status_name  = "On the Way to Delivery";
         $class        = "success";
-        $sub_title = $parcelLog?->delivery_rider?->name . ' ' . $parcelLog->delivery_rider->r_id . '-' . $parcelLog->delivery_rider->branch->name . '-' . $parcelLog->delivery_rider->contact_number;
+        $sub_title = $parcelLog?->delivery_rider?->name . ' ' . $parcelLog->delivery_rider?->r_id . '-' . $parcelLog->delivery_rider?->branch?->name . '-' . $parcelLog->delivery_rider?->contact_number;
 
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;

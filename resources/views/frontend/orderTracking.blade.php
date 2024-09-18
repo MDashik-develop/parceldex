@@ -359,7 +359,7 @@
             }
 
             .pl-100 {
-                padding-left: 20px;
+                padding-left: 50px;
             }
         }
     </style>

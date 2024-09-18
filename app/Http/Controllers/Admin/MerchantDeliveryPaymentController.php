@@ -269,7 +269,7 @@ class MerchantDeliveryPaymentController extends Controller
 
                         Mail::to($merchant_user->email)->send(new MerchantPaymentInvoice($merchant_user, $parcelMerchantDeliveryPayment->total_payment_amount, $merchant_payment_invoice, $pdfPath));
 
-                        $message = "Dear valued Merchant, A Payment invoice " . $merchant_payment_invoice . " has been generated on " . now()->format('m-d-Y') . " and invoiced amount Tk " . $parcelMerchantDeliveryPayment->total_payment_amount . " has been paid. parceldex Ltd.";
+                        $message = "Dear valued Merchant, A Payment invoice " . $merchant_payment_invoice . " has been generated on " . now()->format('m-d-Y') . " and invoiced amount Tk " . number_format($parcelMerchantDeliveryPayment->total_payment_amount, 2) . " has been paid. parceldex Ltd.";
 
                         $this->send_sms($merchant_user->contact_number, $message);
 

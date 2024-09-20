@@ -6,18 +6,23 @@ use DataTables;
 use Carbon\Carbon;
 use App\Models\Branch;
 use App\Models\Parcel;
+use App\Models\District;
 use App\Models\Merchant;
 use App\Models\ParcelLog;
 use Illuminate\Http\Request;
+use App\Models\WeightPackage;
 use App\Exports\BranchParcelExport;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\ParcelDeliveryPayment;
+use App\Exports\BranchDeliveryPayment;
+use App\Models\MerchantServiceAreaCharge;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\BranchDeliveryPaymentList;
 use App\Models\ParcelDeliveryPaymentDetail;
+use App\Models\MerchantServiceAreaCodCharge;
+use App\Models\MerchantServiceAreaReturnCharge;
 use App\Notifications\MerchantParcelNotification;
-use App\Exports\BranchDeliveryPayment;
 
 class BranchDeliveryPaymentController extends Controller
 {
@@ -32,6 +37,203 @@ class BranchDeliveryPaymentController extends Controller
         $data['collapse']   = 'sidebar-collapse';
         $data['branches']   = Branch::where('status', 1)->get();
         return view('admin.account.deliveryPayment.branchDeliveryPaymentList', $data);
+    }
+
+    /** Branch Delivery Payment List */
+    public function pushRequest(Request $request)
+    {
+        $parcels = Parcel::with('merchant')->where('is_push', 1)->where('status', 0)
+            ->where(function ($query) use ($request) {
+                $merchant_id = $request->input('merchant_id');
+                $from_date = $request->input('from_date');
+                $to_date   = $request->input('to_date');
+
+                if ($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0) {
+                    $query->where('merchant_id', $request->input('merchant_id'));
+                }
+
+                if ($request->has('from_date') && !is_null($from_date) && $from_date != '') {
+                    $query->whereDate('date', '>=', $request->input('from_date'));
+                }
+
+                if ($request->has('to_date') && !is_null($to_date) && $to_date != '') {
+                    $query->whereDate('date', '<=', $request->input('to_date'));
+                }
+            })
+            ->orderBy('id', 'desc')
+            ->select()
+            ->get();
+
+        $data               = [];
+        $data['main_menu']  = 'push-request';
+        $data['child_menu'] = 'push-request';
+        $data['page_title'] = 'Push Request';
+        $data['collapse']   = 'sidebar-collapse';
+        $data['merchants']   = Merchant::where('status', 1)->get();
+        $data['parcels']   = $parcels;
+        $data['districts'] = District::where([
+            ['status', '=', 1],
+        ])->get();
+
+        return view('admin.account.deliveryPayment.pushRequest', $data);
+    }
+
+    public function savePushRequest(Request $request)
+    {
+        try {
+            foreach ($request->parcel_id as $key => $value) {
+                if (isset($request->district_id[$key]) && isset($request->area_id[$key]) && isset($request->weight_package_id[$key])) {
+
+                    $parcel = Parcel::find($value);
+
+                    //Set District, Upazila, Area ID and Merchant Service Area Charge
+                    $merchant_service_area_charge = 0;
+                    $delivery_charge = 0;
+                    $merchant_service_area_return_charge = 0;
+                    $weight_package_charge = 0;
+                    $cod_charge = 0;
+                    $service_area_id = 0;
+                    $cod_percent = 0;
+                    $merchant_cod_percent = $parcel->merchant?->cod_charge ?? 0;
+                    $district_id = $request->district_id[$key];
+                    $weight_id = $request->weight_package_id[$key];
+                    $collection_amount = $parcel->total_collect_amount;
+
+                    $district = District::with('service_area:id,cod_charge,default_charge')->where('id', $district_id)->first();
+
+                    if ($district) {
+
+                        $service_area_id = $district->service_area_id;
+                        //Service Area Default Charges
+                        $delivery_charge = $district->service_area ? $district->service_area->default_charge : 0;
+
+
+                        // Check Merchant COD Percent
+                        if ($district->service_area->cod_charge != 0) {
+                            $cod_percent = ($merchant_cod_percent != 0) ? $merchant_cod_percent : $district->service_area->cod_charge;
+                        }
+
+                        $code_charge_percent = $district->service_area->cod_charge;
+                        if ($code_charge_percent != 0) {
+                            $merchantServiceAreaCodCharge = MerchantServiceAreaCodCharge::where([
+                                'service_area_id' => $district->service_area_id,
+                                'merchant_id'     => $parcel->merchant?->id,
+                            ])->first();
+
+                            if ($merchantServiceAreaCodCharge) {
+                                $cod_percent = $merchantServiceAreaCodCharge->cod_charge;
+                            }
+                        }
+
+                        $merchantServiceAreaCharge = MerchantServiceAreaCharge::where([
+                            'service_area_id' => $service_area_id,
+                            'merchant_id' => $parcel->merchant?->id,
+                        ])->first();
+
+                        $merchantServiceAreaReturnCharge = MerchantServiceAreaReturnCharge::where([
+                            'service_area_id' => $service_area_id,
+                            'merchant_id' => $parcel->merchant?->id,
+                        ])->first();
+
+
+                        if ($merchantServiceAreaCharge && !empty($merchantServiceAreaCharge->charge)) {
+                            $merchant_service_area_charge = $merchantServiceAreaCharge->charge;
+                        }
+
+
+                        //Set Default Return Charge 1/2 of Delivery Charge
+                        $merchant_service_area_return_charge = $merchant_service_area_charge / 2;
+                        if ($merchantServiceAreaReturnCharge && !empty($merchantServiceAreaReturnCharge->return_charge)) {
+                            //Set Return Charge Merchant Wise
+                            $merchant_service_area_return_charge = $merchantServiceAreaReturnCharge->return_charge;
+                        }
+                    }
+
+
+                    // Weight Package Charge
+                    if ($weight_id) {
+                        $weightPackage = WeightPackage::with([
+                            'service_area' => function ($query) use ($service_area_id) {
+                                $query->where('service_area_id', '=', $service_area_id);
+                            },
+                        ])
+                            ->where(['id' => $weight_id])
+                            ->first();
+
+                        $weight_package_charge = $weightPackage->rate;
+                        if (!empty($weightPackage->service_area)) {
+                            $weight_package_charge = $weightPackage->service_area->rate;
+                        }
+                    }
+
+                    if (empty($weightPackage) || is_null($weight_id)) {
+                        $weightPackage = WeightPackage::with([
+                            'service_area' => function ($query) use ($service_area_id) {
+                                $query->where('service_area_id', '=', $service_area_id);
+                            },
+                        ])
+                            ->where(['id' => $weight_id])
+                            ->first();
+
+                        $weight_package_charge = $weightPackage->rate;
+                        if (!empty($weightPackage->service_area)) {
+                            $weight_package_charge = $weightPackage->service_area->rate;
+                        }
+                        $weight_id = $weightPackage->id;
+                    }
+
+                    /**
+                     * Set Parcel Delivery Charge
+                     * If Merchant service area is not 0 then check District Area default Delivery charge
+                     */
+                    $delivery_charge = $merchant_service_area_charge != 0 ? $merchant_service_area_charge : $delivery_charge;
+
+
+                    $collection_amount = $collection_amount ?? 0;
+                    if ($collection_amount != 0 && $cod_percent != 0) {
+                        $cod_charge = ($collection_amount / 100) * $cod_percent;
+                    }
+
+                    $item_type_charge = $request->input('item_type_charge') ?? 0;
+                    $service_type_charge = $request->input('service_type_charge') ?? 0;
+                    $delivery_charge =  $delivery_charge + $item_type_charge + $service_type_charge;
+                    $total_charge = $delivery_charge + $cod_charge + $weight_package_charge;
+
+                    $data = [
+                        'district_id' => $district_id,
+                        'area_id' => $request->area_id[$key],
+                        'weight_package_id' => $request->weight_package_id[$key],
+                        'delivery_charge' => $delivery_charge,
+                        'weight_package_charge' => $weight_package_charge,
+                        'merchant_service_area_charge' => $merchant_service_area_charge,
+                        'merchant_service_area_return_charge' => $merchant_service_area_return_charge,
+                        'cod_percent' => $cod_percent,
+                        'cod_charge' => $cod_charge,
+                        'total_charge' => $total_charge,
+                        'status' => 1,
+                    ];
+
+                    $parcel->update($data);
+
+                    if ($parcel) {
+                        $data = [
+                            'parcel_id' => $parcel->id,
+                            'merchant_id' => $parcel->merchant->id,
+                            'pickup_branch_id' => $parcel->merchant->branch_id,
+                            'date' => date('Y-m-d'),
+                            'time' => date('H:i:s'),
+                            'status' => 1,
+                        ];
+
+                        ParcelLog::create($data);
+                    }
+                }
+            }
+
+            return back()->with('success', 'Parcel Update Successfully');
+        } catch (\Exception $exception) {
+            return back()->with('error', 'Parcel Update Failed');
+        }
     }
 
     public function getBranchDeliveryPaymentList(Request $request)

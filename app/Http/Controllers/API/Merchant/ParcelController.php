@@ -181,13 +181,13 @@ class ParcelController extends Controller
                 'parcel_invoice' => $this->returnUniqueParcelInvoice(),
                 'merchant_id' => $merchant->id,
                 'date' => date('Y-m-d'),
-                'exchange' => $request->input('exchange'),
+                'exchange' => $request->input('exchange') ?? 'no',
                 'merchant_order_id' => $request->input('merchant_order_id'),
                 'pickup_address' => $request->input('pickup_address'),
                 'customer_name' => $request->input('customer_name'),
                 'customer_address' => $request->input('customer_address'),
                 'customer_contact_number' => $request->input('customer_contact_number'),
-                'customer_contact_number2' => $request->input('customer_contact_number2'),
+                'customer_contact_number2' => $request->input('customer_alt_contact_number'),
                 'product_details' => $request->input('product_details'),
                 'product_value' => $request->input('product_value') ?? 0,
                 'district_id' => $request->input('district_id'),
@@ -251,7 +251,7 @@ class ParcelController extends Controller
             ], 401);
         }
     }
-    
+
     public function addParcel2(Request $request)
     {
         $merchant = auth()->guard('merchant_api')->user();
@@ -264,30 +264,41 @@ class ParcelController extends Controller
             ], 401);
         }
 
+        // Sanitize input
+        $input = $request->all();
 
-        $validator = Validator::make($request->all(), [
-            'merchant_order_id' => 'sometimes',
-            'cod_percent' => 'required',
-            'cod_charge' => 'required',
-            'delivery_charge' => 'required',
-            'weight_package_charge' => 'required',
-            'merchant_service_area_charge' => 'required',
-            'total_charge' => 'required',
-            'weight_package_id' => 'required',
-            //            'delivery_option_id' => 'required',
-            'product_details' => 'sometimes',
-            //            'product_value' => 'required',
-            'total_collect_amount' => 'sometimes',
-            'customer_name' => 'required',
-            'customer_contact_number' => 'required',
-            'customer_address' => 'required',
-            'district_id' => 'required',
-            'item_type_charge' => 'required',
-            'service_type_charge' => 'required',
-            // 'upazila_id'                            => 'required',
-            'area_id' => 'sometimes',
-            'parcel_note' => 'sometimes',
+        // Strip tags and encode special characters
+        $input['customer_name'] = htmlspecialchars(strip_tags($input['customer_name']), ENT_QUOTES, 'UTF-8');
+        $input['customer_contact_number'] = filter_var($input['customer_contact_number'], FILTER_SANITIZE_NUMBER_INT);
+        $input['customer_address'] = htmlspecialchars(strip_tags($input['customer_address']), ENT_QUOTES, 'UTF-8');
+        $input['merchant_order_id'] = htmlspecialchars(strip_tags($input['merchant_order_id']), ENT_QUOTES, 'UTF-8');
+        $input['product_details'] = htmlspecialchars(strip_tags($input['product_details']), ENT_QUOTES, 'UTF-8');
+        $input['parcel_note'] = htmlspecialchars(strip_tags($input['parcel_note']), ENT_QUOTES, 'UTF-8');
+
+        // Validate the input
+        Validator::extend('no_special_chars', function ($attribute, $value, $parameters, $validator) {
+            return !preg_match('/[<>\/]/', $value); // Prevent special characters
+        });
+
+        $validator = Validator::make($input, [
+            'customer_name' => 'required|min:3|max:100|no_special_chars',
+            'customer_contact_number' => 'required|digits:11',
+            'customer_contact_number2' => 'nullable|digits:11',
+            'customer_address' => 'required|min:10|max:1000|no_special_chars',
+            'total_collect_amount' => 'required|numeric',
+            'merchant_order_id' => 'nullable|max:20',
+            'product_details' => 'nullable|no_special_chars',
+            'product_value' => 'nullable|numeric|gt:0',
+            'district_id' => 'nullable|required_with:area_id,weight_package_id',
+            'area_id' => 'nullable|required_with:district_id,weight_package_id',
+            'weight_package_id' => 'nullable|required_with:district_id,area_id',
+            'parcel_note' => 'nullable|no_special_chars',
+            'exchange' => 'nullable|in:yes,no',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
         if ($validator->fails()) {
             return response()->json([
@@ -297,162 +308,216 @@ class ParcelController extends Controller
             ], 401);
         }
 
-        try {
-            // Set District, Upazila, Area ID and Merchant Service Area Charge
-            $merchant_service_area_charge = 0;
-            $delivery_charge = 0;
-            $merchant_service_area_return_charge = 0;
-            $weight_package_charge = 0;
-            $cod_charge = 0;
-            $service_area_id = 0;
-            $cod_percent = 0;
-            $merchant_cod_percent = $merchant->cod_charge ?? 0;
-            $district_id = $request->input('district_id');
-            $weight_id = $request->input('weight_package_id');
-            $collection_amount = $request->input('total_collect_amount');
+        if ($request->input('district_id') && $request->input('weight_package_id') && $request->input('area_id')) {
+            try {
+                //Set District, Upazila, Area ID and Merchant Service Area Charge
+                $merchant_service_area_charge = 0;
+                $delivery_charge = 0;
+                $merchant_service_area_return_charge = 0;
+                $weight_package_charge = 0;
+                $cod_charge = 0;
+                $service_area_id = 0;
+                $cod_percent = 0;
+                $merchant_cod_percent = $merchant->cod_charge ?? 0;
+                $district_id = $request->input('district_id');
+                $weight_id = $request->input('weight_package_id');
+                $collection_amount = $request->input('total_collect_amount');
 
-            $district = District::with('service_area:id,cod_charge,default_charge')->where('id', $district_id)->first();
+                $district = District::with('service_area:id,cod_charge,default_charge')->where('id', $district_id)->first();
 
-            if ($district) {
+                if ($district) {
 
-                $service_area_id = $district->service_area_id;
-                //Service Area Default Charges
-                $delivery_charge = $district->service_area ? $district->service_area->default_charge : 0;
+                    $service_area_id = $district->service_area_id;
+                    //Service Area Default Charges
+                    $delivery_charge = $district->service_area ? $district->service_area->default_charge : 0;
 
 
-                // Check Merchant COD Percent
-                if ($district->service_area->cod_charge != 0) {
-                    $cod_percent = ($merchant_cod_percent != 0) ? $merchant_cod_percent : $district->service_area->cod_charge;
-                }
+                    // Check Merchant COD Percent
+                    if ($district->service_area->cod_charge != 0) {
+                        $cod_percent = ($merchant_cod_percent != 0) ? $merchant_cod_percent : $district->service_area->cod_charge;
+                    }
 
-                $code_charge_percent = $district->service_area->cod_charge;
-                if ($code_charge_percent != 0) {
-                    $merchantServiceAreaCodCharge = MerchantServiceAreaCodCharge::where([
-                        'service_area_id' => $district->service_area_id,
-                        'merchant_id'     => $merchant->id,
+                    $code_charge_percent = $district->service_area->cod_charge;
+                    if ($code_charge_percent != 0) {
+                        $merchantServiceAreaCodCharge = MerchantServiceAreaCodCharge::where([
+                            'service_area_id' => $district->service_area_id,
+                            'merchant_id'     => $merchant->id,
+                        ])->first();
+
+                        if ($merchantServiceAreaCodCharge) {
+                            $cod_percent = $merchantServiceAreaCodCharge->cod_charge;
+                        }
+                    }
+
+                    $merchantServiceAreaCharge = MerchantServiceAreaCharge::where([
+                        'service_area_id' => $service_area_id,
+                        'merchant_id' => $merchant->id,
                     ])->first();
 
-                    if ($merchantServiceAreaCodCharge) {
-                        $cod_percent = $merchantServiceAreaCodCharge->cod_charge;
+                    $merchantServiceAreaReturnCharge = MerchantServiceAreaReturnCharge::where([
+                        'service_area_id' => $service_area_id,
+                        'merchant_id' => $merchant->id,
+                    ])->first();
+
+
+                    if ($merchantServiceAreaCharge && !empty($merchantServiceAreaCharge->charge)) {
+                        $merchant_service_area_charge = $merchantServiceAreaCharge->charge;
+                    }
+
+
+                    //Set Default Return Charge 1/2 of Delivery Charge
+                    $merchant_service_area_return_charge = $merchant_service_area_charge / 2;
+                    if ($merchantServiceAreaReturnCharge && !empty($merchantServiceAreaReturnCharge->return_charge)) {
+                        //Set Return Charge Merchant Wise
+                        $merchant_service_area_return_charge = $merchantServiceAreaReturnCharge->return_charge;
                     }
                 }
 
 
-                $merchantServiceAreaCharge = MerchantServiceAreaCharge::where([
-                    'service_area_id' => $service_area_id,
+                // Weight Package Charge
+                if ($weight_id) {
+                    $weightPackage = WeightPackage::with([
+                        'service_area' => function ($query) use ($service_area_id) {
+                            $query->where('service_area_id', '=', $service_area_id);
+                        },
+                    ])
+                        ->where(['id' => $weight_id])
+                        ->first();
+
+                    $weight_package_charge = $weightPackage->rate;
+                    if (!empty($weightPackage->service_area)) {
+                        $weight_package_charge = $weightPackage->service_area->rate;
+                    }
+                }
+
+                if (empty($weightPackage) || is_null($weight_id)) {
+                    $weightPackage = WeightPackage::with([
+                        'service_area' => function ($query) use ($service_area_id) {
+                            $query->where('service_area_id', '=', $service_area_id);
+                        },
+                    ])
+                        ->where(['id' => $weight_id])
+                        ->first();
+
+                    $weight_package_charge = $weightPackage->rate;
+                    if (!empty($weightPackage->service_area)) {
+                        $weight_package_charge = $weightPackage->service_area->rate;
+                    }
+                    $weight_id = $weightPackage->id;
+                }
+
+                /**
+                 * Set Parcel Delivery Charge
+                 * If Merchant service area is not 0 then check District Area default Delivery charge
+                 */
+                $delivery_charge = $merchant_service_area_charge != 0 ? $merchant_service_area_charge : $delivery_charge;
+
+
+                $collection_amount = $collection_amount ?? 0;
+                if ($collection_amount != 0 && $cod_percent != 0) {
+                    $cod_charge = ($collection_amount / 100) * $cod_percent;
+                }
+
+                $item_type_charge = $request->input('item_type_charge') ?? 0;
+                $service_type_charge = $request->input('service_type_charge') ?? 0;
+                $delivery_charge =  $delivery_charge + $item_type_charge + $service_type_charge;
+                $total_charge = $delivery_charge + $cod_charge + $weight_package_charge;
+
+                $data = [
+                    'parcel_invoice' => $this->returnUniqueParcelInvoice(),
                     'merchant_id' => $merchant->id,
-                ])->first();
+                    'date' => date('Y-m-d'),
+                    'exchange' => $request->input('exchange') ?? 'no',
+                    'merchant_order_id' => $request->input('merchant_order_id'),
+                    'customer_name' => $request->input('customer_name'),
+                    'customer_address' => $request->input('customer_address'),
+                    'customer_contact_number' => $request->input('customer_contact_number'),
+                    'customer_collect_amount' => $request->input('customer_collect_amount') ?? 0,
+                    'customer_contact_number2' => $request->input('customer_contact_number2'),
+                    'product_details' => $request->input('product_details'),
+                    'product_value' => $request->input('product_value') ?? 0,
+                    'district_id' => $request->input('district_id') ?? 0,
+                    'upazila_id' => 0,
+                    'area_id' => $request->input('area_id') ?? 0,
+                    'weight_package_id' => $weight_id,
+                    'delivery_charge' => $delivery_charge,
+                    'weight_package_charge' => $weight_package_charge,
+                    'merchant_service_area_charge' => $merchant_service_area_charge,
+                    'merchant_service_area_return_charge' => $merchant_service_area_return_charge,
+                    'total_collect_amount' => $collection_amount,
+                    'cod_percent' => $cod_percent,
+                    'cod_charge' => $cod_charge,
+                    'total_charge' => $total_charge,
+                    'delivery_option_id' => 1,
+                    'parcel_note' => $request->input('parcel_note'),
+                    'pickup_branch_id' => $merchant->branch_id,
+                    'parcel_date' => date('Y-m-d'),
+                    'status' => 1,
+                ];
+                $parcel = Parcel::create($data);
 
+                if ($parcel) {
+                    $data = [
+                        'parcel_id' => $parcel->id,
+                        'merchant_id' => $merchant->id,
+                        'pickup_branch_id' => $merchant->branch_id,
+                        'date' => date('Y-m-d'),
+                        'time' => date('H:i:s'),
+                        'status' => 1,
+                    ];
+                    ParcelLog::create($data);
 
-                $merchantServiceAreaReturnCharge = MerchantServiceAreaReturnCharge::where([
-                    'service_area_id' => $service_area_id,
-                    'merchant_id' => $merchant->id,
-                ])->first();
+                    $data = [
+                        'parcel_id' => $parcel->parcel_invoice,
+                        'customer_name' => $parcel->customer_name,
+                        'customer_address' => $parcel->customer_address,
+                        'customer_contact_number' => $parcel->customer_contact_number,
+                        'customer_collect_amount' => $parcel->customer_collect_amount,
+                    ];
 
-
-                if ($merchantServiceAreaCharge && !empty($merchantServiceAreaCharge->charge)) {
-                    $merchant_service_area_charge = $merchantServiceAreaCharge->charge;
+                    return response()->json([
+                        'success' => 200,
+                        'message' => "Parcel Added Successfully",
+                        'data' => $parcel,
+                    ], 200);
                 }
 
-
-                //Set Default Return Charge 1/2 of Delivery Charge
-                $merchant_service_area_return_charge = $merchant_service_area_charge / 2;
-                if ($merchantServiceAreaReturnCharge && !empty($merchantServiceAreaReturnCharge->return_charge)) {
-                    //Set Return Charge Merchant Wise
-                    $merchant_service_area_return_charge = $merchantServiceAreaReturnCharge->return_charge;
-                }
+                return response()->json([
+                    'success' => 401,
+                    'message' => "Parcel Added Unsuccessfully",
+                    'error' => "Parcel Added Unsuccessfully",
+                ], 401);
+            } catch (\Exception $exception) {
+                return response()->json([
+                    'success' => 401,
+                    'message' => "Parcel Added Unsuccessfully",
+                    'error' => $exception->getMessage(),
+                ], 401);
             }
-
-
-            // Weight Package Charge
-            if ($weight_id) {
-                $weightPackage = WeightPackage::with([
-                    'service_area' => function ($query) use ($service_area_id) {
-                        $query->where('service_area_id', '=', $service_area_id);
-                    },
-                ])
-                    ->where(['id' => $weight_id])
-                    ->first();
-
-                $weight_package_charge = $weightPackage->rate;
-                if (!empty($weightPackage->service_area)) {
-                    $weight_package_charge = $weightPackage->service_area->rate;
-                }
-            }
-
-            if (empty($weightPackage) || is_null($weight_id)) {
-                $weightPackage = WeightPackage::with([
-                    'service_area' => function ($query) use ($service_area_id) {
-                        $query->where('service_area_id', '=', $service_area_id);
-                    },
-                ])
-                    ->where(['id' => $weight_id])
-                    ->first();
-
-                $weight_package_charge = $weightPackage->rate;
-                if (!empty($weightPackage->service_area)) {
-                    $weight_package_charge = $weightPackage->service_area->rate;
-                }
-                $weight_id = $weightPackage->id;
-            }
-
-            /**
-             * Set Parcel Delivery Charge
-             * If Merchant service area is not 0 then check District Area default Delivery charge
-             */
-            $delivery_charge = $merchant_service_area_charge != 0 ? $merchant_service_area_charge : $delivery_charge;
-
-
-            $collection_amount = $collection_amount ?? 0;
-            if ($collection_amount != 0 && $cod_percent != 0) {
-                $cod_charge = ($collection_amount / 100) * $cod_percent;
-            }
-
-            $item_type_charge = $request->input('item_type_charge') ?? 0;
-            $service_type_charge = $request->input('service_type_charge') ?? 0;
-            $delivery_charge =  $delivery_charge + $item_type_charge + $service_type_charge;
-            $total_charge = $delivery_charge + $cod_charge + $weight_package_charge;
-
+        } else {
             $data = [
                 'parcel_invoice' => $this->returnUniqueParcelInvoice(),
                 'merchant_id' => $merchant->id,
                 'date' => date('Y-m-d'),
-                'exchange' => $request->input('exchange'),
+                'exchange' => $request->input('exchange') ?? 'no',
                 'merchant_order_id' => $request->input('merchant_order_id'),
-                'pickup_address' => $request->input('pickup_address'),
                 'customer_name' => $request->input('customer_name'),
                 'customer_address' => $request->input('customer_address'),
                 'customer_contact_number' => $request->input('customer_contact_number'),
+                'customer_collect_amount' => $request->input('customer_collect_amount') ?? 0,
                 'customer_contact_number2' => $request->input('customer_contact_number2'),
                 'product_details' => $request->input('product_details'),
                 'product_value' => $request->input('product_value') ?? 0,
-                'district_id' => $request->input('district_id'),
-                // 'upazila_id'                   => $request->input('upazila_id'),
+                'district_id' => $request->input('district_id') ?? 0,
                 'upazila_id' => 0,
                 'area_id' => $request->input('area_id') ?? 0,
-                'weight_package_id' => $weight_id,
-                'delivery_charge' => $delivery_charge,
-                'weight_package_charge' => $weight_package_charge,
-                'merchant_service_area_charge' => $merchant_service_area_charge,
-                'merchant_service_area_return_charge' => $merchant_service_area_return_charge,
-                'total_collect_amount' => $collection_amount,
-                'cod_percent' => $cod_percent,
-                'cod_charge' => $cod_charge,
-                'total_charge' => $total_charge,
-                //            'delivery_option_id'           => $request->input('delivery_option_id'),
+                'total_collect_amount' => $request->input('total_collect_amount'),
                 'delivery_option_id' => 1,
                 'parcel_note' => $request->input('parcel_note'),
                 'pickup_branch_id' => $merchant->branch_id,
                 'parcel_date' => date('Y-m-d'),
-                'status' => 1,
-                'service_type_id' => $request->input('service_type_id') == 0 ? null : $request->input('service_type_id'),
-                'item_type_id' => $request->input('item_type_id') == 0 ? null : $request->input('item_type_id'),
-                'item_type_charge' => $request->input('item_type_charge'),
-                'service_type_charge' => $request->input('service_type_charge'),
-                /*  'service_type_id' => $request->input('service_type_id') ?? null,
-                  'item_type_id' => $request->input('item_type_id') ?? null,
-                  'item_type_charge' => $request->input('item_type_charge'),
-                  'service_type_charge' => $request->input('service_type_charge'),*/
+                'status' => 0,
+                'is_push' => 1,
             ];
             $parcel = Parcel::create($data);
 
@@ -463,28 +528,24 @@ class ParcelController extends Controller
                     'pickup_branch_id' => $merchant->branch_id,
                     'date' => date('Y-m-d'),
                     'time' => date('H:i:s'),
-                    'status' => 1,
+                    'status' => 0,
                 ];
                 ParcelLog::create($data);
 
+                $data = [
+                    'parcel_id' => $parcel->parcel_invoice,
+                    'customer_name' => $parcel->customer_name,
+                    'customer_address' => $parcel->customer_address,
+                    'customer_contact_number' => $parcel->customer_contact_number,
+                    'customer_collect_amount' => $parcel->customer_collect_amount,
+                ];
+
                 return response()->json([
                     'success' => 200,
-                    'message' => "Parcel Add Successfully",
-                    'parcel_id' => $parcel->id,
+                    'message' => "Parcel Added Successfully",
+                    'data' => $parcel,
                 ], 200);
             }
-
-            return response()->json([
-                'success' => 401,
-                'message' => "Parcel Add Unsuccessfully",
-                'error' => "Parcel Add Unsuccessfully",
-            ], 401);
-        } catch (\Exception $exception) {
-            return response()->json([
-                'success' => 401,
-                'message' => "Parcel Add Unsuccessfully",
-                'error' => $exception->getMessage(),
-            ], 401);
         }
     }
 
@@ -531,7 +592,7 @@ class ParcelController extends Controller
                     } else {
                         if ($request->has('parcel_status') && !is_null($parcel_status) && $parcel_status != 0) {
                             if ($parcel_status == 1) {
-                                $query->whereRaw('status >= 25 and delivery_type in (1,2)');
+                                $query->whereRaw('status = 25 and delivery_type in (1)')->whereNull('suborder');
                             } elseif ($parcel_status == 2) {
                                 //    $query->whereRaw('status in (14,16,17,18,19,20,21,22,23,24 ) and delivery_type not in (1,2,4)');
                                 $query->whereRaw('status > 11 and delivery_type in (?)', [3]);
@@ -577,6 +638,7 @@ class ParcelController extends Controller
                 'cod_percent',
                 'total_collect_amount',
                 'customer_collect_amount',
+                'cancel_amount_collection',
                 'cod_charge',
                 'delivery_charge',
                 'total_charge',
@@ -603,6 +665,12 @@ class ParcelController extends Controller
 
             //return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
 
+            $customer_collect_amount = $parcel->customer_collect_amount ?? 0;
+
+            if ($request->input('parcel_status') && $request->input('parcel_status') == 3) {
+                $customer_collect_amount = $parcel->cancel_amount_collection ?? 0;
+            }
+
             $new_parcels[] = [
                 'id' => $parcel->id,
                 'parcel_invoice' => $parcel->parcel_invoice,
@@ -619,7 +687,7 @@ class ParcelController extends Controller
                 'weight_package_charge' => $parcel->weight_package_charge,
                 'cod_percent' => $parcel->cod_percent,
                 'collectable_amount' => $parcel->total_collect_amount ?? 0,
-                'collected_amount' => $parcel->customer_collect_amount ?? 0,
+                'collected_amount' => $customer_collect_amount,
                 'cod_charge' => $parcel->cod_charge ?? 0,
                 'delivery_charge' => $parcel->delivery_charge,
                 'total_charge' => $parcel->total_charge,
@@ -661,7 +729,7 @@ class ParcelController extends Controller
                     }
 
                     if (strtolower($request->input('filter_action')) == "waiting_delivery") {
-                        $query->whereRaw('status != ? and status >= ? and status <= ? and (delivery_type is null or delivery_type = "") or delivery_type in (?)', [3, 16, 24, 3]);
+                        $query->whereRaw('status >= ? and status <= ? and (delivery_type is null or delivery_type = "") or delivery_type in (?)', [16, 24, 3]);
                     }
 
                     /*                    if (strtolower($request->input('filter_action')) == "delivery") {
@@ -673,7 +741,7 @@ class ParcelController extends Controller
                     }
 
                     if (strtolower($request->input('filter_action')) == "in_transit") {
-                        $query->whereRaw('status > ? and status < ?', [11, 15]);
+                        $query->whereRaw('status >= ? and status <= ?', [5, 15]);
                     }
 
                     if (strtolower($request->input('filter_action')) == "canceled") {
@@ -1886,6 +1954,11 @@ class ParcelController extends Controller
             'total_charge' => $parcel->total_charge,
             'parcel_note' => $parcel->parcel_note,
             'parcel_status' => $parcel_status,
+            'exchange' => $parcel->exchange,
+            'customer_alt_contact_number' => $parcel->customer_contact_number2,
+            'product_details' => $parcel->product_details,
+            'merchant_note' => $parcel->parcel_note,
+            'rider_note' => $parcel->note,
         ];
 
 
@@ -2385,23 +2458,20 @@ class ParcelController extends Controller
             'parcel' => $parcel,
             'parcelLogs' => $new_parcelLogs,
         ], 200);
-    }    
-    
-    public function viewParcel2(Request $request)
-    {
+    }
 
-        $validator = Validator::make($request->all(), [
-            'parcel_id' => 'required',
-        ]);
-        if ($validator->fails()) {
+    public function viewParcel2($parcel_invoice)
+    {
+        $merchant = auth()->guard('merchant_api')->user();
+
+        $parcel = Parcel::where('parcel_invoice', $parcel_invoice)->where('merchant_id', $merchant->id)->first();
+
+        if (! $parcel) {
             return response()->json([
-                'success' => 401,
-                'message' => "Validation Error",
-                'error' => $validator->errors(),
-            ], 401);
+                'error' => 'Parcel not found'
+            ], 404);
         }
 
-        $parcel = Parcel::find($request->parcel_id);
         $parcel->load(
             'district:id,name',
             'upazila:id,name',
@@ -2414,6 +2484,92 @@ class ParcelController extends Controller
             'delivery_rider'
         );
 
+        $phone1 = $parcel->customer_contact_number;
+
+        if ($merchant->contact_number) {
+            $customer = Parcel::where('customer_contact_number', $phone1)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
+            $customerParcel = Parcel::where('customer_contact_number', $phone1)->count();
+            $totalDeliveryComplete = Parcel::whereRaw("customer_contact_number = '$phone1' and status >= 25 and delivery_type in (1)")->select('id')->count();
+            $totalDeliveryPending = Parcel::whereRaw("customer_contact_number = '$phone1' and status < 25 ")->select('id')->count();
+            $totalDeliveryCancel = Parcel::whereRaw("customer_contact_number = '$phone1' and status >= 25 and delivery_type in (4)")->select('id')->count();
+        }
+
+        if ($customerParcel > 0) {
+            $percenrtComplete = round(($totalDeliveryComplete / $customerParcel) * 100);
+        } else {
+            $percenrtComplete = 0;
+        }
+
+        if ($customerParcel > 0) {
+            $percenrtPending = round(($totalDeliveryPending / $customerParcel) * 100);
+        } else {
+            $percenrtPending = 0;
+        }
+
+
+        if ($customerParcel > 0) {
+            $percenrtCancle = round(($totalDeliveryCancel / $customerParcel) * 100);
+        } else {
+            $percenrtCancle = 0;
+        }
+
+        $info1 = [
+            'customer' => $customer,
+            'customerParcel' => $customerParcel,
+            'totalDeliveryComplete' => " Delivered:" . " " . $totalDeliveryComplete,
+            'totalDeliveryPending' => " Pending: " . " " . $totalDeliveryPending,
+            'totalDeliveryCancel' => " Canceled: " . " " . $totalDeliveryCancel,
+            'percenrtComplete' => "(" . $percenrtComplete . "%)",
+            'percenrtPending' => "(" . $percenrtPending . "%)",
+            'percenrtCancel' => "(" . $percenrtCancle . "%)",
+
+        ];
+
+        $parcel->customer_info_1 = $info1;
+
+
+        $phone2 = $parcel->customer_contact_number2;
+
+        if ($merchant->contact_number) {
+            $customer = Parcel::where('customer_contact_number', $phone2)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
+            $customerParcel = Parcel::where('customer_contact_number', $phone2)->count();
+            $totalDeliveryComplete = Parcel::whereRaw("customer_contact_number = '$phone2' and status >= 25 and delivery_type in (1)")->select('id')->count();
+            $totalDeliveryPending = Parcel::whereRaw("customer_contact_number = '$phone2' and status < 25 ")->select('id')->count();
+            $totalDeliveryCancel = Parcel::whereRaw("customer_contact_number = '$phone2' and status >= 25 and delivery_type in (4)")->select('id')->count();
+        }
+
+        if ($customerParcel > 0) {
+            $percenrtComplete = round(($totalDeliveryComplete / $customerParcel) * 100);
+        } else {
+            $percenrtComplete = 0;
+        }
+
+        if ($customerParcel > 0) {
+            $percenrtPending = round(($totalDeliveryPending / $customerParcel) * 100);
+        } else {
+            $percenrtPending = 0;
+        }
+
+
+        if ($customerParcel > 0) {
+            $percenrtCancle = round(($totalDeliveryCancel / $customerParcel) * 100);
+        } else {
+            $percenrtCancle = 0;
+        }
+
+        $info2 = [
+            'customer' => $customer,
+            'customerParcel' => $customerParcel,
+            'totalDeliveryComplete' => " Delivered:" . " " . $totalDeliveryComplete,
+            'totalDeliveryPending' => " Pending: " . " " . $totalDeliveryPending,
+            'totalDeliveryCancel' => " Canceled: " . " " . $totalDeliveryCancel,
+            'percenrtComplete' => "(" . $percenrtComplete . "%)",
+            'percenrtPending' => "(" . $percenrtPending . "%)",
+            'percenrtCancel' => "(" . $percenrtCancle . "%)",
+
+        ];
+
+        $parcel->customer_info_2 = $info2;
 
         // $delivery_type = $parcel->delivery_type;
         // switch ($parcel->status) {

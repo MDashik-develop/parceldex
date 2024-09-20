@@ -293,6 +293,10 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin/'], function () {
     //================ Accounts  ================================
 
     //================ Branch Delivery Payment  ================================
+    Route::get('/push-request', [App\Http\Controllers\Admin\BranchDeliveryPaymentController::class, 'pushRequest'])->name('push.request');
+    Route::post('getPushRequestList', [App\Http\Controllers\Admin\BranchDeliveryPaymentController::class, 'savePushRequest'])->name('savePushRequest');
+
+   
     Route::get('account/branchDeliveryPaymentList', [App\Http\Controllers\Admin\BranchDeliveryPaymentController::class, 'branchDeliveryPaymentList'])->name('account.branchDeliveryPaymentList');
     Route::get('account/getBranchDeliveryPaymentList', [App\Http\Controllers\Admin\BranchDeliveryPaymentController::class, 'getBranchDeliveryPaymentList'])->name('account.getBranchDeliveryPaymentList');
 

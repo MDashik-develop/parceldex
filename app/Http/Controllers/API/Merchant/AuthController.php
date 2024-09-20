@@ -8,6 +8,7 @@ use App\Models\Admin;
 use App\Models\Application;
 use App\Models\EmailVerification;
 use App\Models\Merchant;
+use App\Notifications\ForgotPasswordOtp;
 use App\Notifications\MerchantRegisterNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -18,7 +19,8 @@ use App\Traits\UploadTrait;
 use function PHPUnit\Framework\isNull;
 use Illuminate\Support\Facades\Auth;
 
-class AuthController extends Controller {
+class AuthController extends Controller
+{
 
     use UploadTrait;
 
@@ -29,10 +31,13 @@ class AuthController extends Controller {
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Request $request) {
-        $Validator = Validator::make($request->all(), [
-            'email'    => 'required',
-            'password' => 'required|min:5',
+    public function login(Request $request)
+    {
+        $Validator = Validator::make(
+            $request->all(),
+            [
+                'email'    => 'required',
+                'password' => 'required|min:5',
             ],
             [
                 'email.required'    => 'Email is Required',
@@ -50,12 +55,12 @@ class AuthController extends Controller {
         }
 
         $user_name = "email";
-        if(is_numeric($request->input('email'))){
+        if (is_numeric($request->input('email'))) {
             $user_name = "contact_number";
         }
 
 
-//Code By Humayun
+        //Code By Humayun
         if ($token = auth()->guard('merchant_api')->claims(['name' => 'beaconcourier'])->attempt([
             $user_name => $request->input('email'),
             'password' => $request->input('password'),
@@ -63,44 +68,43 @@ class AuthController extends Controller {
         ])) {
             return response()->json([
                 'success' => 401,
-               // 'message' => "Userd ID Inactive Pending For approval From Admin",
+                // 'message' => "Userd ID Inactive Pending For approval From Admin",
                 'message' => "Your account is currently pending approval by the administrator.",
-                
+
                 'error'   => "Unauthorized",
             ], 403);
         }
-        
-//End Code By Humayun         
-        
+
+        //End Code By Humayun         
+
         if ($token = auth()->guard('merchant_api')->claims(['name' => 'beaconcourier'])->attempt([
-                $user_name => $request->input('email'),
-                'password' => $request->input('password'),
-                'status' => 1
-            ])) {
+            $user_name => $request->input('email'),
+            'password' => $request->input('password'),
+            'status' => 1
+        ])) {
             $merchant =  auth()->guard('merchant_api')->user();
 
-            if($merchant->image){
-                $merchant->image = asset('uploads/merchant/'.$merchant->image);
-            }
-            else{
+            if ($merchant->image) {
+                $merchant->image = asset('uploads/merchant/' . $merchant->image);
+            } else {
                 $merchant->image = asset('image/defaultMerchant.png');
             }
 
-            if($merchant->trade_license){
-                $merchant->trade_license = asset('uploads/merchant/'.$merchant->trade_license);
+            if ($merchant->trade_license) {
+                $merchant->trade_license = asset('uploads/merchant/' . $merchant->trade_license);
             }
-            if($merchant->nid_card){
-                $merchant->nid_card = asset('uploads/merchant/'.$merchant->nid_card);
+            if ($merchant->nid_card) {
+                $merchant->nid_card = asset('uploads/merchant/' . $merchant->nid_card);
             }
-            if($merchant->tin_certificate){
-                $merchant->tin_certificate = asset('uploads/merchant/'.$merchant->tin_certificate);
+            if ($merchant->tin_certificate) {
+                $merchant->tin_certificate = asset('uploads/merchant/' . $merchant->tin_certificate);
             }
 
             $service_area_charges =  auth()->guard('merchant_api')->user()->service_area_charges;
 
             $new_service_area = [];
 
-            foreach($service_area_charges as $service_area_charge){
+            foreach ($service_area_charges as $service_area_charge) {
                 $new_service_area[] = [
                     'name'          => $service_area_charge->name,
                     'cod_charge'    => $service_area_charge->cod_charge,
@@ -120,7 +124,7 @@ class AuthController extends Controller {
             );
 
             $cod_charge = 0;
-            if($merchant->cod_charge){
+            if ($merchant->cod_charge) {
                 $cod_charge = $merchant->cod_charge;
             }
 
@@ -147,14 +151,14 @@ class AuthController extends Controller {
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout() {
+    public function logout()
+    {
         auth()->guard('merchant_api')->logout();
 
         return response()->json([
             'success' => 200,
             'message' => "Merchant Successfully logged out",
         ], 200);
-
     }
 
     /**
@@ -164,7 +168,8 @@ class AuthController extends Controller {
      *
      * @return Illuminate\Http\Request;
      */
-    public function registration(Request $request) {
+    public function registration(Request $request)
+    {
 
         $Validator = Validator::make($request->all(), [
             'company_name'      => 'required',
@@ -230,7 +235,7 @@ class AuthController extends Controller {
             $contact_number = $request->input('contact_number');
             $company_name   = $request->input('company_name');
 
-            $otp_token      = random_int(100000,999999);
+            $otp_token      = random_int(100000, 999999);
 
 
             $data     = [
@@ -283,13 +288,13 @@ class AuthController extends Controller {
                 /** For Notification and Counter */
                 $admin_users = Admin::all();
                 foreach ($admin_users as $admin) {
-//                    $admin->notify(new MerchantRegisterNotification($merchant));
+                    //                    $admin->notify(new MerchantRegisterNotification($merchant));
                 }
                 $this->adminDashboardCounterEvent();
                 /** End For Notification and Counter */
 
                 $application = Application::first();
-//                Mail::to($request->input('email'))->send(new VerifyMerchantEmail($merchant, $application));
+                //                Mail::to($request->input('email'))->send(new VerifyMerchantEmail($merchant, $application));
 
 
                 $message    = "Dear {$company_name}, ";
@@ -301,21 +306,20 @@ class AuthController extends Controller {
                     'success'  => 200,
                     'message'  => "Merchant OTP Has been send Successfully",
                 ], 200);
-
-
             }
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => 401,
                 'message' => "Merchant Registration failed",
-//                'error'   => "Unauthorized",
+                //                'error'   => "Unauthorized",
                 'error'   => $e->getMessage(),
             ], 401);
         }
     }
 
 
-    public function webRegistration(Request $request) {
+    public function webRegistration(Request $request)
+    {
 
         $Validator = Validator::make($request->all(), [
             'company_name'      => 'required',
@@ -381,7 +385,7 @@ class AuthController extends Controller {
             $contact_number = $request->input('contact_number');
             $company_name   = $request->input('company_name');
 
-            $otp_token      = random_int(100000,999999);
+            $otp_token      = random_int(100000, 999999);
 
 
             $data     = [
@@ -448,21 +452,22 @@ class AuthController extends Controller {
 
                 $this->send_sms($contact_number, $message);
 
-//                return response()->json([
-//                    'success'  => 200,
-//                    'message'  => "Merchant OTP Has been send Successfully",
-//                ], 200);
+                //                return response()->json([
+                //                    'success'  => 200,
+                //                    'message'  => "Merchant OTP Has been send Successfully",
+                //                ], 200);
 
-                return response()->json([
+                return response()->json(
+                    [
                         'success'   => 200,
                         'type'      => 'success',
                         'title'     => 'Thankyou',
-                        'message'   => "Your Registration successfully Done. Stay with us. Your account will be activate very soon"]
-                , 200);
-
-
+                        'message'   => "Your Registration successfully Done. Stay with us. Your account will be activate very soon"
+                    ],
+                    200
+                );
             }
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
 
             return response()->json([
                 'success'   => 401,
@@ -472,19 +477,22 @@ class AuthController extends Controller {
                 'error'     => "Unauthorized",
             ]);
 
-//            return response()->json([
-//                'success' => 401,
-//                'message' => "Merchant Registration failed",
-//                'error'   => "Unauthorized",
-//            ], 401);
+            //            return response()->json([
+            //                'success' => 401,
+            //                'message' => "Merchant Registration failed",
+            //                'error'   => "Unauthorized",
+            //            ], 401);
         }
     }
 
 
-    public function confirmContactNumber(Request $request) {
-        $Validator = Validator::make($request->all(), [
-            'contact_number'    => 'required|numeric|digits:11',
-            'otp_token'         => 'required|numeric|digits:6',
+    public function confirmContactNumber(Request $request)
+    {
+        $Validator = Validator::make(
+            $request->all(),
+            [
+                'contact_number'    => 'required|numeric|digits:11',
+                'otp_token'         => 'required|numeric|digits:6',
             ],
             [
                 'contact_number.required'   => 'Password is Required',
@@ -507,9 +515,9 @@ class AuthController extends Controller {
         $merchant = Merchant::where([
             "contact_number"    => $contact_number,
             "otp_token"         =>  $request->input('otp_token')
-            ])->first();
+        ])->first();
 
-        if($merchant){
+        if ($merchant) {
 
             Merchant::where('id', $merchant->id)->update([
                 'status'            => 1,
@@ -523,7 +531,7 @@ class AuthController extends Controller {
 
             $new_service_area = [];
 
-            foreach($service_area_charges as $service_area_charge){
+            foreach ($service_area_charges as $service_area_charge) {
                 $new_service_area[] = [
                     'name' => $service_area_charge->name,
                     'cod_charge' => $service_area_charge->cod_charge,
@@ -543,7 +551,7 @@ class AuthController extends Controller {
             );
 
             $cod_charge = $merchant->cod_charge;
-            if(isNull($merchant->cod_charge)){
+            if (isNull($merchant->cod_charge)) {
                 $cod_charge = -1;
             }
 
@@ -571,24 +579,24 @@ class AuthController extends Controller {
 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function me(Request $request) {
+    public function me(Request $request)
+    {
         $merchant                       =  auth()->guard('merchant_api')->user();
 
-        if($merchant->image){
-            $merchant->image = asset('uploads/merchant/'.$merchant->image);
-        }
-        else{
+        if ($merchant->image) {
+            $merchant->image = asset('uploads/merchant/' . $merchant->image);
+        } else {
             $merchant->image = asset('image/defaultMerchant.png');
         }
 
-        if($merchant->trade_license){
-            $merchant->trade_license = asset('uploads/merchant/'.$merchant->trade_license);
+        if ($merchant->trade_license) {
+            $merchant->trade_license = asset('uploads/merchant/' . $merchant->trade_license);
         }
-        if($merchant->nid_card){
-            $merchant->nid_card = asset('uploads/merchant/'.$merchant->nid_card);
+        if ($merchant->nid_card) {
+            $merchant->nid_card = asset('uploads/merchant/' . $merchant->nid_card);
         }
-        if($merchant->tin_certificate){
-            $merchant->tin_certificate = asset('uploads/merchant/'.$merchant->tin_certificate);
+        if ($merchant->tin_certificate) {
+            $merchant->tin_certificate = asset('uploads/merchant/' . $merchant->tin_certificate);
         }
 
         $service_area_charges           =  auth()->guard('merchant_api')->user()->service_area_charges;
@@ -597,10 +605,10 @@ class AuthController extends Controller {
         $merchant_service_area_cod_charges    =  auth()->guard('merchant_api')->user()->merchant_service_area_cod_charges;
         $new_service_area           = [];
         $new_service_return_area    = [];
-// return $merchant_service_area_cod_charges;
+        // return $merchant_service_area_cod_charges;
 
-        foreach($service_area_charges as $service_area_charge){
-            
+        foreach ($service_area_charges as $service_area_charge) {
+
             $new_service_area[] = [
                 'name' => $service_area_charge->name,
                 'cod_charge' => $service_area_charge->cod_charge,
@@ -608,7 +616,7 @@ class AuthController extends Controller {
                 'charge' => $service_area_charge->pivot->charge,
             ];
         }
-        foreach($service_area_return_charges as $service_area_return_charge){
+        foreach ($service_area_return_charges as $service_area_return_charge) {
             $new_service_return_area[] = [
                 'name' => $service_area_charge->name,
                 'return_charge' => $service_area_charge->pivot->return_charge,
@@ -616,7 +624,7 @@ class AuthController extends Controller {
         }
 
         $cod_charge = 0;
-        if($merchant->cod_charge){
+        if ($merchant->cod_charge) {
             $cod_charge = $merchant->cod_charge;
         }
 
@@ -650,7 +658,8 @@ class AuthController extends Controller {
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function refresh() {
+    public function refresh()
+    {
         return $this->respondWithToken(auth()->guard('merchant_api')->refresh());
     }
 
@@ -662,7 +671,8 @@ class AuthController extends Controller {
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithToken($token) {
+    protected function respondWithToken($token)
+    {
         return response()->json([
             'success'      => 200,
             'message'      => "Merchant New Token",
@@ -680,19 +690,17 @@ class AuthController extends Controller {
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    function payload() {
+    function payload()
+    {
         return auth()->guard('merchant_api')->payload();
     }
 
 
-    public function forgotPassword(Request $request) {
-        $Validator = Validator::make($request->all(), [
-            'contact_number'    => 'required|numeric|digits:11',
-            ],
-            [
-                'contact_number.required'   => 'Contact Number is Required',
-                'contact_number.numeric'    => 'Contact Number must be Numeric',
-            ]
+    public function forgotPassword(Request $request)
+    {
+        $Validator = Validator::make(
+            $request->all(),
+            ['email'    => 'required|email|max:50']
         );
 
         if ($Validator->fails()) {
@@ -703,13 +711,11 @@ class AuthController extends Controller {
             ], 401);
         }
 
-        $contact_number = '0' . substr(preg_replace('/\D/', '', $request->input('contact_number')), -10);
+        $merchant = Merchant::where("email", $request->input('email'))->first();
 
-        $merchant = Merchant::where("contact_number", $contact_number)->first();
+        if ($merchant) {
 
-        if($merchant){
-
-            $otp_token = random_int(100000,999999);
+            $otp_token = random_int(100000, 999999);
 
             Merchant::where('id', $merchant->id)->update([
                 'otp_token'         => $otp_token,
@@ -717,14 +723,17 @@ class AuthController extends Controller {
                 'otp_token_status'  => 0,
             ]);
 
-            $message    = "Dear {$merchant->company_name}, ";
-            $message    .= "Your OTP is {$otp_token}. Please Confirm your account.";
+            $merchant->notify(new ForgotPasswordOtp($otp_token));
 
-            $this->send_sms($contact_number, $message);
+            // $message    = "Dear {$merchant->company_name}, ";
+            // $message    .= "Your OTP is {$otp_token}. Please Confirm your account.";
+
+            // $this->send_sms($contact_number, $message);
 
             return response()->json([
                 'success'  => 200,
                 'message'  => "Merchant Forget Password OTP Has been send Successfully",
+                'otp'  => $otp_token,
             ], 200);
         }
 
@@ -733,21 +742,19 @@ class AuthController extends Controller {
             'message' => "Merchant user Credential not Match",
             'error'   => "Unauthorized",
         ], 401);
-
     }
 
-
-    public function confirmForgotPassword(Request $request) {
-        $Validator = Validator::make($request->all(), [
-            'contact_number'    => 'required|numeric|digits:11',
-            // 'otp_token'         => 'required|numeric|digits:6',
-            'password'          => 'required|min:5',
+    public function confirmForgotPassword(Request $request)
+    {
+        $Validator = Validator::make(
+            $request->all(),
+            [
+                'otp'         => 'required|numeric|digits:6',
+                'password'          => 'required|min:5',
             ],
             [
-                'contact_number.required'   => 'Contact number is Required',
-                'contact_number.min'        => 'Contact number is minimum 11 Digit',
-                // 'otp_token.required'        => 'OTP Token is Required',
-                // 'otp_token.min'             => 'OTP Token is minimum 11 Digit',
+                'otp.required'        => 'OTP Token is Required',
+                'otp.min'             => 'OTP Token is minimum 6 Digit',
                 'password.required'         => 'Password is Required',
                 'password.min'              => 'Password is minimum 5 Digit Required',
             ]
@@ -761,15 +768,11 @@ class AuthController extends Controller {
             ], 401);
         }
 
-        $contact_number = '0' . substr(preg_replace('/\D/', '', $request->input('contact_number')), -10);
-
         $merchant = Merchant::where([
-            "contact_number"    => $contact_number,
-            // "otp_token"         =>  $request->input('otp_token')
+            "otp_token" => $request->input('otp')
         ])->first();
 
-        if($merchant){
-
+        if ($merchant) {
             Merchant::where('id', $merchant->id)->update([
                 'otp_token'         => null,
                 'otp_token_status'  => 1,
@@ -783,7 +786,7 @@ class AuthController extends Controller {
 
             $new_service_area = [];
 
-            foreach($service_area_charges as $service_area_charge){
+            foreach ($service_area_charges as $service_area_charge) {
                 $new_service_area[] = [
                     'name' => $service_area_charge->name,
                     'cod_charge' => $service_area_charge->cod_charge,
@@ -803,7 +806,7 @@ class AuthController extends Controller {
             );
 
             $cod_charge = $merchant->cod_charge;
-            if(isNull($merchant->cod_charge)){
+            if (isNull($merchant->cod_charge)) {
                 $cod_charge = -1;
             }
 
@@ -826,7 +829,8 @@ class AuthController extends Controller {
         ], 401);
     }
 
-    public function profileUpdate(Request $request) {
+    public function profileUpdate(Request $request)
+    {
         $merchant_id = auth()->guard('merchant_api')->user()->id;
 
         $validator = Validator::make($request->all(), [
@@ -837,8 +841,8 @@ class AuthController extends Controller {
             'contact_number'    => 'required',
             'address'           => 'required',
             'business_address'  => 'sometimes',
-            'district_id'   	=> 'sometimes',
-            'area_id' 	    	=> 'sometimes',
+            'district_id'       => 'sometimes',
+            'area_id'             => 'sometimes',
             'bkash_number'      => 'sometimes',
             'nagad_number'      => 'sometimes',
             'fb_url'            => 'sometimes',
@@ -871,9 +875,7 @@ class AuthController extends Controller {
                 if (file_exists($old_image_path)) {
                     unlink($old_image_path);
                 }
-
             }
-
         }
 
         $data = [
@@ -918,7 +920,8 @@ class AuthController extends Controller {
         }
     }
 
-    public function updatePassword(Request $request) {
+    public function updatePassword(Request $request)
+    {
         $merchant_id = auth()->guard('merchant_api')->user()->id;
 
         $validator = Validator::make($request->all(), [
@@ -965,7 +968,6 @@ class AuthController extends Controller {
                 'message'   => "Merchant Password Update Successfully",
                 'parcel_id' => $request->parcel_id,
             ], 200);
-
         } else {
             return response()->json([
                 'success' => 401,

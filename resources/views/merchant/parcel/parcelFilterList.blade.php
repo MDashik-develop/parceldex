@@ -145,7 +145,7 @@
                 </div>
 
                 <div class="modal fade" id="viewModal">
-                    <div class="modal-dialog modal-xl">
+                    <div class="modal-dialog modal-lg">
                         <div class="modal-content" id="showResult">
 
                         </div>

@@ -25,12 +25,9 @@ Route::group(['middleware' => 'jwt', 'prefix' => 'merchant/'], function () {
     Route::post('profileUpdate', [App\Http\Controllers\API\Merchant\AuthController::class, 'profileUpdate']);
 
 
-    //
-    Route::post('v1/addParcel', [App\Http\Controllers\API\Merchant\ParcelController::class, 'addParcel2']);
-    Route::post('v1/viewParcel', [App\Http\Controllers\API\Merchant\ParcelController::class, 'viewParcel2']);
-
-
-
+    // Pull Push API
+    Route::get('parcel/{id}', [App\Http\Controllers\API\Merchant\ParcelController::class, 'viewParcel2']);
+    Route::post('parcel/add', [App\Http\Controllers\API\Merchant\ParcelController::class, 'addParcel2']);
 
     //================ Parcel ================================
     Route::post('addParcel', [App\Http\Controllers\API\Merchant\ParcelController::class, 'addParcel']);
@@ -60,7 +57,4 @@ Route::group(['middleware' => 'jwt', 'prefix' => 'merchant/'], function () {
     Route::post('confirmPaymentRequestGenerate', [App\Http\Controllers\API\Merchant\ParcelPaymentRequestController::class, 'confirmPaymentRequestGenerate']);
     Route::get('getParcelPaymentRequestList', [App\Http\Controllers\API\Merchant\ParcelPaymentRequestController::class, 'getParcelPaymentRequestList']);
     Route::post('viewParcelPaymentRequest', [App\Http\Controllers\API\Merchant\ParcelPaymentRequestController::class, 'viewParcelPaymentRequest']);
-
-
 });
-

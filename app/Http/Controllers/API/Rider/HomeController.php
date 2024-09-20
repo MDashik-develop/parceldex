@@ -10,9 +10,11 @@ use Carbon\Carbon;
 
 
 
-class HomeController extends Controller {
+class HomeController extends Controller
+{
 
-    public function dashboard(Request $request) {
+    public function dashboard(Request $request)
+    {
         $rider_id   = auth()->guard('rider_api')->user()->id;
 
         $data       = [];
@@ -41,10 +43,13 @@ class HomeController extends Controller {
         $data['totalDeliveryPending']   = Parcel::whereRaw('delivery_rider_id = ? and status in (23)', [$rider_id])->count();
         $data['totalDeliveryCancel']    = Parcel::whereRaw('delivery_rider_id = ? and status in (20)', [$rider_id])->count();
 
-        $total_ecourier_collection          = Parcel::whereRaw('delivery_rider_id = ? and delivery_type in (1,2)', [$rider_id] )->sum('customer_collect_amount');
+        $total_ecourier_collection1          = Parcel::whereRaw('delivery_rider_id = ? and delivery_type in (1,2)', [$rider_id])->sum('customer_collect_amount');
+        $total_ecourier_collection2          = Parcel::whereRaw('delivery_rider_id = ? and delivery_type in (1,2)', [$rider_id])->sum('cancel_amount_collection');
+        $total_ecourier_collection          = $total_ecourier_collection1 + $total_ecourier_collection2;
+
         $data['ecourierTotalCollectAmount'] = number_format((float) ($total_ecourier_collection), 2, '.', '');
 
-        $ecourier_collection_paid_to_branch = Parcel::whereRaw('delivery_rider_id = ? and delivery_type in (1,2) and status >= ?', [$rider_id, 25] )->sum('customer_collect_amount');
+        $ecourier_collection_paid_to_branch = Parcel::whereRaw('delivery_rider_id = ? and delivery_type in (1,2) and status >= ?', [$rider_id, 25])->sum('customer_collect_amount');
         $data['ecourierPaidToBranch']       = number_format((float) $ecourier_collection_paid_to_branch, 2, '.', '');
 
         $data['ecourierBalanceCollectAmount'] = number_format((float) ($total_ecourier_collection - $ecourier_collection_paid_to_branch), 2, '.', '');
@@ -60,7 +65,7 @@ class HomeController extends Controller {
 
         $data['a_totalReturnRequest']      = Parcel::whereRaw('return_rider_id = ? and status in (31)', [$rider_id])->count();
         $data['a_totalReturnPending']      = Parcel::whereRaw('return_rider_id = ? and status in (33)', [$rider_id])->count();
-        
+
         // New Api 
         $data['sallary']                  = Rider::where('id', $rider_id)->pluck('salary')->first();
         $data['joiningdate']              = Rider::where('id', $rider_id)->pluck('date')->first();
@@ -72,7 +77,5 @@ class HomeController extends Controller {
             'message'                       => "Merchant Dashboard.",
             'dashboard_count'               => $data,
         ], 200);
-
     }
-
 }

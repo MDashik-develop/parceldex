@@ -6,12 +6,11 @@ new migration:
 5. ALTER TABLE `parcels` ADD `cancel_amount_collection` SMALLINT NOT NULL DEFAULT '0' AFTER `parcel_otp_expired_at`;
 6. ALTER TABLE `parcels` ADD `suborder` VARCHAR(191) NULL AFTER `product_details`;
 7. ALTER TABLE `parcel_logs` ADD `updated_by` TEXT NULL AFTER `delivery_type`;
+8. ALTER TABLE `parcels` ADD `is_push` BOOLEAN NOT NULL DEFAULT FALSE AFTER `status`;
 
----------------------------
-fix link for all panel from parcel list data table
-
-----------------
-will be nullable from parcel table
-
+//
 customer_name
 ALTER TABLE `parcels` CHANGE `customer_name` `customer_name` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
+ sl , m n, cid, date , cu n, phone, ad , district, area,weight,
+
+ F P otp will go to email 

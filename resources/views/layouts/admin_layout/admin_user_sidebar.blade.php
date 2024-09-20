@@ -432,6 +432,13 @@
                         <p>Merchant Pickup Parcel Report</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.push.request') }}"
+                        class="nav-link {{ $child_menu == 'push-request' ? 'active' : '' }}">
+                        <i class="fas fa-tags"></i>
+                        <p>Push Request</p>
+                    </a>
+                </li>
                 <li class="nav-item has-treeview {{ $main_menu == 'report' ? 'menu-open' : '' }} ">
                     <a href="#" class="nav-link {{ $main_menu == 'report' ? 'active' : '' }}">
                         <i class="fas fa-book fa-lg text-success"></i>

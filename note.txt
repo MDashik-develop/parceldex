@@ -7,6 +7,8 @@ new migration:
 6. ALTER TABLE `parcels` ADD `suborder` VARCHAR(191) NULL AFTER `product_details`;
 7. ALTER TABLE `parcel_logs` ADD `updated_by` TEXT NULL AFTER `delivery_type`;
 8. ALTER TABLE `parcels` ADD `is_push` BOOLEAN NOT NULL DEFAULT FALSE AFTER `status`;
+ALTER TABLE `parcels` ADD `tracking_id` VARCHAR(191) NULL AFTER `updated_admin_id`;
+
 
 //
 customer_name

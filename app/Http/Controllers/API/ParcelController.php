@@ -16,10 +16,12 @@ use App\Models\MerchantServiceAreaReturnCharge;
 use App\Models\WeightPackage;
 use mysql_xdevapi\Exception;
 
-class ParcelController extends Controller {
+class ParcelController extends Controller
+{
 
 
-    public function orderStatusUpdate(Request $request) {
+    public function orderStatusUpdate(Request $request)
+    {
 
         if (!$request->hasHeader('token') || $request->header('token') != 'flierexpress') {
             return response()->json([
@@ -46,27 +48,31 @@ class ParcelController extends Controller {
         $status             = $request->input('status');
         $parcel_status      = 1;
         $delivery_type      = null;
-        switch($status){
-            case "Picked" : $parcel_status = 11; break;
+        switch ($status) {
+            case "Picked":
+                $parcel_status = 11;
+                break;
 
-            case "Point Received" : $parcel_status = 14; break;
+            case "Point Received":
+                $parcel_status = 14;
+                break;
 
-            case "Delivered" :
+            case "Delivered":
                 $parcel_status = 25;
                 $delivery_type = 1;
                 break;
 
-            case "Partial" :
+            case "Partial":
                 $parcel_status = 25;
                 $delivery_type = 2;
                 break;
 
-            case "Return" :
+            case "Return":
                 $parcel_status = 25;
                 $delivery_type = 4;
                 break;
 
-            default :
+            default:
                 $parcel_status = 1;
                 $delivery_type = null;
                 break;
@@ -107,7 +113,8 @@ class ParcelController extends Controller {
     }
 
 
-    public function parcelStart(Request $request) {
+    public function parcelStart(Request $request)
+    {
         if ($request->ajax()) {
             $validator = Validator::make($request->all(), [
                 'parcel_id' => 'required',
@@ -125,8 +132,8 @@ class ParcelController extends Controller {
                     'parcel_date' => date('Y-m-d'),
                 ];
                 $parcel = Parcel::where('id', '=', $request->parcel_id)
-                ->whereRaw("status = 2 or status = 4")
-                ->update($data);
+                    ->whereRaw("status = 2 or status = 4")
+                    ->update($data);
                 if ($parcel) {
                     $data = [
                         'parcel_id'   => $request->parcel_id,
@@ -158,11 +165,11 @@ class ParcelController extends Controller {
             'message' => "Parcel Start Unsuccessfully",
             'error'   => "Parcel Start Unsuccessfully",
         ], 401);
-
     }
 
 
-    public function parcelHold(Request $request) {
+    public function parcelHold(Request $request)
+    {
         if ($request->ajax()) {
             $validator = Validator::make($request->all(), [
                 'parcel_id' => 'required',
@@ -180,8 +187,8 @@ class ParcelController extends Controller {
                     'parcel_date' => date('Y-m-d'),
                 ];
                 $parcel = Parcel::where('id', '=', $request->parcel_id)
-                ->whereRaw("status = 1 or status = 4")
-                ->update($data);
+                    ->whereRaw("status = 1 or status = 4")
+                    ->update($data);
                 if ($parcel) {
                     $data = [
                         'parcel_id'   => $request->parcel_id,
@@ -215,7 +222,8 @@ class ParcelController extends Controller {
     }
 
 
-    public function parcelCancel(Request $request) {
+    public function parcelCancel(Request $request)
+    {
         if ($request->ajax()) {
             $validator = Validator::make($request->all(), [
                 'parcel_id' => 'required',
@@ -232,8 +240,8 @@ class ParcelController extends Controller {
                     'parcel_date' => date('Y-m-d'),
                 ];
                 $parcel = Parcel::where('id', '=', $request->parcel_id)
-                ->whereRaw("status < 10")
-                ->update($data);
+                    ->whereRaw("status < 10")
+                    ->update($data);
                 if ($parcel) {
                     $data = [
                         'parcel_id'   => $request->parcel_id,
@@ -270,13 +278,13 @@ class ParcelController extends Controller {
     public function pathaoParcelStatus(Request $request)
     {
         try {
-//            dd($request->ip());
+            //            dd($request->ip());
             $sendBoxData = [
                 'ip' => $request->ip(),
                 'body' => json_encode($request->all()),
                 'header' => json_encode($request->header()),
             ];
-//            dd($sendBoxData);
+            //            dd($sendBoxData);
             $sendBox = SendBox::create($sendBoxData);
 
             $signature = "619c5e3ba54f834fe42420f137cde8533ff63ca9";
@@ -292,7 +300,7 @@ class ParcelController extends Controller {
 
                 $pathaoOrderDetail = PathaoOrderDetail::where('consignment_id', $consignment_id)->with('parcel', 'rider_run_detail')->first();
                 if ($pathaoOrderDetail) {
-//            dd($pathaoOrderDetail->rider_run_detail->rider_run->rider_id);
+                    //            dd($pathaoOrderDetail->rider_run_detail->rider_run->rider_id);
                     $riderRunDetail = $pathaoOrderDetail->rider_run_detail;
                     $riderRun = $pathaoOrderDetail->rider_run_detail->rider_run;
                     $parcel = $pathaoOrderDetail->parcel;
@@ -334,7 +342,7 @@ class ParcelController extends Controller {
                          $message .= "Your OTP " . $parcel->parcel_code . ". \n";
                          $message .= "Parcel from " . $parcel->merchant->company_name . " (TK " . $parcel->total_collect_amount . ")";
                          $message .= " will be delivered by " . $parcel->delivery_rider->name . ", " . $parcel->delivery_rider->contact_number . ".\n";
-                         $message .= " Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Foring Move";
+                         $message .= " Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->tracking_id. "   \n- Foring Move";
                          send_bl_sms($parcel->customer_contact_number, $message);*/
                     } elseif ($order_status == "Pickup_Cancelled") {
                         $riderRunDetail->update([
@@ -353,9 +361,8 @@ class ParcelController extends Controller {
                             'status' => 20,
                             'delivery_type' => $parcel->delivery_type,
                         ]);
-
                     } elseif ($order_status == "Delivered") {
-//                dd($riderRun);
+                        //                dd($riderRun);
                         $riderRun->update([
                             'total_run_complete_parcel' => $riderRun->total_run_complete_parcel + 1,
                         ]);
@@ -391,7 +398,7 @@ class ParcelController extends Controller {
                         // $this->send_sms($parcel->customer_contact_number, $message);
 
                     } elseif ($order_status == "Partial_Delivery") {
-//                dd($riderRun);
+                        //                dd($riderRun);
                         $riderRun->update([
                             'total_run_complete_parcel' => $riderRun->total_run_complete_parcel + 1,
                         ]);
@@ -427,7 +434,7 @@ class ParcelController extends Controller {
                         // $this->send_sms($parcel->customer_contact_number, $message);
 
                     } elseif ($order_status == "Return") {
-//                dd($reason);
+                        //                dd($reason);
                         $riderRun->update([
                             'total_run_complete_parcel' => $riderRun->total_run_complete_parcel + 1,
                         ]);
@@ -475,7 +482,6 @@ class ParcelController extends Controller {
                     ];
                     $code = 404;
                 }
-
             } else {
                 $response = [
                     'success' => false,
@@ -495,7 +501,5 @@ class ParcelController extends Controller {
             $sendBox->update(['response' => json_encode($response)]);
             return response()->json($response, $code);
         }
-
     }
-
 }

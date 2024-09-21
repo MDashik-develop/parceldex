@@ -119,7 +119,7 @@
                     <div id="" class="d-flex flex-column  justify-content-center"
                         style=" border: 2px dotted #f87326; background-color: #eac0a8; padding: 10px; width: 88%">
                         <p id="trackingText" class="p-0 m-0 font-weight-bold fs-1">
-                            {{ route('frontend.orderTracking') . '?trackingBox=' . $parcel['parcel_invoice'] }}</p>
+                            {{ route('frontend.orderTracking') . '?trackingBox=' . $parcel['tracking_id'] }}</p>
                     </div>
                     <button id="copyButton" class="text-white font-weight-bolder py-2 px-4 border-0"
                         style="background-color: #f87326; font-size: 18px; border-radius: 5px;">COPY</button>

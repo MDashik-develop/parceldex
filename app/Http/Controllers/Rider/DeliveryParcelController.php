@@ -475,7 +475,7 @@ class DeliveryParcelController extends Controller
                         // $message .= "Your OTP " . $parcel->parcel_code . ". \n";
                         // $message .= "Parcel from " . $parcel->merchant->company_name . " (TK " . $parcel->total_collect_amount . ")";
                         // $message .= " will be delivered by " . $parcel->delivery_rider->name . ", " . $parcel->delivery_rider->contact_number . ".\n";
-                        // $message .= " Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Parceldex Ltd";
+                        // $message .= " Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->tracking_id. "   \n- Parceldex Ltd";
 
                         // $message = "Provide this OTP: " . $parcel->parcel_otp . " to rider if you received parcel (" . $parcel->parcel_invoice . "). This OTP will be valid for 30 minutes. Parceldex Ltd.";
 

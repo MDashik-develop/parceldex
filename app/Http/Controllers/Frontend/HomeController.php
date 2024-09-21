@@ -298,7 +298,7 @@ class HomeController extends Controller
 
     public function orderTracking(Request $request)
     {
-        $parcel = Parcel::with('district', 'upazila', 'area', 'merchant', 'weight_package', 'pickup_branch', 'pickup_rider', 'delivery_branch', 'delivery_rider')->where('parcel_invoice', $request->input('trackingBox'))->first();
+        $parcel = Parcel::with('district', 'upazila', 'area', 'merchant', 'weight_package', 'pickup_branch', 'pickup_rider', 'delivery_branch', 'delivery_rider')->where('tracking_id', $request->input('trackingBox'))->first();
 
         if (! $parcel) {
             return view('frontend.orderTracking', compact('parcel'));

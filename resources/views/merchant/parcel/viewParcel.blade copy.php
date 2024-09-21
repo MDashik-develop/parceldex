@@ -39,7 +39,8 @@
                                     <th style="width: 40%">Date </th>
                                     <td style="width: 10%"> : </td>
                                     <td style="width: 50%">
-                                        {{ \Carbon\Carbon::parse($parcel->delivery_date)->format('d/m/Y') }} </td>
+                                        {{ \Carbon\Carbon::parse($parcel->delivery_date)->format('d/m/Y') }}
+                                    </td>
                                 </tr>
                                 {{-- <tr>
                                     <th style="width: 40%">Product Details  </th>
@@ -47,18 +48,18 @@
                                     <td style="width: 50%"> {{ $parcel->product_details }} </td>
                                 </tr> --}}
                                 @if ($parcel->service_type)
-                                    <tr>
-                                        <th style="width: 40%">Service Type </th>
-                                        <td style="width: 10%"> : </td>
-                                        <td style="width: 50%"> {{ optional($parcel->service_type)->title }} </td>
-                                    </tr>
+                                <tr>
+                                    <th style="width: 40%">Service Type </th>
+                                    <td style="width: 10%"> : </td>
+                                    <td style="width: 50%"> {{ optional($parcel->service_type)->title }} </td>
+                                </tr>
                                 @endif
                                 @if ($parcel->item_type)
-                                    <tr>
-                                        <th style="width: 40%">Item Type </th>
-                                        <td style="width: 10%"> : </td>
-                                        <td style="width: 50%"> {{ optional($parcel->item_type)->title }} </td>
-                                    </tr>
+                                <tr>
+                                    <th style="width: 40%">Item Type </th>
+                                    <td style="width: 10%"> : </td>
+                                    <td style="width: 50%"> {{ optional($parcel->item_type)->title }} </td>
+                                </tr>
                                 @endif
                                 <tr>
                                     <th style="width: 40%">Product Value </th>
@@ -201,129 +202,131 @@
             </div>
             <div class="col-md-12 row">
                 @if (!empty($parcel->pickup_branch))
-                    <div class="col-md-6">
-                        <fieldset>
-                            <legend>Pickup Branch Information</legend>
-                            <table class="table table-style">
-                                <tr>
-                                    <th style="width: 40%"> Pickup Date </th>
-                                    <td style="width: 10%"> : </td>
-                                    <td style="width: 50%">
-                                        {{ \Carbon\Carbon::parse($parcel->pickup_branch_date)->format('d/m/Y') }} </td>
-                                </tr>
-                                <tr>
-                                    <th style="width: 40%"> Name</th>
-                                    <td style="width: 10%"> : </td>
-                                    <td style="width: 50%"> {{ $parcel->pickup_branch->name }} </td>
-                                </tr>
-                                <tr>
-                                    <th style="width: 40%"> Contact Number </th>
-                                    <td style="width: 10%"> : </td>
-                                    <td style="width: 50%"> {{ $parcel->pickup_branch->contact_number }} </td>
-                                </tr>
-                                <tr>
-                                    <th style="width: 40%"> Address </th>
-                                    <td style="width: 10%"> : </td>
-                                    <td style="width: 50%"> {{ $parcel->pickup_branch->address }} </td>
-                                </tr>
-                            </table>
-                        </fieldset>
-                    </div>
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>Pickup Branch Information</legend>
+                        <table class="table table-style">
+                            <tr>
+                                <th style="width: 40%"> Pickup Date </th>
+                                <td style="width: 10%"> : </td>
+                                <td style="width: 50%">
+                                    {{ \Carbon\Carbon::parse($parcel->pickup_branch_date)->format('d/m/Y') }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40%"> Name</th>
+                                <td style="width: 10%"> : </td>
+                                <td style="width: 50%"> {{ $parcel->pickup_branch->name }} </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40%"> Contact Number </th>
+                                <td style="width: 10%"> : </td>
+                                <td style="width: 50%"> {{ $parcel->pickup_branch->contact_number }} </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40%"> Address </th>
+                                <td style="width: 10%"> : </td>
+                                <td style="width: 50%"> {{ $parcel->pickup_branch->address }} </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </div>
                 @endif
 
                 @if (!empty($parcel->pickup_rider))
-                    <div class="col-md-6">
-                        <fieldset>
-                            <legend>Pickup Rider Information</legend>
-                            <table class="table table-style">
-                                <tr>
-                                    <th style="width: 40%"> Pickup Date </th>
-                                    <td style="width: 10%"> : </td>
-                                    <td style="width: 50%">
-                                        {{ \Carbon\Carbon::parse($parcel->pickup_rider_date)->format('d/m/Y') }} </td>
-                                </tr>
-                                <tr>
-                                    <th style="width: 40%"> Name</th>
-                                    <td style="width: 10%"> : </td>
-                                    <td style="width: 50%"> {{ $parcel->pickup_rider->name }} </td>
-                                </tr>
-                                <tr>
-                                    <th style="width: 40%"> Contact Number </th>
-                                    <td style="width: 10%"> : </td>
-                                    <td style="width: 50%"> {{ $parcel->pickup_rider->contact_number }} </td>
-                                </tr>
-                                <!--                            <tr>
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>Pickup Rider Information</legend>
+                        <table class="table table-style">
+                            <tr>
+                                <th style="width: 40%"> Pickup Date </th>
+                                <td style="width: 10%"> : </td>
+                                <td style="width: 50%">
+                                    {{ \Carbon\Carbon::parse($parcel->pickup_rider_date)->format('d/m/Y') }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40%"> Name</th>
+                                <td style="width: 10%"> : </td>
+                                <td style="width: 50%"> {{ $parcel->pickup_rider->name }} </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40%"> Contact Number </th>
+                                <td style="width: 10%"> : </td>
+                                <td style="width: 50%"> {{ $parcel->pickup_rider->contact_number }} </td>
+                            </tr>
+                            <!--                            <tr>
                                 <th style="width: 40%"> Address </th>
                                 <td style="width: 10%"> : </td>
                                 <td style="width: 50%"> {{ $parcel->pickup_rider->address }} </td>
                             </tr>-->
-                            </table>
-                        </fieldset>
-                    </div>
+                        </table>
+                    </fieldset>
+                </div>
                 @endif
 
                 @if (!empty($parcel->delivery_branch))
-                    <div class="col-md-6">
-                        <fieldset>
-                            <legend>Delivery Branch Information</legend>
-                            <table class="table table-style">
-                                <tr>
-                                    <th style="width: 40%"> Delivery Date </th>
-                                    <td style="width: 10%"> : </td>
-                                    <td style="width: 50%">
-                                        {{ \Carbon\Carbon::parse($parcel->delivery_branch_date)->format('d/m/Y') }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th style="width: 40%"> Name</th>
-                                    <td style="width: 10%"> : </td>
-                                    <td style="width: 50%"> {{ $parcel->delivery_branch->name }} </td>
-                                </tr>
-                                <tr>
-                                    <th style="width: 40%"> Contact Number </th>
-                                    <td style="width: 10%"> : </td>
-                                    <td style="width: 50%"> {{ $parcel->delivery_branch->contact_number }} </td>
-                                </tr>
-                                <tr>
-                                    <th style="width: 40%"> Address </th>
-                                    <td style="width: 10%"> : </td>
-                                    <td style="width: 50%"> {{ $parcel->delivery_branch->address }} </td>
-                                </tr>
-                            </table>
-                        </fieldset>
-                    </div>
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>Delivery Branch Information</legend>
+                        <table class="table table-style">
+                            <tr>
+                                <th style="width: 40%"> Delivery Date </th>
+                                <td style="width: 10%"> : </td>
+                                <td style="width: 50%">
+                                    {{ \Carbon\Carbon::parse($parcel->delivery_branch_date)->format('d/m/Y') }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40%"> Name</th>
+                                <td style="width: 10%"> : </td>
+                                <td style="width: 50%"> {{ $parcel->delivery_branch->name }} </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40%"> Contact Number </th>
+                                <td style="width: 10%"> : </td>
+                                <td style="width: 50%"> {{ $parcel->delivery_branch->contact_number }} </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40%"> Address </th>
+                                <td style="width: 10%"> : </td>
+                                <td style="width: 50%"> {{ $parcel->delivery_branch->address }} </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </div>
                 @endif
 
                 @if (!empty($parcel->delivery_rider))
-                    <div class="col-md-6">
-                        <fieldset>
-                            <legend>Delivery Rider Information</legend>
-                            <table class="table table-style">
-                                <tr>
-                                    <th style="width: 40%"> Delivery Date </th>
-                                    <td style="width: 10%"> : </td>
-                                    <td style="width: 50%">
-                                        {{ \Carbon\Carbon::parse($parcel->delivery_rider_date)->format('d/m/Y') }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th style="width: 40%"> Name</th>
-                                    <td style="width: 10%"> : </td>
-                                    <td style="width: 50%"> {{ $parcel->delivery_rider->name ?? '' }} </td>
-                                </tr>
-                                <tr>
-                                    <th style="width: 40%"> Contact Number </th>
-                                    <td style="width: 10%"> : </td>
-                                    <td style="width: 50%"> {{ $parcel->delivery_rider->contact_number ?? '' }} </td>
-                                </tr>
-                                <!--                            <tr>
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>Delivery Rider Information</legend>
+                        <table class="table table-style">
+                            <tr>
+                                <th style="width: 40%"> Delivery Date </th>
+                                <td style="width: 10%"> : </td>
+                                <td style="width: 50%">
+                                    {{ \Carbon\Carbon::parse($parcel->delivery_rider_date)->format('d/m/Y') }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40%"> Name</th>
+                                <td style="width: 10%"> : </td>
+                                <td style="width: 50%"> {{ $parcel->delivery_rider->name ?? '' }} </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40%"> Contact Number </th>
+                                <td style="width: 10%"> : </td>
+                                <td style="width: 50%"> {{ $parcel->delivery_rider->contact_number ?? '' }} </td>
+                            </tr>
+                            <!--                            <tr>
                                 <th style="width: 40%"> Address </th>
                                 <td style="width: 10%"> : </td>
                                 <td style="width: 50%"> {{ $parcel->delivery_rider->address ?? '' }} </td>
                             </tr>-->
-                            </table>
-                        </fieldset>
-                    </div>
+                        </table>
+                    </fieldset>
+                </div>
                 @endif
             </div>
         </div>
@@ -338,30 +341,31 @@
                     <h5>Created Date- {{ $parcel->created_at->format('d-m-Y') }}</h5>
                 </div>
                 @php
-                    $deliveryStatus = [
-                        1 => 'Delivered',
-                        2 => 'Partial Delivered',
-                        3 => 'Rescheduled',
-                        4 => 'Return',
-                    ];
+                $deliveryStatus = [
+                1 => 'Delivered',
+                2 => 'Partial Delivered',
+                3 => 'Rescheduled',
+                4 => 'Return',
+                ];
 
-                    $deliveryStatusDate = App\Models\ParcelLog::where('parcel_id', $parcel->id)
-                        ->where('delivery_type', $parcel->delivery_type)
-                        ->first();
+                $deliveryStatusDate = App\Models\ParcelLog::where('parcel_id', $parcel->id)
+                ->where('delivery_type', $parcel->delivery_type)
+                ->first();
                 @endphp
                 @if ($parcel->delivery_type)
-                    <div>
-                        <h4 class="font-weight-bold">Delivery Status - {{ $deliveryStatus[$parcel->delivery_type] }}
-                        </h4>
-                        <h5>Action Date - {{ \Carbon\Carbon::parse($deliveryStatusDate?->date)->format('d/m/Y') }}</h5>
-                    </div>
+                <div>
+                    <h4 class="font-weight-bold">Delivery Status - {{ $deliveryStatus[$parcel->delivery_type] }}
+                    </h4>
+                    <h5>Action Date - {{ \Carbon\Carbon::parse($deliveryStatusDate?->date)->format('d/m/Y') }}</h5>
+                </div>
                 @endif
                 <div>
                     <h4 class="font-weight-bold">Payment Status - {{ $parcel->payment_type == 5 ? 'Paid' : 'Unpaid' }}
                         </h3>
                         @if ($parcel->payment_type == 5)
-                            <h5>Action Date & Payment ID -
-                                {{ $parcel?->merchantDeliveryPayment?->created_at->format('d-m-Y h:i A') }}</h5>
+                        <h5>Action Date & Payment ID -
+                            {{ $parcel?->merchantDeliveryPayment?->created_at->format('d-m-Y h:i A') }}
+                        </h5>
                         @endif
                 </div>
             </div>
@@ -369,7 +373,8 @@
                 <div>
                     <h4 class="font-weight-bold">Merchant Details</h4>
                     <h4 class="font-weight-bold">{{ $parcel->merchant_shops->shop_name }} -
-                        {{ $parcel->merchant->contact_number }}</h4>
+                        {{ $parcel->merchant->contact_number }}
+                    </h4>
                     <h5>{{ $parcel->merchant->address }}</h5>
                     <h5>{{ $parcel->pickup_address }}</h5>
                 </div>
@@ -442,7 +447,7 @@
                     <h4 class="font-weight-bold">{{ $parcel->customer_name }}</h4>
                     <h5>{{ $parcel->customer_contact_number }}</h5>
                     @if ($parcel->customer_contact_number2)
-                        <h5>{{ $parcel->customer_contact_number2 }}</h5>
+                    <h5>{{ $parcel->customer_contact_number2 }}</h5>
                     @endif
                     <h5>{{ $parcel->customer_address }}</h5>
                     <h5>{{ $parcel->district->name }}</h5>
@@ -506,66 +511,66 @@
                                 @endphp
                                 <tr>
                                     <td> {{ $loop->iteration }} </td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($parcelLog->date)->format('d/m/Y') }}
-                                    </td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($parcelLog->time)->format('H:i:s') }}
-                                    </td>
-                                    <td> {{ $status }} </td>
-                                    <td> {{ $to_user }} </td>
-                                    <td> {{ $from_user }} </td>
-                                </tr>
-                            @endforeach --}}
+            <td>
+                {{ \Carbon\Carbon::parse($parcelLog->date)->format('d/m/Y') }}
+            </td>
+            <td>
+                {{ \Carbon\Carbon::parse($parcelLog->time)->format('H:i:s') }}
+            </td>
+            <td> {{ $status }} </td>
+            <td> {{ $to_user }} </td>
+            <td> {{ $from_user }} </td>
+            </tr>
+            @endforeach --}}
 
             @php
-                $logsGroupedByDate = $parcelLogs
-                    ->groupBy(function ($item) {
-                        return \Carbon\Carbon::parse($item['date'])->format('Y-m-d');
-                    })
-                    ->sortKeysDesc();
+            $logsGroupedByDate = $parcelLogs
+            ->groupBy(function ($item) {
+            return \Carbon\Carbon::parse($item['date'])->format('Y-m-d');
+            })
+            ->sortKeysDesc();
             @endphp
 
             @foreach ($logsGroupedByDate as $key => $items)
-                <div class="d-flex flex-wrap align-items-center">
-                    <h5 class="px-4 py-1 mt-3" style="border:2px solid green; border-radius: 10px;">
-                        {{ \Carbon\Carbon::parse($key)->format('jS F, Y') }}
-                    </h5>
-                </div>
+            <div class="d-flex flex-wrap align-items-center">
+                <h5 class="px-4 py-1 mt-3" style="border:2px solid green; border-radius: 10px;">
+                    {{ \Carbon\Carbon::parse($key)->format('jS F, Y') }}
+                </h5>
+            </div>
 
-                <div class="d-flex justify-content-end align-items-center flex-column text-left mt-2 position-relative"
-                    style="gap: 10px;">
-                    @foreach ($items as $item)
-                        @php
-                            $parcelLogStatus = returnParcelLogStatusNameForAdmin($item, $parcel->delivery_type);
+            <div class="d-flex justify-content-end align-items-center flex-column text-left mt-2 position-relative"
+                style="gap: 10px;">
+                @foreach ($items as $item)
+                @php
+                $parcelLogStatus = returnParcelLogStatusNameForAdmin($item, $parcel->delivery_type);
 
-                            if (!isset($parcelLogStatus['to_user'])) {
-                                continue;
-                            }
+                if (!isset($parcelLogStatus['to_user'])) {
+                continue;
+                }
 
-                            $to_user = $parcelLogStatus['to_user'];
-                            $from_user = $parcelLogStatus['from_user'];
-                            $status = $parcelLogStatus['status_name'];
-                            $sub_title = $parcelLogStatus['sub_title'];
-                        @endphp
+                $to_user = $parcelLogStatus['to_user'];
+                $from_user = $parcelLogStatus['from_user'];
+                $status = $parcelLogStatus['status_name'];
+                $sub_title = $parcelLogStatus['sub_title'];
+                @endphp
 
-                        <div class="d-flex flex-wrap align-items-center py-2 px-3 w-100"
-                            style="background-color: #e7e6e6; border: 1px solid #b4b4b4;">
-                            <div class="d-flex align-items-center flex-wrap section4-card">
-                                <h5>{{ \Carbon\Carbon::parse($item->time)->format('h:i A') }}</h5>
-                                <div>
-                                    <h4>{{ $status }}
-                                    </h4>
-                                    <h5 class="font-weight-normal">{{ $sub_title }} <span
-                                            style="font-size: 18px; color: red;">
-                                        </span></h5>
-                                </div>
-                            </div>
-                            <h6>By – {{ $to_user }}
-                            </h6>
+                <div class="d-flex flex-wrap align-items-center py-2 px-3 w-100"
+                    style="background-color: #e7e6e6; border: 1px solid #b4b4b4;">
+                    <div class="d-flex align-items-center flex-wrap section4-card">
+                        <h5>{{ \Carbon\Carbon::parse($item->time)->format('h:i A') }}</h5>
+                        <div>
+                            <h4>{{ $status }}
+                            </h4>
+                            <h5 class="font-weight-normal">{{ $sub_title }} <span
+                                    style="font-size: 18px; color: red;">
+                                </span></h5>
                         </div>
-                    @endforeach
+                    </div>
+                    <h6>By – {{ $to_user }}
+                    </h6>
                 </div>
+                @endforeach
+            </div>
             @endforeach
 
             {{-- <div class="d-flex flex-wrap align-items-center my-4 section5">
@@ -583,7 +588,8 @@
                     <div id="" class="d-flex flex-column  justify-content-center"
                         style=" border: 2px dotted #f87326; background-color: #eac0a8; padding: 10px; width: 86%">
                         <p id="trackingText" class="p-0 m-0 font-weight-bold fs-1">
-                            {{ route('frontend.orderTracking') . '?trackingBox=' . $parcel['parcel_invoice'] }}</p>
+                            {{ route('frontend.orderTracking') . '?trackingBox=' . $parcel['tracking_id'] }}
+                        </p>
                     </div>
                     <button id="copyButton" class="text-white font-weight-bolder py-2 px-4 border-0"
                         style="background-color: #f87326; font-size: 18px; border-radius: 5px;">COPY</button>

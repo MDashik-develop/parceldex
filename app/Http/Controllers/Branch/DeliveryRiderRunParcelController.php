@@ -333,7 +333,7 @@ class DeliveryRiderRunParcelController extends Controller
                                 // $message .= "Your OTP " . $parcel->parcel_code . ". \n";
                                 // $message .= "Parcel from " . $parcel->merchant->company_name . " (TK " . $parcel->total_collect_amount . ")";
                                 // $message .= " will be delivered by " . $parcel->delivery_rider->name . ", " . $parcel->delivery_rider->contact_number . ".\n";
-                                // $message .= " Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->parcel_invoice . "   \n- Parceldex";
+                                // $message .= " Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->tracking_id. "   \n- Parceldex";
 
                                 $message = "Your parcel ID-" . $parcel->parcel_invoice . " from " . ucwords($parcel->merchant->company_name) . " is on the way to you. COD- " . $parcel->total_collect_amount . " TK. Rider - " . ucwords($parcel->delivery_rider->name) . ", " . $parcel->delivery_rider->contact_number . ". parceldex Ltd.";
 

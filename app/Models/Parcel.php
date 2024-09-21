@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use App\Observers\ParcelObserver;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Parcel extends Model
 {
@@ -13,6 +14,15 @@ class Parcel extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($parcel) {
+            $parcel->tracking_id = Str::uuid()->toString();
+        });
+    }
 
     public function weight_package()
     {

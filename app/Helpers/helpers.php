@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\Notification;
 if (!function_exists('send_bl_sms')) {
     function send_bl_sms($phone, $message)
     {
-        $msisdn = trim($phone);
-        $n = strlen($msisdn);
-        if ($n == 11) {
-            $msisdn = '88' . $msisdn;
-        }
+        // $msisdn = trim($phone);
+        // $n = strlen($msisdn);
+        // if ($n == 11) {
+        //     $msisdn = '88' . $msisdn;
+        // }
 
 
-        return Http::post("https://api.boom-cast.com/boomcast/WebFramework/boomCastWebService/externalApiSendTextMessage.php?masking=NOMASK&userName=Parceldex&password=9b70712043cd3344e52cf6c3bd9d024d&MsgType=TEXT&receiver=$msisdn&message=$message");
+        // return Http::post("https://api.boom-cast.com/boomcast/WebFramework/boomCastWebService/externalApiSendTextMessage.php?masking=NOMASK&userName=Parceldex&password=9b70712043cd3344e52cf6c3bd9d024d&MsgType=TEXT&receiver=$msisdn&message=$message");
         return true;
 
 
@@ -1581,19 +1581,19 @@ function getDifference($model)
     ], true);
 }
 
-function createActivityLog($difference, $parcel)
+function createActivityLog($difference, $parcel, $updated_by)
 {
-    $updated_by = 'User not found';
+    //$updated_by = 'User not found';
 
-    if (auth()->guard('admin')->check()) {
-        $updated_by = auth()->guard('admin')->user()->name;
-    } elseif (auth()->guard('branch')->check()) {
-        $updated_by = auth()->guard('branch')->user()->name . '-' . auth()->guard('branch')->user()->branch->name;
-    } elseif (auth()->guard('merchant')->check()) {
-        $updated_by = auth()->guard('merchant')->user()->name;
-    } elseif (auth()->guard('warehouse')->check()) {
-        $updated_by = auth()->guard('warehouse')->user()->name;
-    }
+    // if (auth()->guard('admin')->check()) {
+    //     $updated_by = auth()->guard('admin')->user()->name;
+    // } elseif (auth()->guard('branch')->check()) {
+    //     $updated_by = auth()->guard('branch')->user()->name . '-' . auth()->guard('branch')->user()->branch->name;
+    // } elseif (auth()->guard('merchant')->check()) {
+    //     $updated_by = auth()->guard('merchant')->user()->name;
+    // } elseif (auth()->guard('warehouse')->check()) {
+    //     $updated_by = auth()->guard('warehouse')->user()->name;
+    // }
 
     $data = [
         'parcel_id' => $parcel->id,

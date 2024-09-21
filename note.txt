@@ -1,18 +1,10 @@
 new migration:
-1. ALTER TABLE `parcels` ADD `customer_contact_number2` VARCHAR(20) NULL AFTER `customer_contact_number`;
-2. ALTER TABLE `parcels` ADD `exchange` VARCHAR(10) NOT NULL DEFAULT 'no' AFTER `customer_contact_number2`;
-3. ALTER TABLE `parcels` ADD `parcel_otp` CHAR(6) NULL AFTER `exchange`;
-4. ALTER TABLE `parcels` ADD `parcel_otp_expired_at` DATETIME NULL AFTER `parcel_otp`;
-5. ALTER TABLE `parcels` ADD `cancel_amount_collection` SMALLINT NOT NULL DEFAULT '0' AFTER `parcel_otp_expired_at`;
-6. ALTER TABLE `parcels` ADD `suborder` VARCHAR(191) NULL AFTER `product_details`;
-7. ALTER TABLE `parcel_logs` ADD `updated_by` TEXT NULL AFTER `delivery_type`;
-8. ALTER TABLE `parcels` ADD `is_push` BOOLEAN NOT NULL DEFAULT FALSE AFTER `status`;
+ALTER TABLE `parcels` ADD `customer_contact_number2` VARCHAR(20) NULL AFTER `customer_contact_number`;
+ALTER TABLE `parcels` ADD `exchange` VARCHAR(10) NOT NULL DEFAULT 'no' AFTER `customer_contact_number2`;
+ALTER TABLE `parcels` ADD `parcel_otp` CHAR(6) NULL AFTER `exchange`;
+ALTER TABLE `parcels` ADD `parcel_otp_expired_at` DATETIME NULL AFTER `parcel_otp`;
+ALTER TABLE `parcels` ADD `cancel_amount_collection` SMALLINT NOT NULL DEFAULT '0' AFTER `parcel_otp_expired_at`;
+ALTER TABLE `parcels` ADD `suborder` VARCHAR(191) NULL AFTER `product_details`;
+ALTER TABLE `parcel_logs` ADD `updated_by` TEXT NULL AFTER `delivery_type`;
+ALTER TABLE `parcels` ADD `is_push` BOOLEAN NOT NULL DEFAULT FALSE AFTER `status`;
 ALTER TABLE `parcels` ADD `tracking_id` VARCHAR(191) NULL AFTER `updated_admin_id`;
-
-
-//
-customer_name
-ALTER TABLE `parcels` CHANGE `customer_name` `customer_name` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
- sl , m n, cid, date , cu n, phone, ad , district, area,weight,
-
- F P otp will go to email 

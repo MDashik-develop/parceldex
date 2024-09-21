@@ -200,21 +200,21 @@ class HomeController extends Controller
 
 
         // ================== new codes by Humayun ===============
-        $total_customer_collect_amount      = Parcel::where('merchant_id', $merchant_id)
-            ->where('status', '>=', 25)
-            ->whereRaw('delivery_type in (?,?) and payment_type in (?,?,?) and payment_request_status = ?', [1, 2, 2, 4, 6, 0])
-            ->sum('customer_collect_amount');
+        // $total_customer_collect_amount      = Parcel::where('merchant_id', $merchant_id)
+        //     ->where('status', '>=', 25)
+        //     ->whereRaw('delivery_type in (?,?) and payment_type in (?,?,?) and payment_request_status = ?', [1, 2, 2, 4, 6, 0])
+        //     ->sum('customer_collect_amount');
 
 
 
 
-        $total_charge_amount                = Parcel::where('merchant_id', $merchant_id)
-            ->where('status', '>=', 25)
-            ->whereRaw('delivery_type in (?,?) and payment_type in (?,?,?) and payment_request_status = ?', [1, 2, 2, 4, 6, 0])
-            ->sum('total_charge');
+        // $total_charge_amount                = Parcel::where('merchant_id', $merchant_id)
+        //     ->where('status', '>=', 25)
+        //     ->whereRaw('delivery_type in (?,?) and payment_type in (?,?,?) and payment_request_status = ?', [1, 2, 2, 4, 6, 0])
+        //     ->sum('total_charge');
 
-        // Balance Amount
-        $data['total_pending_payment'] = number_format($total_customer_collect_amount - $total_charge_amount, 2, '.', '');
+        // // Balance Amount
+        // $data['total_pending_payment'] = number_format($total_customer_collect_amount - $total_charge_amount, 2, '.', '');
         // ================== new codes by Humayun End ===============
 
 

@@ -60,6 +60,7 @@ class BranchParcelExport implements
                 $query->select('id', 'name', 'm_id', 'company_name', 'contact_number', 'address');
             },
         ])
+            ->where('delivery_branch_id', $branch_id)
             ->whereRaw($where_condition)
             ->select();
 

@@ -689,7 +689,7 @@ class ParcelController extends Controller
             }
 
             if ($hasUpdated) {
-                createActivityLog($x, $parcelOld);
+                createActivityLog($x, $parcelOld, auth()->guard('admin')->user()->name);
             }
 
             $data = [

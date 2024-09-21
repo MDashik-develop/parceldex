@@ -1275,7 +1275,7 @@ class ParcelController extends Controller
             }
 
             if ($hasUpdated) {
-                createActivityLog($x, $parcelOld);
+                createActivityLog($x, $parcelOld, $branch->name);
             }
 
             $data = [

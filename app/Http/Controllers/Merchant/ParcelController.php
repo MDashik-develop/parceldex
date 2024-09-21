@@ -1196,7 +1196,7 @@ class ParcelController extends Controller
             }
 
             if ($hasUpdated) {
-                createActivityLog($x, $parcelOld);
+                createActivityLog($x, $parcelOld, $merchant->name);
             }
 
             $data = [

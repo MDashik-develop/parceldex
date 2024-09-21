@@ -20,7 +20,7 @@ class Parcel extends Model
         parent::boot();
 
         static::creating(function ($parcel) {
-            $parcel->tracking_id = Str::uuid()->toString();
+            $parcel->tracking_id = substr(uniqid(), 0, 9);
         });
     }
 

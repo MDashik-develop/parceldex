@@ -80,7 +80,6 @@ class MerchantController extends Controller
                 } else {
                     return '<a class="text-bold text-' . $class . '" href="javascript:void(0)" style="font-size:20px; pointer-events: none" > ' . $status_name . '</a>';
                 }
-
             })
             ->editColumn('cod_charge', function ($data) {
                 $cod_charge = "0 %";
@@ -106,25 +105,25 @@ class MerchantController extends Controller
 
                 return $button;
             })
-            
+
             ->editColumn('created_at', function ($data) {
-                
-                
+
+
 
                 return $data->created_at->format("d-M-Y");
             })
-            
+
             ->addColumn('branch_name', function ($data) {
-                if($data->branch_id){
-                    $text='<span>'.$data->branch->name.'</span>';
-                }else{
-                      $text='<span class="text-danger">'.$data->branch->name.'</span>';
+                if ($data->branch_id) {
+                    $text = '<span>' . $data->branch->name . '</span>';
+                } else {
+                    $text = '<span class="text-danger">' . $data->branch->name . '</span>';
                 }
-                
+
 
                 return $text;
             })
-            ->rawColumns(['image', 'status', 'action', 'image','created_at','branch_name'])
+            ->rawColumns(['image', 'status', 'action', 'image', 'created_at', 'branch_name'])
             ->make(true);
     }
 
@@ -188,7 +187,7 @@ class MerchantController extends Controller
         $data['page_title'] = 'Merchant Bulk Import';
 
         $import_merchant = \session()->has('import_merchant') ? \session()->get('import_merchant') : [];
-//dd($import_merchant);
+        //dd($import_merchant);
         $data['areas'] = Area::all();
         $data['districts'] = District::all();
         $data['branches'] = Branch::all();
@@ -231,15 +230,15 @@ class MerchantController extends Controller
 
             $this->setMessage('Merchant Create Successfully', 'success');
             return redirect()->route('admin.merchant.index');
-
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             \DB::rollback();
             $this->setMessage($e->getMessage(), 'danger');
             return redirect()->back()->withInput();
         }
     }
 
-    public function merchantBulkImportReset() {
+    public function merchantBulkImportReset()
+    {
         \session()->forget('import_merchant');
         $this->setMessage('Import reset successful!', 'success');
         return redirect()->route('admin.merchant.merchantBulkImport');
@@ -392,18 +391,15 @@ class MerchantController extends Controller
 
                 $this->setMessage('Merchant Create Successfully', 'success');
                 return redirect()->route('admin.merchant.index');
-
             } else {
                 $this->setMessage('Merchant Create Failed', 'danger');
                 return redirect()->back()->withInput();
             }
-
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             \DB::rollback();
             $this->setMessage('Database Error Found', 'danger');
             return redirect()->back()->withInput();
         }
-
     }
 
     public function show(Request $request, Merchant $merchant)
@@ -442,7 +438,7 @@ class MerchantController extends Controller
 
     public function update(Request $request, Merchant $merchant)
     {
-        
+
         // return $request->all();
         $validator = Validator::make($request->all(), [
             'company_name' => 'required',
@@ -498,9 +494,7 @@ class MerchantController extends Controller
                     if (file_exists($old_image_path)) {
                         unlink($old_image_path);
                     }
-
                 }
-
             }
 
             if ($request->hasFile('trade_license')) {
@@ -512,9 +506,7 @@ class MerchantController extends Controller
                     if (file_exists($old_image_path)) {
                         unlink($old_image_path);
                     }
-
                 }
-
             }
 
             if ($request->hasFile('nid_card')) {
@@ -526,9 +518,7 @@ class MerchantController extends Controller
                     if (file_exists($old_image_path)) {
                         unlink($old_image_path);
                     }
-
                 }
-
             }
 
             if ($request->hasFile('tin_certificate')) {
@@ -540,9 +530,7 @@ class MerchantController extends Controller
                     if (file_exists($old_image_path)) {
                         unlink($old_image_path);
                     }
-
                 }
-
             }
 
             $data = [
@@ -578,7 +566,7 @@ class MerchantController extends Controller
                 'nid_card' => $nid_card,
                 'tin_certificate' => $tin_certificate,
                 'date' => date('Y-m-d'),
-//                'status' => 1,
+                //                'status' => 1,
                 'updated_admin_id' => auth()->guard('admin')->user()->id,
             ];
 
@@ -625,7 +613,6 @@ class MerchantController extends Controller
                             'return_charge' => $return_charge[$i],
                         ];
                     }
-
                 }
 
 
@@ -640,13 +627,11 @@ class MerchantController extends Controller
                 $this->setMessage('Merchant Update Failed', 'danger');
                 return redirect()->back()->withInput();
             }
-
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             \DB::rollback();
             $this->setMessage('Database Error Found', 'danger');
             return redirect()->back()->withInput();
         }
-
     }
 
     public function updateStatus(Request $request)
@@ -667,7 +652,7 @@ class MerchantController extends Controller
                 ];
             } else {
                 $merchant = Merchant::where('id', $request->merchant_id)->first();
-                if (($merchant->branch_id && $merchant->branch_id !=0) || $merchant->status){
+                if (($merchant->branch_id && $merchant->branch_id != 0) || $merchant->status) {
                     $check = $merchant->update(['status' => $request->status]) ? true : false;
                     if ($check) {
                         $response = [
@@ -679,14 +664,12 @@ class MerchantController extends Controller
                             'error' => 'Database Error Found',
                         ];
                     }
-                }else{
+                } else {
                     $response = [
                         'error' => 'Please Assign Branch First!',
                     ];
                 }
-
             }
-
         }
 
         return response()->json($response);
@@ -733,7 +716,6 @@ class MerchantController extends Controller
                         if (file_exists($old_photo_path)) {
                             unlink($old_photo_path);
                         }
-
                     }
 
                     if (!empty($merchant->trade_license)) {
@@ -742,7 +724,6 @@ class MerchantController extends Controller
                         if (file_exists($old_photo_path)) {
                             unlink($old_photo_path);
                         }
-
                     }
 
                     if (!empty($merchant->nid_card)) {
@@ -751,7 +732,6 @@ class MerchantController extends Controller
                         if (file_exists($old_photo_path)) {
                             unlink($old_photo_path);
                         }
-
                     }
 
                     if (!empty($merchant->tin_certificate)) {
@@ -760,16 +740,13 @@ class MerchantController extends Controller
                         if (file_exists($old_photo_path)) {
                             unlink($old_photo_path);
                         }
-
                     }
 
                     $response = ['success' => 'Merchant Delete Update Successfully'];
                 } else {
                     $response = ['error' => 'Database Error Found'];
                 }
-
             }
-
         }
 
         return response()->json($response);
@@ -821,7 +798,6 @@ class MerchantController extends Controller
                     'charge' => $charge,
                 ];
             }
-
         }
 
         return response()->json($response);
@@ -932,8 +908,6 @@ class MerchantController extends Controller
                             $code_charge_percent = $merchantServiceAreaCodCharge->cod_charge;
                         }
                     }
-
-
                 }
 
 
@@ -949,7 +923,6 @@ class MerchantController extends Controller
                     'itemTypeOption' => $itemTypeOption,
                 ];
             }
-
         }
 
         return response()->json($response);
@@ -1039,62 +1012,68 @@ class MerchantController extends Controller
                 'nid_card' => $nid_card,
                 'tin_certificate' => $tin_certificate,
                 'date' => date('Y-m-d'),
-                'otp_token' => $otp_token,
-                'otp_token_created' => date("Y-m-d H:i:s"),
-                'otp_token_status' => 0,
-                'status' => 0,
+                //'otp_token' => $otp_token,
+                //'otp_token_created' => date("Y-m-d H:i:s"),
+                //'otp_token_status' => 0,
+                'status' => 1,
             ];
 
-
-            $data_verification = [
-                'token' => $this->generateRandomString(70),
-                'type' => 3
-            ];
+            // $data_verification = [
+            //     'token' => $this->generateRandomString(70),
+            //     'type' => 3
+            // ];
 
             $merchant = Merchant::create($data);
 
-            $check = $merchant ? true : false;
+            // $check = $merchant ? true : false;
 
-            if ($check) {
+            auth()->guard('merchant')->login($merchant);
 
-                $email_verification = $merchant->email_verifications()->save(new EmailVerification($data_verification));
+            $this->setApplicationInformationIntoSession();
+            $this->setMessage('Merchant Login Successfully', 'success');
 
-                \DB::commit();
+            return redirect()->route('merchant.home');
+
+            // if ($check) {
+
+            //     $email_verification = $merchant->email_verifications()->save(new EmailVerification($data_verification));
+
+            //     \DB::commit();
 
 
-                // $admin_users = Admin::all();
-                // foreach ($admin_users as $admin) {
-                //     $admin->notify(new MerchantRegisterNotification($merchant));
-                // }
+            //     // $admin_users = Admin::all();
+            //     // foreach ($admin_users as $admin) {
+            //     //     $admin->notify(new MerchantRegisterNotification($merchant));
+            //     // }
 
-                // $this->adminDashboardCounterEvent();
+            //     // $this->adminDashboardCounterEvent();
 
-                // $application = Application::first();
-                // Mail::to($request->input('email'))->send(new VerifyMerchantEmail($merchant, $application));
+            //     // $application = Application::first();
+            //     // Mail::to($request->input('email'))->send(new VerifyMerchantEmail($merchant, $application));
 
-                $message = "Dear {$company_name}, ";
-                // $message .= "Your OTP is {$otp_token} From Parceldex Ltd. Please Confirm your account and keep it secret";
-                $message .= "Please Use this OTP {$otp_token} to complete your Sign Up procedures and verify your account";
+            //     $message = "Dear {$company_name}, ";
+            //     // $message .= "Your OTP is {$otp_token} From Parceldex Ltd. Please Confirm your account and keep it secret";
+            //     $message .= "Please Use this OTP {$otp_token} to complete your Sign Up procedures and verify your account";
 
-                $merchant->notify(new MerchantRegistrationNotification($message));
+            //     $merchant->notify(new MerchantRegistrationNotification($message));
 
-                $this->send_reg_sms($contact_number, $message);
+            //     $this->send_reg_sms($contact_number, $message);
 
-                return response()->json([
-                        'success' => 200,
-                        'type' => 'success',
-                        'title' => 'Thankyou',
-                        'message' => "Your Registration successfully Done. Stay with us. Your account will be activate very soon"]
-                    , 200);
-            } else {
-                return response()->json([
-                    'success' => 401,
-                    'type' => 'error',
-                    'title' => "Oop's",
-                    'message' => "Your Registration Failed",
-                    'error' => "Unauthorized"
-                ], 401);
-            }
+            //     return response()->json([
+            //             'success' => 200,
+            //             'type' => 'success',
+            //             'title' => 'Thankyou',
+            //             'message' => "Your Registration successfully Done. Stay with us. Your account will be activate very soon"]
+            //         , 200);
+            // } else {
+            //     return response()->json([
+            //         'success' => 401,
+            //         'type' => 'error',
+            //         'title' => "Oop's",
+            //         'message' => "Your Registration Failed",
+            //         'error' => "Unauthorized"
+            //     ], 401);
+            // }
 
         } catch (\Exception $e) {
 
@@ -1103,7 +1082,5 @@ class MerchantController extends Controller
             $this->setMessage('Database Error Found', 'danger');
             return redirect()->back()->withInput();
         }
-
     }
-
 }

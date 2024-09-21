@@ -43,6 +43,7 @@ class ForgotPasswordOtp extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
+            ->subject('Forgotten password retrieval')
             ->line('Your OTP is ' . $this->otp . '. Please Confirm your account.');
     }
 

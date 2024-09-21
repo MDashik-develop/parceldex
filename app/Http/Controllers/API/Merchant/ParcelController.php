@@ -292,7 +292,7 @@ class ParcelController extends Controller
             'district_id' => 'nullable|required_with:area_id,weight_package_id',
             'area_id' => 'nullable|required_with:district_id,weight_package_id',
             'weight_package_id' => 'nullable|required_with:district_id,area_id',
-            'parcel_note' => 'nullable|no_special_chars',
+            'parcel_note' => 'nullable|max:1000|no_special_chars',
             'exchange' => 'nullable|in:yes,no',
         ]);
 

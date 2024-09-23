@@ -197,6 +197,8 @@ class MerchantParcelExport implements
                     'logs_note' => $logs_note,
                     'payment_status_name' => $payment_status_name,
                     'return_status_name' => $return_status_name,
+                    'picked_up_date' => $parcel->parcel_logs->where('status', 11)->first()?->date,
+                    'service_area' => $parcel?->district?->service_area?->name,
                 ];
             }
         }
@@ -214,11 +216,13 @@ class MerchantParcelExport implements
             $row->date,
             $row->status,
             $row->parcel_date,
+            $row->picked_up_date,
             // $row->company_name,
             $row->customer_name,
             $row->customer_contact_number,
             $row->customer_contact_number2,
             $row->customer_address,
+            $row->service_area,
             $row->district_name,
             $row->area_name,
             $row->service_type,
@@ -234,6 +238,7 @@ class MerchantParcelExport implements
             $row->logs_note,
             $row->payment_status_name,
             $row->return_status_name,
+
         ];
     }
 
@@ -246,11 +251,14 @@ class MerchantParcelExport implements
             'Parcel Date',
             'Status',
             'Last Update Date',
+            'Picked Up Date',
+
             // 'company_name',
             'Customer Name',
             'Customer Contact Number',
             'Alternative Number',
             'Customer Address',
+            'Service Area',
             'District Name',
             'Area Name',
             'Service Type',

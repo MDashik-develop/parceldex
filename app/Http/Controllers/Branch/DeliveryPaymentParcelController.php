@@ -358,9 +358,13 @@ class DeliveryPaymentParcelController extends Controller
         $branch_id = auth()->guard('branch')->user()->branch->id;
         $branch_user_id = auth()->guard('branch')->user()->id;
 
+        if (empty($request->input('total_payment_parcel')) || empty($request->input('total_payment_amount'))) {
+            $this->setMessage('Delivery Payment Insert Failed', 'danger');
+            return redirect()->back()->withInput();
+        }
+
         \DB::beginTransaction();
         try {
-
             $data = [
                 'payment_invoice' => $this->returnUniqueDeliveryPaymentInvoice(),
                 'branch_id' => $branch_id,

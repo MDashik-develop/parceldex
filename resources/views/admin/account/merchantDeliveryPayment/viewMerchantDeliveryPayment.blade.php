@@ -210,8 +210,13 @@
                                             <td class="text-center">
                                                 {{ number_format($parcel_merchant_delivery_payment_detail->return_charge, 2) }}
                                             </td>
+                                            @php
+                                                $total =
+                                                    $parcel_merchant_delivery_payment_detail->total_charge +
+                                                    $parcel_merchant_delivery_payment_detail->return_charge;
+                                            @endphp
                                             <td class="text-center">
-                                                {{ number_format($parcel_merchant_delivery_payment_detail->parcel->total_charge, 2) }}
+                                                {{ number_format($total, 2) }}
                                             </td>
                                             <td class="text-center">
                                                 {{ number_format($parcel_merchant_delivery_payment_detail->paid_amount, 2) }}

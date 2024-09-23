@@ -60,8 +60,8 @@
         }
 
         /* .d-flex:hover{
-                                                  background: red !important;
-                                              } */
+                                                      background: red !important;
+                                                  } */
 
 
         .info-box-content:hover {
@@ -187,8 +187,8 @@
                         {{-- <span class="info-box-icon bg-info elevation-1"><i class="fas fa-truck"></i></span> --}}
 
                         <div class="info-box-content" style="text-align: center">
-                            <h5 class="info-box-text">Today's Pickedup</h5>
                             <span class="info-box-number">{{ $today_total_picked_up }}</span>
+                            <h5 class="info-box-text">Today's Pickedup</h5>
                             <a href="{{ route('merchant.parcel.filterList', 'today_parcel') }}"
                                 class="small-box-footer">More
                                 info <i class="fas fa-arrow-circle-right"></i></a>
@@ -581,7 +581,8 @@
                                 <div class="info-box-content2 info-box-content" style="text-align: center">
                                     <span class="info-box-number2" style="font-size: 36px;">
                                         {{ number_format($counter_data['total_pending_collect_amount'], 2) }} TK</span>
-                                    <span class="info-box-text" style="font-size: 16px;">Ready for Payment</span>
+                                    <span class="info-box-text" style="font-size: 16px;"> Ready for Payment - Order
+                                        ({{ $counter_data['total_pending_collect_amount_order_count'] }}) </span>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>
@@ -592,7 +593,8 @@
                                     <span class="info-box-number2"
                                         style="font-size: 36px;">{{ number_format($total_customer_collect_amount_due, 2) }}
                                         TK</span>
-                                    <span class="info-box-text" style="font-size: 16px;">Awaiting payment</span>
+                                    <span class="info-box-text" style="font-size: 16px;">Awaiting payment - Order
+                                        ({{ $total_customer_collect_amount_due_oc }})</span>
 
                                     <!--<span class="info-box-number2">{{ number_format($total_customer_collect_amount_due, 2) }} TK </span>-->
                                 </div>
@@ -604,7 +606,8 @@
                                 <div class="info-box-content2 info-box-content" style="text-align: center">
                                     <span class="info-box-number2" style="font-size: 36px;">
                                         {{ number_format($total_to_be_collected, 2) }} TK</span>
-                                    <span class="info-box-text" style="font-size: 16px;">To Be Collected</span>
+                                    <span class="info-box-text" style="font-size: 16px;">To Be Collected - Order
+                                        ({{ $total_to_be_collectedoc }})</span>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>
@@ -619,7 +622,8 @@
                                     <span class="info-box-number2"
                                         style="font-size: 36px;">{{ number_format($total_customer_collected_amount, 2) }}
                                         TK</span>
-                                    <span class="info-box-text" style="font-size: 16px;">Total Collected</span>
+                                    <span class="info-box-text" style="font-size: 16px;">Total Collected - Order
+                                        ({{ $total_customer_collected_amount_oc }})</span>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>
@@ -631,7 +635,7 @@
                                         style="font-size: 36px;">{{ number_format($counter_data['total_collect_amount'], 2) }}
                                         TK
                                     </span>
-                                    <span class="info-box-text" style="font-size: 16px;">Total Paid</span>
+                                    <span class="info-box-text" style="font-size: 16px;">Total Paid - Order ({{ $counter_data['total_collect_amount_oc'] }})</span>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>
@@ -641,7 +645,7 @@
                                 <div class="info-box-content2 info-box-content" style="text-align: center">
                                     <span class="info-box-number2"
                                         style="font-size: 36px;">{{ number_format($total_service_charge, 2) }} TK</span>
-                                    <span class="info-box-text" style="font-size: 16px;">Total Service Charge</span>
+                                    <span class="info-box-text" style="font-size: 16px;">Total Service Charge - Order ({{ $total_service_charge_oc }})</span>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>

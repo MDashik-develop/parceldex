@@ -297,16 +297,37 @@ class HomeController extends Controller
 
         $data['total_customer_collect_amount_due'] = ($p + $q) - $r;
 
+        $awc = Parcel::where('merchant_id', $merchant_id)
+            ->whereNull('suborder')
+            ->where('status', '>=', 25)
+            ->whereIn('delivery_type', [1, 2, 4])
+            ->where(function ($query) {
+                $query->whereIn('payment_type', [1, 2, 3, 6])->orWhereNull('payment_type');
+            })
+            ->count();
+
+        $data['total_customer_collect_amount_due_oc'] = $awc;
+
+
         $data['total_to_be_collected']     = Parcel::where('merchant_id', $merchant_id)
             // ->whereNull('suborder')
             ->whereIn('status', [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24])
             //->whereRaw('delivery_type in (?,?) and payment_type in (?,?) and payment_request_status = ?', [1,2,2,6,0])
-            ->where(function ($query) {
-                $query->where('delivery_type', 3)->orWhereNull('delivery_type');
+            ->orWhere(function ($query) {
+                $query->where('status', 25)->where('delivery_type', 3);
             })
             // ->whereRaw('delivery_type in (?,?) and payment_type in (?,?,?) and payment_request_status = ?', [1,2,2,4,6,0])
             ->sum('total_collect_amount');
 
+        $data['total_to_be_collectedoc']     = Parcel::where('merchant_id', $merchant_id)
+            ->whereNull('suborder')
+            ->whereIn('status', [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24])
+            //->whereRaw('delivery_type in (?,?) and payment_type in (?,?) and payment_request_status = ?', [1,2,2,6,0])
+            ->orWhere(function ($query) {
+                $query->where('status', 25)->where('delivery_type', 3);
+            })
+            // ->whereRaw('delivery_type in (?,?) and payment_type in (?,?,?) and payment_request_status = ?', [1,2,2,4,6,0])
+            ->count();
 
         $a = Parcel::where('merchant_id', $merchant_id)
             ->where('status', '>=', 25)
@@ -319,6 +340,12 @@ class HomeController extends Controller
             ->sum('cancel_amount_collection');
 
         $data['total_customer_collected_amount'] = $a + $b;
+
+        $data['total_customer_collected_amount_oc'] = Parcel::where('merchant_id', $merchant_id)
+            ->whereNull('suborder')
+            ->where('status', '>=', 25)
+            ->whereRaw('payment_type in (?,?)', [4, 5])
+            ->count();
 
 
         $data['parcel_in_process']      = Parcel::where('merchant_id', $merchant_id)
@@ -426,10 +453,17 @@ class HomeController extends Controller
             ->where('status', '>=', 25)
             ->whereIn('payment_type', [5])
             ->whereIn('delivery_type', [1, 2, 4])
-           // ->whereNull('suborder')
+            // ->whereNull('suborder')
             ->sum('total_charge');
 
         $data['total_service_charge']      =  $minus1;
+
+        $data['total_service_charge_oc'] = Parcel::where('merchant_id', $merchant_id)
+            ->where('status', '>=', 25)
+            ->whereIn('payment_type', [5])
+            ->whereIn('delivery_type', [1, 2, 4])
+            ->whereNull('suborder')
+            ->count();
 
 
         // $data['total_service_charge']      =  Parcel::where('merchant_id', $merchant_id)

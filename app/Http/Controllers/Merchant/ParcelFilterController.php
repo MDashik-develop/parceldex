@@ -89,7 +89,7 @@ class ParcelFilterController extends Controller
                 ->with('district', 'area')->get();
         } elseif ($type == 'today_total_delivery_parcel') {
             $data['parcels'] = Parcel::where('merchant_id', $merchant_id)
-                ->whereRaw('status >= ? and delivery_type in (?,?)', [25, 1, 2])
+                ->whereRaw('status >= ? and delivery_type in (?)', [25, 1])
                 ->whereRaw('parcel_date = ? ', [date("Y-m-d")])
                 ->with('district', 'area')->get();
         } elseif ($type == 'today_total_partial_delivery_parcel') {

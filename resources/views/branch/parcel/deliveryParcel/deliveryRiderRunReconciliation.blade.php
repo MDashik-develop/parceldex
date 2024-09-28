@@ -193,16 +193,14 @@
                                                     <br>
                                                 @endif --}}
                                                 @php
-                                                        $parcelStatus = returnParcelStatusNameForMerchant(
-                                                            $rider_run_detail->parcel->status,
-                                                            $rider_run_detail->parcel
-                                                                ->delivery_type,
-                                                            $rider_run_detail->parcel
-                                                                ->payment_type,
-                                                        );
+                                                    $parcelStatus = returnParcelStatusNameForMerchant(
+                                                        $rider_run_detail->parcel->status,
+                                                        $rider_run_detail->parcel->delivery_type,
+                                                        $rider_run_detail->parcel->payment_type,
+                                                    );
 
-                                                    @endphp
-                                                    {{ $parcelStatus['status_name'] }}
+                                                @endphp
+                                                {{ $parcelStatus['status_name'] }}
                                             </td>
                                             <td class="text-center">
                                                 {{ $rider_run_detail->parcel->merchant ? $rider_run_detail->parcel->merchant->company_name : '' }}
@@ -530,16 +528,29 @@
     });
 
     setInterval(() => {
-        var sum = 0;
-        $(".customer_collect_amount").each(function() {
-            sum += returnNumber($(this).val());
-        });
-        
-        $(".cancel_amount_collection").each(function() {
-            sum += returnNumber($(this).val());
+        // Collect customer collected amounts, ensure only relevant (non-cancelled) amounts are counted
+        let collect = 0;
+        $(".customer_collect_amount:visible").each(function() {
+            let value = returnNumber($(this).val());
+            if (!isNaN(value)) {
+                collect += value;
+            }
         });
 
+        // Now handle canceled amounts separately, but don't add them to the total
+        let cancel = 0;
+        $(".cancel_amount_collection:visible").each(function() {
+            let value = returnNumber($(this).val());
+            if (!isNaN(value)) {
+                cancel += value;
+            }
+        });
 
-        $(".total_complete_collection_amount span").text(sum);
+        // Display the total sum of collected amounts (ignoring cancel amounts)
+        $(".total_complete_collection_amount span").text(collect + cancel);
     }, 500);
+
+    function returnNumber(value) {
+        return parseFloat(value) || 0; // Make sure it's a valid number, otherwise return 0
+    }
 </script>

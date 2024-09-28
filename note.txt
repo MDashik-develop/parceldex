@@ -8,3 +8,7 @@ ALTER TABLE `parcels` ADD `suborder` VARCHAR(191) NULL AFTER `product_details`;
 ALTER TABLE `parcel_logs` ADD `updated_by` TEXT NULL AFTER `delivery_type`;
 ALTER TABLE `parcels` ADD `is_push` BOOLEAN NOT NULL DEFAULT FALSE AFTER `status`;
 ALTER TABLE `parcels` ADD `tracking_id` VARCHAR(191) NULL AFTER `updated_admin_id`;
+
+
+// parcel view id update
+// desing fix log view

@@ -44,12 +44,15 @@ class HomeController extends Controller
         $data['totalDeliveryCancel']    = Parcel::whereRaw('delivery_rider_id = ? and status in (20)', [$rider_id])->count();
 
         $total_ecourier_collection1          = Parcel::whereRaw('delivery_rider_id = ? and delivery_type in (1,2)', [$rider_id])->sum('customer_collect_amount');
-        $total_ecourier_collection2          = Parcel::whereRaw('delivery_rider_id = ? and delivery_type in (1,2)', [$rider_id])->sum('cancel_amount_collection');
+        $total_ecourier_collection2          = Parcel::whereRaw('delivery_rider_id = ? and delivery_type in (4)', [$rider_id])->sum('cancel_amount_collection');
         $total_ecourier_collection          = $total_ecourier_collection1 + $total_ecourier_collection2;
 
         $data['ecourierTotalCollectAmount'] = number_format((float) ($total_ecourier_collection), 2, '.', '');
 
-        $ecourier_collection_paid_to_branch = Parcel::whereRaw('delivery_rider_id = ? and delivery_type in (1,2) and status >= ?', [$rider_id, 25])->sum('customer_collect_amount');
+        $ecourier_collection_paid_to_branch1 = Parcel::whereRaw('delivery_rider_id = ? and delivery_type in (1,2) and status >= ?', [$rider_id, 25])->sum('customer_collect_amount');
+        $ecourier_collection_paid_to_branch2 = Parcel::whereRaw('delivery_rider_id = ? and delivery_type in (4) and status >= ?', [$rider_id, 25])->sum('cancel_amount_collection');
+
+        $ecourier_collection_paid_to_branch = $ecourier_collection_paid_to_branch1 + $ecourier_collection_paid_to_branch2;
         $data['ecourierPaidToBranch']       = number_format((float) $ecourier_collection_paid_to_branch, 2, '.', '');
 
         $data['ecourierBalanceCollectAmount'] = number_format((float) ($total_ecourier_collection - $ecourier_collection_paid_to_branch), 2, '.', '');

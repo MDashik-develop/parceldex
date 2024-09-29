@@ -99,16 +99,11 @@ class ParcelController extends Controller
             $percenrtPending = 0;
         }
 
-
         if ($customerParcel > 0) {
             $percenrtCancle = round(($totalDeliveryCancel / $customerParcel) * 100);
         } else {
             $percenrtCancle = 0;
         }
-
-
-
-
 
         return response()->json([
             'customer' => $customer,
@@ -123,9 +118,6 @@ class ParcelController extends Controller
         ]);
     }
     // For getting customer Info -->
-
-
-
 
     public function store(Request $request)
     {

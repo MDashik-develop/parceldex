@@ -16,6 +16,86 @@ use App\Models\WeightPackage;
 class ParcelController extends Controller
 {
 
+    public function customerInfo(Request $request)
+    {
+
+        if (!$request->query('phone') && !$request->query('phone2')) {
+            return response()->json([
+                'message' => 'Enter your phone number.',
+                'status' => 'error',
+            ], 400);
+        }
+
+        if ($request->query('phone') && strlen($request->query('phone')) != 11) {
+            return response()->json([
+                'message' => 'Invalid phone number.',
+                'status' => 'error',
+            ], 400);
+        }
+
+        if ($request->query('phone2') && strlen($request->query('phone2')) != 11) {
+            return response()->json([
+                'message' => 'Invalid alternative phone number.',
+                'status' => 'error',
+            ], 400);
+        }
+
+        $phone = $request->query('phone');
+        $phone2 = $request->query('phone2');
+
+        // dd($phone);
+        // $customer = Parcel::where('customer_contact_number',$phone)->select('customer_name','customer_address')->first();
+        // $customer = Parcel::where('customer_contact_number',$phone)->select('customer_name','customer_address','district_id','area_id')->first();
+        // $customerParcel = Parcel::where('customer_contact_number',$phone)->count();
+        // $totalDeliveryComplete = Parcel::whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (1)")->select('id')->count();
+        // $totalDeliveryPending = Parcel::whereRaw("customer_contact_number = '$phone' and status < 25 ")->select('id')->count();
+        // $totalDeliveryCancel = Parcel::whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (4)")->select('id')->count();
+
+        if ($request->phone) {
+            $customer = Parcel::where('customer_contact_number', $phone)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
+            $customerParcel = Parcel::where('customer_contact_number', $phone)->count();
+            $totalDeliveryComplete = Parcel::whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (1)")->select('id')->count();
+            $totalDeliveryPending = Parcel::whereRaw("customer_contact_number = '$phone' and status < 25 ")->select('id')->count();
+            $totalDeliveryCancel = Parcel::whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (4)")->select('id')->count();
+        } elseif ($request->phone2) {
+            $customer = Parcel::where('customer_contact_number2', $phone2)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
+            $customerParcel = Parcel::where('customer_contact_number2', $phone2)->count();
+            $totalDeliveryComplete = Parcel::whereRaw("customer_contact_number2 = '$phone2' and status >= 25 and delivery_type in (1)")->select('id')->count();
+            $totalDeliveryPending = Parcel::whereRaw("customer_contact_number2 = '$phone2' and status < 25 ")->select('id')->count();
+            $totalDeliveryCancel = Parcel::whereRaw("customer_contact_number2 = '$phone2' and status >= 25 and delivery_type in (4)")->select('id')->count();
+        }
+
+        if ($customerParcel > 0) {
+            $percenrtComplete = round(($totalDeliveryComplete / $customerParcel) * 100);
+        } else {
+            $percenrtComplete = 0;
+        }
+
+        if ($customerParcel > 0) {
+            $percenrtPending = round(($totalDeliveryPending / $customerParcel) * 100);
+        } else {
+            $percenrtPending = 0;
+        }
+
+        if ($customerParcel > 0) {
+            $percenrtCancle = round(($totalDeliveryCancel / $customerParcel) * 100);
+        } else {
+            $percenrtCancle = 0;
+        }
+
+        return response()->json([
+            'customer' => $customer,
+            'customerParcel' => $customerParcel,
+            'totalDeliveryComplete' => " Delivered:" . " " . $totalDeliveryComplete,
+            'totalDeliveryPending' => " Pending: " . " " . $totalDeliveryPending,
+            'totalDeliveryCancel' => " Canceled: " . " " . $totalDeliveryCancel,
+            'percenrtComplete' => "(" . $percenrtComplete . "%)",
+            'percenrtPending' => "(" . $percenrtPending . "%)",
+            'percenrtCancel' => "(" . $percenrtCancle . "%)",
+
+        ]);
+    }
+
     public function addParcel(Request $request)
     {
         $merchant = auth()->guard('merchant_api')->user();

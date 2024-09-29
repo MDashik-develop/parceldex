@@ -21,6 +21,7 @@ Route::group(['middleware' => 'jwt', 'prefix' => 'merchant/'], function () {
     Route::post('dashboard', [App\Http\Controllers\API\Merchant\HomeController::class, 'dashboard']);
     Route::get('view/news', [App\Http\Controllers\API\Merchant\HomeController::class, 'viewNews']);
 
+    Route::get('customer/info', [App\Http\Controllers\API\Merchant\ParcelController::class, 'customerInfo'] )->name('customer.info'); 
 
     Route::post('profileUpdate', [App\Http\Controllers\API\Merchant\AuthController::class, 'profileUpdate']);
 

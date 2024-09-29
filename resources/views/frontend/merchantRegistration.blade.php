@@ -41,7 +41,7 @@
                         <div class="form-group row">
                             <div class="col-lg-8 offset-lg-2 col-md-8 offset-md-2 com-sm-10">
                                 <strong style="color: #00509D" for="address" class="col-form-label">
-                                    Owner's Address : <span style="font-weight: bold; color: red;">*</span>
+                                    Owner's Address : 
                                 </strong>
                                 <textarea class="form-control" name="address" id="address" cols="30" rows="1"
                                     placeholder="Business Owner's Address"></textarea>

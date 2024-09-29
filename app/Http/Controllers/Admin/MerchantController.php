@@ -930,8 +930,7 @@ class MerchantController extends Controller
 
     public function confirmMerchantRegistration(Request $request)
     {
-
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'company_name' => 'required',
             'name' => 'required',
             'email' => 'required|email|unique:merchants',
@@ -957,9 +956,36 @@ class MerchantController extends Controller
             'tin_certificate' => 'sometimes|image|max:3000',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()]);
-        }
+
+        // $validator = Validator::make($request->all(), [
+        //     'company_name' => 'required',
+        //     'name' => 'required',
+        //     'email' => 'required|email|unique:merchants',
+        //     'password' => 'required',
+        //     'confirm_password' => 'required',
+        //     'address' => 'sometimes',
+        //     'contact_number' => 'required',
+        //     'district_id' => 'required',
+        //     // 'upazila_id'        => 'sometimes',
+        //     'area_id' => 'sometimes',
+        //     'business_address' => 'sometimes',
+        //     // 'fb_url' => 'required',
+        //     'web_url' => 'sometimes',
+        //     'bank_account_name' => 'sometimes',
+        //     'bank_account_no' => 'sometimes',
+        //     'bank_name' => 'sometimes',
+        //     'bkash_number' => 'sometimes',
+        //     'nagad_number' => 'sometimes',
+        //     'rocket_name' => 'sometimes',
+        //     'nid_no' => 'sometimes',
+        //     'nid_card' => 'sometimes|image|max:3000',
+        //     'trade_license' => 'sometimes|image|max:3000',
+        //     'tin_certificate' => 'sometimes|image|max:3000',
+        // ]);
+
+        // if ($validator->fails()) {
+        //     return response()->json(['error' => $validator->errors()]);
+        // }
 
         \DB::beginTransaction();
         try {
@@ -1025,14 +1051,18 @@ class MerchantController extends Controller
 
             $merchant = Merchant::create($data);
 
+            if ($merchant) {
+                return back()->with('success', 'sdfsdfsdf');
+            }
+
             // $check = $merchant ? true : false;
 
-            auth()->guard('merchant')->login($merchant);
+            //auth()->guard('merchant')->login($merchant);
 
-            $this->setApplicationInformationIntoSession();
-            $this->setMessage('Merchant Login Successfully', 'success');
+            //$this->setApplicationInformationIntoSession();
+            //$this->setMessage('One of our Sales Representatives will contact you shortly to review your information. Once the review is complete, you’ll gain access to the Parcelede x Merchant Panel, enabling you to seamlessly manage and deliver your products.', 'success');
 
-            return redirect()->route('merchant.home');
+            //return redirect()->route('merchant.login');
 
             // if ($check) {
 
@@ -1079,8 +1109,9 @@ class MerchantController extends Controller
 
             dd($e->getMessage());
             \DB::rollback();
-            $this->setMessage('Database Error Found', 'danger');
-            return redirect()->back()->withInput();
+            // $this->setMessage('Database Error Found', 'danger');
+            //return redirect()->back()->withInput();
+            return back()->with('error', 'Something went wrong, please try again.');
         }
     }
 }

@@ -18,9 +18,34 @@
                             Join as a Merchant and begin delivering today!
                         </p>
                     </div>
+                    @if (Session::has('success'))
+                        <div class="alert alert-success" role="alert">
+                            <strong>Thank you for signup!</strong> <br> One of our Sales Representatives will contact you
+                            shortly to
+                            review your information. Once the review is complete, you’ll gain access to the Parcelede x
+                            Merchant Panel, enabling you to seamlessly manage and deliver your products.<br> Login <a
+                                style="color: #000" href="/login">here</a>
+                        </div>
+                    @endif
+
+                    @if (Session::has('error'))
+                        <div class="alert alert-danger" role="alert">
+                            {{ Session::get('error') }}
+                        </div>
+                    @endif
+
                     <form name="contact-form" id="merchantRegistrationForm"
                         action="{{ route('frontend.confirmMerchantRegistration') }}" method="POST">
+                        @csrf
                         <div class="form-group row">
+                            <div class="col-lg-8 offset-lg-2 col-md-8 offset-md-2 com-sm-10">
+                                @if ($errors->any())
+                                    @foreach ($errors->all() as $error)
+                                        <div class="alert alert-danger" role="alert">{{ $error }}</div>
+                                    @endforeach
+                                @endif
+                            </div>
+
                             <div class="col-lg-8 offset-lg-2 col-md-8 offset-md-2 com-sm-10">
                                 <strong style="color: #00509D" for="company_name" class="col-form-label">
                                     Company Name : <span style="font-weight: bold; color: red;">*</span>
@@ -41,7 +66,7 @@
                         <div class="form-group row">
                             <div class="col-lg-8 offset-lg-2 col-md-8 offset-md-2 com-sm-10">
                                 <strong style="color: #00509D" for="address" class="col-form-label">
-                                    Owner's Address : 
+                                    Owner's Address :
                                 </strong>
                                 <textarea class="form-control" name="address" id="address" cols="30" rows="1"
                                     placeholder="Business Owner's Address"></textarea>
@@ -354,7 +379,7 @@
             });
 
 
-            $('#merchantRegistrationForm').on('submit', function(e) {
+            $('#merchantRegistrationForm000').on('submit', function(e) {
                 e.preventDefault();
 
                 var district_id = $("#district_id option:selected").val();

@@ -517,7 +517,7 @@ function returnParcelStatusForAdmin($status, $delivery_type, $payment_type = nul
         $class        = "danger";
     }
 
-    if ($status == 1 && $parcel?->is_push) {
+    if ($status == 1 && isset($parcel) && $parcel?->is_push) {
         $status_name  = "In Review API";
         $class        = "success";
     }
@@ -852,7 +852,7 @@ function returnParcelStatusNameForBranch($status, $delivery_type, $payment_type,
     //     $class        = "warning";
     // }
 
-    if ($status == 1 && $parcel?->is_push) {
+    if ($status == 1 && isset($parcel) && $parcel?->is_push) {
         $status_name  = "In Review API";
         $class        = "success";
     }
@@ -1006,7 +1006,7 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
     //     $status_name  .=  "Payment Done";
     // }
 
-    if ($status == 1 && $parcel?->is_push) {
+    if ($status == 1 && isset($parcel) && $parcel?->is_push) {
         $status_name  = "In Review API";
         $class        = "success";
     }

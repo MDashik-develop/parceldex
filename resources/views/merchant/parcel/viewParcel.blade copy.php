@@ -542,7 +542,7 @@
                 style="gap: 10px;">
                 @foreach ($items as $item)
                 @php
-                $parcelLogStatus = returnParcelLogStatusNameForAdmin($item, $parcel->delivery_type);
+                $parcelLogStatus = returnParcelLogStatusNameForAdmin($item, $parcel->delivery_type, $parcel);
 
                 if (!isset($parcelLogStatus['to_user'])) {
                 continue;

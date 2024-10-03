@@ -1054,7 +1054,7 @@ function returnPaymentStatusForMerchant($status, $delivery_type, $payment_type)
 
 
 // -------------------------------
-function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type)
+function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel = null)
 {
     $status         = $parcelLog->status;
     $to_user        = "";
@@ -1562,6 +1562,10 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type)
     } else if ($status == 100) {
         $status_name  = $parcelLog->note;
         $to_user  = $parcelLog->updated_by;
+    } elseif ($status == 0 && isset($parcel) && $parcel?->is_push) {
+        $status_name  = "In Review API";
+        $class        = "success";
+        $to_user      = "Merchant : " . $parcelLog->merchant->company_name;
     }
 
     // if ($parcelLog->parcel->payment_type == 5) {

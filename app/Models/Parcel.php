@@ -20,7 +20,12 @@ class Parcel extends Model
         parent::boot();
 
         static::creating(function ($parcel) {
-            $parcel->tracking_id = substr(uniqid(), 0, 9);
+            do {
+                // Generate a random unique tracking ID
+                $tracking_id = substr(uniqid(), 0, 9);
+            } while (Parcel::where('tracking_id', $tracking_id)->exists()); // Check for uniqueness
+
+            $parcel->tracking_id = $tracking_id;
         });
     }
 

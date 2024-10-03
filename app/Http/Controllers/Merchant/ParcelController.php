@@ -35,20 +35,23 @@ class ParcelController extends Controller
     {
         $parcels = Parcel::with('merchant')->where('is_push', 1)->where('status', 0)
             ->where(function ($query) use ($request) {
-                $merchant_id = $request->input('merchant_id');
-                $branch_id = $request->input('branch_id');
+                // $merchant_id = $request->input('merchant_id');
+                //  $branch_id = $request->input('branch_id');
                 $from_date = $request->input('from_date');
                 $to_date   = $request->input('to_date');
+                $merchant_id = auth()->guard('merchant')->user()->id;
 
-                if ($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0) {
-                    $query->where('merchant_id', $request->input('merchant_id'));
-                }
+                $query->where('merchant_id', $merchant_id);
 
-                if ($request->has('branch_id') && !is_null($branch_id) && $branch_id != '' && $branch_id != 0) {
-                    $query->whereHas('merchant', function ($query) use ($branch_id) {
-                        $query->where('branch_id', $branch_id);
-                    });
-                }
+                // if ($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0) {
+                //     $query->where('merchant_id', $request->input('merchant_id'));
+                // }
+
+                // if ($request->has('branch_id') && !is_null($branch_id) && $branch_id != '' && $branch_id != 0) {
+                //     $query->whereHas('merchant', function ($query) use ($branch_id) {
+                //         $query->where('branch_id', $branch_id);
+                //     });
+                // }
 
                 if ($request->has('from_date') && !is_null($from_date) && $from_date !== '') {
                     $fromDateTime = Carbon::parse($request->input('from_date'));

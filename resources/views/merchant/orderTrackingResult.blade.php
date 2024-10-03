@@ -1,11 +1,12 @@
-<div class="modal-header bg-default">
-    <h4 class="modal-title">Parcel Information View</h4>
-    <button type="button" class="close bg-danger" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
 <div class="modal-body">
     <div class="parcel-details-container">
+        <div class="modal-header bg-default mb-3">
+            <h4 class="modal-title">Parcel Information View</h4>
+            <button type="button" class="close bg-danger" onclick="closeModal()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
         <div class="header">
             <div class="header-item strong-header">
                 Consignment ID - {{ $parcel->parcel_invoice }}
@@ -176,7 +177,7 @@
 
                 @foreach ($items as $item)
                     @php
-                        $parcelLogStatus = returnParcelLogStatusNameForAdmin($item, $parcel->delivery_type);
+                        $parcelLogStatus = returnParcelLogStatusNameForAdmin($item, $parcel->delivery_type, $parcel);
 
                         if (!isset($parcelLogStatus['to_user'])) {
                             continue;
@@ -213,14 +214,13 @@
                 details from the link.
             </p>
         </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger float-right" onclick="closeModal()">Close</button>
+        </div>
     </div>
+</div>
 
-
-</div>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-danger float-right" data-dismiss="modal">Close</button>
-</div>
 
 <style>
     .parcel-details-container {
@@ -360,6 +360,11 @@
 </style>
 
 <script>
+    function closeModal() {
+        $('#show_order_tracking_result').empty();
+        $('#parcel_invoice').val('');
+    }
+
     $(document).ready(function() {
         $('#copyButton').click(function() {
             // Get the text from the <p> tag

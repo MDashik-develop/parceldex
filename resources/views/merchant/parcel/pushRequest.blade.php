@@ -41,16 +41,16 @@
                             <form action="{{ route('merchant.push.request') }}" method="GET">
                                 <div class="row input-daterange" style="margin-top: 40px">
 
-                                    <div class="col-md-3 d-none">
+                                    {{-- <div class="col-md-3 d-none">
                                         <label for="branch_id">Merchant </label>
                                         <select name="merchant_id" id="branch_id" class="form-control select2"
                                             style="width: 100%">
                                             <option value="0">Select Merchant </option>
                                             @foreach ($merchants as $merchant)
-                                                <option value="{{ $merchant->id }}">{{ $merchant->name }} </option>
+                                                <option value="{{ $merchant->id }}">{{ $merchant->company_name }} </option>
                                             @endforeach
                                         </select>
-                                    </div>
+                                    </div> --}}
                                     {{-- <div class="col-md-3">
                                         <label for="branch_id">Branch </label>
                                         <select name="branch_id" id="branch_id" class="form-control select2"
@@ -211,10 +211,10 @@
         }
 
         /*
-                                                                                                                                                                                        div.container {
-                                                                                                                                                                                            width: 80%;
-                                                                                                                                                                                        }
-                                                                                                                                                                                        */
+                                                                                                                                                                                                    div.container {
+                                                                                                                                                                                                        width: 80%;
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                    */
     </style>
     <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">

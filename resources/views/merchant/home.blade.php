@@ -173,7 +173,7 @@
                 </div>
             </div>
 
-            <div class="col-md-12" id="show_order_tracking_result">
+            <div class="col-md-8 offset-md-2 p-3" id="show_order_tracking_result">
 
             </div>
 

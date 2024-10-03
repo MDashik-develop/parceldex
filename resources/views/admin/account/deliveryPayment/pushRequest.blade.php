@@ -42,11 +42,11 @@
                                 <div class="row input-daterange" style="margin-top: 40px">
                                     <div class="col-md-3">
                                         <label for="branch_id">Merchant </label>
-                                        <select name="merchant_id" id="branch_id" class="form-control select2"
+                                        <select name="merchant_id" id="merchant_id" class="form-control select2"
                                             style="width: 100%">
                                             <option value="0">Select Merchant </option>
                                             @foreach ($merchants as $merchant)
-                                                <option value="{{ $merchant->id }}">{{ $merchant->name }} </option>
+                                                <option value="{{ $merchant->id }}">{{ $merchant->company_name }} </option>
                                             @endforeach
                                         </select>
                                     </div>

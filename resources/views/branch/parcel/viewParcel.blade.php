@@ -8,8 +8,8 @@
     <div class="parcel-details-container">
         <div class="header">
             <div class="header-item strong-header">
-                Consignment ID - {{ $parcel->parcel_invoice }}<br>
-                {{ $parcel->created_at->format('d-m-Y') }}
+                Consignment ID - {{ $parcel->parcel_invoice }}
+                - {{ $parcel->created_at->format('d-m-Y') }}
             </div>
 
             @php
@@ -32,6 +32,9 @@
                         $date_time = date('Y-m-d', strtotime($parcel->reschedule_parcel_date));
                     } elseif ($parcel->delivery_type == 1 || $parcel->delivery_type == 2) {
                         $date_time = date('Y-m-d', strtotime($parcel->delivery_date));
+                    }
+                    if ($parcel->delivery_type == 4) {
+                        $date_time = $parcel->date;
                     }
                 } elseif ($parcel->status == 11 || $parcel->status == 13 || $parcel->status == 15) {
                     $date_time = date('Y-m-d', strtotime($parcel->pickup_branch_date));
@@ -131,7 +134,7 @@
             <div class="customer-details">
                 @if ($parcel?->pickup_rider)
                     <h3>Pickup Rider Details</h3>
-                    <p>Delivery Rider - {{ $parcel?->pickup_rider?->name }}</p>
+                    <p>Pickup Rider - {{ $parcel?->pickup_rider?->name }}</p>
                 @endif
 
                 @if ($parcel?->delivery_rider)
@@ -196,8 +199,8 @@
         <div class="section6 mt-3">
             <h5 class="fs-1 font-weight-bold">Share Tracking Details</h5>
             <div class="d-flex flex-wrap justify-content-between w-100 " style="gap: 30px;">
-                <div id="" class="d-flex flex-column  justify-content-center"
-                    style=" border: 2px dotted #f87326; background-color: #eac0a8; padding: 10px; width: 80%">
+                <div id="" class="d-flex flex-column  justify-content-center ww-80"
+                    style=" border: 2px dotted #f87326; background-color: #eac0a8; padding: 10px;">
                     <p id="trackingText" class="p-0 m-0 font-weight-bold fs-1">
                         {{ route('frontend.orderTracking') . '?trackingBox=' . $parcel['tracking_id'] }}</p>
                 </div>
@@ -251,12 +254,16 @@
     .section {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
+    }
+
+    .ww-80 {
+        width: 80%;
     }
 
     .section div {
         flex: 1;
-        padding: 20px;
+        padding: 10px;
         border-radius: 8px;
         background-color: #fff;
         box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
@@ -297,7 +304,7 @@
 
     .log-date {
         display: inline-block;
-        padding: 3px 10px;
+        padding: 1px 10px;
         background-color: #99cc99;
         border-radius: 8px;
         color: #fff;
@@ -326,7 +333,15 @@
         padding-left: 40px;
     }
 
+    p {
+        margin-bottom: 0.3rem;
+    }
+
     @media (max-width: 768px) {
+
+        .ww-80 {
+            width: 100%;
+        }
 
         .header,
         .section {

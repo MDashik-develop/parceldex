@@ -214,11 +214,15 @@ class ParcelController extends Controller
             ->addIndexColumn()
             ->editColumn('parcel_invoice', function ($data) {
                 $x = '';
+                $suborderId = Parcel::where('parcel_invoice', $data->suborder)->first()?->id;
 
                 if ($data->suborder) {
-                    $x = '<br>Main Order:<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" parcel_id="' . $data->id . '"  title="Parcel View">
+                    $x = '<br>Main Order:<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" parcel_id="' . $suborderId . '"  title="Parcel View">
                 ' . $data->suborder . ' </button>';
+
+                    //$x = '<br></span> <p><strong>Main Order: </strong>' . $data->suborder . '</p>';
                 }
+
                 // $date_time =  $data->date . " " . date("h:i A", strtotime($data->created_at));
                 $date_time =   $data->created_at->format('Y-m-d h:i A');
 

@@ -77,6 +77,17 @@
                         </p>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('branch.push.request') }}"
+                       class="nav-link {{ $main_menu == 'push-request' ? 'active' : '' }}">
+                        <i class="fas fa-clipboard-list fa-lg text-success"></i>
+                        <p>
+                            In Review API
+                        </p>
+                    </a>
+                </li>
+
                 <li class="nav-item">
                     <a href="{{ route('branch.parcel.allRiderParcelList') }}"
                        class="nav-link {{ $main_menu == 'allRiderParcelList' ? 'active' : '' }}">

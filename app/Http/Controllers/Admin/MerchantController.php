@@ -1052,7 +1052,7 @@ class MerchantController extends Controller
             $merchant = Merchant::create($data);
 
             if ($merchant) {
-                return back()->with('success', 'sdfsdfsdf');
+                return redirect()->route('frontend.login')->with('success', 'sdfsdfsdf');
             }
 
             // $check = $merchant ? true : false;

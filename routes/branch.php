@@ -131,6 +131,10 @@ Route::group(['middleware' => 'branch', 'prefix' => 'branch/'], function () {
     //================ Pickup Parcel  Route  ================================
 
     //================ Delivery  Parcel  Route  ================================
+    Route::get('/push-request', [App\Http\Controllers\Branch\DeliveryParcelController::class, 'pushRequest'])->name('push.request');
+    Route::post('getPushRequestList', [App\Http\Controllers\Branch\DeliveryParcelController::class, 'savePushRequest'])->name('savePushRequest');
+
+
     Route::get('parcel/deliveryParcelList', [App\Http\Controllers\Branch\DeliveryParcelController::class, 'deliveryParcelList'])->name('parcel.deliveryParcelList');
     Route::get('parcel/getDeliveryParcelList', [App\Http\Controllers\Branch\DeliveryParcelController::class, 'getDeliveryParcelList'])->name('parcel.getDeliveryParcelList');
     Route::get('parcel/printDeliveryParcelList', [App\Http\Controllers\Branch\DeliveryParcelController::class, 'printDeliveryParcelList'])->name('parcel.printDeliveryParcelList');

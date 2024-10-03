@@ -85,6 +85,7 @@ class ParcelController extends Controller
             },
         ])
             ->where('delivery_branch_id', $branch_id)
+            ->where('status', '!=', 0)
             ->whereRaw($where_condition)
             ->select();
 
@@ -231,7 +232,7 @@ class ParcelController extends Controller
                     $date_time = $data->date;
                 }
 
-                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name  = $parcelStatus['status_name'];
                 $class        = $parcelStatus['class'];
 
@@ -1278,17 +1279,17 @@ class ParcelController extends Controller
                 createActivityLog($x, $parcelOld, $branch->name);
             }
 
-            $data = [
-                'parcel_id'             => $parcel->id,
-                'date'                  => date('Y-m-d'),
-                'time'                  => date('H:i:s'),
-                'status'                => $parcel->status,
-                'sub_branch_id'         => $sub_branch_id,
-                'pickup_branch_id'      => $pickup_branch_id,
-                'pickup_branch_user_id' => $pickup_branch_user_id,
-                'delivery_type'         => $parcel->delivery_type,
-            ];
-            ParcelLog::create($data);
+            // $data = [
+            //     'parcel_id'             => $parcel->id,
+            //     'date'                  => date('Y-m-d'),
+            //     'time'                  => date('H:i:s'),
+            //     'status'                => $parcel->status,
+            //     'sub_branch_id'         => $sub_branch_id,
+            //     'pickup_branch_id'      => $pickup_branch_id,
+            //     'pickup_branch_user_id' => $pickup_branch_user_id,
+            //     'delivery_type'         => $parcel->delivery_type,
+            // ];
+            // ParcelLog::create($data);
 
             \DB::commit();
             $this->setMessage('Parcel Update Successfully', 'success');

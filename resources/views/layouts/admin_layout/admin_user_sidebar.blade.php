@@ -436,7 +436,7 @@
                     <a href="{{ route('admin.push.request') }}"
                         class="nav-link {{ $child_menu == 'push-request' ? 'active' : '' }}">
                         <i class="fas fa-tags"></i>
-                        <p>Push Request</p>
+                        <p>API in Review</p>
                     </a>
                 </li>
                 <li class="nav-item has-treeview {{ $main_menu == 'report' ? 'menu-open' : '' }} ">

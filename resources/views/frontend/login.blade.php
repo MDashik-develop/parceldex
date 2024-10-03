@@ -22,6 +22,23 @@
                                 </p>
                                 @include('layouts.merchant_layout.merchant_session_alert')
 
+                                @if (Session::has('success'))
+                                    <div class="alert alert-success" role="alert">
+                                        <strong>Thank you for signup!</strong> <br> One of our Sales Representatives will
+                                        contact you
+                                        shortly to
+                                        review your information. Once the review is complete, you’ll gain access to the
+                                        Parcelede x
+                                        Merchant Panel, enabling you to seamlessly manage and deliver your products.
+                                    </div>
+                                @endif
+
+                                @if (Session::has('error'))
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ Session::get('error') }}
+                                    </div>
+                                @endif
+
                                 <form action="{{ route('frontend.login') }}" method="post">
                                     @csrf
                                     <div class="mb-3">

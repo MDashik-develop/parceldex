@@ -51,6 +51,10 @@ Route::group(['middleware' => 'merchant', 'prefix'=>'merchant/'], function (){
     Route::post('parcel/excelAllParcelList', [App\Http\Controllers\Merchant\ParcelController::class, 'excelAllParcelList'])->name('parcel.excelAllParcelList');
 
 
+    Route::get('/push-request', [App\Http\Controllers\Merchant\ParcelController::class, 'pushRequest'])->name('push.request');
+    Route::post('getPushRequestList', [App\Http\Controllers\Merchant\ParcelController::class, 'savePushRequest'])->name('savePushRequest');
+
+
 
 
     // Route::get('parcel/merchantBulkParcelImport', [App\Http\Controllers\Merchant\ParcelController::class, 'merchantBulkParcelImport'] )->name('parcel.merchantBulkParcelImport');

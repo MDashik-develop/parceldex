@@ -1,4 +1,4 @@
-@extends('layouts.admin_layout.admin_layout')
+@extends('layouts.merchant_layout.merchant_layout')
 
 @section('content')
     <div class="content-header">
@@ -38,9 +38,10 @@
                         <div class="card-header">
                             <h3 class="card-title">Merchant API Request in Review List </h3>
 
-                            <form action="{{ route('admin.push.request') }}" method="GET">
+                            <form action="{{ route('merchant.push.request') }}" method="GET">
                                 <div class="row input-daterange" style="margin-top: 40px">
-                                    <div class="col-md-3">
+
+                                    <div class="col-md-3 d-none">
                                         <label for="branch_id">Merchant </label>
                                         <select name="merchant_id" id="branch_id" class="form-control select2"
                                             style="width: 100%">
@@ -50,7 +51,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-3">
+                                    {{-- <div class="col-md-3">
                                         <label for="branch_id">Branch </label>
                                         <select name="branch_id" id="branch_id" class="form-control select2"
                                             style="width: 100%">
@@ -59,7 +60,8 @@
                                                 <option value="{{ $branch->id }}">{{ $branch->name }} </option>
                                             @endforeach
                                         </select>
-                                    </div>
+                                    </div> --}}
+
                                     <div class="col-md-2">
                                         <label for="from_date">From Date</label>
                                         <input type="datetime-local" name="from_date" id="from_date" class="form-control"
@@ -89,7 +91,6 @@
                                                 <tr>
                                                     <th width="5%" class="text-center"> SL </th>
                                                     <th width="10%" class="text-center">Invoice </th>
-                                                    <th width="10%" class="text-center">Merchant Name</th>
                                                     <th width="10%" class="text-center">Merchant Order ID</th>
                                                     <th width="10%" class="text-center">Product Details</th>
                                                     <th width="10%" class="text-center">Amount to be Collect</th>
@@ -109,10 +110,6 @@
                                                         <td class="text-center"> {{ $loop->iteration }} </td>
                                                         <td class="text-center">
                                                             {{ $parcel->parcel_invoice }}
-                                                        </td>
-
-                                                        <td class="text-center">
-                                                            {{ $parcel->merchant?->name }}
                                                         </td>
 
                                                         <td class="text-center">
@@ -168,13 +165,14 @@
                                                             <input type="hidden" class="merchantid"
                                                                 value="{{ $parcel->merchant_id }}" />
                                                         </td>
+
                                                         <td style="text-align: center">
                                                             <input type="checkbox" name="delete[{{ $key }}]">
                                                         </td>
                                                     </tr>
                                                 @endforeach
                                                 <tr>
-                                                    <td colspan="12" class="text-right">
+                                                    <td colspan="11" class="text-right">
                                                         <input type="submit" value="Save">
                                                     </td>
                                                 </tr>
@@ -213,10 +211,10 @@
         }
 
         /*
-                                                                                                                                                                div.container {
-                                                                                                                                                                    width: 80%;
-                                                                                                                                                                }
-                                                                                                                                                                */
+                                                                                                                                                                                        div.container {
+                                                                                                                                                                                            width: 80%;
+                                                                                                                                                                                        }
+                                                                                                                                                                                        */
     </style>
     <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">

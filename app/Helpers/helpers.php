@@ -425,7 +425,7 @@ function returnParcelStatusNameForAdmin($status, $delivery_type, $payment_type)
 // color class comment------
 //  primary -blue, warning -yellow  , info - akasi , danger - red , success - green , secondary - gray
 
-function returnParcelStatusForAdmin($status, $delivery_type)
+function returnParcelStatusForAdmin($status, $delivery_type, $payment_type = null, $parcel = null)
 {
     $status_name    = "";
     $class          = "";
@@ -515,6 +515,11 @@ function returnParcelStatusForAdmin($status, $delivery_type)
     } elseif ($status >= 25 && $delivery_type == 4) {
         $status_name  = "Delivery Cancel";
         $class        = "danger";
+    }
+
+    if ($status == 1 && $parcel?->is_push) {
+        $status_name  = "In Review API";
+        $class        = "success";
     }
 
     return [
@@ -635,7 +640,7 @@ function returnReturnStatusForAdmin($status, $delivery_type, $payment_type)
 }
 
 
-function returnParcelStatusNameForBranch($status, $delivery_type, $payment_type)
+function returnParcelStatusNameForBranch($status, $delivery_type, $payment_type, $parcel = null)
 {
     $status_name    = "";
     $class          = "";
@@ -847,6 +852,11 @@ function returnParcelStatusNameForBranch($status, $delivery_type, $payment_type)
     //     $class        = "warning";
     // }
 
+    if ($status == 1 && $parcel?->is_push) {
+        $status_name  = "In Review API";
+        $class        = "success";
+    }
+
     return [
         'status_name'   => $status_name,
         'class'         => $class
@@ -996,7 +1006,10 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
     //     $status_name  .=  "Payment Done";
     // }
 
-
+    if ($status == 1 && $parcel?->is_push) {
+        $status_name  = "In Review API";
+        $class        = "success";
+    }
 
     return [
         'status_name'   => $status_name,

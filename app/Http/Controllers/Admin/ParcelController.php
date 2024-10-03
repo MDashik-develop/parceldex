@@ -117,6 +117,7 @@ class ParcelController extends Controller
                 $query->select('id', 'note');
             },*/
         ])
+            ->where('status', '!=', 0)
             ->whereRaw('pickup_branch_id IS NOT NULL')
             ->select();
 
@@ -238,7 +239,7 @@ class ParcelController extends Controller
                     // $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
                     $date_time = $data->date;
                 }
-                $parcelStatus = returnParcelStatusForAdmin($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus = returnParcelStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
                 return '<span class="  text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong></strong>' . $date_time . '</p>';
@@ -285,7 +286,7 @@ class ParcelController extends Controller
                     }
 
                     // if (auth()->guard('admin')->user()->type == 1) {
-                        $button .= '&nbsp; <a href="' . route('admin.parcel.editParcel', $data->id) . '" class="btn btn-success btn-sm"> <i class="fa fa-edit"></i> </a>';
+                    $button .= '&nbsp; <a href="' . route('admin.parcel.editParcel', $data->id) . '" class="btn btn-success btn-sm"> <i class="fa fa-edit"></i> </a>';
                     // }
                     // if ($data->status < 10) {
                     //     $button .= '&nbsp; <button class="btn btn-danger pickup-cancel btn-sm" parcel_id="' . $data->id . '" title="Parcel Cancel">
@@ -692,15 +693,15 @@ class ParcelController extends Controller
                 createActivityLog($x, $parcelOld, auth()->guard('admin')->user()->name);
             }
 
-            $data = [
-                'parcel_id' => $parcel->id,
-                'admin_id' => auth()->guard('admin')->user()->id,
-                'date' => date('Y-m-d'),
-                'time' => date('H:i:s'),
-                'status' => $parcel->status,
-                'delivery_type' => $parcel->delivery_type,
-            ];
-            ParcelLog::create($data);
+            // $data = [
+            //     'parcel_id' => $parcel->id,
+            //     'admin_id' => auth()->guard('admin')->user()->id,
+            //     'date' => date('Y-m-d'),
+            //     'time' => date('H:i:s'),
+            //     'status' => $parcel->status,
+            //     'delivery_type' => $parcel->delivery_type,
+            // ];
+            // ParcelLog::create($data);
 
             $this->setMessage('Parcel Update Successfully', 'success');
             return redirect()->back();

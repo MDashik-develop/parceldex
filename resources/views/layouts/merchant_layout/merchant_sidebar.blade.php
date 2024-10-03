@@ -90,6 +90,14 @@
                     </li>
 
                     <li class="nav-item">
+                        <a href="{{ route('merchant.push.request') }}"
+                            class="nav-link {{ $child_menu == 'push-request' ? 'active' : '' }}">
+                            <i class="fas fa-clipboard-list fa-lg text-success"></i>
+                            <p>In Review API</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a href="{{ route('merchant.return.list') }}"
                             class="nav-link {{ $child_menu == 'returnList' ? 'active' : '' }}">
                             <i class="fas fa-clipboard-list fa-lg text-success"></i>

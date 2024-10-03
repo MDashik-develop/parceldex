@@ -1,4 +1,4 @@
-@extends('layouts.admin_layout.admin_layout')
+@extends('layouts.branch_layout.branch_layout')
 
 @section('content')
     <div class="content-header">
@@ -50,7 +50,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-3">
+                                    {{-- <div class="col-md-3">
                                         <label for="branch_id">Branch </label>
                                         <select name="branch_id" id="branch_id" class="form-control select2"
                                             style="width: 100%">
@@ -59,7 +59,7 @@
                                                 <option value="{{ $branch->id }}">{{ $branch->name }} </option>
                                             @endforeach
                                         </select>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-2">
                                         <label for="from_date">From Date</label>
                                         <input type="datetime-local" name="from_date" id="from_date" class="form-control"
@@ -213,10 +213,10 @@
         }
 
         /*
-                                                                                                                                                                div.container {
-                                                                                                                                                                    width: 80%;
-                                                                                                                                                                }
-                                                                                                                                                                */
+                                                                                                                                                                        div.container {
+                                                                                                                                                                            width: 80%;
+                                                                                                                                                                        }
+                                                                                                                                                                        */
     </style>
     <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">

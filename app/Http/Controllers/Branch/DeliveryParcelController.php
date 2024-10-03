@@ -2,27 +2,251 @@
 
 namespace App\Http\Controllers\Branch;
 
-use App\Http\Controllers\Controller;
+use DataTables;
+use Carbon\Carbon;
 use App\Models\Area;
+use App\Models\Rider;
 use App\Models\Branch;
+use App\Models\Parcel;
+use App\Models\Upazila;
 use App\Models\District;
 use App\Models\ItemType;
 use App\Models\Merchant;
-use App\Models\Parcel;
-use App\Models\ParcelLog;
-use App\Models\Rider;
 use App\Models\RiderRun;
-use App\Models\RiderRunDetail;
+use App\Models\ParcelLog;
 use App\Models\ServiceType;
-use App\Models\Upazila;
-use App\Models\WeightPackage;
-use App\Notifications\MerchantParcelNotification;
-use DataTables;
 use Illuminate\Http\Request;
+use App\Models\WeightPackage;
+use App\Models\RiderRunDetail;
+use App\Http\Controllers\Controller;
+use App\Models\MerchantServiceAreaCharge;
 use Illuminate\Support\Facades\Validator;
+use App\Models\MerchantServiceAreaCodCharge;
+use App\Models\MerchantServiceAreaReturnCharge;
+use App\Notifications\MerchantParcelNotification;
 
 class DeliveryParcelController extends Controller
 {
+
+    public function pushRequest(Request $request)
+    {
+
+        $parcels = Parcel::with('merchant')->where('is_push', 1)->where('status', 0)
+            ->where(function ($query) use ($request) {
+                $merchant_id = $request->input('merchant_id');
+                // $branch_id = $request->input('branch_id');
+                $branch_id = auth()->guard('branch')->user()->branch->id;
+
+                $from_date = $request->input('from_date');
+                $to_date   = $request->input('to_date');
+
+                if ($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0) {
+                    $query->where('merchant_id', $request->input('merchant_id'));
+                }
+
+                // if ($request->has('branch_id') && !is_null($branch_id) && $branch_id != '' && $branch_id != 0) {
+                $query->whereHas('merchant', function ($query) use ($branch_id) {
+                    $query->where('branch_id', $branch_id);
+                });
+                // }
+
+                if ($request->has('from_date') && !is_null($from_date) && $from_date !== '') {
+                    $fromDateTime = Carbon::parse($request->input('from_date'));
+                    $query->where('created_at', '>=', $fromDateTime);
+                }
+
+                if ($request->has('to_date') && !is_null($to_date) && $to_date !== '') {
+                    $toDateTime = Carbon::parse($request->input('to_date'));
+                    $query->where('created_at', '<=', $toDateTime);
+                }
+            })
+            ->orderBy('id', 'desc')
+            ->select()
+            ->get();
+
+        $data               = [];
+        $data['main_menu']  = 'push-request';
+        $data['child_menu'] = 'push-request';
+        $data['page_title'] = 'Push Request';
+        $data['collapse']   = 'sidebar-collapse';
+        $data['merchants']   = Merchant::where('status', 1)->get();
+        $data['branches']   = Branch::where('status', 1)->get();
+        $data['parcels']   = $parcels;
+        $data['districts'] = District::where([
+            ['status', '=', 1],
+        ])->get();
+
+        return view('branch.parcel.deliveryParcel.pushRequest', $data);
+    }
+
+    public function savePushRequest(Request $request)
+    {
+        try {
+            foreach ($request->parcel_id as $key => $value) {
+                $parcel = Parcel::find($value);
+
+                if (isset($request->delete[$key]) && !empty($request->delete[$key])) {
+                    $parcel->delete();
+                    continue;
+                }
+
+                if (
+                    isset($request->district_id[$key]) && !empty($request->district_id[$key]) &&
+                    isset($request->area_id[$key]) && !empty($request->area_id[$key]) &&
+                    isset($request->weight_package_id[$key]) && !empty($request->weight_package_id[$key])
+                ) {
+
+                    //Set District, Upazila, Area ID and Merchant Service Area Charge
+                    $merchant_service_area_charge = 0;
+                    $delivery_charge = 0;
+                    $merchant_service_area_return_charge = 0;
+                    $weight_package_charge = 0;
+                    $cod_charge = 0;
+                    $service_area_id = 0;
+                    $cod_percent = 0;
+                    $merchant_cod_percent = $parcel->merchant?->cod_charge ?? 0;
+                    $district_id = $request->district_id[$key];
+                    $weight_id = $request->weight_package_id[$key];
+                    $collection_amount = $parcel->total_collect_amount;
+
+                    $district = District::with('service_area:id,cod_charge,default_charge')->where('id', $district_id)->first();
+
+                    if ($district) {
+
+                        $service_area_id = $district->service_area_id;
+                        //Service Area Default Charges
+                        $delivery_charge = $district->service_area ? $district->service_area->default_charge : 0;
+
+
+                        // Check Merchant COD Percent
+                        if ($district->service_area->cod_charge != 0) {
+                            $cod_percent = ($merchant_cod_percent != 0) ? $merchant_cod_percent : $district->service_area->cod_charge;
+                        }
+
+                        $code_charge_percent = $district->service_area->cod_charge;
+                        if ($code_charge_percent != 0) {
+                            $merchantServiceAreaCodCharge = MerchantServiceAreaCodCharge::where([
+                                'service_area_id' => $district->service_area_id,
+                                'merchant_id'     => $parcel->merchant?->id,
+                            ])->first();
+
+                            if ($merchantServiceAreaCodCharge) {
+                                $cod_percent = $merchantServiceAreaCodCharge->cod_charge;
+                            }
+                        }
+
+                        $merchantServiceAreaCharge = MerchantServiceAreaCharge::where([
+                            'service_area_id' => $service_area_id,
+                            'merchant_id' => $parcel->merchant?->id,
+                        ])->first();
+
+                        $merchantServiceAreaReturnCharge = MerchantServiceAreaReturnCharge::where([
+                            'service_area_id' => $service_area_id,
+                            'merchant_id' => $parcel->merchant?->id,
+                        ])->first();
+
+
+                        if ($merchantServiceAreaCharge && !empty($merchantServiceAreaCharge->charge)) {
+                            $merchant_service_area_charge = $merchantServiceAreaCharge->charge;
+                        }
+
+
+                        //Set Default Return Charge 1/2 of Delivery Charge
+                        $merchant_service_area_return_charge = $merchant_service_area_charge / 2;
+                        if ($merchantServiceAreaReturnCharge && !empty($merchantServiceAreaReturnCharge->return_charge)) {
+                            //Set Return Charge Merchant Wise
+                            $merchant_service_area_return_charge = $merchantServiceAreaReturnCharge->return_charge;
+                        }
+                    }
+
+
+                    // Weight Package Charge
+                    if ($weight_id) {
+                        $weightPackage = WeightPackage::with([
+                            'service_area' => function ($query) use ($service_area_id) {
+                                $query->where('service_area_id', '=', $service_area_id);
+                            },
+                        ])
+                            ->where(['id' => $weight_id])
+                            ->first();
+
+                        $weight_package_charge = $weightPackage->rate;
+                        if (!empty($weightPackage->service_area)) {
+                            $weight_package_charge = $weightPackage->service_area->rate;
+                        }
+                    }
+
+                    if (empty($weightPackage) || is_null($weight_id)) {
+                        $weightPackage = WeightPackage::with([
+                            'service_area' => function ($query) use ($service_area_id) {
+                                $query->where('service_area_id', '=', $service_area_id);
+                            },
+                        ])
+                            ->where(['id' => $weight_id])
+                            ->first();
+
+                        $weight_package_charge = $weightPackage->rate;
+                        if (!empty($weightPackage->service_area)) {
+                            $weight_package_charge = $weightPackage->service_area->rate;
+                        }
+                        $weight_id = $weightPackage->id;
+                    }
+
+                    /**
+                     * Set Parcel Delivery Charge
+                     * If Merchant service area is not 0 then check District Area default Delivery charge
+                     */
+                    $delivery_charge = $merchant_service_area_charge != 0 ? $merchant_service_area_charge : $delivery_charge;
+
+
+                    $collection_amount = $collection_amount ?? 0;
+                    if ($collection_amount != 0 && $cod_percent != 0) {
+                        $cod_charge = ($collection_amount / 100) * $cod_percent;
+                    }
+
+                    $item_type_charge = $request->input('item_type_charge') ?? 0;
+                    $service_type_charge = $request->input('service_type_charge') ?? 0;
+                    $delivery_charge =  $delivery_charge + $item_type_charge + $service_type_charge;
+                    $total_charge = $delivery_charge + $cod_charge + $weight_package_charge;
+
+                    $data = [
+                        'district_id' => $district_id,
+                        'area_id' => $request->area_id[$key],
+                        'weight_package_id' => $request->weight_package_id[$key],
+                        'delivery_charge' => $delivery_charge,
+                        'weight_package_charge' => $weight_package_charge,
+                        'merchant_service_area_charge' => $merchant_service_area_charge,
+                        'merchant_service_area_return_charge' => $merchant_service_area_return_charge,
+                        'cod_percent' => $cod_percent,
+                        'cod_charge' => $cod_charge,
+                        'total_charge' => $total_charge,
+                        'status' => 1,
+                    ];
+
+                    $parcel->update($data);
+
+                    if ($parcel) {
+                        $data = [
+                            'parcel_id' => $parcel->id,
+                            'merchant_id' => $parcel->merchant->id,
+                            'pickup_branch_id' => $parcel->merchant->branch_id,
+                            'date' => date('Y-m-d'),
+                            'time' => date('H:i:s'),
+                            'status' => 1,
+                        ];
+
+                        ParcelLog::create($data);
+                    }
+                } else {
+                    continue;
+                }
+            }
+
+            return back()->with('success', 'Parcel Update Successfully');
+        } catch (\Exception $exception) {
+            return back()->with('error', 'Parcel Update Failed');
+        }
+    }
 
     public function deliveryParcelList()
     {
@@ -38,7 +262,10 @@ class DeliveryParcelController extends Controller
     {
         $branch_id = auth()->guard('branch')->user()->branch->id;
 
-        $model = Parcel::with(['district', 'upazila', 'area',
+        $model = Parcel::with([
+            'district',
+            'upazila',
+            'area',
             'merchant' => function ($query) {
                 $query->select('id', 'name', 'company_name', 'contact_number', 'address');
             }
@@ -116,7 +343,7 @@ class DeliveryParcelController extends Controller
             ->addColumn('company_info', function ($data) {
                 $company_info = '<p><strong>Name: </strong>' . $data->merchant->company_name . '</p>';
                 $company_info .= '<p><strong>Phone: </strong>' . $data->merchant->contact_number . '</p>';
-//                $company_info .= '<span><strong>Address: </strong>'.$data->merchant->address.'</span>';
+                //                $company_info .= '<span><strong>Address: </strong>'.$data->merchant->address.'</span>';
                 return $company_info;
             })
             ->addColumn('customer_info', function ($data) {
@@ -177,7 +404,10 @@ class DeliveryParcelController extends Controller
     {
         $branch_id = auth()->guard('branch')->user()->branch->id;
 
-        $model = Parcel::with(['district', 'upazila', 'area',
+        $model = Parcel::with([
+            'district',
+            'upazila',
+            'area',
             'merchant' => function ($query) {
                 $query->select('id', 'name', 'company_name', 'contact_number', 'address');
             }
@@ -196,7 +426,6 @@ class DeliveryParcelController extends Controller
         }
         $parcels = $model->get();
         return view('branch.parcel.deliveryParcel.printDeliveryParcelList', compact('parcels', 'filter'));
-
     }
 
     public function completeDeliveryParcelList()
@@ -213,7 +442,10 @@ class DeliveryParcelController extends Controller
     {
         $branch_id = auth()->guard('branch')->user()->branch->id;
 
-        $model = Parcel::with(['district', 'upazila', 'area',
+        $model = Parcel::with([
+            'district',
+            'upazila',
+            'area',
             'merchant' => function ($query) {
                 $query->select('id', 'name', 'company_name', 'contact_number', 'address');
             }
@@ -228,7 +460,7 @@ class DeliveryParcelController extends Controller
             $model->whereDate('delivery_date', '<=', $request->get('to_date'));
         }
 
-       /* return DataTables::of($model)
+        /* return DataTables::of($model)
             ->addIndexColumn()
             ->editColumn('merchant.company_name', function ($data) {
                 $company_name = ($data->merchant) ? $data->merchant->company_name : "Default";
@@ -319,7 +551,7 @@ class DeliveryParcelController extends Controller
             ->addColumn('company_info', function ($data) {
                 $company_info = '<p><strong>Name: </strong>' . $data->merchant->company_name . '</p>';
                 $company_info .= '<p><strong>Phone: </strong>' . $data->merchant->contact_number . '</p>';
-//                $company_info .= '<span><strong>Address: </strong>'.$data->merchant->address.'</span>';
+                //                $company_info .= '<span><strong>Address: </strong>'.$data->merchant->address.'</span>';
                 return $company_info;
             })
             ->addColumn('customer_info', function ($data) {
@@ -374,15 +606,16 @@ class DeliveryParcelController extends Controller
                 'remarks',
             ])
             ->make(true);
-
-
     }
 
     public function printCompleteDeliveryParcelList(Request $request)
     {
         $branch_id = auth()->guard('branch')->user()->branch->id;
 
-        $model = Parcel::with(['district', 'upazila', 'area',
+        $model = Parcel::with([
+            'district',
+            'upazila',
+            'area',
             'merchant' => function ($query) {
                 $query->select('id', 'name', 'company_name', 'contact_number', 'address');
             }
@@ -401,7 +634,7 @@ class DeliveryParcelController extends Controller
         }
 
         $parcels = $model->get();
-        return view('branch.parcel.deliveryParcel.printCompleteDeliveryParcelList', compact('parcels','filter'));
+        return view('branch.parcel.deliveryParcel.printCompleteDeliveryParcelList', compact('parcels', 'filter'));
     }
 
     public function rescheduleDeliveryParcelList()
@@ -418,7 +651,10 @@ class DeliveryParcelController extends Controller
     {
         $branch_id = auth()->guard('branch')->user()->branch->id;
 
-        $model = Parcel::with(['district', 'upazila', 'area',
+        $model = Parcel::with([
+            'district',
+            'upazila',
+            'area',
             'merchant' => function ($query) {
                 $query->select('id', 'name', 'company_name', 'contact_number', 'address');
             }
@@ -426,7 +662,8 @@ class DeliveryParcelController extends Controller
             ->whereRaw('delivery_branch_id = ? and status in (23,25) and delivery_type in (3)', [$branch_id])
             ->select();
         if (($request->has('from_date') && !is_null($request->get('from_date')) && $request->get('from_date') != 0)
-            || ($request->has('to_date') && !is_null($request->get('to_date')) && $request->get('to_date') != 0)) {
+            || ($request->has('to_date') && !is_null($request->get('to_date')) && $request->get('to_date') != 0)
+        ) {
             if ($request->has('from_date') && !is_null($request->get('from_date')) && $request->get('from_date') != 0) {
                 $model->where('reschedule_parcel_date', '>=', $request->get('from_date'));
             }
@@ -451,7 +688,6 @@ class DeliveryParcelController extends Controller
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
-
             })
             ->addColumn('action', function ($data) {
                 $button = '<a href="' . route('parcel.printParcel', $data->id) . '" class="btn btn-success btn-sm" title="Print Pickup Parcel" target="_blank">
@@ -460,9 +696,9 @@ class DeliveryParcelController extends Controller
                 $button .= '&nbsp; <button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" parcel_id="' . $data->id . '}" title=" View Pickup Parcel ">
                         <i class="fa fa-eye"></i> </button>';
 
-//                if($data->status != 25){
+                //                if($data->status != 25){
                 $button .= '&nbsp; <a href="' . route('branch.parcel.editRescheduleParcel', $data->id) . '" class="btn btn-info btn-sm" title="Edit Pickup Parcel "> <i class="fa fa-edit"></i> </a>';
-//                }
+                //                }
                 return $button;
             })
             ->rawColumns(['status', 'action', 'image'])
@@ -474,7 +710,10 @@ class DeliveryParcelController extends Controller
     {
         $branch_id = auth()->guard('branch')->user()->branch->id;
 
-        $model = Parcel::with(['district', 'upazila', 'area',
+        $model = Parcel::with([
+            'district',
+            'upazila',
+            'area',
             'merchant' => function ($query) {
                 $query->select('id', 'name', 'company_name', 'contact_number', 'address');
             }
@@ -483,7 +722,8 @@ class DeliveryParcelController extends Controller
             ->select();
         $filter = [];
         if (($request->has('from_date') && !is_null($request->get('from_date')) && $request->get('from_date') != 0)
-            || ($request->has('to_date') && !is_null($request->get('to_date')) && $request->get('to_date') != 0)) {
+            || ($request->has('to_date') && !is_null($request->get('to_date')) && $request->get('to_date') != 0)
+        ) {
             if ($request->has('from_date') && !is_null($request->get('from_date')) && $request->get('from_date') != 0) {
                 $model->where('reschedule_parcel_date', '>=', $request->get('from_date'));
                 $filter['from_date'] = $request->get('from_date');
@@ -581,7 +821,7 @@ class DeliveryParcelController extends Controller
         try {
 
             $data = [
-//                'date'                         => date('Y-m-d'),
+                //                'date'                         => date('Y-m-d'),
                 'merchant_order_id' => $request->input('merchant_order_id'),
                 'customer_name' => $request->input('customer_name'),
                 'customer_address' => $request->input('customer_address'),
@@ -604,7 +844,7 @@ class DeliveryParcelController extends Controller
                 'service_type_id' => $request->input('service_type_id') == 0 ? null : $request->input('service_type_id'),
                 'item_type_id' => $request->input('item_type_id') == 0 ? null : $request->input('item_type_id'),
                 'parcel_note' => $request->input('parcel_note'),
-//                'parcel_date'                  => date('Y-m-d'),
+                //                'parcel_date'                  => date('Y-m-d'),
             ];
             if ($request->input('item_type_id') != 0) {
                 $data['service_type_id'] = null;
@@ -631,13 +871,11 @@ class DeliveryParcelController extends Controller
                 $this->setMessage('Parcel Update Failed', 'danger');
                 return redirect()->back()->withInput();
             }
-
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             \DB::rollback();
             $this->setMessage('Database Error Found', 'danger');
             return redirect()->back()->withInput();
         }
-
     }
 
 
@@ -725,7 +963,7 @@ class DeliveryParcelController extends Controller
         try {
 
             $data = [
-//                'date'                         => date('Y-m-d'),
+                //                'date'                         => date('Y-m-d'),
                 'merchant_order_id' => $request->input('merchant_order_id'),
                 'customer_name' => $request->input('customer_name'),
                 'customer_address' => $request->input('customer_address'),
@@ -745,7 +983,7 @@ class DeliveryParcelController extends Controller
                 'total_charge' => $request->input('total_charge'),
                 'delivery_option_id' => $request->input('delivery_option_id'),
                 'parcel_note' => $request->input('parcel_note'),
-//                'parcel_date'                  => date('Y-m-d'),
+                //                'parcel_date'                  => date('Y-m-d'),
             ];
 
             $check = Parcel::where('id', $parcel->id)->update($data) ? true : false;
@@ -770,13 +1008,11 @@ class DeliveryParcelController extends Controller
                 $this->setMessage('Parcel Update Failed', 'danger');
                 return redirect()->back()->withInput();
             }
-
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             \DB::rollback();
             $this->setMessage('Database Error Found', 'danger');
             return redirect()->back()->withInput();
         }
-
     }
 
 
@@ -864,7 +1100,7 @@ class DeliveryParcelController extends Controller
         try {
 
             $data = [
-//                'date'                         => date('Y-m-d'),
+                //                'date'                         => date('Y-m-d'),
                 'merchant_order_id' => $request->input('merchant_order_id'),
                 'customer_name' => $request->input('customer_name'),
                 'customer_address' => $request->input('customer_address'),
@@ -884,7 +1120,7 @@ class DeliveryParcelController extends Controller
                 'total_charge' => $request->input('total_charge'),
                 'delivery_option_id' => $request->input('delivery_option_id'),
                 'parcel_note' => $request->input('parcel_note'),
-//                'parcel_date'                  => date('Y-m-d'),
+                //                'parcel_date'                  => date('Y-m-d'),
             ];
 
             $check = Parcel::where('id', $parcel->id)->update($data) ? true : false;
@@ -909,14 +1145,12 @@ class DeliveryParcelController extends Controller
                 $this->setMessage('Parcel Update Failed', 'danger');
                 return redirect()->back()->withInput();
             }
-
         } catch (\Exception $e) {
             \DB::rollback();
             $this->setMessage('Database Error Found', 'danger');
-//            return $e->getMessage();
+            //            return $e->getMessage();
             return redirect()->back()->withInput();
         }
-
     }
 
     public function deliveryParcelReceived(Request $request)
@@ -1030,9 +1264,10 @@ class DeliveryParcelController extends Controller
     {
         $branch_id = auth()->guard('branch')->user()->id;
 
-        $model = RiderRun::with(['rider' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $model = RiderRun::with([
+            'rider' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->whereRaw('branch_id = ? and run_type = 2', [$branch_id])
             ->orderBy('id', 'desc')
@@ -1090,9 +1325,10 @@ class DeliveryParcelController extends Controller
             ->select('id', 'name', 'contact_number', 'address')
             ->get();
 
-        $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number');
-        },
+        $data['parcels'] = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number');
+            },
         ])
             ->where([
                 'pickup_branch_id' => $branch_id,
@@ -1114,9 +1350,10 @@ class DeliveryParcelController extends Controller
 
         if (!empty($parcel_invoice_barcode) || !empty($parcel_invoice) || !empty($merchant_order_id)) {
 
-            $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-                $query->select('id', 'name', 'contact_number');
-            },
+            $data['parcels'] = Parcel::with([
+                'merchant' => function ($query) {
+                    $query->select('id', 'name', 'contact_number');
+                },
             ])
                 ->where(function ($query) use ($branch_id, $parcel_invoice_barcode, $parcel_invoice, $merchant_order_id) {
                     $query->whereIn('status', [11, 15, 17]);
@@ -1152,9 +1389,10 @@ class DeliveryParcelController extends Controller
     {
         $branch_id = auth()->guard('branch')->user()->id;
         $parcel_invoice = $request->input('parcel_invoice');
-        $parcels = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $parcels = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->whereIn('id', $request->parcel_invoices)
             ->where([
@@ -1279,7 +1517,7 @@ class DeliveryParcelController extends Controller
                     'parcel_id' => $parcel_id,
                 ]);
 
-                $parcel=Parcel::where('id', $parcel_id)->first();
+                $parcel = Parcel::where('id', $parcel_id)->first();
                 $parcel->update([
                     'status' => 13,
                     'parcel_date' => $request->input('date'),
@@ -1333,7 +1571,7 @@ class DeliveryParcelController extends Controller
                     $riderRunDetails = RiderRunDetail::where('rider_run_id', $request->rider_run_id)->get();
 
                     foreach ($riderRunDetails as $riderRunDetail) {
-                        $parcel=Parcel::where('id', $riderRunDetail->parcel_id)->update([
+                        $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->update([
                             'status' => 14,
                             'parcel_date' => date('Y-m-d'),
                         ]);
@@ -1417,9 +1655,7 @@ class DeliveryParcelController extends Controller
                 } else {
                     $response = ['error' => 'Database Error Found'];
                 }
-
             }
-
         }
 
         return response()->json($response);
@@ -1560,7 +1796,6 @@ class DeliveryParcelController extends Controller
             $this->setMessage('Parcel Update Failed', 'danger');
             return redirect()->back()->withInput();
         }
-
     }
 
 
@@ -1619,7 +1854,6 @@ class DeliveryParcelController extends Controller
                 } else {
                     $response = ['error' => 'Database Error Found'];
                 }
-
             }
 
             return response()->json($response);
@@ -1670,9 +1904,7 @@ class DeliveryParcelController extends Controller
                 } else {
                     $response = ['error' => 'Database Error Found'];
                 }
-
             }
-
         }
 
         return response()->json($response);
@@ -1736,7 +1968,6 @@ class DeliveryParcelController extends Controller
                 } else {
                     $response = ['error' => 'Database Error Found'];
                 }
-
             }
 
             return response()->json($response);
@@ -1815,7 +2046,6 @@ class DeliveryParcelController extends Controller
             $this->setMessage('Parcel Create Failed', 'danger');
             return redirect()->back()->withInput();
         }
-
     }
 
     public function list()
@@ -1938,5 +2168,4 @@ class DeliveryParcelController extends Controller
             ->rawColumns(['status', 'action', 'image'])
             ->make(true);
     }
-
 }

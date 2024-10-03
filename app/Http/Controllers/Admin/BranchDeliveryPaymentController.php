@@ -45,6 +45,7 @@ class BranchDeliveryPaymentController extends Controller
         $parcels = Parcel::with('merchant')->where('is_push', 1)->where('status', 0)
             ->where(function ($query) use ($request) {
                 $merchant_id = $request->input('merchant_id');
+                $branch_id = $request->input('branch_id');
                 $from_date = $request->input('from_date');
                 $to_date   = $request->input('to_date');
 
@@ -52,12 +53,20 @@ class BranchDeliveryPaymentController extends Controller
                     $query->where('merchant_id', $request->input('merchant_id'));
                 }
 
-                if ($request->has('from_date') && !is_null($from_date) && $from_date != '') {
-                    $query->whereDate('date', '>=', $request->input('from_date'));
+                if ($request->has('branch_id') && !is_null($branch_id) && $branch_id != '' && $branch_id != 0) {
+                    $query->whereHas('merchant', function ($query) use ($branch_id) {
+                        $query->where('branch_id', $branch_id);
+                    });
                 }
 
-                if ($request->has('to_date') && !is_null($to_date) && $to_date != '') {
-                    $query->whereDate('date', '<=', $request->input('to_date'));
+                if ($request->has('from_date') && !is_null($from_date) && $from_date !== '') {
+                    $fromDateTime = Carbon::parse($request->input('from_date'));
+                    $query->where('created_at', '>=', $fromDateTime);
+                }
+
+                if ($request->has('to_date') && !is_null($to_date) && $to_date !== '') {
+                    $toDateTime = Carbon::parse($request->input('to_date'));
+                    $query->where('created_at', '<=', $toDateTime);
                 }
             })
             ->orderBy('id', 'desc')
@@ -70,6 +79,7 @@ class BranchDeliveryPaymentController extends Controller
         $data['page_title'] = 'Push Request';
         $data['collapse']   = 'sidebar-collapse';
         $data['merchants']   = Merchant::where('status', 1)->get();
+        $data['branches']   = Branch::where('status', 1)->get();
         $data['parcels']   = $parcels;
         $data['districts'] = District::where([
             ['status', '=', 1],
@@ -82,9 +92,18 @@ class BranchDeliveryPaymentController extends Controller
     {
         try {
             foreach ($request->parcel_id as $key => $value) {
-                if (isset($request->district_id[$key]) && isset($request->area_id[$key]) && isset($request->weight_package_id[$key])) {
+                $parcel = Parcel::find($value);
 
-                    $parcel = Parcel::find($value);
+                if (isset($request->delete[$key]) && !empty($request->delete[$key])) {
+                    $parcel->delete();
+                    continue;
+                }
+
+                if (
+                    isset($request->district_id[$key]) && !empty($request->district_id[$key]) &&
+                    isset($request->area_id[$key]) && !empty($request->area_id[$key]) &&
+                    isset($request->weight_package_id[$key]) && !empty($request->weight_package_id[$key])
+                ) {
 
                     //Set District, Upazila, Area ID and Merchant Service Area Charge
                     $merchant_service_area_charge = 0;
@@ -227,6 +246,8 @@ class BranchDeliveryPaymentController extends Controller
 
                         ParcelLog::create($data);
                     }
+                } else {
+                    continue;
                 }
             }
 

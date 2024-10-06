@@ -191,9 +191,9 @@
                         $logs_note .= $parcel_log->note;
                     }
                 }
-                $parcelPaymentStatus = returnPaymentStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type);
+                $parcelPaymentStatus = returnPaymentStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
                 $payment_status_name = $parcelPaymentStatus['status_name'];
-                $parcelReturnStatus = returnReturnStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type);
+                $parcelReturnStatus = returnReturnStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
                 $return_status_name = $parcelReturnStatus['status_name'];
             @endphp
             <tr>

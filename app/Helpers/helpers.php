@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\Parcel;
 use App\Models\ParcelLog;
 use Illuminate\Support\Facades\Auth;
@@ -517,7 +518,7 @@ function returnParcelStatusForAdmin($status, $delivery_type, $payment_type = nul
         $class        = "danger";
     }
 
-    if ($status == 1 && isset($parcel) && $parcel?->is_push) {
+    if ($status == 0 && isset($parcel) && $parcel?->is_push) {
         $status_name  = "In Review API";
         $class        = "success";
     }
@@ -555,87 +556,140 @@ function returnDeliveryStatusForAdmin($status, $delivery_type, $payment_type)
     ];
 }
 
-function returnPaymentStatusForAdmin($status, $delivery_type, $payment_type)
+function returnPaymentStatusForAdmin($status, $delivery_type, $payment_type, $parcel)
 {
     $status_name    = "";
     $class          = "";
+    $time           = "";
+
+    $query = ParcelLog::where('parcel_id', $parcel->id)->where('status', '>=', 25)->whereIn('delivery_type', [1, 2, 4]);
 
     if ($status >= 25 && ($delivery_type == 1 || $delivery_type == 2 || $delivery_type == 4) && $payment_type) {
         if ($payment_type == 1) {
             $status_name  = "Branch Payment Request";
             $class        = "primary";
+            $x            = $query->whereHas('parcel', function ($query) {
+                $query->where('payment_type', 1);
+            })->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($payment_type == 2) {
             $status_name  = "Accounts Accept Payment";
             $class        = "success";
+            $x            = $query->whereHas('parcel', function ($query) {
+                $query->where('payment_type', 2);
+            })->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($payment_type == 3) {
             $status_name  = "Accounts Reject Payment";
             $class        = "warning";
+            $x            = $query->whereHas('parcel', function ($query) {
+                $query->where('payment_type', 3);
+            })->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($payment_type == 4) {
             $status_name  = "Accounts Payment Request";
             $class        = "primary";
+            $x            = $query->whereHas('parcel', function ($query) {
+                $query->where('payment_type', 4);
+            })->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($payment_type == 5) {
             $status_name  = "Paid ";
             // $status_name  = "Accounts Payment Done";
             $class        = "success";
+            $x            = $query->whereHas('parcel', function ($query) {
+                $query->where('payment_type', 5);
+            })->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($payment_type == 6) {
             $status_name  = "Merchant Payment Reject";
             $class        = "warning";
+            $x            = $query->whereHas('parcel', function ($query) {
+                $query->where('payment_type', 6);
+            })->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         }
     }
 
     return [
         'status_name'   => $status_name,
-        'class'         => $class
+        'class'         => $class,
+        'time'         => $time
     ];
 }
 
-function returnReturnStatusForAdmin($status, $delivery_type, $payment_type)
+function returnReturnStatusForAdmin($status, $delivery_type, $payment_type, $parcel)
 {
     $status_name    = "";
     $class          = "";
+    $time = "";
+
+    $query = ParcelLog::where('parcel_id', $parcel->id);
 
     if ($status >= 25 && $delivery_type && ($delivery_type == 2 || $delivery_type == 4)) {
-
         /** For Partial Delivery Return */
         if ($status == 26) {
             $status_name  = "Return Transfer";
             $class        = "success";
+            $x            = $query->where('status', 26)->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($status == 27) {
             $status_name  = "Return Transfer Cancel";
             $class        = "success";
+            $x            = $query->where('status', 27)->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($status == 28) {
             $status_name  = "Return Transfer Complete";
             $class        = "success";
+            $x            = $query->where('status', 28)->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($status == 29) {
             $status_name  = "Return Transfer Reject";
             $class        = "success";
+            $x            = $query->where('status', 29)->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($status == 30) {
             $status_name  = "Return Run Create";
             $class        = "success";
+            $x            = $query->where('status', 30)->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($status == 31) {
             $status_name  = "Return Run start";
             $class        = "success";
+            $x            = $query->where('status', 31)->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($status == 32) {
             $status_name  = "Return Run Cancel";
             $class        = "success";
+            $x            = $query->where('status', 32)->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($status == 33) {
             $status_name  = "Return Run Rider Accept";
             $class        = "success";
+            $x            = $query->where('status', 33)->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($status == 34) {
             $status_name  = "Return Run Rider Reject";
             $class        = "success";
+            $x            = $query->where('status', 34)->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($status == 35) {
             $status_name  = "Return Run Complete";
             $class        = "success";
+            $x            = $query->where('status', 35)->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         } elseif ($status == 36) {
             $status_name  = "Return Complete";
             $class        = "success";
+            $x            = $query->where('status', 36)->first();
+            $time         =  Carbon::parse($x?->date . ' ' . $x?->time)->format('d-m-Y h:i A');
         }
     }
 
     return [
         'status_name'   => $status_name,
-        'class'         => $class
+        'class'         => $class,
+        'time'         => $time
     ];
 }
 
@@ -852,7 +906,7 @@ function returnParcelStatusNameForBranch($status, $delivery_type, $payment_type,
     //     $class        = "warning";
     // }
 
-    if ($status == 1 && isset($parcel) && $parcel?->is_push) {
+    if ($status == 0 && isset($parcel) && $parcel?->is_push) {
         $status_name  = "In Review API";
         $class        = "success";
     }
@@ -1006,7 +1060,7 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
     //     $status_name  .=  "Payment Done";
     // }
 
-    if ($status == 1 && isset($parcel) && $parcel?->is_push) {
+    if ($status == 0 && isset($parcel) && $parcel?->is_push) {
         $status_name  = "In Review API";
         $class        = "success";
     }
@@ -1428,7 +1482,10 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->delivery_branch) {
             $to_user    = !empty($parcelLog->delivery_branch) ? "Delivery Branch : " . $parcelLog?->delivery_branch?->name : "";
+        } elseif ($parcelLog->delivery_rider) {
+            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name;
         }
+
         $x = $parcelLog->parcel;
 
         $status_name  = "Delivery Cancel";

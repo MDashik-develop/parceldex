@@ -260,17 +260,27 @@ class ParcelController extends Controller
                 // $status_name = $parcelStatus['status_name'];
                 // $class = $parcelStatus['class'];
                 // $return .= '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
-                $parcelStatus = returnPaymentStatusForAdmin($data->status, $data->delivery_type, $data->payment_type);
+                $date  = $data?->merchantDeliveryPayment?->created_at->format('d-m-Y h:i A');
+                $x = '';
+                $payment_invoice = $data?->merchantDeliveryPayment?->payment_invoice;
+                if ($date && $payment_invoice) {
+                    $x = $date . '<br>' . $payment_invoice;
+                }
+
+
+                $parcelStatus = returnPaymentStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
-                return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
+                $time = $parcelStatus['time'];
+                return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
 
             ->editColumn('return_status', function ($data) {
-                $parcelStatus = returnReturnStatusForAdmin($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus = returnReturnStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
-                return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
+                $time        = $parcelStatus['time'];
+                return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
             ->addColumn('action', function ($data) {
                 $button = '<a href="' . route('parcel.printParcel', $data->id) . '" class="btn btn-success btn-sm" title="Print Pickup Parcel" target="_blank">

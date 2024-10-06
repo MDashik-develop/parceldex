@@ -833,13 +833,15 @@ class ParcelController extends Controller
                 $parcelStatus = returnPaymentStatusForMerchant($data->status, $data->delivery_type, $data->payment_type);
                 $status_name  = $parcelStatus['status_name'];
                 $class        = $parcelStatus['class'];
-                return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $x;
+                $time        = $parcelStatus['time'];
+                return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
             ->editColumn('return_status', function ($data) {
-                $parcelStatus = returnReturnStatusForAdmin($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus = returnReturnStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name  = $parcelStatus['status_name'];
                 $class        = $parcelStatus['class'];
-                return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
+                $time        = $parcelStatus['time'];
+                return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
             // ->editColumn('payment_status', function ($data) {
             //     $return = "";

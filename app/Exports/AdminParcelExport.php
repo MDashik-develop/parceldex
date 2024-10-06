@@ -130,9 +130,9 @@ class AdminParcelExport implements
             foreach ($parcels as $key => $parcel) {
                 $parcelStatus = returnParcelStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type);
                 $status_name = $parcelStatus['status_name'];
-                $parcelPaymentStatus = returnPaymentStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type);
+                $parcelPaymentStatus = returnPaymentStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
                 $payment_status_name = $parcelPaymentStatus['status_name'];
-                $parcelReturnStatus = returnReturnStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type);
+                $parcelReturnStatus = returnReturnStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
                 $return_status_name = $parcelReturnStatus['status_name'];
 
                 $logs_note = "";

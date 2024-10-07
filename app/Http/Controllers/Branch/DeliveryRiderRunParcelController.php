@@ -1093,6 +1093,57 @@ class DeliveryRiderRunParcelController extends Controller
                                 $parcel_log_create_data['status'] = 25;
                                 $sms_delivery_status = 1;
                                 $sms_delivery_type = "Delivered";
+
+                                $area = Area::with('district')->where('id', $parcel->area_id)->first();
+                                $service_area_id = $area?->district?->service_area_id;
+
+                                $merchantServiceAreaReturnCharge = MerchantServiceAreaReturnCharge::where([
+                                    'service_area_id' => $service_area_id,
+                                    'merchant_id' => $parcel->merchant_id,
+                                ])->first();
+
+                                $merchant_service_area_return_charge = 0;
+
+                                if ($merchantServiceAreaReturnCharge && !empty($merchantServiceAreaReturnCharge->return_charge)) {
+                                    $merchant_service_area_return_charge = $merchantServiceAreaReturnCharge->return_charge;
+                                }
+
+                                if ($parcel->exchange == 'yes') {
+                                    $new_parcel = $parcel->replicate();
+                                    $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
+                                    $new_parcel->suborder = $parcel->parcel_invoice;
+                                    $new_parcel->delivery_type = 4;
+                                    $new_parcel->status = 25;
+                                    $new_parcel->total_collect_amount = 0;
+                                    $new_parcel->delivery_charge = 0;
+                                    $new_parcel->merchant_service_area_charge = 0;
+                                    $new_parcel->cod_percent = 0;
+                                    $new_parcel->cod_charge = 0;
+                                    $new_parcel->weight_package_charge = 0;
+                                    $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                    $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                    $new_parcel->customer_collect_amount = 0;
+                                    $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                    $new_parcel->delivery_date = now()->toDateString();
+                                    $new_parcel->created_at = now();
+                                    $new_parcel->save();
+                                }
+
+                                $parcel->merchant_service_area_return_charge = 0;
+                                $parcel->save();
+
+                                $new_parcel_log = [
+                                    'parcel_id' => $new_parcel->id,
+                                    'delivery_branch_id' => auth()->guard('branch')->user()->id,
+                                    'date' => date('Y-m-d'),
+                                    'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
+                                    'time' => date('H:i:s'),
+                                    'status' => 25,
+                                    'delivery_type' => 4,
+                                ];
+
+                                ParcelLog::create($new_parcel_log);
+
                                 break;
 
                             case 22:
@@ -1130,24 +1181,64 @@ class DeliveryRiderRunParcelController extends Controller
                                     $merchant_service_area_return_charge = $merchantServiceAreaReturnCharge->return_charge;
                                 }
 
-                                $new_parcel = $parcel->replicate();
-                                $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
-                                $new_parcel->suborder = $parcel->parcel_invoice;
-                                $new_parcel->delivery_type = 4;
-                                $new_parcel->status = 25;
-                                $new_parcel->total_collect_amount = $confirm_amount_to_be_collect - $confirm_customer_collect_amount;
-                                $new_parcel->delivery_charge = 0;
-                                $new_parcel->merchant_service_area_charge = 0;
-                                $new_parcel->cod_percent = 0;
-                                $new_parcel->cod_charge = 0;
-                                $new_parcel->weight_package_charge = 0;
-                                $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
-                                $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
-                                $new_parcel->customer_collect_amount = 0;
-                                $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
-                                $new_parcel->delivery_date = now()->toDateString();
-                                $new_parcel->created_at = now();
-                                $new_parcel->save();
+                                if ($parcel->exchange == 'yes') {
+                                    $new_parcel = $parcel->replicate();
+                                    $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
+                                    $new_parcel->suborder = $parcel->parcel_invoice;
+                                    $new_parcel->delivery_type = 4;
+                                    $new_parcel->status = 25;
+                                    $new_parcel->total_collect_amount = 0;
+                                    $new_parcel->delivery_charge = 0;
+                                    $new_parcel->merchant_service_area_charge = 0;
+                                    $new_parcel->cod_percent = 0;
+                                    $new_parcel->cod_charge = 0;
+                                    $new_parcel->weight_package_charge = 0;
+                                    $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                    $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                    $new_parcel->customer_collect_amount = 0;
+                                    $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                    $new_parcel->delivery_date = now()->toDateString();
+                                    $new_parcel->created_at = now();
+                                    $new_parcel->save();
+                                } else {
+                                    $new_parcel = $parcel->replicate();
+                                    $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
+                                    $new_parcel->suborder = $parcel->parcel_invoice;
+                                    $new_parcel->delivery_type = 4;
+                                    $new_parcel->status = 25;
+                                    $new_parcel->total_collect_amount = $confirm_amount_to_be_collect - $confirm_customer_collect_amount;
+                                    $new_parcel->delivery_charge = 0;
+                                    $new_parcel->merchant_service_area_charge = 0;
+                                    $new_parcel->cod_percent = 0;
+                                    $new_parcel->cod_charge = 0;
+                                    $new_parcel->weight_package_charge = 0;
+                                    $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                    $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                    $new_parcel->customer_collect_amount = 0;
+                                    $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                    $new_parcel->delivery_date = now()->toDateString();
+                                    $new_parcel->created_at = now();
+                                    $new_parcel->save();
+                                }
+
+                                // $new_parcel = $parcel->replicate();
+                                // $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
+                                // $new_parcel->suborder = $parcel->parcel_invoice;
+                                // $new_parcel->delivery_type = 4;
+                                // $new_parcel->status = 25;
+                                // $new_parcel->total_collect_amount = $confirm_amount_to_be_collect - $confirm_customer_collect_amount;
+                                // $new_parcel->delivery_charge = 0;
+                                // $new_parcel->merchant_service_area_charge = 0;
+                                // $new_parcel->cod_percent = 0;
+                                // $new_parcel->cod_charge = 0;
+                                // $new_parcel->weight_package_charge = 0;
+                                // $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                // $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                // $new_parcel->customer_collect_amount = 0;
+                                // $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                // $new_parcel->delivery_date = now()->toDateString();
+                                // $new_parcel->created_at = now();
+                                // $new_parcel->save();
 
                                 $parcel->merchant_service_area_return_charge = 0;
                                 $parcel->save();

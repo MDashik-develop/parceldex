@@ -554,9 +554,9 @@ class MerchantDeliveryPaymentController extends Controller
             foreach ($cart as $item) {
                 $parcel_id = $item->id;
 
-                if (empty($parcel_id) || empty($item->attributes->customer_collect_amount) || empty($item->attributes->cod_charge) || empty($item->attributes->delivery_charge) || empty($item->attributes->weight_package_charge) || empty($item->attributes->return_charge) || empty($item->price)) {
-                    continue;
-                }
+                // if (empty($parcel_id) || empty($item->attributes->customer_collect_amount) || empty($item->attributes->cod_charge) || empty($item->attributes->delivery_charge) || empty($item->attributes->weight_package_charge) || empty($item->attributes->return_charge) || empty($item->price)) {
+                //     continue;
+                // }
 
                 ParcelMerchantDeliveryPaymentDetail::create([
                     'parcel_merchant_delivery_payment_id' => $parcelMerchantDeliveryPayment->id,

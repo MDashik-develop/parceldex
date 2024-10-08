@@ -1127,22 +1127,22 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();
                                     $new_parcel->save();
+
+                                    $parcel->merchant_service_area_return_charge = 0;
+                                    $parcel->save();
+
+                                    $new_parcel_log = [
+                                        'parcel_id' => $new_parcel->id,
+                                        'delivery_branch_id' => auth()->guard('branch')->user()->id,
+                                        'date' => date('Y-m-d'),
+                                        'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
+                                        'time' => date('H:i:s'),
+                                        'status' => 25,
+                                        'delivery_type' => 4,
+                                    ];
+
+                                    ParcelLog::create($new_parcel_log);
                                 }
-
-                                $parcel->merchant_service_area_return_charge = 0;
-                                $parcel->save();
-
-                                $new_parcel_log = [
-                                    'parcel_id' => $new_parcel->id,
-                                    'delivery_branch_id' => auth()->guard('branch')->user()->id,
-                                    'date' => date('Y-m-d'),
-                                    'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
-                                    'time' => date('H:i:s'),
-                                    'status' => 25,
-                                    'delivery_type' => 4,
-                                ];
-
-                                ParcelLog::create($new_parcel_log);
 
                                 break;
 
@@ -1200,7 +1200,22 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();
                                     $new_parcel->save();
-                                } else {
+
+                                    $parcel->merchant_service_area_return_charge = 0;
+                                    $parcel->save();
+
+                                    $new_parcel_log = [
+                                        'parcel_id' => $new_parcel->id,
+                                        'delivery_branch_id' => auth()->guard('branch')->user()->id,
+                                        'date' => date('Y-m-d'),
+                                        'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
+                                        'time' => date('H:i:s'),
+                                        'status' => 25,
+                                        'delivery_type' => 4,
+                                    ];
+
+                                    ParcelLog::create($new_parcel_log);
+                                } elseif ($parcel->exchange == 'no') {
                                     $new_parcel = $parcel->replicate();
                                     $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
                                     $new_parcel->suborder = $parcel->parcel_invoice;
@@ -1219,6 +1234,21 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();
                                     $new_parcel->save();
+
+                                    $parcel->merchant_service_area_return_charge = 0;
+                                    $parcel->save();
+
+                                    $new_parcel_log = [
+                                        'parcel_id' => $new_parcel->id,
+                                        'delivery_branch_id' => auth()->guard('branch')->user()->id,
+                                        'date' => date('Y-m-d'),
+                                        'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
+                                        'time' => date('H:i:s'),
+                                        'status' => 25,
+                                        'delivery_type' => 4,
+                                    ];
+
+                                    ParcelLog::create($new_parcel_log);
                                 }
 
                                 // $new_parcel = $parcel->replicate();
@@ -1239,21 +1269,6 @@ class DeliveryRiderRunParcelController extends Controller
                                 // $new_parcel->delivery_date = now()->toDateString();
                                 // $new_parcel->created_at = now();
                                 // $new_parcel->save();
-
-                                $parcel->merchant_service_area_return_charge = 0;
-                                $parcel->save();
-
-                                $new_parcel_log = [
-                                    'parcel_id' => $new_parcel->id,
-                                    'delivery_branch_id' => auth()->guard('branch')->user()->id,
-                                    'date' => date('Y-m-d'),
-                                    'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
-                                    'time' => date('H:i:s'),
-                                    'status' => 25,
-                                    'delivery_type' => 4,
-                                ];
-
-                                ParcelLog::create($new_parcel_log);
 
                                 break;
 

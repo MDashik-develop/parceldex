@@ -1458,7 +1458,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && $x->exchange) {
+        if ($x->suborder && $x->exchange == 'yes') {
             $status_name  = "Exchange Delivered";
         }
     } elseif ($status == 25 && $parcelLog->delivery_type == 2) {
@@ -1474,9 +1474,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && !$x->exchange) {
+        if ($x->suborder && $x->exchange == 'no') {
             $status_name  = "Partial Delivery Cancel";
-        } elseif ($x->suborder && $x->exchange) {
+        } elseif ($x->suborder && $x->exchange == 'yes') {
             $status_name  = "Partial Exchange Delivered";
         }
     } elseif ($status == 25 && $parcelLog->delivery_type == 3) {
@@ -1504,9 +1504,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $status_name  = "Cancelled";
 
-        if ($x->suborder && !$x->exchange) {
+        if ($x->suborder && $x->exchange == 'no') {
             $status_name  = "Partial Delivery Cancel";
-        } elseif ($x->suborder && $x->exchange) {
+        } elseif ($x->suborder && $x->exchange == 'yes') {
             $status_name  = "Exchange Collected";
         }
 
@@ -1541,9 +1541,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && !$x->exchange) {
+        if ($x->suborder && $x->exchange == 'no') {
             $status_name  = "Partial Return Branch Assign";
-        } elseif ($x->suborder && $x->exchange) {
+        } elseif ($x->suborder && $x->exchange == 'yes') {
             $status_name  = "Exchange Return Branch Assign";
         }
     } elseif ($status == 27) {
@@ -1558,9 +1558,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && !$x->exchange) {
+        if ($x->suborder && $x->exchange == 'no') {
             $status_name  = "Partial Return Branch Assign Cancel";
-        } elseif ($x->suborder && $x->exchange) {
+        } elseif ($x->suborder && $x->exchange == 'yes') {
             $status_name  = "Exchange Return Branch Assign Cancel";
         }
     } elseif ($status == 28) {
@@ -1575,9 +1575,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && !$x->exchange) {
+        if ($x->suborder && $x->exchange == 'no') {
             $status_name  = "Partial Branch Assign Received";
-        } elseif ($x->suborder && $x->exchange) {
+        } elseif ($x->suborder && $x->exchange == 'yes') {
             $status_name  = "Exchange Branch Assign Received";
         }
     } elseif ($status == 29) {
@@ -1592,9 +1592,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && !$x->exchange) {
+        if ($x->suborder && $x->exchange == 'no') {
             $status_name  = "Partial Return Branch Assign Reject";
-        } elseif ($x->suborder && $x->exchange) {
+        } elseif ($x->suborder && $x->exchange == 'yes') {
             $status_name  = "Exchange Return Branch Assign Reject";
         }
     } elseif ($status == 30) {
@@ -1609,9 +1609,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && !$x->exchange) {
+        if ($x->suborder && $x->exchange == 'no') {
             $status_name  = "Partial Return Branch Run Create";
-        } elseif ($x->suborder && $x->exchange) {
+        } elseif ($x->suborder && $x->exchange == 'yes') {
             $status_name  = "Exchange Return Branch Run Create";
         }
     } elseif ($status == 31) {
@@ -1628,9 +1628,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && !$x->exchange) {
+        if ($x->suborder && $x->exchange == 'no') {
             $status_name  = "Partial Return Assigned to Rider";
-        } elseif ($x->suborder && $x->exchange) {
+        } elseif ($x->suborder && $x->exchange == 'yes') {
             $status_name  = "Exchange Return Assigned to Rider";
         }
     } elseif ($status == 32) {
@@ -1645,9 +1645,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && !$x->exchange) {
+        if ($x->suborder && $x->exchange == 'no') {
             $status_name  = "Partial Return Branch Run Cancel";
-        } elseif ($x->suborder && $x->exchange) {
+        } elseif ($x->suborder && $x->exchange == 'yes') {
             $status_name  = "Exchange Return Branch Run Cancel";
         }
     } elseif ($status == 33) {
@@ -1662,9 +1662,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && !$x->exchange) {
+        if ($x->suborder && $x->exchange == 'no') {
             $status_name  = "Partial Return Rider Accept";
-        } elseif ($x->suborder && $x->exchange) {
+        } elseif ($x->suborder && $x->exchange == 'yes') {
             $status_name  = "Exchange Return Rider Accept";
         }
     } elseif ($status == 34) {
@@ -1679,9 +1679,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && !$x->exchange) {
+        if ($x->suborder && $x->exchange == 'no') {
             $status_name  = "Partial Return Rider Reject";
-        } elseif ($x->suborder && $x->exchange) {
+        } elseif ($x->suborder && $x->exchange == 'yes') {
             $status_name  = "Exchange Return Rider Reject";
         }
     } elseif ($status == 35) {
@@ -1696,9 +1696,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && !$x->exchange) {
+        if ($x->suborder && $x->exchange == 'no') {
             $status_name  = "Partial Return Rider Complete";
-        } elseif ($x->suborder && $x->exchange) {
+        } elseif ($x->suborder && $x->exchange == 'yes') {
             $status_name  = "Exchange Return Rider Complete";
         }
     } elseif ($status == 36) {
@@ -1715,9 +1715,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && !$x->exchange) {
+        if ($x->suborder && $x->exchange == 'no') {
             $status_name  = "Partial Return Handover to Merchant";
-        } elseif ($x->suborder && $x->exchange) {
+        } elseif ($x->suborder && $x->exchange == 'yes') {
             $status_name  = "Exchange Return Handover to Merchant";
         }
     } else if ($status == 100) {

@@ -817,7 +817,7 @@ class ParcelController extends Controller
                     // $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
                     $date_time = $data->created_at->format('Y-m-d');
                 }
-                $parcelStatus = returnParcelStatusNameForMerchant($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus = returnParcelStatusNameForMerchant($data->status, $data->delivery_type, $data->payment_type, $data->parcel_invoice);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
                 return '<span class="  text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong></strong>' . $date_time . '</p>';
@@ -833,14 +833,14 @@ class ParcelController extends Controller
                 $parcelStatus = returnPaymentStatusForMerchant($data->status, $data->delivery_type, $data->payment_type);
                 $status_name  = $parcelStatus['status_name'];
                 $class        = $parcelStatus['class'];
-                $time        = $parcelStatus['time'];
+                $time        = isset($parcelStatus['time']) ?  $parcelStatus['time'] : '';
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
             ->editColumn('return_status', function ($data) {
                 $parcelStatus = returnReturnStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name  = $parcelStatus['status_name'];
                 $class        = $parcelStatus['class'];
-                $time        = $parcelStatus['time'];
+                $time        = isset($parcelStatus['time']) ?  $parcelStatus['time'] : '';
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
             // ->editColumn('payment_status', function ($data) {

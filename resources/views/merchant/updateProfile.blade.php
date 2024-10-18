@@ -229,7 +229,7 @@
                                                 <input type="hidden" name="rocket_name"
                                                     value="{{ $merchant->rocket_name }}" id="">
 
-                                                @if (!$merchant->payment_recived_by)
+                                                {{-- @if (!$merchant->payment_recived_by) --}}
                                                     <div>
                                                         <div class="col-md-6">
                                                             <label for="payment_recived_by"> Payment Recived By</label>
@@ -406,13 +406,13 @@
                                                         </div>
 
                                                     </div>
-                                                @else
-                                                    <div class="calert calert-warning" role="alert"
+                                                {{-- @else --}}
+                                                    {{-- <div class="calert calert-warning" role="alert"
                                                         style="margin-top: 30px; width: 100%;">
                                                         <strong>Please mail to Parceldex to update your bank
                                                             information.</strong>
-                                                    </div>
-                                                @endif
+                                                    </div> --}}
+                                                {{-- @endif --}}
 
                                                 <div class="col-md-12 text-center">
                                                     <button type="submit" class="btn btn-success">Update</button>

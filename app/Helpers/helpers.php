@@ -275,7 +275,7 @@ function returnParcelStatusNameForAdmin($status, $delivery_type, $payment_type)
         $status_name  = "Delivery Rider Complete Delivery";
         $class        = "success";
     } elseif ($status == 22) {
-        $status_name  = "Partially Delivered";
+        $status_name  = "Partial Delivered";
         $class        = "success";
     } elseif ($status == 23) {
         $status_name  = "Rescheduled";
@@ -420,9 +420,6 @@ function returnParcelStatusNameForAdmin($status, $delivery_type, $payment_type)
 }
 
 
-
-
-
 // color class comment------
 //  primary -blue, warning -yellow  , info - akasi , danger - red , success - green , secondary - gray
 
@@ -514,8 +511,16 @@ function returnParcelStatusForAdmin($status, $delivery_type, $payment_type = nul
         $status_name  = "Reschedule Delivery";
         $class        = "success";
     } elseif ($status >= 25 && $delivery_type == 4) {
-        $status_name  = "Delivery Cancel";
+        $status_name  = "Cancelled";
         $class        = "danger";
+
+        $x = $parcel;
+
+        if ($x->suborder && $x->exchange == 'no') {
+            $status_name  = "Partial Cancelled";
+        } elseif ($x->suborder && $x->exchange == 'yes') {
+            $status_name  = "Exchange Collected";
+        }
     }
 
     if ($status == 0 && isset($parcel) && $parcel?->is_push) {
@@ -786,8 +791,18 @@ function returnParcelStatusNameForBranch($status, $delivery_type, $payment_type,
         $status_name  = "Reschedule Delivery";
         $class        = "success";
     } elseif ($status == 25 && $delivery_type == 4) {
-        $status_name  = "Delivery Cancel";
+        $status_name  = "Cancelled";
         $class        = "danger";
+
+        $x = $parcel;
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Collected";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Collected";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Cancelled";
+        }
     }
 
     /** For Partial Delivery Return */
@@ -1003,7 +1018,7 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
         $status_name  = "Delivered";
         $class        = "success";
     } elseif ($status == 25 && $delivery_type == 2) {
-        $status_name  = "Partially Delivered";
+        $status_name  = "Partial Delivered";
         $class        = "success";
     } elseif ($status == 25 && $delivery_type == 3) {
         $status_name  = "Rescheduled";
@@ -1011,10 +1026,18 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
     } elseif ($status == 25 && $delivery_type == 4) {
         $status_name  = "Cancelled";
 
-        $parcel = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+        $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
 
-        if ($parcel && $parcel->suborder) {
-            $status_name  = "Partial Delivery Cancel";
+        // if ($parcel && $parcel->suborder) {
+        //     $status_name  = "Partial Delivery Cancel";
+        // }
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Collected";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Collected";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Cancelled";
         }
 
         $class        = "danger";
@@ -1034,10 +1057,14 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
         $status_name  = "Returned";
         $class        = "danger";
 
-        $parcel = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+        $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
 
-        if ($parcel && $parcel->suborder) {
-            $status_name  = "Partial Delivery Returned";
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Returned";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Returned";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Returned";
         }
     }
 
@@ -1388,7 +1415,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         }
     } elseif ($status == 22) {
         return [];
-        $status_name  = "Partially Delivered";
+        $status_name  = "Partial Delivered";
         $class        = "success";
 
         if (!empty($parcelLog->admin)) {
@@ -1458,8 +1485,12 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && $x->exchange == 'yes') {
-            $status_name  = "Exchange Delivered";
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Collected";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Collected";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Cancelled";
         }
     } elseif ($status == 25 && $parcelLog->delivery_type == 2) {
         if (!empty($parcelLog->admin)) {
@@ -1474,10 +1505,12 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && $x->exchange == 'no') {
-            $status_name  = "Partial Delivery Cancel";
-        } elseif ($x->suborder && $x->exchange == 'yes') {
-            $status_name  = "Partial Exchange Delivered";
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Collected";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Collected";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Cancelled";
         }
     } elseif ($status == 25 && $parcelLog->delivery_type == 3) {
         if (!empty($parcelLog->admin)) {
@@ -1504,10 +1537,12 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $status_name  = "Cancelled";
 
-        if ($x->suborder && $x->exchange == 'no') {
-            $status_name  = "Partial Delivery Cancel";
-        } elseif ($x->suborder && $x->exchange == 'yes') {
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
             $status_name  = "Exchange Collected";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Collected";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Cancelled";
         }
 
         $class        = "success";
@@ -1715,10 +1750,12 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         $x = $parcelLog->parcel;
 
-        if ($x->suborder && $x->exchange == 'no') {
-            $status_name  = "Partial Return Handover to Merchant";
-        } elseif ($x->suborder && $x->exchange == 'yes') {
-            $status_name  = "Exchange Return Handover to Merchant";
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Returned";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Returned";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Returned";
         }
     } else if ($status == 100) {
         $status_name  = $parcelLog->note;

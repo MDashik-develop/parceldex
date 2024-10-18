@@ -183,6 +183,7 @@
                                             <th width="10%" class="text-center">Delivery </th>
                                             <th width="10%" class="text-center">COD Charge</th>
                                             <th width="5%" class="text-center">Return Charge</th>
+                                            <th width="5%" class="text-center">Total Charge</th>
                                             <th width="5%" class="text-center">Payable</th>
                                         </tr>
                                     </thead>
@@ -196,10 +197,12 @@
                                                 $t_cod_charge = 0;
                                                 $t_returnCharge = 0;
                                                 $t_payable_amount = 0;
+                                                $t_charge = 0;
                                             @endphp
                                             @foreach ($parcels as $parcel)
                                                 @php
                                                     //  dd($parcel);
+                                                    $s_charge = 0;
                                                     $returnCharge = 0;
                                                     if ($parcel->delivery_type == 4 || $parcel->delivery_type == 2) {
                                                         $returnCharge = $parcel->merchant_service_area_return_charge;
@@ -301,6 +304,21 @@
                                                     </td>
                                                     <td class="text-right "
                                                         id="view_total_charge_amount{{ $parcel->id }}">
+                                                        @php
+                                                            $s_charge +=
+                                                                $parcel->weight_package_charge +
+                                                                $parcel->delivery_charge +
+                                                                $parcel->cod_charge +
+                                                                $returnCharge;
+
+                                                            $t_charge += $s_charge;
+                                                        @endphp
+
+                                                        {{ number_format($s_charge, 2) }}
+
+                                                    </td>
+                                                    <td class="text-right "
+                                                        id="view_total_charge_amount{{ $parcel->id }}">
                                                         {{ number_format($payable_amount, 2) }}
                                                         @php
                                                             $t_payable_amount += $payable_amount;
@@ -315,6 +333,9 @@
                                                 <td style="text-align: right">{{ $t_delivery_charge }}</td>
                                                 <td style="text-align: right">{{ $t_cod_charge }}</td>
                                                 <td style="text-align: right">{{ $t_returnCharge }}</td>
+                                                <td style="text-align: right">
+                                                    {{ $t_charge }}
+                                                </td>
                                                 <td style="text-align: right">{{ $t_payable_amount }}</td>
                                             </tr>
                                         @endif

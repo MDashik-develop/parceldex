@@ -271,7 +271,7 @@ class ParcelController extends Controller
                 $parcelStatus = returnPaymentStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
-                $time = $parcelStatus['time'];
+                $time = isset($parcelStatus['time']) ?  $parcelStatus['time'] : '';
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
 
@@ -279,7 +279,7 @@ class ParcelController extends Controller
                 $parcelStatus = returnReturnStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
-                $time        = $parcelStatus['time'];
+                $time        = isset($parcelStatus['time']) ?  $parcelStatus['time'] : '';
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
             ->addColumn('action', function ($data) {

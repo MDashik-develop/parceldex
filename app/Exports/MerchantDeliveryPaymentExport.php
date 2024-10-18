@@ -53,7 +53,7 @@ class MerchantDeliveryPaymentExport implements
 
         foreach ($parcelMerchantDeliveryPayment->parcel_merchant_delivery_payment_details as $key => $parcel_merchant_delivery_payment_detail) {
 
-            $parcelStatus = returnParcelStatusNameForMerchant($parcel_merchant_delivery_payment_detail->parcel->status, $parcel_merchant_delivery_payment_detail->parcel->delivery_type, $parcel_merchant_delivery_payment_detail->parcel->payment_type);
+            $parcelStatus = returnParcelStatusNameForMerchant($parcel_merchant_delivery_payment_detail->parcel->status, $parcel_merchant_delivery_payment_detail->parcel->delivery_type, $parcel_merchant_delivery_payment_detail->parcel->payment_type, $parcel_merchant_delivery_payment_detail->parcel->parcel_invoice);
 
             $data_parcel_array[] = (object)[
                 'serial' => $key + 1,

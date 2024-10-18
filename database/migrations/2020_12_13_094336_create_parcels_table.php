@@ -34,7 +34,7 @@ class CreateParcelsTable extends Migration
             $table->integer('area_id')->default(0);
 
             $table->integer('weight_package_id')->default(0);
-            $table->float('delivery_    charge', 8, 2)->default(0);
+            $table->float('delivery_charge', 8, 2)->default(0);
 
             $table->float('total_collect_amount',  8, 2)->default(0);
             $table->float('cod_percent',  8, 2)->default(0);

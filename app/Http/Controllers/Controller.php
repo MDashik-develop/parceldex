@@ -794,12 +794,16 @@ class Controller extends BaseController
         $data = [];
 
         $data['today_total_parcel'] = Parcel::where('merchant_id', $merchant_id)
-            ->where('status', '>=', 10)
+            ->where('status', '>=', 11)
             ->where('status', '<=', 36)
             ->whereRaw('parcel_date = ? ', [date("Y-m-d")])
             ->whereNull('suborder')
             ->count();
-        $data['total_parcel'] = Parcel::where('merchant_id', $merchant_id)->whereNull('suborder')->count();
+        $data['total_parcel'] = Parcel::where('status', '>=', 11)
+            ->where('status', '<=', 36)
+            ->where('merchant_id', $merchant_id)
+            ->whereNull('suborder')
+            ->count();
         //            ->where('status', '!=', 3)->count();
 
         $data['total_cancel_parcel'] = Parcel::where('merchant_id', $merchant_id)
@@ -870,7 +874,7 @@ class Controller extends BaseController
 
         $data['total_partial_delivery_complete_parcel'] = Parcel::where('merchant_id', $merchant_id)
             // ->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25,1,2,5])
-            ->whereRaw('delivery_type = ? and status in (?,?)', [2, 22, 25])
+            ->whereRaw('delivery_type = ? and status in (?)', [2, 25])
             ->whereNull('suborder')
             ->count();
 
@@ -906,14 +910,12 @@ class Controller extends BaseController
             ->count();
 
         $plusx = Parcel::where('merchant_id', $merchant_id)
-            //->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25, 1, 2, 4])
-            ->whereIn('payment_type', [4])
+            ->whereRaw('status >= ? and delivery_type in (?,?,?) and payment_type = ?', [25, 1, 2, 4, 4])
             // ->whereNull('suborder')
             ->sum('customer_collect_amount');
 
         $plusy = Parcel::where('merchant_id', $merchant_id)
-            //->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25, 1, 2, 4])
-            ->whereIn('payment_type', [4])
+            ->whereRaw('status >= ? and delivery_type in (?,?,?) and payment_type = ?', [25, 1, 2, 4, 4])
             // ->whereNull('suborder')
             ->sum('cancel_amount_collection');
 
@@ -929,18 +931,22 @@ class Controller extends BaseController
         //     // ->whereNull('suborder')
         //     ->sum('merchant_paid_amount');
 
-        $minus = Parcel::where('merchant_id', $merchant_id)
-            //->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25, 1, 2, 4])
-            ->whereIn('payment_type', [4])
-            // ->whereNull('suborder')
-            ->sum('total_charge');
+        $minus_query = Parcel::where('merchant_id', $merchant_id)
+            ->whereRaw('status >= ? and delivery_type in (?,?,?) and payment_type = ?', [25, 1, 2, 4, 4]);
+        // ->whereNull('suborder')
+
+        $cod_charge = $minus_query->sum('cod_charge');
+        $delivery_charge = $minus_query->sum('delivery_charge');
+        $weight_package_charge = $minus_query->sum('weight_package_charge');
+        $return_charge = $minus_query->sum('return_charge');
+
+        $minus = $cod_charge + $delivery_charge + $weight_package_charge + $return_charge;
 
 
         $data['total_pending_collect_amount'] = ($plusx + $plusy) - $minus;
 
         $total_pending_collect_amount_order_count = Parcel::where('merchant_id', $merchant_id)
-            //->whereRaw('status >= ? and delivery_type in (?,?) and payment_type = ?', [25, 1, 2, 4])
-            ->whereIn('payment_type', [4])
+            ->whereRaw('status >= ? and delivery_type in (?,?,?) and payment_type = ?', [25, 1, 2, 4, 4])
             ->whereNull('suborder')
             ->count();
 
@@ -960,25 +966,32 @@ class Controller extends BaseController
 
         $plus1 = Parcel::where('merchant_id', $merchant_id)
             ->where('status', '>=', 25)
-            ->whereIn('payment_type', [5])
+            ->whereIn('payment_type', [6])
             ->whereIn('delivery_type', [1, 2, 4])
             // ->whereNull('suborder')
             ->sum('customer_collect_amount');
 
         $plus2 = Parcel::where('merchant_id', $merchant_id)
             ->where('status', '>=', 25)
-            ->whereIn('payment_type', [5])
+            ->whereIn('payment_type', [6])
             ->whereIn('delivery_type', [1, 2, 4])
             // ->whereNull('suborder')
             ->sum('cancel_amount_collection');
 
 
-        $minus1 = Parcel::where('merchant_id', $merchant_id)
+        $minus1_query = Parcel::where('merchant_id', $merchant_id)
             ->where('status', '>=', 25)
-            ->whereIn('payment_type', [5])
-            ->whereIn('delivery_type', [1, 2, 4])
-            // ->whereNull('suborder')
-            ->sum('total_charge');
+            ->whereIn('payment_type', [6])
+            ->whereIn('delivery_type', [1, 2, 4]);
+        // ->whereNull('suborder')
+        //->sum('total_charge');
+
+        $cod_charge = $minus1_query->sum('cod_charge');
+        $delivery_charge = $minus1_query->sum('delivery_charge');
+        $weight_package_charge = $minus1_query->sum('weight_package_charge');
+        $return_charge = $minus1_query->sum('return_charge');
+
+        $minus1 = $cod_charge + $delivery_charge + $weight_package_charge + $return_charge;
 
         $data['total_collect_amount'] = ($plus1 + $plus2) - $minus1;
 
@@ -986,7 +999,7 @@ class Controller extends BaseController
         $data['total_collect_amount_oc'] = Parcel::where('merchant_id', $merchant_id)
             ->whereNull('suborder')
             ->where('status', '>=', 25)
-            ->whereIn('payment_type', [5])
+            ->whereIn('payment_type', [6])
             ->whereIn('delivery_type', [1, 2, 4])
             // ->whereNull('suborder')
             ->count();

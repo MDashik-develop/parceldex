@@ -520,6 +520,7 @@
                                                     $r_order->status,
                                                     $r_order->delivery_type,
                                                     $r_order->payment_type,
+                                                    $r_order->parcel_invoice,
                                                 );
                                                 $status_name = $parcelStatus['status_name'];
 

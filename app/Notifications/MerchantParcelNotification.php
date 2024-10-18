@@ -22,7 +22,7 @@ class MerchantParcelNotification extends Notification implements ShouldBroadcast
      */
     public function __construct($parcel_info)
     {
-        $parcel_status = returnParcelStatusNameForMerchant($parcel_info->status, $parcel_info->delivery_type, $parcel_info->payment_type);
+        $parcel_status = returnParcelStatusNameForMerchant($parcel_info->status, $parcel_info->delivery_type, $parcel_info->payment_type, $parcel_info->parcel_invoice);
         $status_name = $parcel_status['status_name'];
         $status_class = $parcel_status['class'];
 

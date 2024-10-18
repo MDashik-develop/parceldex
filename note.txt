@@ -9,6 +9,10 @@ ALTER TABLE `parcel_logs` ADD `updated_by` TEXT NULL AFTER `delivery_type`;
 ALTER TABLE `parcels` ADD `is_push` BOOLEAN NOT NULL DEFAULT FALSE AFTER `status`;
 ALTER TABLE `parcels` ADD `tracking_id` VARCHAR(191) NULL AFTER `updated_admin_id`;
 
+New-------------
+ALTER TABLE `parcels` ADD `parent_delivery_type` TINYINT NULL AFTER `delivery_type`;
+
+
 
 // parcel view id update
 // desing fix log view

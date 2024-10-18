@@ -731,7 +731,7 @@ class ParcelController extends Controller
         $new_parcels = [];
 
         foreach ($parcels as $parcel) {
-            $parcelStatus = returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type);
+            $parcelStatus = returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel->parcel_invoice);
             $status_name = $parcelStatus['status_name'];
 
 
@@ -883,7 +883,7 @@ class ParcelController extends Controller
 
         foreach ($parcels as $parcel) {
             // $parcelStatus = returnParcelStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type);
-            $parcelStatus = returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type);
+            $parcelStatus = returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel->parcel_invoice);
             $status_name = $parcelStatus['status_name'];
             $class = $parcelStatus['class'];
 
@@ -1890,7 +1890,7 @@ class ParcelController extends Controller
         //         break;
         // }
 
-        $parcelStatus = returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type);
+        $parcelStatus = returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel->parcel_invoice);
         $parcel_status = $parcelStatus['status_name'];
 
 
@@ -2822,7 +2822,7 @@ class ParcelController extends Controller
         //         break;
         // }
 
-        $parcelStatus = returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type);
+        $parcelStatus = returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel->parcel_invoice);
         $parcel_status = $parcelStatus['status_name'];
 
 

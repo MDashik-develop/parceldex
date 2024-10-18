@@ -159,6 +159,8 @@
                                                                 ->delivery_type,
                                                             $rider_run_detail->parcel
                                                                 ->payment_type,
+                                                            $rider_run_detail->parcel
+                                                                ->parcel_invoice,
                                                         );
 
                                                     @endphp

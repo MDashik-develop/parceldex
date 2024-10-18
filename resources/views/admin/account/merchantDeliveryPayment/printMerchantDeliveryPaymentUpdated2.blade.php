@@ -188,6 +188,7 @@
                                 $parcel_merchant_delivery_payment_detail->parcel->status,
                                 $parcel_merchant_delivery_payment_detail->parcel->delivery_type,
                                 $parcel_merchant_delivery_payment_detail->parcel->payment_type,
+                                $parcel_merchant_delivery_payment_detail->parcel->parcel_invoice,
                             );
 
                         @endphp

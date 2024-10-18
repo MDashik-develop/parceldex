@@ -85,6 +85,11 @@ class ParcelController extends Controller
             },
         ])
             ->where('delivery_branch_id', $branch_id)
+            ->orWhere('return_branch_id', $branch_id)
+            ->orWhere(function ($query) use ($branch_id) {
+                $query->where('status', '<=', 11)
+                    ->where('pickup_branch_id', $branch_id);
+            })
             ->where('status', '!=', 0)
             ->whereRaw($where_condition)
             ->select();
@@ -558,14 +563,14 @@ class ParcelController extends Controller
                 $parcelStatus = returnPaymentStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name  = $parcelStatus['status_name'];
                 $class        = $parcelStatus['class'];
-                $time = $parcelStatus['time'];
+                $time = isset($parcelStatus['time']) ?  $parcelStatus['time'] : '';
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
             ->editColumn('return_status', function ($data) {
                 $parcelStatus = returnReturnStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name  = $parcelStatus['status_name'];
                 $class        = $parcelStatus['class'];
-                $time        = $parcelStatus['time'];
+                $time        = isset($parcelStatus['time']) ?  $parcelStatus['time'] : '';
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
             ->addColumn('action', function ($data) {

@@ -281,17 +281,7 @@
                                                     </fieldset>
     
                                                 </div>
-                                                <div class="col-md-12 text-center">
-                                                    <input type="hidden" name="select_pickup_address"
-                                                        id="select_pickup_address" value="1">
-                                                    <input type="hidden" name="delivery_option_id"
-                                                        id="delivery_option_id" value="1">
-                                                    <input type="hidden" name="pickup_address" id="pickup_address"
-                                                        value="{{ $merchant->address }}">
-
-                                                    <button type="submit" class="btn btn-success">Submit</button>
-                                                    <button type="reset" class="btn btn-primary">Reset</button>
-                                                </div>
+                                                
                                             </div>
 
                                             <div class="col-md-6">
@@ -383,6 +373,18 @@
                                                                 <label for="parcel_note">Remark</label>
                                                                 <textarea name="parcel_note" id="parcel_note" class="form-control" placeholder="Parcel Remark"></textarea>
                                                             </div>
+                                                        </div>
+
+                                                        <div class="col-md-12 text-right">
+                                                            <input type="hidden" name="select_pickup_address"
+                                                                id="select_pickup_address" value="1">
+                                                            <input type="hidden" name="delivery_option_id"
+                                                                id="delivery_option_id" value="1">
+                                                            <input type="hidden" name="pickup_address" id="pickup_address"
+                                                                value="{{ $merchant->address }}">
+        
+                                                            <button type="submit" class="btn btn-success">Submit</button>
+                                                            {{-- <button type="reset" class="btn btn-primary">Reset</button> --}}
                                                         </div>
                                                     </div>
                                                 </fieldset>

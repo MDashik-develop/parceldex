@@ -137,20 +137,21 @@
                             <table class="table table-style table-striped">
                                 <thead>
                                     <tr>
-                                        <th width="5%" class="text-center">Order ID</th>
+                                        <th width="3%" class="text-center">Order ID</th>
                                         <th width="10%" class="text-center">Run Status</th>
                                         <th width="10%" class="text-center">M.Company</th>
-                                        <th width="15%" class="text-center">Customer Name</th>
-                                        {{-- <th width="15%" class="text-center">Address</th> --}}
-                                        <th width="5%" class="text-center">Area</th>
+                                        <th width="10%" class="text-center">Customer Name</th>
+                                        <th width="15%" class="text-center">Address</th>
+                                        {{-- <th width="5%" class="text-center">Area</th> --}}
                                         <th width="10%" class="text-center">Amount to be Collect</th>
                                         {{-- @if ($riderRun->rider->id == 1)
                                             <th class="text-center">Pathao Info</th>
                                         @endif --}}
+                                        <th width="5%" class="text-center">Exchange</th>
                                         <th width="5%" class="text-center">Status</th>
                                         <th width="5%" class="text-center">Delivery Type</th>
                                         <th width="10%" class="text-center">Collected</th>
-                                        <th width="25%" class="text-center">Complete Note</th>
+                                        <th width="17%" class="text-center">Complete Note</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -197,6 +198,7 @@
                                                         $rider_run_detail->parcel->status,
                                                         $rider_run_detail->parcel->delivery_type,
                                                         $rider_run_detail->parcel->payment_type,
+                                                        $rider_run_detail->parcel->parcel_invoice,
                                                     );
 
                                                 @endphp
@@ -207,10 +209,11 @@
                                             </td>
                                             <td class="text-center"> {{ $rider_run_detail->parcel->customer_name }}
                                             </td>
-                                            {{-- <td class="text-center"> {{ $rider_run_detail->parcel->customer_address }}
-                                            </td> --}}
-                                            <td class="text-center"> {{ $rider_run_detail?->parcel?->area?->name }}
+                                            <td class="text-center"> {{ $rider_run_detail->parcel->customer_address }}
+                                                </br> Area : {{ $rider_run_detail?->parcel?->area?->name }}
                                             </td>
+                                            {{-- <td class="text-center"> {{ $rider_run_detail?->parcel?->area?->name }}
+                                            </td> --}}
                                             <td class="text-center">
 
                                                 {{ $rider_run_detail->parcel->total_collect_amount }}
@@ -229,6 +232,8 @@
                                                         class="">{{ str_replace('_', ' ', $rider_run_detail->parcel->pathao_status) }}</span>
                                                 </td>
                                             @endif
+                                            <td class="text-center"> {{ $rider_run_detail?->parcel?->exchange }}
+                                            </td>
                                             <td class="text-center">
                                                 <select name="rider_run_status[]"
                                                     class="form-control select2 rider_run_status" style="width: 100%"

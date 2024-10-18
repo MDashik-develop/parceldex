@@ -152,7 +152,7 @@ class MerchantParcelExport implements
         $data_parcel_array  = [];
         if (count($parcels) > 0) {
             foreach ($parcels as $key => $parcel) {
-                $parcelStatus = returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type);
+                $parcelStatus = returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel->parcel_invoice);
                 $status_name = $parcelStatus['status_name'];
                 $parcelPaymentStatus = returnPaymentStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
                 $payment_status_name = $parcelPaymentStatus['status_name'];

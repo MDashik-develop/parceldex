@@ -392,7 +392,7 @@ class HomeController extends Controller
             ->count();
 
         $data['total_pickup_pending']    = Parcel::where('merchant_id', $merchant_id)
-            ->whereNull('suborder')
+            //->whereNull('suborder')
             ->whereIn('status', [1, 2, 4, 5, 6, 7, 8, 9, 10])
             ->count();
 

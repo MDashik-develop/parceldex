@@ -474,7 +474,7 @@
 
                             </span>
                             <h5 class="info-box-text">Total Returned</h5>
-                            <a href="{{ route('merchant.parcel.filterList', 'pending_parcel') }}"
+                            <a href="{{ route('merchant.parcel.filterList', 'total_return') }}"
                                 class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
 
                         </div>

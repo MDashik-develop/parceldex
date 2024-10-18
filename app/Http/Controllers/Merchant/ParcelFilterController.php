@@ -49,12 +49,16 @@ class ParcelFilterController extends Controller
                 ->with('district', 'area')->get();
         } elseif ($type == 'p_delivered_parcel') {
             $data['parcels'] = Parcel::where('merchant_id', $merchant_id)
-                ->whereRaw('delivery_type = ? and status in (?,?)', [2, 22, 25])
+                ->whereRaw('delivery_type = ? and status in (?)', [2, 25])
                 ->whereNull('suborder')
                 ->with('district', 'area')->get();
         } elseif ($type == 'cancelled_parcel') {
             $data['parcels'] = Parcel::where('merchant_id', $merchant_id)
                 ->whereRaw('status >= ? and delivery_type in (?)', [25, 4])
+                ->with('district', 'area')->get();
+        } elseif ($type == 'total_return') {
+            $data['parcels'] = Parcel::where('merchant_id', $merchant_id)
+                ->whereRaw('status >= ? and delivery_type in (?)', [36, 4])
                 ->with('district', 'area')->get();
         } elseif ($type == 'return_process') {
             $data['parcels'] = Parcel::where('merchant_id', $merchant_id)
@@ -64,27 +68,22 @@ class ParcelFilterController extends Controller
         } elseif ($type == 'pending_parcel') {
             $data['parcels'] = Parcel::where('merchant_id', $merchant_id)
                 ->whereNull('suborder')
-                ->where(function ($query) {
-                    $query->whereIn('status', [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
-                    //$query->whereBetween('status', [10, 24]);
-                    //->orWhere('delivery_type', 3);
-                })
+                ->whereIn('status', [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24])
                 ->orWhere(function ($query) {
                     $query->where('status', 25)->where('delivery_type', 3);
                 })
                 ->with('district', 'area')->get();
         } elseif ($type == 'pickup_pending') {
             $data['parcels'] = Parcel::where('merchant_id', $merchant_id)
-                ->whereIn('status', [1, 2, 4])
-                ->whereNull('suborder')
+                ->whereIn('status', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+                //->whereNull('suborder')
 
                 // ->whereRaw('status = ?',  [1])
                 ->with('district', 'area')->get();
         } elseif ($type == 'today_parcel') {
-
-
             $data['parcels'] = Parcel::where('merchant_id', $merchant_id)
                 ->whereRaw('pickup_branch_date = ? ', [date("Y-m-d")])
+                ->where('status', '>=', 11)
                 ->whereNull('suborder')
                 ->with('district', 'area')->get();
         } elseif ($type == 'today_total_delivery_parcel') {

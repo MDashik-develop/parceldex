@@ -1050,9 +1050,141 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
     // }
 
     /** For Return Parcel */
-    elseif ($status >= 26 && $status <= 35 && $delivery_type == 4) {
+    // elseif ($status >= 26 && $status <= 35 && $delivery_type == 4) {
+    //     $status_name  = "Return Processing";
+    //     $class        = "warning";
+    // }
+
+    elseif ($status == 26 && $delivery_type == 4) {
+        $status_name  = "Return To Kitchen";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Return to Kitchen";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Return to Kitchen";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return to Kitchen";
+        }
+    } elseif ($status == 27 && $delivery_type == 4) {
+        $status_name  = "Return To Kitchen";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Return to Kitchen";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Return to Kitchen";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return to Kitchen";
+        }
+    } elseif ($status == 28 && $delivery_type == 4) {
+        $status_name  = "Return At Kitchen";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Return At Kitchen";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange At Kitchen";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return At Kitchen";
+        }
+    } elseif ($status == 29 && $delivery_type == 4) {
         $status_name  = "Return Processing";
-        $class        = "warning";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Return Processing";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Return Processing";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return Processing";
+        }
+    } elseif ($status == 30 && $delivery_type == 4) {
+        $status_name  = "Assigned For Return";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Assigned For Return";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Assigned For Return";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Assigned For Return";
+        }
+    } elseif ($status == 31 && $delivery_type == 4) {
+        $status_name  = "Assigned For Return";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Assigned For Return";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Assigned For Return";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Assigned For Return";
+        }
+    } elseif ($status == 32 && $delivery_type == 4) {
+        $status_name  = "Return Processing";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Return Processing";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Return Processing";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return Processing";
+        }
+    } elseif ($status == 33 && $delivery_type == 4) {
+        $status_name  = "Return On Way";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Return On Way";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Return On Way";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return On Way";
+        }
+    } elseif ($status == 34 && $delivery_type == 4) {
+        $status_name  = "Return On Way";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Return On Way";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Return On Way";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return On Way";
+        }
+    } elseif ($status == 35 && $delivery_type == 4) {
+        $status_name  = "Returned";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Returned";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Returned";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Returned";
+        }
     } elseif ($status == 36 && $delivery_type == 4) {
         $status_name  = "Returned";
         $class        = "danger";
@@ -1062,11 +1194,13 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
         if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
             $status_name  = "Exchange Returned";
         } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
-            $status_name  = "Partial & Exchange Returned";
-        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
             $status_name  = "Partial Returned";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Returned";
         }
     }
+
+
 
     // /** For Payment Status */
     // if($delivery_type == 1 && $status == 25 && (($payment_type >= 1 && $payment_type <= 4) || ($payment_type == 6))){

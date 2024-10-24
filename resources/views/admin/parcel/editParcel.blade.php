@@ -56,7 +56,7 @@
                                                         <td style="width: 10%"> : </td>
                                                         <td style="width: 50%">
                                                             @php
-                                                               $parcelStatus   = returnParcelStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type);
+                                                               $parcelStatus   = returnParcelStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
                                                                 $status_name    = $parcelStatus['status_name'];
                                                                 $class          = $parcelStatus['class'];
                                                             @endphp

@@ -112,7 +112,7 @@
                                                         </td>
 
                                                         <td class="text-center">
-                                                            {{ $parcel->merchant?->name }}
+                                                            {{ $parcel->merchant?->company_name }}
                                                         </td>
 
                                                         <td class="text-center">

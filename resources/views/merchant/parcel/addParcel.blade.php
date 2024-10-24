@@ -170,7 +170,7 @@
                                                         </div>
                                                     </fieldset>
                                                 </div>
-                                                <div class="col-md-12">
+                                                <div class="col-md-12" style="display: none;">
                                                     <fieldset>
                                                         <input type="hidden" id="merchant_full_address"
                                                             value="{{ $merchant->address }}">
@@ -178,7 +178,7 @@
                                                             value="{{ $merchant->business_address }}">
                                                         <legend>Parcel Charge</legend>
                                                         <table class="table ">
-                                                           
+
                                                             <tr>
                                                                 <th style="width: 40%">Weight Package</th>
                                                                 <td style="width: 10%"> :</td>
@@ -221,7 +221,8 @@
                                                                     </span>
                                                                     <input type="hidden" id="confirm_cod_percent"
                                                                         name="cod_percent" value="0">
-                                                                    <input type="hidden" id="confirm_merchant_cod_percent"
+                                                                    <input type="hidden"
+                                                                        id="confirm_merchant_cod_percent"
                                                                         value="{{ $cod_percent }}">
                                                                 </td>
                                                             </tr>
@@ -230,7 +231,8 @@
                                                                 <td style="width: 10%"> :</td>
                                                                 <td style="width: 50%">
                                                                     <span id="view_weight_package_charge">0.00</span>
-                                                                    <input type="hidden" id="confirm_weight_package_charge"
+                                                                    <input type="hidden"
+                                                                        id="confirm_weight_package_charge"
                                                                         name="weight_package_charge" value="0">
                                                                 </td>
                                                             </tr>
@@ -252,7 +254,8 @@
                                                                         name="delivery_charge" value="0">
                                                                     <input type="hidden"
                                                                         id="confirm_merchant_service_area_charge"
-                                                                        name="merchant_service_area_charge" value="0">
+                                                                        name="merchant_service_area_charge"
+                                                                        value="0">
                                                                     <input type="hidden"
                                                                         id="confirm_merchant_service_area_return_charge"
                                                                         name="merchant_service_area_return_charge"
@@ -261,7 +264,7 @@
                                                                         id="only_merchant_service_area_charge"
                                                                         name="only_merchant_service_area_charge"
                                                                         value="0">
-    
+
                                                                     <input type="hidden" id="item_type_charge"
                                                                         name="item_type_charge" value="0">
                                                                     <input type="hidden" id="service_type_charge"
@@ -279,13 +282,13 @@
                                                             </tr>
                                                         </table>
                                                     </fieldset>
-    
+
                                                 </div>
-                                                
+
                                             </div>
 
                                             <div class="col-md-6">
-                                               
+
 
 
                                                 <fieldset>
@@ -298,8 +301,7 @@
                                                                 <input type="text" name="merchant_order_id"
                                                                     id="merchant_order_id"
                                                                     value="{{ old('merchant_order_id') }}"
-                                                                    class="form-control"
-                                                                    placeholder="Merchant Order ID">
+                                                                    class="form-control" placeholder="Merchant Order ID">
                                                             </div>
                                                         </div>
 
@@ -319,8 +321,7 @@
                                                                 <label for="product_value">Product
                                                                     Value<code>*</code></label>
                                                                 <input type="number" name="product_value"
-                                                                    id="product_value"
-                                                                    value="{{ old('product_value') }}"
+                                                                    id="product_value" value="{{ old('product_value') }}"
                                                                     class="form-control" placeholder="1200.00"
                                                                     min="1" required>
                                                             </div>
@@ -332,8 +333,7 @@
                                                             <div class="form-group">
                                                                 <label for="weight_package_id">Product Weight
                                                                     <code>*</code> </label>
-                                                                <select name="weight_package_id"
-                                                                    id="weight_package_id"
+                                                                <select name="weight_package_id" id="weight_package_id"
                                                                     class="form-control select2" style="width: 100%"
                                                                     disabled>
                                                                     <option value="0" data-charge="0">Select
@@ -364,8 +364,7 @@
                                                                 <input type="text" name="product_details"
                                                                     id="product_details"
                                                                     value="{{ old('product_details') }}"
-                                                                    class="form-control"
-                                                                    placeholder="product details">
+                                                                    class="form-control" placeholder="product details">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12">
@@ -380,15 +379,15 @@
                                                                 id="select_pickup_address" value="1">
                                                             <input type="hidden" name="delivery_option_id"
                                                                 id="delivery_option_id" value="1">
-                                                            <input type="hidden" name="pickup_address" id="pickup_address"
-                                                                value="{{ $merchant->address }}">
-        
+                                                            <input type="hidden" name="pickup_address"
+                                                                id="pickup_address" value="{{ $merchant->address }}">
+
                                                             <button type="submit" class="btn btn-success">Submit</button>
                                                             {{-- <button type="reset" class="btn btn-primary">Reset</button> --}}
                                                         </div>
                                                     </div>
                                                 </fieldset>
-                                                
+
                                             </div>
                                         </div>
                                     </div>

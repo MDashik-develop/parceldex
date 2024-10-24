@@ -111,13 +111,13 @@ class ParcelController extends Controller
             'upazila:id,name',
             'area:id,name',
             'weight_package:id,name',
-            'merchant:id,name,company_name,address',
+            'merchant:id,name,company_name,address,contact_number',
             'parcel_logs'
             /*'parcel_logs' => function ($query) {
                 $query->select('id', 'note');
             },*/
         ])
-            ->where('status', '!=', 0)
+            // ->where('status', '!=', 0)
             ->whereRaw('pickup_branch_id IS NOT NULL')
             ->select();
 

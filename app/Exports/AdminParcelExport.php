@@ -2,16 +2,18 @@
 
 namespace App\Exports;
 
-use App\Models\BookingParcel;
+use Carbon\Carbon;
 use App\Models\Parcel;
+use App\Models\BookingParcel;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Events\AfterSheet;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithProperties;
-use Maatwebsite\Excel\Events\AfterSheet;
+use App\Models\ParcelMerchantDeliveryPaymentDetail;
 
 class AdminParcelExport implements
     FromCollection,
@@ -38,18 +40,28 @@ class AdminParcelExport implements
         $request = $this->request;
 
 
-        $model = Parcel::with([
-            'delivery_branch:id,name',
-            'delivery_rider:id,name',
-            'district:id,name',
-            'upazila:id,name',
-            'area:id,name',
-            'weight_package:id,name',
-            'merchant:id,m_id,name,company_name,address',
-            'parcel_logs' => function ($query) {
-                $query->select('id', 'note');
-            },
-        ])
+        $model =
+            // Parcel::with([
+            //     'delivery_branch:id,name',
+            //     'delivery_rider:id,name',
+            //     'district:id,name',
+            //     'upazila:id,name',
+            //     'area:id,name',
+            //     'weight_package:id,name',
+            //     'merchant:id,m_id,name,company_name,address',
+            //     'parcel_logs' => function ($query) {
+            //         $query->select('id', 'note');
+            //     },
+            // ])
+            Parcel::with([
+                'district',
+                'upazila',
+                'area',
+                'parcel_logs',
+                'merchant' => function ($query) {
+                    $query->select('id', 'name', 'm_id', 'company_name', 'contact_number', 'address');
+                },
+            ])
             ->orderBy('id', 'desc')
             ->select();
 
@@ -128,7 +140,7 @@ class AdminParcelExport implements
         $data_parcel_array = [];
         if (count($parcels) > 0) {
             foreach ($parcels as $key => $parcel) {
-                $parcelStatus = returnParcelStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type);
+                $parcelStatus = returnParcelStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
                 $status_name = $parcelStatus['status_name'];
                 $parcelPaymentStatus = returnPaymentStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
                 $payment_status_name = $parcelPaymentStatus['status_name'];
@@ -148,13 +160,15 @@ class AdminParcelExport implements
                 $totalCharge = $parcel->weight_package_charge + $parcel->cod_charge + $parcel->delivery_charge + $parcel->return_charge;
                 $x = $parcel->cancel_amount_collection != 0 ? $parcel->cancel_amount_collection : ($parcel->customer_collect_amount != 0 ? $parcel->customer_collect_amount : 0);
 
+                $a = ParcelMerchantDeliveryPaymentDetail::where('parcel_id', $parcel->id)->first();
+
                 $data_parcel_array[] = (object)[
                     'serial' => $key + 1,
                     'parcel_invoice' => $parcel->parcel_invoice,
                     'merchant_order_id' => $parcel->merchant_order_id,
-                    'date' => $parcel->date,
+                    'date' => $parcel->created_at->format('d-m-Y h:i A'),
                     'status' => $status_name,
-                    'parcel_date' => $parcel->parcel_date,
+                    'parcel_date' => $parcel->updated_at->format('d-m-Y h:i A'),
                     'company_name' => $parcel->merchant->company_name,
                     'm_id' => $parcel->merchant->m_id,
                     'customer_name' => $parcel->customer_name,
@@ -167,7 +181,7 @@ class AdminParcelExport implements
                     'delivery_branch' => optional($parcel->delivery_branch)->name,
                     'delivery_rider' => optional($parcel->delivery_rider)->name,
                     'item_type' => optional($parcel->item_type)->title,
-                    'total_collect_amount' => $parcel->total_collect_amount != 0 ? $parcel->total_collect_amount : 0,
+                    'total_collect_amount' => $parcel->total_collect_amount != 0 ? $parcel->total_collect_amount : '0',
                     'customer_collect_amount' => $parcel->cancel_amount_collection != 0 ? $parcel->cancel_amount_collection : ($parcel->customer_collect_amount != 0 ? $parcel->customer_collect_amount : '0'),
                     'weight_charge' => $parcel->weight_package_charge != 0 ? $parcel->weight_package_charge : '0',
                     'cod_charge' => $parcel->cod_charge != 0 ? $parcel->cod_charge : '0',
@@ -178,11 +192,12 @@ class AdminParcelExport implements
                     'logs_note' => $logs_note,
                     'payment_status_name' => $payment_status_name,
                     'paid_amount' => $x - $totalCharge,
-                    'payment_date' => $parcel?->merchantDeliveryPayment?->action_date_time ?? '',
-                    'payment_invoice_id' => $parcel?->merchantDeliveryPayment?->merchant_payment_invoice ?? '',
+                    'payment_date' => $a?->parcel_merchant_delivery_payment?->action_date_time ?? '',
+                    //'payment_invoice_id' => $parcel?->merchantDeliveryPayment?->merchant_payment_invoice ?? '',
+                    'payment_invoice_id' => $a?->parcel_merchant_delivery_payment?->merchant_payment_invoice ?? '',
                     'return_status_name' => $return_status_name,
-                    'picked_up_date' => $parcel->parcel_logs->where('status', 11)->first()?->date,
-                    'service_area' => $parcel?->district?->service_area?->name,
+                    'picked_up_date' => Carbon::parse($parcel->parcel_logs->where('status', 11)->first()?->date . ' ' . $parcel->parcel_logs->where('status', 11)->first()?->time)->format('d-m-Y h:i A'),
+                    'service_area' => $parcel?->district?->service_area?->name ?? 'N/A',
                 ];
             }
         }
@@ -238,10 +253,10 @@ class AdminParcelExport implements
             'serial',
             'Parcel Invoice',
             'Merchant Order ID',
-            'Parcel Date',
+            'Parcel Created Date & Time',
             'Status',
-            'Last Update Date',
-            'Picked Up Date',
+            'Last Update Date & Time',
+            'Picked Up Date & Time',
             'company_name',
             'Merchant ID',
             'Customer Name',

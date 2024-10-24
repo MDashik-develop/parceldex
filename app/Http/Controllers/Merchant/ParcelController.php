@@ -296,17 +296,17 @@ class ParcelController extends Controller
         // $totalDeliveryCancel = Parcel::whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (4)")->select('id')->count();
 
         if ($request->phone) {
-            $customer = Parcel::where('customer_contact_number', $phone)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
-            $customerParcel = Parcel::where('customer_contact_number', $phone)->count();
-            $totalDeliveryComplete = Parcel::whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (1)")->select('id')->count();
-            $totalDeliveryPending = Parcel::whereRaw("customer_contact_number = '$phone' and status < 25 ")->select('id')->count();
-            $totalDeliveryCancel = Parcel::whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (4)")->select('id')->count();
+            $customer = Parcel::whereNull('sub_order')->where('customer_contact_number', $phone)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
+            $customerParcel = Parcel::whereNull('sub_order')->where('customer_contact_number', $phone)->count();
+            $totalDeliveryComplete = Parcel::whereNull('sub_order')->whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (1)")->select('id')->count();
+            $totalDeliveryPending = Parcel::whereNull('sub_order')->whereRaw("customer_contact_number = '$phone' and status < 25 ")->select('id')->count();
+            $totalDeliveryCancel = Parcel::whereNull('sub_order')->whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (4)")->select('id')->count();
         } elseif ($request->phone2) {
-            $customer = Parcel::where('customer_contact_number2', $phone2)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
-            $customerParcel = Parcel::where('customer_contact_number2', $phone2)->count();
-            $totalDeliveryComplete = Parcel::whereRaw("customer_contact_number2 = '$phone2' and status >= 25 and delivery_type in (1)")->select('id')->count();
-            $totalDeliveryPending = Parcel::whereRaw("customer_contact_number2 = '$phone2' and status < 25 ")->select('id')->count();
-            $totalDeliveryCancel = Parcel::whereRaw("customer_contact_number2 = '$phone2' and status >= 25 and delivery_type in (4)")->select('id')->count();
+            $customer = Parcel::whereNull('sub_order')->where('customer_contact_number2', $phone2)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
+            $customerParcel = Parcel::whereNull('sub_order')->where('customer_contact_number2', $phone2)->count();
+            $totalDeliveryComplete = Parcel::whereNull('sub_order')->whereRaw("customer_contact_number2 = '$phone2' and status >= 25 and delivery_type in (1)")->select('id')->count();
+            $totalDeliveryPending = Parcel::whereNull('sub_order')->whereRaw("customer_contact_number2 = '$phone2' and status < 25 ")->select('id')->count();
+            $totalDeliveryCancel = Parcel::whereNull('sub_order')->whereRaw("customer_contact_number2 = '$phone2' and status >= 25 and delivery_type in (4)")->select('id')->count();
         }
 
         if ($customerParcel > 0) {
@@ -639,10 +639,10 @@ class ParcelController extends Controller
             'upazila:id,name',
             'area:id,name',
             'weight_package:id,name',
-            'merchant:id,name,company_name,address',
+            'merchant:id,name,company_name,address,contact_number',
             'parcel_logs'
         ])
-            ->where('status', '!=', 0)
+            // ->where('status', '!=', 0)
             ->whereRaw('merchant_id = ?', [$merchant_id])
             ->where(function ($query) use ($request) {
                 $parcel_status = $request->input('parcel_status');

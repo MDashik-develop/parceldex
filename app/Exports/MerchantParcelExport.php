@@ -2,16 +2,18 @@
 
 namespace App\Exports;
 
-use App\Models\BookingParcel;
+use Carbon\Carbon;
 use App\Models\Parcel;
+use App\Models\BookingParcel;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Events\AfterSheet;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithProperties;
-use Maatwebsite\Excel\Events\AfterSheet;
+use App\Models\ParcelMerchantDeliveryPaymentDetail;
 
 class MerchantParcelExport implements
     FromCollection,
@@ -40,16 +42,26 @@ class MerchantParcelExport implements
 
         $merchant_id = auth()->guard('merchant')->user()->id;
 
-        $model = Parcel::with([
-            'service_type',
-            'item_type',
-            'district:id,name',
-            'upazila:id,name',
-            'area:id,name',
-            'weight_package:id,name',
-            'merchant:id,name,company_name,address',
-            'parcel_logs'
-        ])
+        $model =
+            Parcel::with([
+                'district',
+                'upazila',
+                'area',
+                'parcel_logs',
+                'merchant' => function ($query) {
+                    $query->select('id', 'name', 'm_id', 'company_name', 'contact_number', 'address');
+                },
+            ])
+            // Parcel::with([
+            //     'service_type',
+            //     'item_type',
+            //     'district:id,name',
+            //     'upazila:id,name',
+            //     'area:id,name',
+            //     'weight_package:id,name',
+            //     'merchant:id,name,company_name,address',
+            //     'parcel_logs'
+            // ])
             ->whereRaw('merchant_id = ?', [$merchant_id])
             ->where(function ($query) use ($request) {
                 $parcel_status = $request->input('ex_parcel_status');
@@ -156,6 +168,9 @@ class MerchantParcelExport implements
                 $status_name = $parcelStatus['status_name'];
                 $parcelPaymentStatus = returnPaymentStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
                 $payment_status_name = $parcelPaymentStatus['status_name'];
+                $payment_status_time = $parcelPaymentStatus['time'];
+
+
                 $parcelReturnStatus = returnReturnStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
                 $return_status_name = $parcelReturnStatus['status_name'];
                 $logs_note = "";
@@ -170,13 +185,15 @@ class MerchantParcelExport implements
 
                 $totalCharge = $parcel->weight_package_charge + $parcel->cod_charge + $parcel->delivery_charge + $parcel->return_charge;
 
+                $a = ParcelMerchantDeliveryPaymentDetail::where('parcel_id', $parcel->id)->first();
+
                 $data_parcel_array[] = (object)[
                     'serial' => $key + 1,
                     'parcel_invoice' => $parcel->parcel_invoice,
                     'merchant_order_id' => $parcel->merchant_order_id,
-                    'date' => $parcel->date,
+                    'date' => $parcel->created_at->format('d-m-Y h:i A'),
                     'status' => $status_name,
-                    'parcel_date' => $parcel->parcel_date,
+                    'parcel_date' => $parcel->updated_at->format('d-m-Y h:i A'),
                     'company_name' => $parcel->merchant->company_name,
                     'customer_name' => $parcel->customer_name,
                     'customer_contact_number' => $parcel->customer_contact_number,
@@ -186,7 +203,7 @@ class MerchantParcelExport implements
                     'area_name' => $parcel->area->name,
                     'service_type' => optional($parcel->service_type)->title,
                     'item_type' => optional($parcel->item_type)->title,
-                    'total_collect_amount' => $parcel->total_collect_amount != 0 ? $parcel->total_collect_amount : 0,
+                    'total_collect_amount' => $parcel->total_collect_amount != 0 ? $parcel->total_collect_amount : '0',
                     'customer_collect_amount' => $parcel->cancel_amount_collection != 0 ? $parcel->cancel_amount_collection : ($parcel->customer_collect_amount != 0 ? $parcel->customer_collect_amount : '0'),
                     'weight_charge' => $parcel->weight_package_charge != 0 ? $parcel->weight_package_charge : '0',
                     'cod_charge' => $parcel->cod_charge != 0 ? $parcel->cod_charge : '0',
@@ -196,9 +213,10 @@ class MerchantParcelExport implements
                     'parcel_note' => $parcel->parcel_note,
                     'logs_note' => $logs_note,
                     'payment_status_name' => $payment_status_name,
+                    'payment_invoice_id' => $a?->parcel_merchant_delivery_payment?->merchant_payment_invoice ?? '',
                     'return_status_name' => $return_status_name,
-                    'picked_up_date' => $parcel->parcel_logs->where('status', 11)->first()?->date,
-                    'service_area' => $parcel?->district?->service_area?->name,
+                    'picked_up_date' => Carbon::parse($parcel->parcel_logs->where('status', 11)->first()?->date . ' ' . $parcel->parcel_logs->where('status', 11)->first()?->time)->format('d-m-Y h:i A'),
+                    'service_area' => $parcel?->district?->service_area?->name ?? 'N/A',
                 ];
             }
         }
@@ -237,8 +255,8 @@ class MerchantParcelExport implements
             $row->parcel_note,
             $row->logs_note,
             $row->payment_status_name,
+            $row->payment_invoice_id,
             $row->return_status_name,
-
         ];
     }
 
@@ -248,17 +266,17 @@ class MerchantParcelExport implements
             'serial',
             'Parcel Invoice',
             'Merchant Order ID',
-            'Parcel Date',
+            'Parcel Date & Time',
             'Status',
-            'Last Update Date',
-            'Picked Up Date',
+            'Last Update Date & Time',
+            'Picked Up Date & Time',
 
             // 'company_name',
             'Customer Name',
             'Customer Contact Number',
             'Alternative Number',
             'Customer Address',
-            'Service Area',
+            'Service Area Name',
             'District Name',
             'Area Name',
             'Service Type',
@@ -273,6 +291,7 @@ class MerchantParcelExport implements
             'Parcel Note',
             'Logs Note',
             'Payment Status Name',
+            'Payment Invoice Id',
             'Return Status Name',
         ];
     }

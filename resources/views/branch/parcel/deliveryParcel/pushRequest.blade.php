@@ -112,7 +112,7 @@
                                                         </td>
 
                                                         <td class="text-center">
-                                                            {{ $parcel->merchant?->name }}
+                                                            {{ $parcel->merchant?->company_name }}
                                                         </td>
 
                                                         <td class="text-center">
@@ -213,10 +213,10 @@
         }
 
         /*
-                                                                                                                                                                        div.container {
-                                                                                                                                                                            width: 80%;
-                                                                                                                                                                        }
-                                                                                                                                                                        */
+                                                                                                                                                                            div.container {
+                                                                                                                                                                                width: 80%;
+                                                                                                                                                                            }
+                                                                                                                                                                            */
     </style>
     <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">

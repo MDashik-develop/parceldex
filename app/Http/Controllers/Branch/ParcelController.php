@@ -90,7 +90,7 @@ class ParcelController extends Controller
                 $query->where('status', '<=', 11)
                     ->where('pickup_branch_id', $branch_id);
             })
-            ->where('status', '!=', 0)
+            // ->where('status', '!=', 0)
             ->whereRaw($where_condition)
             ->select();
 

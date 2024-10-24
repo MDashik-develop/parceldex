@@ -69,7 +69,7 @@ class DeliveryParcelController extends Controller
         $data['child_menu'] = 'push-request';
         $data['page_title'] = 'Push Request';
         $data['collapse']   = 'sidebar-collapse';
-        $data['merchants']   = Merchant::where('status', 1)->get();
+        $data['merchants']   = Merchant::whereIn('id', $parcels->pluck('merchant_id')->toArray())->get();
         $data['branches']   = Branch::where('status', 1)->get();
         $data['parcels']   = $parcels;
         $data['districts'] = District::where([

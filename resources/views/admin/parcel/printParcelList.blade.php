@@ -172,7 +172,7 @@
         @endphp
         @foreach($parcels as $key => $parcel)
             @php
-                $parcelStatus = returnParcelStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type);
+                $parcelStatus = returnParcelStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
                 $status_name = $parcelStatus['status_name'];
                 $district = "";
                 if ($parcel->district) {

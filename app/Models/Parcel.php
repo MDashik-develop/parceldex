@@ -44,6 +44,11 @@ class Parcel extends Model
         return $this->belongsTo(ParcelMerchantDeliveryPayment::class, 'merchant_id', 'merchant_id');
     }
 
+    // public function merchantDeliveryPaymentDetails()
+    // {
+    //     return $this->belongsTo(ParcelMerchantDeliveryPaymentDetail::class, 'parcel_id');
+    // }
+
     public function deliveryBranchTransferDetails()
     {
         return $this->belongsTo(DeliveryBranchTransferDetail::class, 'parcel_id');

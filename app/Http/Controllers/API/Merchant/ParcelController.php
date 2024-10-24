@@ -2042,7 +2042,7 @@ class ParcelController extends Controller
         ];
 
         $parcelLogs = ParcelLog::where('parcel_id', $parcel->id)
-            // ->orderBy('id', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
 
         $logsGroupedByDate = $parcelLogs->groupBy(function ($item) {

@@ -2077,36 +2077,6 @@ class ParcelController extends Controller
             ];
         }
 
-        // @foreach ($logsGroupedByDate as $key => $items)
-        //         <div class="parcel-log">
-        //             <h3><span class="log-date">{{ \Carbon\Carbon::parse($key)->format('jS F, Y') }}</span></h3>
-
-        //             @foreach ($items as $item)
-        //                 @php
-        //                     $parcelLogStatus = returnParcelLogStatusNameForAdmin(
-        //                         $item,
-        //                         $parcel->delivery_type,
-        //                         $parcel,
-        //                     );
-
-        //                     if (!isset($parcelLogStatus['to_user'])) {
-        //                         continue;
-        //                     }
-
-        //                     $to_user = $parcelLogStatus['to_user'];
-        //                     $from_user = $parcelLogStatus['from_user'];
-        //                     $status = $parcelLogStatus['status_name'];
-        //                     $sub_title = $parcelLogStatus['sub_title'];
-        //                 @endphp
-        //                 <div class="log-item">
-        //                     <span class="log-time">{{ \Carbon\Carbon::parse($item->time)->format('h:i A') }}</span>
-        //                     {{ $status }}<br>
-        //                     <span class="log-details">{{ $sub_title }} By - {{ $to_user }}</span>
-        //                 </div>
-        //             @endforeach
-        //         </div>
-        //     @endforeach
-
         return response()->json([
             'success' => 200,
             'message' => "Parcel Results",

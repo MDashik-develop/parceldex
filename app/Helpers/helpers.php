@@ -1353,7 +1353,9 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
         }
     }
 
-    if ($status == 0 && isset($parcel) && $parcel?->is_push) {
+    $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+
+    if ($status == 0 && isset($x) && $x?->is_push) {
         $status_name  = "In Review API";
         $class        = "success";
     }

@@ -52,17 +52,17 @@ class ParcelController extends Controller
         // $totalDeliveryCancel = Parcel::whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (4)")->select('id')->count();
 
         if ($request->phone) {
-            $customer = Parcel::whereNull('sub_order')->where('customer_contact_number', $phone)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
-            $customerParcel = Parcel::whereNull('sub_order')->where('customer_contact_number', $phone)->count();
-            $totalDeliveryComplete = Parcel::whereNull('sub_order')->whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (1)")->select('id')->count();
-            $totalDeliveryPending = Parcel::whereNull('sub_order')->whereRaw("customer_contact_number = '$phone' and status < 25 ")->select('id')->count();
-            $totalDeliveryCancel = Parcel::whereNull('sub_order')->whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (4)")->select('id')->count();
+            $customer = Parcel::whereNull('suborder')->where('customer_contact_number', $phone)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
+            $customerParcel = Parcel::whereNull('suborder')->where('customer_contact_number', $phone)->count();
+            $totalDeliveryComplete = Parcel::whereNull('suborder')->whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (1)")->select('id')->count();
+            $totalDeliveryPending = Parcel::whereNull('suborder')->whereRaw("customer_contact_number = '$phone' and status < 25 ")->select('id')->count();
+            $totalDeliveryCancel = Parcel::whereNull('suborder')->whereRaw("customer_contact_number = '$phone' and status >= 25 and delivery_type in (4)")->select('id')->count();
         } elseif ($request->phone2) {
-            $customer = Parcel::whereNull('sub_order')->where('customer_contact_number2', $phone2)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
-            $customerParcel = Parcel::whereNull('sub_order')->where('customer_contact_number2', $phone2)->count();
-            $totalDeliveryComplete = Parcel::whereNull('sub_order')->whereRaw("customer_contact_number2 = '$phone2' and status >= 25 and delivery_type in (1)")->select('id')->count();
-            $totalDeliveryPending = Parcel::whereNull('sub_order')->whereRaw("customer_contact_number2 = '$phone2' and status < 25 ")->select('id')->count();
-            $totalDeliveryCancel = Parcel::whereNull('sub_order')->whereRaw("customer_contact_number2 = '$phone2' and status >= 25 and delivery_type in (4)")->select('id')->count();
+            $customer = Parcel::whereNull('suborder')->where('customer_contact_number2', $phone2)->select('customer_name', 'customer_address', 'district_id', 'area_id')->first();
+            $customerParcel = Parcel::whereNull('suborder')->where('customer_contact_number2', $phone2)->count();
+            $totalDeliveryComplete = Parcel::whereNull('suborder')->whereRaw("customer_contact_number2 = '$phone2' and status >= 25 and delivery_type in (1)")->select('id')->count();
+            $totalDeliveryPending = Parcel::whereNull('suborder')->whereRaw("customer_contact_number2 = '$phone2' and status < 25 ")->select('id')->count();
+            $totalDeliveryCancel = Parcel::whereNull('suborder')->whereRaw("customer_contact_number2 = '$phone2' and status >= 25 and delivery_type in (4)")->select('id')->count();
         }
 
         if ($customerParcel > 0) {
@@ -649,59 +649,59 @@ class ParcelController extends Controller
                 $from_date = $request->input('from_date');
                 $to_date = $request->input('to_date');
 
-                if (($request->has('parcel_status') && !is_null($parcel_status))
-                    || ($request->has('parcel_invoice') && !is_null($parcel_invoice))
-                    || ($request->has('customer_contact_number') && !is_null($customer_contact_number))
-                    || ($request->has('merchant_order_id') && !is_null($merchant_order_id))
-                    || ($request->has('from_date') && !is_null($from_date))
-                    || ($request->has('to_date') && !is_null($to_date))
+                // if (($request->has('parcel_status') && !is_null($parcel_status))
+                //     || ($request->has('parcel_invoice') && !is_null($parcel_invoice))
+                //     || ($request->has('customer_contact_number') && !is_null($customer_contact_number))
+                //     || ($request->has('merchant_order_id') && !is_null($merchant_order_id))
+                //     || ($request->has('from_date') && !is_null($from_date))
+                //     || ($request->has('to_date') && !is_null($to_date))
+                // ) {
+                if ((!is_null($parcel_invoice) && !is_null($parcel_invoice))
+                    || (!is_null($merchant_order_id) && !is_null($merchant_order_id))
+                    || (!is_null($customer_contact_number) && !is_null($customer_contact_number))
                 ) {
-                    if ((!is_null($parcel_invoice) && !is_null($parcel_invoice))
-                        || (!is_null($merchant_order_id) && !is_null($merchant_order_id))
-                        || (!is_null($customer_contact_number) && !is_null($customer_contact_number))
-                    ) {
-                        if (!is_null($parcel_invoice) && !is_null($parcel_invoice)) {
-                            $query->where('parcel_invoice', 'like', "%$parcel_invoice");
-                            $query->orWhere('merchant_order_id', 'like', "%$parcel_invoice");
-                            $query->orWhere('customer_contact_number', 'like', "%$parcel_invoice");
-                        } elseif (!is_null($merchant_order_id) && !is_null($merchant_order_id)) {
-                            $query->where('merchant_order_id', 'like', "%$merchant_order_id");
-                        } elseif (!is_null($customer_contact_number) && !is_null($customer_contact_number)) {
-                            $query->where('customer_contact_number', 'like', "%$customer_contact_number");
-                        }
-                    } else {
-                        if ($request->has('parcel_status') && !is_null($parcel_status) && $parcel_status != 0) {
-                            if ($parcel_status == 1) {
-                                $query->whereRaw('status = 25 and delivery_type in (1)')->whereNull('suborder');
-                            } elseif ($parcel_status == 2) {
-                                //    $query->whereRaw('status in (14,16,17,18,19,20,21,22,23,24 ) and delivery_type not in (1,2,4)');
-                                $query->whereRaw('status > 11 and delivery_type in (?)', [3]);
-                            } elseif ($parcel_status == 3) {
-                                //    $query->whereRaw('status = 3');
-                                $query->whereRaw('status >= ? and delivery_type in (4)', [25]);
-                            } elseif ($parcel_status == 4) {
-                                $query->whereRaw('status >= 25 and payment_type = 5 and delivery_type = 1 or delivery_type = 2');
-                            } elseif ($parcel_status == 5) {
-
-                                $query->whereRaw('status >= 25 and payment_type <= 4  and delivery_type = 1 or delivery_type = 2');
-                                // $query->whereRaw('status >= 25 and payment_type >= 4  and payment_type in (4, 6) and delivery_type = 1 or delivery_type = 2');
-                            } elseif ($parcel_status == 6) {
-                                //    $query->whereRaw('status = 36 and delivery_type = 4');
-                                $query->whereRaw('status = ? and delivery_type in (?,?)', [36, 2, 4]);
-                            } elseif ($parcel_status == 7) {
-                                $query->whereRaw('status in (1) and delivery_type IS NULL or delivery_type = ""');
-                            }
-                        }
-                        if ($request->has('from_date') && !is_null($from_date)) {
-                            $query->whereDate('date', '>=', $from_date);
-                        }
-                        if ($request->has('to_date') && !is_null($to_date)) {
-                            $query->whereDate('date', '<=', $to_date);
-                        }
+                    if (!is_null($parcel_invoice) && !is_null($parcel_invoice)) {
+                        $query->where('parcel_invoice', 'like', "%$parcel_invoice");
+                        $query->orWhere('merchant_order_id', 'like', "%$parcel_invoice");
+                        $query->orWhere('customer_contact_number', 'like', "%$parcel_invoice");
+                    } elseif (!is_null($merchant_order_id) && !is_null($merchant_order_id)) {
+                        $query->where('merchant_order_id', 'like', "%$merchant_order_id");
+                    } elseif (!is_null($customer_contact_number) && !is_null($customer_contact_number)) {
+                        $query->where('customer_contact_number', 'like', "%$customer_contact_number");
                     }
                 } else {
-                    $query->where('status', '!=', 0);
+                    if ($request->has('parcel_status') && !is_null($parcel_status) && $parcel_status != 0) {
+                        if ($parcel_status == 1) {
+                            $query->whereRaw('status = 25 and delivery_type in (1)')->whereNull('suborder');
+                        } elseif ($parcel_status == 2) {
+                            //    $query->whereRaw('status in (14,16,17,18,19,20,21,22,23,24 ) and delivery_type not in (1,2,4)');
+                            $query->whereRaw('status > 11 and delivery_type in (?)', [3]);
+                        } elseif ($parcel_status == 3) {
+                            //    $query->whereRaw('status = 3');
+                            $query->whereRaw('status >= ? and delivery_type in (4)', [25]);
+                        } elseif ($parcel_status == 4) {
+                            $query->whereRaw('status >= 25 and payment_type = 5 and delivery_type = 1 or delivery_type = 2');
+                        } elseif ($parcel_status == 5) {
+
+                            $query->whereRaw('status >= 25 and payment_type <= 4  and delivery_type = 1 or delivery_type = 2');
+                            // $query->whereRaw('status >= 25 and payment_type >= 4  and payment_type in (4, 6) and delivery_type = 1 or delivery_type = 2');
+                        } elseif ($parcel_status == 6) {
+                            //    $query->whereRaw('status = 36 and delivery_type = 4');
+                            $query->whereRaw('status = ? and delivery_type in (?,?)', [36, 2, 4]);
+                        } elseif ($parcel_status == 7) {
+                            $query->whereRaw('status in (1) and delivery_type IS NULL or delivery_type = ""');
+                        }
+                    }
+                    if ($request->has('from_date') && !is_null($from_date)) {
+                        $query->whereDate('date', '>=', $from_date);
+                    }
+                    if ($request->has('to_date') && !is_null($to_date)) {
+                        $query->whereDate('date', '<=', $to_date);
+                    }
                 }
+                // } else {
+                //     $query->where('status', '!=', 0);
+                // }
             })
             ->orderBy('id', 'desc')
             ->select(

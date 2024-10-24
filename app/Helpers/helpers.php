@@ -429,77 +429,77 @@ function returnParcelStatusForAdmin($status, $delivery_type, $payment_type = nul
     $class          = "";
 
     if ($status == 1) {
-        $status_name  = "Pickup Request";
-        $class        = "warning";
+        $status_name  = "Pick Requested Reschedule";
+        $class        = "success";
     } elseif ($status == 2) {
-        $status_name  = "Parcel Hold";
+        $status_name  = "Pick Request Hold";
         $class        = "warning";
     } elseif ($status == 3) {
         // $status_name  = "Parcel Cancel";
         $status_name  = "Deleted";
         $class        = "danger";
     } elseif ($status == 4) {
-        $status_name  = "Re-schedule Pickup";
+        $status_name  = "Pick Request Reschedule";
         $class        = "warning";
     } elseif ($status == 5) {
-        $status_name  = "Assign for Pickup";
+        $status_name  = "Pick Run Create";
         $class        = "success";
     } elseif ($status == 6) {
-        $status_name  = "Rider Assign For Pick";
+        $status_name  = "Pick Run Start";
         $class        = "success";
     } elseif ($status == 7) {
-        $status_name  = "Pickup Run Cancel";
+        $status_name  = "Pick Run Cancel";
         $class        = "warning";
     } elseif ($status == 8) {
-        $status_name  = "On the way to Pickup";
+        $status_name  = "Pick Rider Accept";
         $class        = "success";
     } elseif ($status == 9) {
-        $status_name  = "Pickup Rider Reject";
+        $status_name  = "Pick Rider Declined";
         $class        = "warning";
     } elseif ($status == 10) {
-        $status_name  = "Pickup Rider Complete ";
+        $status_name  = "Picked Up by Rider";
         $class        = "success";
     } elseif ($status == 11) {
         $status_name  = "Picked Up";
-        $class        = "primary";
-    } elseif ($status == 12) {
-        $status_name  = "Branch Transfer";
         $class        = "success";
+    } elseif ($status == 12) {
+        $status_name  = "Transfer Run Create";
+        $class        = "secondary";
     } elseif ($status == 13) {
-        $status_name  = "Branch Transfer Cancel";
+        $status_name  = "Transfer Run Cancel";
         $class        = "warning";
     } elseif ($status == 14) {
-        $status_name  = "Branch Transfer Complete";
+        $status_name  = "At Kitchen";
         $class        = "info";
     } elseif ($status == 15) {
-        $status_name  = "Delivery Branch Reject";
+        $status_name  = "Transfer Declined";
         $class        = "warning";
     } elseif ($status == 16) {
-        $status_name  = "Delivery Run Create";
+        $status_name  = "Rider Assign Run Create";
         $class        = "success";
     } elseif ($status == 17) {
-        $status_name  = "Delivery Run Start";
+        $status_name  = "Rider Assign Run Start";
         $class        = "success";
     } elseif ($status == 18) {
-        $status_name  = "Delivery Run Cancel";
+        $status_name  = "Rider Assign Run Cancel";
         $class        = "warning";
     } elseif ($status == 19) {
-        $status_name  = "Delivery Rider Accept";
-        $class        = "secondary";
+        $status_name  = "Rider Accept for Delivery";
+        $class        = "success";
     } elseif ($status == 20) {
-        $status_name  = "Delivery Rider Reject";
+        $status_name  = "Rider Declined";
         $class        = "warning";
     } elseif ($status == 21) {
-        $status_name  = "Delivered";
+        $status_name  = "Rider Requested for Delivery";
         $class        = "success";
     } elseif ($status == 22) {
-        $status_name  = "Partial Delivery";
+        $status_name  = "Rider Requested for Partial Delivery";
         $class        = "success";
     } elseif ($status == 23) {
-        $status_name  = "Rider Reschedule";
+        $status_name  = "Rider Requested for Reschedule";
         $class        = "success";
     } elseif ($status == 24) {
-        $status_name  = "Rider Return";
+        $status_name  = "Rider Requested for Cancel";
         $class        = "warning";
     } elseif ($status >= 25 && $delivery_type == 1) {
         $status_name  = "Delivered";
@@ -510,16 +510,161 @@ function returnParcelStatusForAdmin($status, $delivery_type, $payment_type = nul
     } elseif ($status >= 25 && $delivery_type == 3) {
         $status_name  = "Reschedule Delivery";
         $class        = "success";
-    } elseif ($status >= 25 && $delivery_type == 4) {
+    } elseif ($status == 25 && $delivery_type == 4) {
         $status_name  = "Cancelled";
         $class        = "danger";
 
         $x = $parcel;
 
-        if ($x->suborder && $x->exchange == 'no') {
-            $status_name  = "Partial Cancelled";
-        } elseif ($x->suborder && $x->exchange == 'yes') {
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
             $status_name  = "Exchange Collected";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Collected";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Cancelled";
+        }
+    } elseif ($status == 26 && $delivery_type == 4) {
+        $status_name  = "Return Transfer Run Create";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Transfer Run Create";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Transfer Run Create";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return Transfer Run Create";
+        }
+    } elseif ($status == 27 && $delivery_type == 4) {
+        $status_name  = "Return Transfer Run Cancel";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Transfer Run Cancel";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Transfer Run Cancel";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Transfer Run Cancel";
+        }
+    } elseif ($status == 28 && $delivery_type == 4) {
+        $status_name  = "Return Transfer Received";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Transfer Received";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Transfer Received";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return Transfer Received";
+        }
+    } elseif ($status == 29 && $delivery_type == 4) {
+        $status_name  = "Return Transfer Declined";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Return Transfer Declined";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Return Transfer Declined";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return Transfer Declined";
+        }
+    } elseif ($status == 30 && $delivery_type == 4) {
+        $status_name  = "Return Assign Run Create";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Assign Run Create";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Assign Run Create";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Assign Run Create";
+        }
+    } elseif ($status == 31 && $delivery_type == 4) {
+        $status_name  = "Return Assign Run Start";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Assign Run Start";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Assign Run Start";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Assign Run Start";
+        }
+    } elseif ($status == 32 && $delivery_type == 4) {
+        $status_name  = "Return Assign Declined";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Assign Declined";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Assign Declined";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Assign Declined";
+        }
+    } elseif ($status == 33 && $delivery_type == 4) {
+        $status_name  = "Return Assign Accept";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Assign Accept";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Assign Accept";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Assign Accept";
+        }
+    } elseif ($status == 34 && $delivery_type == 4) {
+        $status_name  = "Return Assign Declined";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Assign Declined";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Assign Declined";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Assign Declined";
+        }
+    } elseif ($status == 35 && $delivery_type == 4) {
+        $status_name  = "Return Confirmed";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Return Confirmed";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Return Confirmed";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return Confirmed";
+        }
+    } elseif ($status == 36 && $delivery_type == 4) {
+        $status_name  = "Returned";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Returned";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Returned";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Returned";
         }
     }
 
@@ -708,78 +853,77 @@ function returnParcelStatusNameForBranch($status, $delivery_type, $payment_type,
     $deliveredParcel    = ($delivery_type == 1 || $delivery_type == 2);
 
     if ($status == 1) {
-        $status_name  = "Pickup Request";
-        $class        = "warning";
+        $status_name  = "Pick Requested Reschedule";
+        $class        = "success";
     } elseif ($status == 2) {
-        $status_name  = "Parcel Hold";
+        $status_name  = "Pick Request Hold";
         $class        = "warning";
     } elseif ($status == 3) {
         // $status_name  = "Parcel Cancel";
         $status_name  = "Deleted";
         $class        = "danger";
     } elseif ($status == 4) {
-        $status_name  = "Re-schedule Pickup";
+        $status_name  = "Pick Request Reschedule";
         $class        = "warning";
     } elseif ($status == 5) {
-        $status_name  = "Assign for Pickup";
+        $status_name  = "Pick Run Create";
         $class        = "success";
     } elseif ($status == 6) {
-        $status_name  = "Rider Assign For Pick";
+        $status_name  = "Pick Run Start";
         $class        = "success";
     } elseif ($status == 7) {
-        $status_name  = "Pickup Run Cancel";
+        $status_name  = "Pick Run Cancel";
         $class        = "warning";
     } elseif ($status == 8) {
-        $status_name  = "On the way to Pickup";
+        $status_name  = "Pick Rider Accept";
         $class        = "success";
     } elseif ($status == 9) {
-        $status_name  = "Pickup Rider Reject";
-        $class        = "danger";
+        $status_name  = "Pick Rider Declined";
+        $class        = "warning";
     } elseif ($status == 10) {
-        $status_name  = "Pickup Rider Complete Task";
+        $status_name  = "Picked Up by Rider";
         $class        = "success";
     } elseif ($status == 11) {
         $status_name  = "Picked Up";
-        $class        = "primary";
-    } elseif ($status == 12) {
-        $status_name  = "At Destination Hub";
         $class        = "success";
+    } elseif ($status == 12) {
+        $status_name  = "Transfer Run Create";
+        $class        = "secondary";
     } elseif ($status == 13) {
-        $status_name  = "Branch Transfer Cancel";
+        $status_name  = "Transfer Run Cancel";
         $class        = "warning";
     } elseif ($status == 14) {
-        $status_name  = "Branch Transfer Complete";
+        $status_name  = "At Kitchen";
         $class        = "info";
     } elseif ($status == 15) {
-        $status_name  = "Delivery Branch Reject";
+        $status_name  = "Transfer Declined";
         $class        = "warning";
     } elseif ($status == 16) {
-        $status_name  = "Delivery Run Create";
+        $status_name  = "Rider Assign Run Create";
         $class        = "success";
     } elseif ($status == 17) {
-        $status_name  = "Delivery Run Start";
+        $status_name  = "Rider Assign Run Start";
         $class        = "success";
     } elseif ($status == 18) {
-        $status_name  = "Delivery Run Cancel";
+        $status_name  = "Rider Assign Run Cancel";
         $class        = "warning";
     } elseif ($status == 19) {
-        $status_name  = "Delivery Rider Accept";
+        $status_name  = "Rider Accept for Delivery";
         $class        = "success";
     } elseif ($status == 20) {
-        $status_name  = "Delivery Rider Reject";
-        $class        = "danger";
+        $status_name  = "Rider Declined";
+        $class        = "warning";
     } elseif ($status == 21) {
-        //            $status_name  = "Delivery Rider Complete Delivery";
-        $status_name  = "Delivered";
+        $status_name  = "Rider Requested for Delivery";
         $class        = "success";
     } elseif ($status == 22) {
-        $status_name  = "Partial Delivered";
+        $status_name  = "Rider Requested for Partial Delivery";
         $class        = "success";
     } elseif ($status == 23) {
-        $status_name  = "Rescheduled";
+        $status_name  = "Rider Requested for Reschedule";
         $class        = "success";
     } elseif ($status == 24) {
-        $status_name  = "Cancel";
+        $status_name  = "Rider Requested for Cancel";
         $class        = "warning";
     } elseif ($status >= 25 && $delivery_type == 1) {
         $status_name  = "Delivered";
@@ -803,123 +947,150 @@ function returnParcelStatusNameForBranch($status, $delivery_type, $payment_type,
         } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
             $status_name  = "Partial Cancelled";
         }
-    }
+    } elseif ($status == 26 && $delivery_type == 4) {
+        $status_name  = "Return Transfer Run Create";
+        $class        = "danger";
 
-    /** For Partial Delivery Return */
-    // elseif ($status == 26 && $delivery_type == 2) {
-    //     $status_name  = "Delivery Exchange Transfer";
-    //     $class        = "success";
-    // } elseif ($status == 27 && $delivery_type == 2) {
-    //     $status_name  = "Delivery Exchange Transfer Cancel";
-    //     $class        = "success";
-    // } elseif ($status == 28 && $delivery_type == 2) {
-    //     $status_name  = "Delivery Exchange Transfer Complete";
-    //     $class        = "success";
-    // } elseif ($status == 29 && $delivery_type == 2) {
-    //     $status_name  = "Delivery Exchange Transfer Reject";
-    //     $class        = "success";
-    // } elseif ($status == 30 && $delivery_type == 2) {
-    //     $status_name  = "Delivery Exchange Return Run Create";
-    //     $class        = "success";
-    // } elseif ($status == 31 && $delivery_type == 2) {
-    //     $status_name  = "Delivery Exchange Return Run start";
-    //     $class        = "success";
-    // } elseif ($status == 32 && $delivery_type == 2) {
-    //     $status_name  = "Delivery Exchange Return Run Cancel";
-    //     $class        = "success";
-    // } elseif ($status == 33 && $delivery_type == 2) {
-    //     $status_name  = "Delivery Exchange Return Rider Accept";
-    //     $class        = "success";
-    // } elseif ($status == 34 && $delivery_type == 2) {
-    //     $status_name  = "Delivery Exchange Return Rider Reject";
-    //     $class        = "success";
-    // } elseif ($status == 35 && $delivery_type == 2) {
-    //     $status_name  = "Delivery Exchange Return Run Complete";
-    //     $class        = "success";
-    // } elseif ($status == 36 && $delivery_type == 2) {
-    //     $status_name  = "Delivery Exchange Return Complete";
-    //     $class        = "success";
-    // }
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
 
-    /** For Return Parcel */
-    elseif ($status == 26 && $delivery_type == 4) {
-        $status_name  = "Return Transfer";
-        $class        = "success";
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Transfer Run Create";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Transfer Run Create";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return Transfer Run Create";
+        }
     } elseif ($status == 27 && $delivery_type == 4) {
-        $status_name  = "Return Transfer Cancel";
-        $class        = "success";
+        $status_name  = "Return Transfer Run Cancel";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Transfer Run Cancel";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Transfer Run Cancel";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Transfer Run Cancel";
+        }
     } elseif ($status == 28 && $delivery_type == 4) {
-        $status_name  = "Return Transfer Complete";
-        $class        = "success";
+        $status_name  = "Return Transfer Received";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Transfer Received";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Transfer Received";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return Transfer Received";
+        }
     } elseif ($status == 29 && $delivery_type == 4) {
-        $status_name  = "Return Transfer Reject";
-        $class        = "success";
+        $status_name  = "Return Transfer Declined";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Return Transfer Declined";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Return Transfer Declined";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return Transfer Declined";
+        }
     } elseif ($status == 30 && $delivery_type == 4) {
-        $status_name  = "Return Run Create";
-        $class        = "success";
+        $status_name  = "Return Assign Run Create";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Assign Run Create";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Assign Run Create";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Assign Run Create";
+        }
     } elseif ($status == 31 && $delivery_type == 4) {
-        $status_name  = "Return Run start";
-        $class        = "success";
+        $status_name  = "Return Assign Run Start";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Assign Run Start";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Assign Run Start";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Assign Run Start";
+        }
     } elseif ($status == 32 && $delivery_type == 4) {
-        $status_name  = "Return Run Cancel";
-        $class        = "success";
+        $status_name  = "Return Assign Declined";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Assign Declined";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Assign Declined";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Assign Declined";
+        }
     } elseif ($status == 33 && $delivery_type == 4) {
-        $status_name  = "Return Run Rider Accept";
-        $class        = "success";
+        $status_name  = "Return Assign Accept";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Assign Accept";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Assign Accept";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Assign Accept";
+        }
     } elseif ($status == 34 && $delivery_type == 4) {
-        $status_name  = "Return Run Rider Reject";
-        $class        = "success";
+        $status_name  = "Return Assign Declined";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Assign Declined";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Assign Declined";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Assign Declined";
+        }
     } elseif ($status == 35 && $delivery_type == 4) {
-        $status_name  = "Return Run Complete";
-        $class        = "success";
+        $status_name  = "Return Confirmed";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Return Confirmed";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Return Confirmed";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Return Confirmed";
+        }
     } elseif ($status == 36 && $delivery_type == 4) {
-        $status_name  = "Return Complete";
-        $class        = "success";
+        $status_name  = "Returned";
+        $class        = "danger";
+
+        $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
+        if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
+            $status_name  = "Exchange Returned";
+        } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial Returned";
+        } elseif ($x->suborder && $x->exchange == 'no' && $x->parent_delivery_type == 2) {
+            $status_name  = "Partial & Exchange Returned";
+        }
     }
-
-    // /** For Payment Status */
-    // if($delivery_type == 1 && $status == 25 && $payment_type == 1){
-    //     $status_name  = "Branch Payment Request";
-    //     $class        = "primary";
-    // }elseif($delivery_type == 1 && $status == 25 && $payment_type == 2){
-    //     $status_name  = "Accounts Accept Payment";
-    //     $class        = "success";
-    // }elseif($delivery_type == 1 && $status == 25 && $payment_type == 3){
-    //     $status_name  = "Accounts Reject Payment";
-    //     $class        = "warning";
-    // }elseif($delivery_type == 1 && $status == 25 && $payment_type == 4){
-    //     $status_name  = "Accounts Payment Request";
-    //     $class        = "primary";
-    // }elseif($delivery_type == 1 && $status == 25 && $payment_type == 5){
-    //     $status_name  = "Paid ";
-    //      $status_name  = "Accounts Payment Done";
-    //     $class        = "success";
-    // }elseif($delivery_type == 1 && $status == 25 && $payment_type == 6){
-    //     $status_name  = "Merchant Payment Reject";
-    //     $class        = "warning";
-    // }
-
-
-    /** For Partial Payment Status */
-    // if ($delivery_type == 2 && $status == 25 && $payment_type == 1) {
-    //     $status_name  = "Branch Delivery Exchange Payment Request";
-    //     $class        = "primary";
-    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 2) {
-    //     $status_name  = "Accounts Delivery Exchange Accept Payment";
-    //     $class        = "success";
-    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 3) {
-    //     $status_name  = "Accounts Delivery Exchange Reject Payment";
-    //     $class        = "warning";
-    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 4) {
-    //     $status_name  = "Accounts Delivery Exchange Payment Request";
-    //     $class        = "primary";
-    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 5) {
-    //     $status_name  = "Accounts Delivery Exchange Payment Done";
-    //     $class        = "success";
-    // } elseif ($delivery_type == 2 && $status == 25 && $payment_type == 6) {
-    //     $status_name  = "Merchant Delivery Exchange Payment Reject";
-    //     $class        = "warning";
-    // }
 
     if ($status == 0 && isset($parcel) && $parcel?->is_push) {
         $status_name  = "In Review API";
@@ -942,20 +1113,20 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
     $deliveredParcel    = ($delivery_type == 1 || $delivery_type == 2);
 
     if ($status == 1) {
-        $status_name  = "Pickup Request";
-        $class        = "success";
+        $status_name  = "Pick Requested";
+        $class        = "warning";
     } elseif ($status == 2) {
-        $status_name  = "Parcel Hold";
+        $status_name  = "Pick Request Hold";
         $class        = "warning";
     } elseif ($status == 3) {
         // $status_name  = "Parcel Cancel";
         $status_name  = "Deleted";
         $class        = "danger";
     } elseif ($status == 4) {
-        $status_name  = "Re-schedule Pickup";
+        $status_name  = "Pick Request Reschedule";
         $class        = "warning";
     } elseif ($status == 5) {
-        $status_name  = "Assign for pickup";
+        $status_name  = "Pickup Processing";
         $class        = "success";
     } elseif ($status == 6) {
         $status_name  = "Pickup Processing";
@@ -964,55 +1135,55 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
         $status_name  = "Pickup Processing";
         $class        = "warning";
     } elseif ($status == 8) {
-        $status_name  = "Pickup Processing";
+        $status_name  = "Pick Rider On Way";
         $class        = "success";
     } elseif ($status == 9) {
         $status_name  = "Pickup Processing";
         $class        = "warning";
     } elseif ($status == 10) {
-        $status_name  = "Pickup Processing";
+        $status_name  = "Picked Up by Rider";
         $class        = "success";
     } elseif ($status == 11) {
         $status_name  = "Picked Up";
-        $class        = "success";
+        $class        = "primary";
     } elseif ($status == 12) {
-        $status_name  = "In Transit";
-        $class        = "secondary";
+        $status_name  = "On way to Kitchen";
+        $class        = "success";
     } elseif ($status == 13) {
-        $status_name  = "Picked Up";
+        $status_name  = "On way to Kitchen";
         $class        = "warning";
     } elseif ($status == 14) {
-        $status_name  = "At Destination Hub";
+        $status_name  = "At Kitchen";
         $class        = "info";
     } elseif ($status == 15) {
-        $status_name  = "Picked Up";
+        $status_name  = "On way to Kitchen";
         $class        = "warning";
     } elseif ($status == 16) {
-        $status_name  = "Assign for Delivery";
+        $status_name  = "At Kitchen";
         $class        = "success";
     } elseif ($status == 17) {
-        $status_name  = "Delivery Processing";
+        $status_name  = "Rider Assigned";
         $class        = "success";
     } elseif ($status == 18) {
-        $status_name  = "On The Way To Delivery";
+        $status_name  = "At Kitchen";
         $class        = "warning";
     } elseif ($status == 19) {
-        $status_name  = "On The Way To Delivery";
-        $class        = "success";
+        $status_name  = "On the way to Delivery";
+        $class        = "secondary";
     } elseif ($status == 20) {
-        $status_name  = "Delivery Processing";
+        $status_name  = "At Kitchen";
         $class        = "warning";
     } elseif ($status == 21) {
-        $status_name  = "Rider Delivered";
+        $status_name  = "Delivery Approval Pending";
         $class        = "success";
     } elseif ($status == 22) {
-        $status_name  = "Partial Delivery";
+        $status_name  = "Partial Approval Pending";
         $class        = "success";
     } elseif ($status == 23) {
-        $status_name  = "Rider Reschedule";
+        $status_name  = "Reschedule Approval Pending";
         $class        = "success";
     } elseif ($status == 24) {
-        $status_name  = "Rider Return";
+        $status_name  = "Cancel Approval Pending";
         $class        = "warning";
     } elseif ($status == 25 && $delivery_type == 1) {
         $status_name  = "Delivered";
@@ -1028,10 +1199,6 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
 
         $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
 
-        // if ($parcel && $parcel->suborder) {
-        //     $status_name  = "Partial Delivery Cancel";
-        // }
-
         if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
             $status_name  = "Exchange Collected";
         } elseif ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 2) {
@@ -1041,21 +1208,7 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
         }
 
         $class        = "danger";
-    }
-
-    /** For Partial Delivery Return */
-    // elseif ($status >= 26 && $status <= 36 && $delivery_type == 2) {
-    //     $status_name  = "Delivery with Exchange";
-    //     $class        = "success";
-    // }
-
-    /** For Return Parcel */
-    // elseif ($status >= 26 && $status <= 35 && $delivery_type == 4) {
-    //     $status_name  = "Return Processing";
-    //     $class        = "warning";
-    // }
-
-    elseif ($status == 26 && $delivery_type == 4) {
+    } elseif ($status == 26 && $delivery_type == 4) {
         $status_name  = "Return To Kitchen";
         $class        = "danger";
 
@@ -1199,27 +1352,6 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
             $status_name  = "Partial & Exchange Returned";
         }
     }
-
-
-
-    // /** For Payment Status */
-    // if($delivery_type == 1 && $status == 25 && (($payment_type >= 1 && $payment_type <= 4) || ($payment_type == 6))){
-    //     $status_name  = "Payment Pending";
-    //     $class        = "warning";
-    // }
-    // elseif($delivery_type == 1 && $status == 25 && $payment_type == 5){
-    //     $status_name  = "Payment Done";
-    //     $class        = "success";
-    // }
-
-
-    // /** For Partial Payment Status */
-    // if($delivery_type == 2 && $status >= 25 && (($payment_type >= 1 && $payment_type <= 4) || ($payment_type == 6))){
-    //     $status_name  .=  "Payment Pending";
-    // }
-    // elseif($delivery_type == 2 && $status >= 25 && $payment_type == 5){
-    //     $status_name  .=  "Payment Done";
-    // }
 
     if ($status == 0 && isset($parcel) && $parcel?->is_push) {
         $status_name  = "In Review API";

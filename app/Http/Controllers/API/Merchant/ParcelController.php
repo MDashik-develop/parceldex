@@ -2041,13 +2041,13 @@ class ParcelController extends Controller
             'rider_note' => $parcel->note,
         ];
 
-        $parcelLogs = ParcelLog::where('parcel_id', $parcel->id)
-            ->orderBy('id', 'desc')
-            ->get();
+        $parcelLogs = ParcelLog::where('parcel_id', $parcel->id)->orderBy('id', 'asc')->get();
 
-        $logsGroupedByDate = $parcelLogs->groupBy(function ($item) {
-            return Carbon::parse($item['date'])->format('Y-m-d');
-        })->sortKeysDesc();
+        $logsGroupedByDate = $parcelLogs
+            ->groupBy(function ($item) {
+                return \Carbon\Carbon::parse($item['date'])->format('Y-m-d');
+            })
+            ->sortKeysDesc();
 
         $response = [];
 

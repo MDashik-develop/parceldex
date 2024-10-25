@@ -45,6 +45,7 @@ class BranchDeliveryPayment implements
                     $parcel_delivery_payment_detail?->parcel?->status,
                     $parcel_delivery_payment_detail?->parcel?->delivery_type,
                     $parcel_delivery_payment_detail?->parcel?->payment_type,
+                    $parcel_delivery_payment_detail?->parcel
                 );
 
                 $status_name = $status['status_name'];

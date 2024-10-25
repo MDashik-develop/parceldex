@@ -1126,6 +1126,7 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();
+                                    $new_parcel->parent_delivery_type = $parcel->delivery_type;
                                     $new_parcel->save();
 
                                     $parcel->merchant_service_area_return_charge = 0;
@@ -1199,6 +1200,7 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();
+                                    $new_parcel->parent_delivery_type = $parcel->delivery_type;
                                     $new_parcel->save();
 
                                     $parcel->merchant_service_area_return_charge = 0;
@@ -1233,6 +1235,7 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();
+                                    $new_parcel->parent_delivery_type = $parcel->delivery_type;
                                     $new_parcel->save();
 
                                     $parcel->merchant_service_area_return_charge = 0;

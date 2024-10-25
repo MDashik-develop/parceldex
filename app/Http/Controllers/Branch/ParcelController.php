@@ -547,7 +547,7 @@ class ParcelController extends Controller
                     $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
                 }
 
-                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name  = $parcelStatus['status_name'];
                 $class        = $parcelStatus['class'];
                 return '<span class="  text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong>Date: </strong>' . $date_time . '</p>';

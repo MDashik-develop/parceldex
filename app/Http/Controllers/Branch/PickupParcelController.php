@@ -57,7 +57,7 @@ class PickupParcelController extends Controller
             ->addIndexColumn()
             ->editColumn('parcel_status', function ($data) {
 
-                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
 
@@ -66,7 +66,7 @@ class PickupParcelController extends Controller
             })
             ->editColumn('parcel_color', function ($data) {
 
-                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
                 return $class;
@@ -122,7 +122,7 @@ class PickupParcelController extends Controller
             ->addIndexColumn()
             ->editColumn('parcel_status', function ($data) {
 
-                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
 
@@ -131,7 +131,7 @@ class PickupParcelController extends Controller
             })
             ->editColumn('parcel_color', function ($data) {
 
-                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
                 return $class;

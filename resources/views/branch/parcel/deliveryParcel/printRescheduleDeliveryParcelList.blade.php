@@ -96,7 +96,7 @@
         </tr>
         @foreach($parcels as $key => $parcel)
             @php
-                $parcelStatus = returnParcelStatusNameForBranch($parcel->status, $parcel->delivery_type, $parcel->payment_type);
+                $parcelStatus = returnParcelStatusNameForBranch($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
                 $status_name = $parcelStatus['status_name'];
                 $district = "";
                 if ($parcel->district) {

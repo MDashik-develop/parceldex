@@ -16,3 +16,22 @@ ALTER TABLE `parcels` ADD `parent_delivery_type` TINYINT NULL AFTER `delivery_ty
 
 // parcel view id update
 // desing fix log view
+
+-------------------------------25-10-2024-----------------------
+1- 
+2-
+3-
+4-
+5-
+6-
+7-
+8-
+9-
+10-
+11-
+12-
+13-
+14-
+15-
+
+9355

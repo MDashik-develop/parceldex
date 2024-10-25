@@ -162,7 +162,7 @@ class ParcelFilterController extends Controller {
             })
             ->editColumn('status', function ($data) {
 
-                $parcelStatus   = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus   = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name    = $parcelStatus['status_name'];
                 $class          = $parcelStatus['class'];
 

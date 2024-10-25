@@ -40,7 +40,7 @@ class ReturnParcelController extends Controller {
             ->addIndexColumn()
             ->editColumn('status', function ($data) {
 
-                $parcelStatus   = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus   = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name    = $parcelStatus['status_name'];
                 $class          = $parcelStatus['class'];
 
@@ -77,7 +77,7 @@ class ReturnParcelController extends Controller {
             ->addIndexColumn()
             ->editColumn('status', function ($data) {
 
-                $parcelStatus   = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus   = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name    = $parcelStatus['status_name'];
                 $class          = $parcelStatus['class'];
 
@@ -118,7 +118,7 @@ class ReturnParcelController extends Controller {
             ->addIndexColumn()
             ->editColumn('status', function ($data) {
 
-                $parcelStatus   = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus   = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name    = $parcelStatus['status_name'];
                 $class          = $parcelStatus['class'];
                 return '<a class=" text-bold text-' . $class . '" href="javascript:void(0)" style="font-size:16px;"> ' . $status_name . '</a>';
@@ -151,7 +151,7 @@ class ReturnParcelController extends Controller {
             ->addIndexColumn()
             ->editColumn('status', function ($data) {
 
-                $parcelStatus   = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type);
+                $parcelStatus   = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name    = $parcelStatus['status_name'];
                 $class          = $parcelStatus['class'];
                 return '<a class=" text-bold text-' . $class . '" href="javascript:void(0)" style="font-size:16px;"> ' . $status_name . '</a>';

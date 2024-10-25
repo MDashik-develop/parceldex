@@ -206,7 +206,26 @@
                                                     $returnCharge = 0;
                                                     if ($parcel->delivery_type == 4 || $parcel->delivery_type == 2) {
                                                         $returnCharge = $parcel->merchant_service_area_return_charge;
+                                                    } elseif (
+                                                        $parcel->suborder &&
+                                                        $parcel->exchange == 'yes' &&
+                                                        $parcel->parent_delivery_type == 1
+                                                    ) {
+                                                        $returnCharge = $parcel->merchant_service_area_return_charge;
+                                                    } elseif (
+                                                        $parcel->suborder &&
+                                                        $parcel->exchange == 'yes' &&
+                                                        $parcel->parent_delivery_type == 2
+                                                    ) {
+                                                        $returnCharge = $parcel->merchant_service_area_return_charge;
+                                                    } elseif (
+                                                        $parcel->suborder &&
+                                                        $parcel->exchange == 'no' &&
+                                                        $parcel->parent_delivery_type == 2
+                                                    ) {
+                                                        $returnCharge = $parcel->merchant_service_area_return_charge;
                                                     }
+
                                                     $change =
                                                         $parcel->customer_collect_amount -
                                                         $parcel->weight_package_charge -

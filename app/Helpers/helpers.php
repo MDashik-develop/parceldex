@@ -429,7 +429,7 @@ function returnParcelStatusForAdmin($status, $delivery_type, $payment_type = nul
     $class          = "";
 
     if ($status == 1) {
-        $status_name  = "Pick Requested Reschedule";
+        $status_name  = "Pick Requested";
         $class        = "success";
     } elseif ($status == 2) {
         $status_name  = "Pick Request Hold";
@@ -853,7 +853,7 @@ function returnParcelStatusNameForBranch($status, $delivery_type, $payment_type,
     $deliveredParcel    = ($delivery_type == 1 || $delivery_type == 2);
 
     if ($status == 1) {
-        $status_name  = "Pick Requested Reschedule";
+        $status_name  = "Pick Requested";
         $class        = "success";
     } elseif ($status == 2) {
         $status_name  = "Pick Request Hold";

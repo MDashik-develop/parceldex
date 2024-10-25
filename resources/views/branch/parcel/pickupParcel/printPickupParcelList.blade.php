@@ -79,7 +79,7 @@
         </tr>
         @foreach($pickupParcels as $key => $pickupParcel)
             @php
-                $parcelStatus = returnParcelStatusNameForBranch($pickupParcel->status, $pickupParcel->delivery_type, $pickupParcel->payment_type);
+                $parcelStatus = returnParcelStatusNameForBranch($pickupParcel->status, $pickupParcel->delivery_type, $pickupParcel->payment_type, $pickupParcel);
                 $status_name = $parcelStatus['status_name'];
             @endphp
             <tr>

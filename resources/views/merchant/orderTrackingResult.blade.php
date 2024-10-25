@@ -50,6 +50,7 @@
                         $parcel?->status,
                         $parcel?->delivery_type,
                         $parcel?->payment_type,
+                        $parcel
                     );
                 @endphp
                 {{ $parcelStatus['status_name'] }} - {{ $date_time }}
@@ -105,7 +106,7 @@
                         <p>: {{ $parcel->weight_package->name }}</p>
                         <p>: <strong>{{ number_format($parcel->total_collect_amount, 2) }}
                                 Tk</p>
-                        <p>: <strong>{{ number_format($parcel->cancel_amount_collection ?? $parcel->customer_collect_amount, 2) }}
+                        <p>: <strong>{{ number_format($parcel->cancel_amount_collection > 0 ? $parcel->cancel_amount_collection : $parcel->customer_collect_amount, 2) }}
                                 Tk</strong></p>
                     </section>
             </div>

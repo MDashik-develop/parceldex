@@ -270,15 +270,26 @@ class HomeController extends Controller
         $data['total_customer_collect_amount_due_oc'] = $awc;
 
 
+        $statusRange = range(11, 25);
+        $deliveryTypes = [1, 2, 3, 4, null];
+        $paymentTypes = [null];
+
         $data['total_to_be_collected']     = Parcel::where('merchant_id', $merchant_id)
-            // ->whereNull('suborder')
-            ->whereIn('status', [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24])
-            //->whereRaw('delivery_type in (?,?) and payment_type in (?,?) and payment_request_status = ?', [1,2,2,6,0])
-            // ->orWhere(function ($query) {
-            //     $query->where('status', 25)->where('delivery_type', 3);
-            // })
-            // ->whereRaw('delivery_type in (?,?) and payment_type in (?,?,?) and payment_request_status = ?', [1,2,2,4,6,0])
+            ->whereIn('status', $statusRange)
+            ->whereIn('delivery_type', $deliveryTypes)
+            ->whereIn('payment_type', $paymentTypes)
             ->sum('total_collect_amount');
+
+
+        // Parcel::where('merchant_id', $merchant_id)
+        //     ->whereIn('status', [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25])
+        //     ->whereRaw('delivery_type in (?,?,?,?,?) and payment_type in (?)', [1, 2, 3, 4, null, null])
+        //     ->sum('total_collect_amount');
+        // ->whereNull('suborder')
+        //->whereRaw('delivery_type in (?,?) and payment_type in (?,?) and payment_request_status = ?', [1,2,2,6,0])
+        // ->orWhere(function ($query) {
+        //     $query->where('status', 25)->where('delivery_type', 3);
+        // })
 
         $data['total_to_be_collectedoc']     = Parcel::where('merchant_id', $merchant_id)
             //->whereNull('suborder')
@@ -452,11 +463,42 @@ class HomeController extends Controller
             ->whereIn('delivery_type', [1, 2, 4])
             ->whereIn('payment_type', [2, 4, 6]);
 
-
+        // $parcel->merchant_service_area_return_charge
         $cod_charge = $total_charge_amount_query->sum('cod_charge');
         $delivery_charge = $total_charge_amount_query->sum('delivery_charge');
         $weight_package_charge = $total_charge_amount_query->sum('weight_package_charge');
-        $return_charge = $total_charge_amount_query->sum('return_charge');
+
+        $return_charge_amount_query = Parcel::where('merchant_id', $merchant_id)
+            ->where('status', '>=', 25)
+            ->whereIn('delivery_type', [1, 2, 4])
+            ->whereIn('payment_type', [2, 4, 6])->get();
+
+        $return_charge = 0;
+
+        foreach ($return_charge_amount_query as $parcel) {
+            if ($parcel->delivery_type == 4 || $parcel->delivery_type == 2) {
+                $return_charge += $parcel->merchant_service_area_return_charge;
+            } elseif (
+                $parcel->suborder &&
+                $parcel->exchange == 'yes' &&
+                $parcel->parent_delivery_type == 1
+            ) {
+                $return_charge += $parcel->merchant_service_area_return_charge;
+            } elseif (
+                $parcel->suborder &&
+                $parcel->exchange == 'yes' &&
+                $parcel->parent_delivery_type == 2
+            ) {
+                $return_charge += $parcel->merchant_service_area_return_charge;
+            } elseif (
+                $parcel->suborder &&
+                $parcel->exchange == 'no' &&
+                $parcel->parent_delivery_type == 2
+            ) {
+                $return_charge += $parcel->merchant_service_area_return_charge;
+            }
+        }
+
 
         $total_charge_amount = $cod_charge + $delivery_charge + $weight_package_charge + $return_charge;
 

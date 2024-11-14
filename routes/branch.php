@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::post('parcel/printParcelMultiple', [App\Http\Controllers\Branch\ParcelController::class, 'printParcelMultiple'])->name('parcel.printParcelMultiple');
+
 Route::get('/branch', [App\Http\Controllers\Branch\AuthController::class, 'login'])->name('login');
 Route::post('/branch', [App\Http\Controllers\Branch\AuthController::class, 'login_check'])->name('login');
 

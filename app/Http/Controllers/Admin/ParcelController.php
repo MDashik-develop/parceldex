@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use App\Models\District;
 use App\Models\Upazila;
 use App\Models\WeightPackage;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\DataTables;
@@ -231,22 +232,25 @@ class ParcelController extends Controller
             })
             ->editColumn('parcel_status', function ($data) {
                 $date_time = '---';
-                if ($data->status >= 25) {
-                    if ($data->delivery_type == 3) {
-                        $date_time = date("Y-m-d", strtotime($data->reschedule_parcel_date));
-                    } elseif ($data->delivery_type == 1 || $data->delivery_type == 2 || $data->delivery_type == 4) {
-                        $date_time = date("Y-m-d", strtotime($data->delivery_date));
-                    }
-                } elseif ($data->status == 11 || $data->status == 13 || $data->status == 15) {
-                    $date_time = date("Y-m-d", strtotime($data->pickup_branch_date));
-                } else {
-                    // $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
-                    $date_time = $data->date;
-                }
+                // if ($data->status >= 25) {
+                //     if ($data->delivery_type == 1 || $data->delivery_type == 2 || $data->delivery_type == 3 || $data->delivery_type == 4) {
+                //         $date_time = $data->delivery_date ? Carbon::parse($data->delivery_date)->format('d-m-Y') : 'N/A';
+                //     }
+                // } elseif ($data->status == 11 || $data->status == 13 || $data->status == 15) {
+                //     $date_time = $data->pickup_branch_date ? Carbon::parse($data->pickup_branch_date)->format('d-m-Y') : 'N/A';
+                // } else {
+                //     $date_time = $data->date ? Carbon::parse($data->date)->format('d-m-Y') : 'N/A';
+                // }
+
+                $xLog = $data->parcel_logs->sortByDesc('id')->first();
+
+                $date_time = Carbon::parse($xLog?->date . ' ' . $xLog?->time)->format('d-m-Y h:i A');
+
                 $parcelStatus = returnParcelStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
-                return '<span class="  text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong></strong>' . $date_time . '</p>';
+
+                return '<span class="  text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong></strong>' . $date_time . '</p><p><strong>Attempt: </strong>' . $data->number_of_attempt . '</p>';
             })
             ->editColumn('payment_status', function ($data) {
                 // $return = "";

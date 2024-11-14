@@ -802,25 +802,29 @@ class ParcelController extends Controller
             })
             ->editColumn('parcel_status', function ($data) {
                 $date_time = '---';
-                if ($data->status >= 25) {
-                    if ($data->delivery_type == 3) {
-                        $date_time = date("Y-m-d", strtotime($data->reschedule_parcel_date));
-                    }
-                    if ($data->delivery_type == 4) {
-                        $date_time = $data->created_at->format('Y-m-d');
-                    } elseif ($data->delivery_type == 1 || $data->delivery_type == 2) {
-                        $date_time = date("Y-m-d", strtotime($data->delivery_date));
-                    }
-                } elseif ($data->status == 11 || $data->status == 13 || $data->status == 15) {
-                    $date_time = date("Y-m-d", strtotime($data->pickup_branch_date));
-                } else {
-                    // $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
-                    $date_time = $data->created_at->format('Y-m-d');
-                }
+                // if ($data->status >= 25) {
+                //     if ($data->delivery_type == 3) {
+                //         $date_time = date("Y-m-d", strtotime($data->reschedule_parcel_date));
+                //     }
+                //     if ($data->delivery_type == 4) {
+                //         $date_time = $data->created_at->format('Y-m-d');
+                //     } elseif ($data->delivery_type == 1 || $data->delivery_type == 2) {
+                //         $date_time = date("Y-m-d", strtotime($data->delivery_date));
+                //     }
+                // } elseif ($data->status == 11 || $data->status == 13 || $data->status == 15) {
+                //     $date_time = date("Y-m-d", strtotime($data->pickup_branch_date));
+                // } else {
+                //     // $date_time = $data->date . " " . date("h:i A", strtotime($data->created_at));
+                //     $date_time = $data->created_at->format('Y-m-d');
+                // }
+                $xLog = $data->parcel_logs->sortByDesc('id')->first();
+
+                $date_time = Carbon::parse($xLog?->date . ' ' . $xLog?->time)->format('d-m-Y h:i A');
+
                 $parcelStatus = returnParcelStatusNameForMerchant($data->status, $data->delivery_type, $data->payment_type, $data->parcel_invoice);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
-                return '<span class="  text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong></strong>' . $date_time . '</p>';
+                return '<span class="  text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong></strong>' . $date_time . '</p><p><strong>Attempt: </strong>' . $data->number_of_attempt . '</p>';
             })
             ->editColumn('payment_status', function ($data) {
                 $date  = $data?->merchantDeliveryPayment?->created_at->format('d-m-Y h:i A');
@@ -1559,6 +1563,7 @@ class ParcelController extends Controller
                     // $service_type_id = isset($row['service_type_id']) ? $row['service_type_id'] : null;
                     // $item_type_id = isset($row['item_type_id']) ? $row['item_type_id'] : null;
 
+                    $exchange = isset($row['exchange']) ? $row['exchange'] : 'no';
                     $remark = isset($row['parcel_note']) ? $row['parcel_note'] : null;
                     $collection_amount = isset($row['total_collect_amount']) ? $row['total_collect_amount'] : null;
                     //                    dd($collection_amount);
@@ -1771,6 +1776,7 @@ class ParcelController extends Controller
                                 'pickup_rider_date' => date('Y-m-d'),
                                 'parcel_date' => date('Y-m-d'),
                                 'status' => 1,
+                                'exchange' => $exchange,
                             ];
                             //                                                        dd($data);
 

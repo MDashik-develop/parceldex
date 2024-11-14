@@ -15,6 +15,8 @@ class Parcel extends Model
 
     protected $guarded = [];
 
+    protected $appends = ['number_of_attempt'];
+
     protected static function boot()
     {
         parent::boot();
@@ -121,6 +123,11 @@ class Parcel extends Model
     public function parcel_logs()
     {
         return $this->hasMany(ParcelLog::class, 'parcel_id');
+    }
+
+    public function getNumberOfAttemptAttribute()
+    {
+        return $this->parcel_logs()->where('status', 17)->count();
     }
 
     public function rider_run_detail()

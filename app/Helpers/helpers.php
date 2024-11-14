@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Notification;
 if (!function_exists('send_bl_sms')) {
     function send_bl_sms($phone, $message)
     {
-        // $msisdn = trim($phone);
-        // $n = strlen($msisdn);
-        // if ($n == 11) {
-        //     $msisdn = '88' . $msisdn;
-        // }
+        $msisdn = trim($phone);
+        $n = strlen($msisdn);
+        if ($n == 11) {
+            $msisdn = '88' . $msisdn;
+        }
 
 
-        // return Http::post("https://api.boom-cast.com/boomcast/WebFramework/boomCastWebService/externalApiSendTextMessage.php?masking=NOMASK&userName=Parceldex&password=9b70712043cd3344e52cf6c3bd9d024d&MsgType=TEXT&receiver=$msisdn&message=$message");
+        return Http::post("https://api.boom-cast.com/boomcast/WebFramework/boomCastWebService/externalApiSendTextMessage.php?masking=NOMASK&userName=Parceldex&password=9b70712043cd3344e52cf6c3bd9d024d&MsgType=TEXT&receiver=$msisdn&message=$message");
         return true;
 
 
@@ -1694,7 +1694,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
     } elseif ($status == 23) {
         //$status_name  = "Rescheduled";
         $status_name  = "Hold Requested";
-        $sub_title = 'Note - ' . $parcelLog->note;
+        $sub_title = $parcelLog->note ?? 'N/A';
         $class        = "success";
 
         if (!empty($parcelLog->admin)) {
@@ -1704,7 +1704,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         }
     } elseif ($status == 24 && $parcelLog->delivery_type == 2) {
         $status_name  = "Partial Delivery Requested by Rider";
-        $sub_title = 'Note - ' . $parcelLog->note;
+        $sub_title = $parcelLog->note ?? 'N/A';
         //$status_name  = "Exchange Product Received by Rider";
 
         //$status_name  = "Delivery Rider Return";
@@ -1717,7 +1717,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         }
     } elseif ($status == 24 && $parcelLog->delivery_type == 4) {
         $status_name  = "Cancel Requested by Rider";
-        $sub_title = 'Note - ' . $parcelLog->note;
+        $sub_title = $parcelLog->note ?? 'N/A';
         //$status_name  = "Exchange Product Received by Rider";
 
         //$status_name  = "Delivery Rider Return";
@@ -1730,7 +1730,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         }
     } elseif ($status == 24) {
         $status_name  = "Cancel Requested";
-        $sub_title = 'Note - ' . $parcelLog->note;
+        $sub_title = $parcelLog->note ?? 'N/A';
         //$status_name  = "Exchange Product Received by Rider";
 
         //$status_name  = "Delivery Rider Return";
@@ -1742,7 +1742,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
             $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name;
         }
     } elseif ($status == 25 && $parcelLog->delivery_type == 1) {
-        $sub_title = 'Note - ' . $parcelLog->note;
+        $sub_title = $parcelLog->note ?? 'N/A';
         $status_name  = "Delivered";
         $class        = "success";
         if (!empty($parcelLog->admin)) {
@@ -1761,13 +1761,23 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
             $status_name  = "Partial Cancelled";
         }
     } elseif ($status == 25 && $parcelLog->delivery_type == 2) {
+        // if (!empty($parcelLog->admin)) {
+        //     $to_user    = "Admin : " . $parcelLog->admin->name;
+        // } elseif ($parcelLog->delivery_branch) {
+        //     $to_user    = !empty($parcelLog->delivery_branch) ? "Delivery Branch : " . $parcelLog?->delivery_branch?->name : "";
+        // }
+
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->delivery_branch) {
-            $to_user    = !empty($parcelLog->delivery_branch) ? "Delivery Branch : " . $parcelLog?->delivery_branch?->name : "";
+            $to_user    = $parcelLog?->delivery_branch?->name ?? "N/A";
+        } elseif ($parcelLog->delivery_rider) {
+            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name;
+        } elseif ($parcelLog->pickup_branch) {
+            $to_user    = "Pickup Branch : " . $parcelLog?->pickup_branch?->name;
         }
 
-        $sub_title = 'Note - ' . $parcelLog->note;
+        $sub_title = $parcelLog->note ?? 'N/A';
         $status_name  = "Partial Delivered";
         $class        = "success";
 
@@ -1787,18 +1797,20 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
             $to_user    = !empty($parcelLog->delivery_branch) ? "Delivery Branch : " . $parcelLog?->delivery_branch?->name : "";
         }
 
-        $sub_title = 'Note - ' . $parcelLog->note;
+        $sub_title = $parcelLog->note ?? 'N/A';
         $status_name  = "Hold Parcel Received";
-        $sub_title = 'Note - ' . $parcelLog->note;
+        $sub_title = $parcelLog->note ?? 'N/A';
         $class        = "success";
     } elseif ($status == 25 && $parcelLog->delivery_type == 4) {
-        $sub_title = 'Note - ' . $parcelLog->note;
+        $sub_title = $parcelLog->note ?? 'N/A';
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->delivery_branch) {
-            $to_user    = !empty($parcelLog->delivery_branch) ? "Delivery Branch : " . $parcelLog?->delivery_branch?->name : "";
+            $to_user    = $parcelLog?->delivery_branch?->name ?? "N/A";
         } elseif ($parcelLog->delivery_rider) {
             $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name;
+        } elseif ($parcelLog->pickup_branch) {
+            $to_user    = "Pickup Branch : " . $parcelLog?->pickup_branch?->name;
         }
 
         $x = $parcelLog->parcel;
@@ -2026,7 +2038,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
             $status_name  = "Partial Returned";
         }
     } else if ($status == 100) {
-        $status_name  = $parcelLog->note;
+        $status_name  = $parcelLog->note ?? 'N/A';
         $to_user  = $parcelLog->updated_by;
     } elseif ($status == 0 && isset($parcel) && $parcel?->is_push) {
         $status_name  = "In Review API";

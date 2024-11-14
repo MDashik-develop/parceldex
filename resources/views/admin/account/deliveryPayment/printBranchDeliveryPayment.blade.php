@@ -237,7 +237,7 @@
                                     {{-- <td class="text-center"> {{ $parcel_delivery_payment_detail->parcel->merchant->company_name }} </td> --}}
                                     {{-- <td class="text-center"> {{ $parcel_delivery_payment_detail->parcel->merchant->contact_number }} </td> --}}
                                     <td class="text-center">
-                                        {{ $parcel_delivery_payment_detail->parcel->merchant->address }} </td>
+                                        {{ $parcel_delivery_payment_detail->parcel->merchant->company_name }} </td>
                                     <td class="text-center">
                                         {{ $parcel_delivery_payment_detail->parcel->customer_name }} </td>
                                     <td class="text-center">
@@ -247,7 +247,7 @@
                                         {{ number_format($parcel_delivery_payment_detail->parcel->total_collect_amount, 2) }}
                                     </td>
                                     <td class="text-center">
-                                        {{ number_format($parcel_delivery_payment_detail->parcel->cancel_amount_collection != 0 ? $parcel_delivery_payment_detail->parcel->cancel_amount_collection :  $parcel_delivery_payment_detail->parcel->customer_collect_amount, 2) }}
+                                        {{ number_format($parcel_delivery_payment_detail->parcel->cancel_amount_collection != 0 ? $parcel_delivery_payment_detail->parcel->cancel_amount_collection : $parcel_delivery_payment_detail->parcel->customer_collect_amount, 2) }}
                                     </td>
                                 </tr>
                             @endforeach

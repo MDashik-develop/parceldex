@@ -269,9 +269,18 @@ class MerchantDeliveryPaymentController extends Controller
 
                         Mail::to($merchant_user->email)->send(new MerchantPaymentInvoice($merchant_user, $parcelMerchantDeliveryPayment->total_payment_amount, $merchant_payment_invoice, $pdfPath));
 
-                        $message = "Dear valued Merchant, A Payment invoice " . $merchant_payment_invoice . " has been generated on " . now()->format('m-d-Y') . " and invoiced amount Tk " . number_format($parcelMerchantDeliveryPayment->total_payment_amount, 2) . " has been paid. parceldex Ltd.";
+                        //                         PAYMENT ON THE WAY:
+                        // Invoice ID: PAY10003 (parcel_merchant_delivery_payment_id)
+                        // Amount: 1,00,000 Tk. (paid_amount)
+                        // Stay tuned to get 5 days payment service from Your trusted partner in deliveries !!
 
-                        $this->send_sms($merchant_user->contact_number, $message);
+
+
+                        // $message = "Dear valued Merchant, A Payment invoice " . $merchant_payment_invoice . " has been generated on " . now()->format('m-d-Y') . " and invoiced amount Tk " . number_format($parcelMerchantDeliveryPayment->total_payment_amount, 2) . " has been paid. parceldex Ltd.";
+
+                        $message = "PAYMENT ON THE WAY: \nInvoice ID: " . $merchant_payment_invoice . " \nAmount: " . number_format($parcelMerchantDeliveryPayment->total_payment_amount) . " \n-Stay tuned to get 5 days payment service from Your trusted partner in deliveries !!";
+
+                        $this->send_reg_sms($merchant_user->contact_number, $message);
 
                         $response = ['success' => 'Payment Confirmed Successfully'];
                     } else {

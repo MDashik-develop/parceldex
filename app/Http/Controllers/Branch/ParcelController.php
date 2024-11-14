@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers\Branch;
 
-use App\Exports\BranchParcelExport;
-use App\Http\Controllers\Controller;
+use DataTables;
+use Carbon\Carbon;
 use App\Models\Area;
+use App\Models\Rider;
 use App\Models\Branch;
+use App\Models\Parcel;
 use App\Models\District;
 use App\Models\ItemType;
 use App\Models\Merchant;
-use App\Models\Parcel;
-use App\Models\ParcelDeliveryPaymentDetail;
 use App\Models\ParcelLog;
-use App\Models\ParcelMerchantDeliveryPaymentDetail;
-use App\Models\Rider;
 use App\Models\ServiceType;
-use App\Models\WeightPackage;
-use DataTables;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Models\WeightPackage;
+use App\Exports\BranchParcelExport;
+use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Validator;
+use App\Models\ParcelDeliveryPaymentDetail;
+use App\Models\ParcelMerchantDeliveryPaymentDetail;
 
 class ParcelController extends Controller
 {
@@ -227,18 +228,22 @@ class ParcelController extends Controller
             ->editColumn('parcel_status', function ($data) {
                 $date_time = '---';
 
-                if ($data->status >= 25) {
+                // if ($data->status >= 25) {
 
-                    if ($data->delivery_type == 3) {
-                        $date_time = date("Y-m-d", strtotime($data->reschedule_parcel_date));
-                    } elseif ($data->delivery_type == 1 || $data->delivery_type == 2) {
-                        $date_time = date("Y-m-d", strtotime($data->delivery_date));
-                    }
-                } elseif ($data->status == 11 || $data->status == 13 || $data->status == 15) {
-                    $date_time = date("Y-m-d", strtotime($data->pickup_branch_date));
-                } else {
-                    $date_time = $data->date;
-                }
+                //     if ($data->delivery_type == 3) {
+                //         $date_time = date("Y-m-d", strtotime($data->reschedule_parcel_date));
+                //     } elseif ($data->delivery_type == 1 || $data->delivery_type == 2) {
+                //         $date_time = date("Y-m-d", strtotime($data->delivery_date));
+                //     }
+                // } elseif ($data->status == 11 || $data->status == 13 || $data->status == 15) {
+                //     $date_time = date("Y-m-d", strtotime($data->pickup_branch_date));
+                // } else {
+                //     $date_time = $data->date;
+                // }
+
+                $xLog = $data->parcel_logs->sortByDesc('id')->first();
+
+                $date_time = Carbon::parse($xLog?->date . ' ' . $xLog?->time)->format('d-m-Y h:i A');
 
                 $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name  = $parcelStatus['status_name'];
@@ -254,7 +259,7 @@ class ParcelController extends Controller
                 border-radius: 15px;
                 color: #fff;">' . '48 hours exceed & <br>  delivery not complete'
 
-                    . '</p>' : '<span class="text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong></strong>' . $date_time . '</p>';
+                    . '</p>' : '<span class="text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong></strong>' . $date_time . '</p><p><strong>Attempt: </strong>' . $data->number_of_attempt . '</p>';
 
                 //Status color red for message '72 hours exceed & <br>  delivery not complete'
             })
@@ -285,13 +290,15 @@ class ParcelController extends Controller
                 $parcelStatus = returnPaymentStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name  = $parcelStatus['status_name'];
                 $class        = $parcelStatus['class'];
-                return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
+                $time = isset($parcelStatus['time']) ?  $parcelStatus['time'] : '';
+                return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
             ->editColumn('return_status', function ($data) {
                 $parcelStatus = returnReturnStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name  = $parcelStatus['status_name'];
                 $class        = $parcelStatus['class'];
-                return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
+                $time        = isset($parcelStatus['time']) ?  $parcelStatus['time'] : '';
+                return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
             ->addColumn('action', function ($data) {
                 $button = '<a href="' . route('parcel.printParcel', $data->id) . '" class="btn btn-success btn-sm" title="Print Pickup Parcel" target="_blank">
@@ -308,6 +315,9 @@ class ParcelController extends Controller
                 }
 
                 return $button;
+            })
+            ->addColumn('print', function ($data) {
+                return '<input type="checkbox" class="print-check" id="" value="' . $data->id . '"/>';
             })
             ->addColumn('parcel_info', function ($data) {
                 $abc = is_null($data->parcel_otp) ? 'N/A' : $data->parcel_otp;
@@ -414,6 +424,7 @@ class ParcelController extends Controller
                 'customer_info',
                 'amount',
                 'remarks',
+                'print',
             ])
             ->make(true);
     }
@@ -594,7 +605,7 @@ class ParcelController extends Controller
                 $date_time   = $data->date . " " . date("h:i A", strtotime($data->created_at));
                 $parcel_info = '<p><strong>Merchant Order ID: </strong>' . $data->merchant_order_id . '</p>';
                 // $parcel_info .= '<p><strong>Parcel OTP: </strong>' . $data->parcel_code . '</p>';
-                $parcel_info .= '<p><strong>OTP: </strong>' . $abc . '</p>';
+                // $parcel_info .= '<p><strong>OTP: </strong>' . $abc . '</p>';
                 $parcel_info .= '<p><strong>Service Type: </strong>' . optional($data->service_type)->title . '</p>';
                 $parcel_info .= '<p><strong>Item Type: </strong>' . optional($data->item_type)->title . '</p>';
                 $parcel_info .= '</span> <p><strong>Created: </strong>' . $date_time . '</p>';
@@ -667,6 +678,16 @@ class ParcelController extends Controller
                 'remarks',
             ])
             ->make(true);
+    }
+
+    public function printParcelMultiple(Request $request)
+    {
+        //        dd($request->all());
+        $parcel_ids = $request->input('parcel_ids');
+        $parcels = Parcel::whereIn("id", $parcel_ids)->with('merchant', 'weight_package', 'pickup_branch', 'pickup_rider', 'delivery_branch', 'delivery_rider')->get();
+        //        dd($parcels);
+
+        return view('merchant.parcel.printParcelMultiple', compact('parcels'));
     }
 
     public function printAllParcelList(Request $request)

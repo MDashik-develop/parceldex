@@ -29,7 +29,6 @@ class PickupParcelController extends Controller
             'weight_package:id,name'
         ])
             ->whereRaw('(pickup_rider_id = ? and status in (6, 8) )', [$rider_id])
-            ->orderBy('id', 'desc')
             ->select(
                 'id',
                 'parcel_invoice',
@@ -43,7 +42,7 @@ class PickupParcelController extends Controller
                 'merchant_id',
                 'status'
             )
-            ->get();
+            ->get()->sortBy('merchant.company_name');
 
         $new_parcels = [];
 
@@ -189,7 +188,7 @@ class PickupParcelController extends Controller
     }
     public function getAllPickupParcelList(Request $request)
     {
-        dd(1223121);
+        //dd(1223121);
         $rider_id = auth()->guard('rider_api')->user()->id;
 
         $parcels = Parcel::with([
@@ -200,7 +199,6 @@ class PickupParcelController extends Controller
             'weight_package:id,name'
         ])
             ->whereRaw('(pickup_rider_id = ? )', [$rider_id])
-            ->orderBy('id', 'desc')
             ->select(
                 'id',
                 'parcel_invoice',
@@ -214,7 +212,7 @@ class PickupParcelController extends Controller
                 'merchant_id',
                 'status'
             )
-            ->get();
+            ->get()->sortBy('merchant.company_name');
 
         $new_parcels = [];
 

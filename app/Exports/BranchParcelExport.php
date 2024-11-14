@@ -159,6 +159,7 @@ class BranchParcelExport implements
                 $payment_status_name = $parcelPaymentStatus['status_name'];
                 $parcelReturnStatus = returnReturnStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
                 $return_status_name = $parcelReturnStatus['status_name'];
+                $return_status_time = $parcelReturnStatus['time'];
                 $logs_note = "";
                 if ($parcel->parcel_logs) {
                     foreach ($parcel->parcel_logs as $parcel_log) {
@@ -169,7 +170,7 @@ class BranchParcelExport implements
                     }
                 }
 
-                $a = ParcelMerchantDeliveryPaymentDetail::where('parcel_id', $parcel->id)->first();
+                $a = ParcelMerchantDeliveryPaymentDetail::where('parcel_id', $parcel->id)->where('status', 2)->first();
 
                 $data_parcel_array[] = (object)[
                     'serial' => $key + 1,
@@ -196,9 +197,11 @@ class BranchParcelExport implements
                     'logs_note' => $logs_note,
                     'payment_status_name' => $payment_status_name,
                     'return_status_name' => $return_status_name,
+                    'return_status_time' => $return_status_time,
                     'picked_up_date' => Carbon::parse($parcel->parcel_logs->where('status', 11)->first()?->date . ' ' . $parcel->parcel_logs->where('status', 11)->first()?->time)->format('d-m-Y h:i A'),
                     'service_area' => $parcel?->district?->service_area?->name ?? 'N/A',
                     'payment_invoice_id' => $a?->parcel_merchant_delivery_payment?->merchant_payment_invoice ?? '',
+                    'number_of_attempt' => $parcel->number_of_attempt,
                 ];
             }
         }
@@ -214,6 +217,7 @@ class BranchParcelExport implements
             $row->parcel_invoice,
             $row->merchant_order_id,
             $row->date,
+            $row->number_of_attempt,
             $row->status,
             $row->parcel_date,
             $row->picked_up_date,
@@ -237,6 +241,7 @@ class BranchParcelExport implements
             $row->payment_status_name,
             $row->payment_invoice_id,
             $row->return_status_name,
+            $row->return_status_time,
         ];
     }
 
@@ -247,6 +252,7 @@ class BranchParcelExport implements
             'Parcel Invoice',
             'Merchant Order ID',
             'Parcel Date',
+            'Attempt',
             'Status',
             'Last Update Date',
             'Picked Up Date',
@@ -270,6 +276,7 @@ class BranchParcelExport implements
             'Payment Status Name',
             'Payment Invoice ID',
             'Return Status Name',
+            'Return Status Date & Time',
         ];
     }
 

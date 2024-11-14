@@ -337,7 +337,7 @@ class DeliveryRiderRunParcelController extends Controller
 
                                 $message = "Your parcel ID-" . $parcel->parcel_invoice . " from " . ucwords($parcel->merchant->company_name) . " is on the way to you. COD- " . $parcel->total_collect_amount . " TK. Rider - " . ucwords($parcel->delivery_rider->name) . ", " . $parcel->delivery_rider->contact_number . ". parceldex Ltd.";
 
-                                $this->send_sms($parcel->customer_contact_number, $message);
+                                //$this->send_sms($parcel->customer_contact_number, $message);
                             }
 
                             $merchant_user = Merchant::where('id', $parcel->merchant_id)->first();
@@ -1126,7 +1126,7 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();
-                                    $new_parcel->parent_delivery_type = $parcel->delivery_type;
+                                    $new_parcel->parent_delivery_type = 1;
                                     $new_parcel->save();
 
                                     $parcel->merchant_service_area_return_charge = 0;
@@ -1188,7 +1188,7 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->suborder = $parcel->parcel_invoice;
                                     $new_parcel->delivery_type = 4;
                                     $new_parcel->status = 25;
-                                    $new_parcel->total_collect_amount = 0;
+                                    $new_parcel->total_collect_amount = $confirm_amount_to_be_collect - $confirm_customer_collect_amount;
                                     $new_parcel->delivery_charge = 0;
                                     $new_parcel->merchant_service_area_charge = 0;
                                     $new_parcel->cod_percent = 0;
@@ -1200,7 +1200,7 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();
-                                    $new_parcel->parent_delivery_type = $parcel->delivery_type;
+                                    $new_parcel->parent_delivery_type = 2;
                                     $new_parcel->save();
 
                                     $parcel->merchant_service_area_return_charge = 0;
@@ -1235,7 +1235,7 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();
-                                    $new_parcel->parent_delivery_type = $parcel->delivery_type;
+                                    $new_parcel->parent_delivery_type = 2;
                                     $new_parcel->save();
 
                                     $parcel->merchant_service_area_return_charge = 0;

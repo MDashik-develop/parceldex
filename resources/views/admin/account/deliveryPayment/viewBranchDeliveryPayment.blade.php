@@ -209,7 +209,7 @@
                                             {{-- <td class="text-center"> {{ $parcel_delivery_payment_detail->parcel->merchant->company_name }} </td> --}}
                                             {{-- <td class="text-center"> {{ $parcel_delivery_payment_detail->parcel->merchant->contact_number }} </td> --}}
                                             <td class="text-center">
-                                                {{ $parcel_delivery_payment_detail->parcel->merchant->address }} </td>
+                                                {{ $parcel_delivery_payment_detail->parcel->merchant->company_name }} </td>
                                             <td class="text-center">
                                                 {{ $parcel_delivery_payment_detail->parcel->customer_name }} </td>
                                             <td class="text-center">

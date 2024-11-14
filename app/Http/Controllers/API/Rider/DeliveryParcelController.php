@@ -26,7 +26,8 @@ class DeliveryParcelController extends Controller
             'upazila:id,name',
             'area:id,name',
             'merchant:id,company_name,address,contact_number',
-            'weight_package:id,name', 'parcel_logs:note'
+            'weight_package:id,name',
+            'parcel_logs:note'
         ])
             ->whereRaw('(delivery_rider_id = ? and status in (17, 19) )', [$rider_id])
             ->orderBy('id', 'desc')
@@ -450,6 +451,17 @@ class DeliveryParcelController extends Controller
                     'delivery_type' => $parcel->delivery_type,
                 ]);
 
+                // ON THE WAY:
+                // SAREEZ BY SAKYLA (Company_Name)
+                // Parcel ID: 4580 (parcel_invoice)
+                // COD: 1,00,000 Tk. (total_collect_amount)
+                // Delivery Hero: 01711057407 (contact_number)
+                // -Parceldex Courier
+
+                $message = "ON THE WAY:\n" . ucwords($parcel->merchant->company_name) . " \n Parcel ID: " . $parcel->parcel_invoice . " \nCOD: " . number_format($parcel->total_collect_amount) . " Tk. \nDelivery Hero:  " . $parcel->delivery_rider->contact_number . "\n-Parceldex Courier";
+
+                $this->send_sms($parcel->customer_contact_number, $message);
+
                 \DB::commit();
                 return response()->json([
                     'success' => 200,
@@ -657,14 +669,25 @@ class DeliveryParcelController extends Controller
 
         $parcel = Parcel::where('id', $request->get('parcel_id'))
             ->where('delivery_rider_id', $rider_id)->first();
-        
+
         $parcel->parcel_otp = random_int(100000, 999999);
         $parcel->parcel_otp_expired_at = now()->addMinutes(30)->toDateTimeString();
         $parcel->save();
 
         try {
             if ($request->send_to == 'customer') {
-                $message = "Provide this OTP: " . $parcel->parcel_otp . " to rider if you received parcel (" . $parcel->parcel_invoice . "). This OTP will be valid for 30 minutes. Parceldex Ltd.";
+                // $message = "Provide this OTP: " . $parcel->parcel_otp . " to rider if you received parcel (" . $parcel->parcel_invoice . "). This OTP will be valid for 30 minutes. Parceldex Ltd.";
+
+                $message = "PAID PARCEL DELIVERY:  \n" . ucwords($parcel->merchant->company_name) . " \nParcel ID: " . $parcel->parcel_invoice . " \nOTP: " . $parcel->parcel_otp . " \nValid for 30 Min \nDelivery Hero:  " . $parcel->delivery_rider->contact_number . " \n-Parceldex Courier";
+
+                //                 PAID PARCEL DELIVERY:
+                // SAREEZ BY SAKYLA (Company_Name)
+                // Parcel ID: 1234567891011 (parcel_invoice)
+                // OTP: 1234
+                // Valid for 30 Min
+                // Delivery Hero: 01711057407 (contact_number)
+                // -Parceldex Courier
+
 
                 $number = $parcel->customer_contact_number;
 
@@ -685,8 +708,22 @@ class DeliveryParcelController extends Controller
                     ], 401);
                 }
             } elseif ($request->send_to == 'merchant') {
-                $message = "Provide this OTP: " . $parcel->parcel_otp . " to rider if you approve partial ID (" . $parcel->parcel_invoice . "). This OTP will be valid for 30 minutes. Parceldex Ltd.";
-                
+
+                //                 PARTIAL DELIVERY:
+                // Parcel ID: 1234567891011 (parcel_invoice)
+                // Actual COD: 1,00,000 Tk. (total_collect_amount)
+                // Partial COD: 50,000 tk. (customer_collect_amount)
+                // Approval OTP: 1234
+                // Valid for 30 Min
+                // -Parceldex Courier
+
+                // $message = "PARTIAL DELIVERY:  \n   " . ucwords($parcel->merchant->company_name) . " \n Parcel ID: " . $parcel->parcel_invoice . " \n COD: " . number_format($parcel->total_collect_amount) . " Tk. \n  Delivery Hero:  " . $parcel->delivery_rider->contact_number . " \n- Parceldex Courier";
+
+
+                // $message = "Provide this OTP: " . $parcel->parcel_otp . " to rider if you approve partial ID (" . $parcel->parcel_invoice . "). This OTP will be valid for 30 minutes. Parceldex Ltd.";
+
+                $message = "PARTIAL DELIVERY:  \nParcel ID: " . $parcel->parcel_invoice . " \nActual COD: " . number_format($parcel->total_collect_amount) . " Tk. \nPartial COD: " . number_format($parcel->customer_collect_amount) . " Tk. \nApproval OTP: " . $parcel->parcel_otp . " \nValid for 30 Min \n-Parceldex Courier";
+
                 if ($this->send_sms($parcel->merchant->contact_number, $message)) {
                     return response()->json([
                         'success' => 200,
@@ -848,6 +885,17 @@ class DeliveryParcelController extends Controller
                 if ($delivery_type == '21') {
                     $parcel_update_data['delivery_type'] = 1;
                     $parcel_update_data['customer_collect_amount'] = $customer_collect_amount;
+
+                    // SUCCESSFULLY DELIVERED: 
+                    // SAREEZ BY SAKYLA (Company_Name)
+                    // Parcel ID: 1234567891011 (parcel_invoice)
+                    // Collected COD: 1,00,000 Tk. (customer_collect_amount)
+                    // -Thank you for using-Parceldex Courier
+
+                    $message = "SUCCESSFULLY DELIVERED:\n"
+                        . ucwords($parcel->merchant->company_name) . "\nParcel ID: " . $parcel->parcel_invoice . " \nCollected COD: " . number_format($parcel->customer_collect_amount) . " \n-Thank you for using-Parceldex Courier";
+
+                    $this->send_sms($parcel->merchant->contact_number, $message);
                 } // Delivery Parcel Partial Delivery
                 elseif ($delivery_type == '22') {
                     $parcel_update_data['delivery_type'] = 2;

@@ -189,6 +189,18 @@
                                             <th class="text-center"> Payment Status</th>
                                             <th class="text-center"> Return Status</th>
                                             <th class="text-center"> Action</th>
+                                            <th class="text-center" width="10%">
+                                                <button type="button" id="printMultiple" class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-print"></i>
+                                                </button>
+                                                <button type="button" id="checkAll" class="btn btn-success btn-sm">
+                                                    {{-- <i class="fas fa-check"></i> --}}
+                                                    <i class="fas fa-square" id="checkAllIcon"></i>
+                                                </button>
+
+                                                </form>
+
+                                            </th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -228,10 +240,10 @@
         }
 
         /*
-            div.container {
-                width: 80%;
-            }
-            */
+                            div.container {
+                                width: 80%;
+                            }
+                            */
     </style>
     <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
@@ -327,7 +339,15 @@
                             orderable: false,
                             searchable: false,
                             class: "text-center"
+                        },
+                        {
+                            data: 'print',
+                            name: 'print',
+                            orderable: false,
+                            searchable: false,
+                            class: "text-center"
                         }
+
                     ],
                     order: [
                         [1, 'DESC']
@@ -364,6 +384,80 @@
                 $('#yajraDatatable').DataTable().destroy();
                 load_data(parcel_status, parcel_invoice, merchant_order_id, customer_contact_number,
                     merchant_id, from_date, to_date);
+            });
+
+            $(document).on('click', '#checkAll', function() {
+                var checkboxes = document.getElementsByClassName('print-check');
+                var allChecked = true;
+
+                // Check if all checkboxes are currently checked
+                for (var checkbox of checkboxes) {
+                    if (!$(checkbox).prop('checked')) {
+                        allChecked = false;
+                        break;
+                    }
+                }
+
+                // Toggle checkboxes
+                for (var checkbox of checkboxes) {
+                    $(checkbox).prop('checked', !allChecked);
+                }
+
+                // Toggle icon
+                var icon = $('#checkAllIcon');
+                if (allChecked) {
+                    icon.removeClass('fa-check-square').addClass('fa-square');
+                } else {
+                    icon.removeClass('fa-square').addClass('fa-check-square');
+                }
+            });
+
+            // $(document).on('click', '#checkAll', function () {
+            //     var checkboxes = document.getElementsByClassName('print-check');
+            //     for (var checkbox of checkboxes) {
+            //         $(checkbox).prop('checked', true);
+            //     }
+            // });
+
+            $(document).on('click', '#printMultiple', function() {
+                var parcel_ids = $(".print-check:checkbox:checked").map(function() {
+                    return $(this).val();
+                }).get();
+                console.log(parcel_ids);
+                /*
+                var url = '{!! route('merchant.parcel.printParcelMultiple') !!}';
+                var data =  {
+                    parcel_ids: parcel_ids,
+                };
+
+                $.post(url, function (parcel_ids) {
+                    var w = window.open('about:blank');
+                    w.document.open();
+                    w.document.write(data);
+                    w.document.close();
+                });*/
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{!! route('branch.parcel.printParcelMultiple') !!}',
+                    data: {
+                        parcel_ids: parcel_ids,
+                    },
+                    dataType: 'html',
+                    success: function(html) {
+                        console.log(html)
+                        w = window.open(window.location.href, "_blank");
+                        w.document.open();
+                        w.document.write(html);
+                        // w.document.close();
+                        // w.window.print();
+                        // w.window.close();
+                    },
+                    error: function(data) {
+                        console.log('Error:', data);
+                    }
+                });
+
             });
 
             $('#filterForm').submit(function() {

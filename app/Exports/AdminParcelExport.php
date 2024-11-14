@@ -146,6 +146,7 @@ class AdminParcelExport implements
                 $payment_status_name = $parcelPaymentStatus['status_name'];
                 $parcelReturnStatus = returnReturnStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
                 $return_status_name = $parcelReturnStatus['status_name'];
+                $return_status_time = $parcelReturnStatus['time'];
 
                 $logs_note = "";
                 if ($parcel->parcel_logs) {
@@ -186,7 +187,7 @@ class AdminParcelExport implements
                     'weight_charge' => $parcel->weight_package_charge != 0 ? $parcel->weight_package_charge : '0',
                     'cod_charge' => $parcel->cod_charge != 0 ? $parcel->cod_charge : '0',
                     'delivery_charge' => $parcel->delivery_charge != 0 ? $parcel->delivery_charge : '0',
-                    'return_charge' => $parcel->return_charge != 0 ? $parcel->return_charge : '0',
+                    'return_charge' => $parcel->merchant_service_area_return_charge ?? '0',
                     'total_charge' => $totalCharge != 0 ? $totalCharge : '0',
                     'parcel_note' => $parcel->parcel_note,
                     'logs_note' => $logs_note,
@@ -196,8 +197,10 @@ class AdminParcelExport implements
                     //'payment_invoice_id' => $parcel?->merchantDeliveryPayment?->merchant_payment_invoice ?? '',
                     'payment_invoice_id' => $a?->parcel_merchant_delivery_payment?->merchant_payment_invoice ?? '',
                     'return_status_name' => $return_status_name,
+                    'return_status_time' => $return_status_time,
                     'picked_up_date' => Carbon::parse($parcel->parcel_logs->where('status', 11)->first()?->date . ' ' . $parcel->parcel_logs->where('status', 11)->first()?->time)->format('d-m-Y h:i A'),
                     'service_area' => $parcel?->district?->service_area?->name ?? 'N/A',
+                    'number_of_attempt' => $parcel->number_of_attempt,
                 ];
             }
         }
@@ -213,6 +216,7 @@ class AdminParcelExport implements
             $row->parcel_invoice,
             $row->merchant_order_id,
             $row->date,
+            $row->number_of_attempt,
             $row->status,
             $row->parcel_date,
             $row->picked_up_date,
@@ -243,6 +247,7 @@ class AdminParcelExport implements
             $row->payment_date,
             $row->payment_invoice_id,
             $row->return_status_name,
+            $row->return_status_time,
 
         ];
     }
@@ -254,6 +259,7 @@ class AdminParcelExport implements
             'Parcel Invoice',
             'Merchant Order ID',
             'Parcel Created Date & Time',
+            'Attempt',
             'Status',
             'Last Update Date & Time',
             'Picked Up Date & Time',
@@ -284,6 +290,7 @@ class AdminParcelExport implements
             'Payment Date',
             'Payment Invoice Id',
             'Return Status Name',
+            'Return Status Date & Time',
         ];
     }
 

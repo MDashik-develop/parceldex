@@ -49,7 +49,7 @@
                         $parcel?->status,
                         $parcel?->delivery_type,
                         $parcel?->payment_type,
-                        $parcel
+                        $parcel,
                     );
                 @endphp
                 {{ $parcelStatus['status_name'] }} - {{ $date_time }}
@@ -135,15 +135,17 @@
             <div class="customer-details">
                 @if ($parcel?->pickup_rider)
                     <h3>Pickup Rider Details</h3>
-                    <p>Pickup Rider - {{ $parcel?->pickup_rider?->name }}</p>
+                    <p>Pickup Rider - {{ $parcel?->pickup_rider?->name }} - {{ $parcel?->delivery_rider?->r_id }}</p>
                 @endif
 
                 @if ($parcel?->delivery_rider)
                     <h3>Delivery Rider Details</h3>
                     @if ($parcel->status > 24)
-                        <p>Delivery Rider - {{ $parcel?->delivery_rider?->name }}</p>
+                        <p>Delivery Rider - {{ $parcel?->delivery_rider?->name }} -
+                            {{ $parcel?->delivery_rider?->r_id }}</p>
                     @else
                         <p>Delivery Rider - {{ $parcel?->delivery_rider?->name }} -
+                            {{ $parcel?->delivery_rider?->r_id }} -
                             {{ $parcel?->delivery_rider?->contact_number }}</p>
                     @endif
                 @endif
@@ -191,7 +193,8 @@
                     <div class="log-item">
                         <span class="log-time">{{ \Carbon\Carbon::parse($item->time)->format('h:i A') }}</span>
                         {{ $status }}<br>
-                        <span class="log-details">{{ $sub_title }} By - {{ $to_user }}</span>
+                        <span class="log-details">Note: {{ empty($sub_title) ? 'N/A' : $sub_title }} <br> By -
+                            {{ $to_user }}</span>
                     </div>
                 @endforeach
             </div>

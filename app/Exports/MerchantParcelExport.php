@@ -183,9 +183,9 @@ class MerchantParcelExport implements
                     }
                 }
 
-                $totalCharge = $parcel->weight_package_charge + $parcel->cod_charge + $parcel->delivery_charge + $parcel->return_charge;
+                $totalCharge = $parcel->weight_package_charge + $parcel->cod_charge + $parcel->delivery_charge + $parcel->merchant_service_area_return_charge;
 
-                $a = ParcelMerchantDeliveryPaymentDetail::where('parcel_id', $parcel->id)->first();
+                $a = ParcelMerchantDeliveryPaymentDetail::where('parcel_id', $parcel->id)->where('status', 2)->first();
 
                 $data_parcel_array[] = (object)[
                     'serial' => $key + 1,
@@ -208,15 +208,17 @@ class MerchantParcelExport implements
                     'weight_charge' => $parcel->weight_package_charge != 0 ? $parcel->weight_package_charge : '0',
                     'cod_charge' => $parcel->cod_charge != 0 ? $parcel->cod_charge : '0',
                     'delivery_charge' => $parcel->delivery_charge != 0 ? $parcel->delivery_charge : '0',
-                    'return_charge' => $parcel->return_charge != 0 ? $parcel->return_charge : '0',
+                    'return_charge' => $parcel->merchant_service_area_return_charge != 0 ? $parcel->merchant_service_area_return_charge : '0',
                     'total_charge' => $totalCharge != 0 ? $totalCharge : '0',
                     'parcel_note' => $parcel->parcel_note,
                     'logs_note' => $logs_note,
                     'payment_status_name' => $payment_status_name,
                     'payment_invoice_id' => $a?->parcel_merchant_delivery_payment?->merchant_payment_invoice ?? '',
                     'return_status_name' => $return_status_name,
+                    'payment_status_time' => $payment_status_time,
                     'picked_up_date' => Carbon::parse($parcel->parcel_logs->where('status', 11)->first()?->date . ' ' . $parcel->parcel_logs->where('status', 11)->first()?->time)->format('d-m-Y h:i A'),
                     'service_area' => $parcel?->district?->service_area?->name ?? 'N/A',
+                    'number_of_attempt' => $parcel->number_of_attempt,
                 ];
             }
         }
@@ -232,6 +234,7 @@ class MerchantParcelExport implements
             $row->parcel_invoice,
             $row->merchant_order_id,
             $row->date,
+            $row->number_of_attempt,
             $row->status,
             $row->parcel_date,
             $row->picked_up_date,
@@ -257,6 +260,7 @@ class MerchantParcelExport implements
             $row->payment_status_name,
             $row->payment_invoice_id,
             $row->return_status_name,
+            $row->payment_status_time,
         ];
     }
 
@@ -267,6 +271,7 @@ class MerchantParcelExport implements
             'Parcel Invoice',
             'Merchant Order ID',
             'Parcel Date & Time',
+            'Attempt',
             'Status',
             'Last Update Date & Time',
             'Picked Up Date & Time',
@@ -293,6 +298,7 @@ class MerchantParcelExport implements
             'Payment Status Name',
             'Payment Invoice Id',
             'Return Status Name',
+            'Return Status Date & Time',
         ];
     }
 

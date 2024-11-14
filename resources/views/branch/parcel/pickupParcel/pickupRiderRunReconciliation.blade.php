@@ -146,7 +146,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($riderRun->rider_run_details as $rider_run_detail)
+                                        @foreach ($riderRun->rider_run_details->sortBy('parcel.merchant.company_name') as $rider_run_detail)
                                             <tr>
                                                 <td class="text-center"> {{ $loop->iteration }} </td>
                                                 <td class="text-center">
@@ -155,12 +155,9 @@
                                                     @php
                                                         $parcelStatus = returnParcelStatusNameForMerchant(
                                                             $rider_run_detail->parcel->status,
-                                                            $rider_run_detail->parcel
-                                                                ->delivery_type,
-                                                            $rider_run_detail->parcel
-                                                                ->payment_type,
-                                                            $rider_run_detail->parcel
-                                                                ->parcel_invoice,
+                                                            $rider_run_detail->parcel->delivery_type,
+                                                            $rider_run_detail->parcel->payment_type,
+                                                            $rider_run_detail->parcel->parcel_invoice,
                                                         );
 
                                                     @endphp
@@ -175,8 +172,9 @@
                                                 <td class="text-center">
                                                     {{ $rider_run_detail->parcel->merchant->company_name }} </td>
                                                 <td class="text-center">
-                                                        {{ $rider_run_detail->parcel->merchant?->area?->name }} </td>
+                                                    {{ $rider_run_detail->parcel->merchant?->area?->name }} </td>
                                                 <td class="text-center"> {{ $rider_run_detail->parcel->customer_name }}
+                                                    <br> {{ $rider_run_detail->parcel->customer_contact_number }}
                                                 </td>
                                                 <td class="text-center">
                                                     <select name="status[]"

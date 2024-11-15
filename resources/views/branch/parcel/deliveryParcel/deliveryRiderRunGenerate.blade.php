@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Generate Delivery Rider Run </h1>
+                    <h1 class="m-0 text-dark">Generate Delivery Rider Run</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -192,7 +192,9 @@
                                 <tbody id="show_parcel">
                                     @if ($parcels->count() > 0)
                                         @foreach ($parcels as $parcel)
-                                            <tr style="background-color: #f4f4f4;">
+                                            <tr style="background-color: #f4f4f4;" class="parclTR"
+                                            data-parcel_invoice="{{ $parcel->parcel_invoice }}"
+                                            data-parcel_id="{{ $parcel->id }}">
                                                 <td class="text-center">
                                                     <input type="checkbox" id="checkItem" class="parcelId"
                                                         value="{{ $parcel->id }}">
@@ -320,6 +322,14 @@
                         $("#show_rider_run_parcel").html(response);
                         $("#div_rider_run_parcel").show();
                         $('input:checkbox').prop('checked', false);
+                        parcel_invoices.forEach(element => {
+                            $('.parclTR').each(function() {
+                                if ($(this).data('parcel_id') == element) {
+                                    $(this)
+                                        .hide(); // Hide the row if the data attribute matches
+                                }
+                            });
+                        });
                         return false;
                     }
                 });
@@ -353,6 +363,12 @@
                             $("#show_rider_run_parcel").html(response);
                             $("#div_rider_run_parcel").show();
                             $("#parcel_invoice").val("");
+                            $('.parclTR').each(function() {
+                                if ($(this).data('parcel_invoice') == invoice_id) {
+                                    $(this)
+                                        .hide(); // Hide the row if the data attribute matches
+                                }
+                            });
                             return false;
                         }
                     });
@@ -392,6 +408,11 @@
                 },
                 success: function(response) {
                     $('#show_rider_run_parcel').html(response);
+                    $('.parclTR').each(function() {
+                        if ($(this).data('parcel_id') == itemId) {
+                            $(this).show(); // Hide the row if the data attribute matches
+                        }
+                    });
                 }
             });
         }

@@ -127,7 +127,7 @@
                                 <div class="form-group">
                                     <input type="text" name="merchant_order_id" id="merchant_order_id"
                                         class="form-control" placeholder="Enter Merchant Order ID"
-                                        style="font-size: 20px; box-shadow: 0 0 5px rgb(62, 196, 118);
+                                        style="font-size: 20px; box-shadow: 0 0 5px rgb(44, 112, 72);
                                     padding: 3px 0px 3px 3px;
                                     margin: 5px 1px 3px 0px;
                                     border: 1px solid rgb(62, 196, 118);">
@@ -172,7 +172,9 @@
                                     <tbody id="show_parcel">
                                         @if ($parcels->count() > 0)
                                             @foreach ($parcels as $parcel)
-                                                <tr style="background-color: #f4f4f4;">
+                                                <tr style="background-color: #f4f4f4;" class="parclTR"
+                                                    data-parcel_invoice="{{ $parcel->parcel_invoice }}"
+                                                    data-parcel_id="{{ $parcel->id }}">
                                                     <td class="text-center">
                                                         <input type="checkbox" id="checkItem" class="parcelId"
                                                             value="{{ $parcel->id }}">
@@ -249,9 +251,7 @@
             });
 
             $("#parcel_invoice").on("trigger change", function() {
-
                 var invoice_id = $(this).val();
-
                 var parcel_invoices = [invoice_id];
 
                 if (invoice_id != "") {
@@ -271,6 +271,14 @@
                             $("#show_delivery_branch_transfer_parcel").html(response);
                             $("#div_delivery_branch_transfer_parcel").show();
                             $("#parcel_invoice").val("");
+
+                            $('.parclTR').each(function() {
+                                if ($(this).data('parcel_invoice') == invoice_id) {
+                                    $(this)
+                                        .hide(); // Hide the row if the data attribute matches
+                                }
+                            });
+
                             return false;
                         }
                     });
@@ -304,6 +312,15 @@
                         $("#show_delivery_branch_transfer_parcel").html(response);
                         $("#div_delivery_branch_transfer_parcel").show();
                         $('input:checkbox').prop('checked', false);
+                        parcel_invoices.forEach(element => {
+                            $('.parclTR').each(function() {
+                                if ($(this).data('parcel_id') == element) {
+                                    $(this)
+                                        .hide(); // Hide the row if the data attribute matches
+                                }
+                            });
+                        });
+
                         return false;
                     }
                 });
@@ -343,6 +360,11 @@
                 },
                 success: function(response) {
                     $('#show_delivery_branch_transfer_parcel').html(response);
+                    $('.parclTR').each(function() {
+                        if ($(this).data('parcel_id') == itemId) {
+                            $(this).show(); // Hide the row if the data attribute matches
+                        }
+                    });
                 }
             });
         }

@@ -123,7 +123,9 @@ Route::group(['middleware' => 'branch', 'prefix' => 'branch/'], function () {
     Route::get('parcel/deliveryBranchTransferGenerate', [App\Http\Controllers\Branch\DeliveryBranchTransferParcelController::class, 'deliveryBranchTransferGenerate'])->name('parcel.deliveryBranchTransferGenerate');
     Route::post('parcel/returnDeliveryBranchTransferParcel', [App\Http\Controllers\Branch\DeliveryBranchTransferParcelController::class, 'returnDeliveryBranchTransferParcel'])->name('parcel.returnDeliveryBranchTransferParcel');
     Route::post('parcel/deliveryBranchTransferParcelAddCart', [App\Http\Controllers\Branch\DeliveryBranchTransferParcelController::class, 'deliveryBranchTransferParcelAddCart'])->name('parcel.deliveryBranchTransferParcelAddCart');
+    Route::post('parcel/deliveryBranchTransferParcelAddCart2', [App\Http\Controllers\Branch\DeliveryBranchTransferParcelController::class, 'deliveryBranchTransferParcelAddCart2'])->name('parcel.deliveryBranchTransferParcelAddCart2');
     Route::post('parcel/deliveryBranchTransferParcelDeleteCart', [App\Http\Controllers\Branch\DeliveryBranchTransferParcelController::class, 'deliveryBranchTransferParcelDeleteCart'])->name('parcel.deliveryBranchTransferParcelDeleteCart');
+    Route::post('parcel/deliveryBranchTransferParcelDeleteCart2', [App\Http\Controllers\Branch\DeliveryBranchTransferParcelController::class, 'deliveryBranchTransferParcelDeleteCart2'])->name('parcel.deliveryBranchTransferParcelDeleteCart2');
     Route::post('parcel/confirmDeliveryBranchTransferGenerate', [App\Http\Controllers\Branch\DeliveryBranchTransferParcelController::class, 'confirmDeliveryBranchTransferGenerate'])->name('parcel.confirmDeliveryBranchTransferGenerate');
 
     Route::get('parcel/{deliveryBranchTransfer}/editDeliveryBranchTransfer', [App\Http\Controllers\Branch\DeliveryBranchTransferParcelController::class, 'editDeliveryBranchTransfer'])->name('parcel.editDeliveryBranchTransfer');

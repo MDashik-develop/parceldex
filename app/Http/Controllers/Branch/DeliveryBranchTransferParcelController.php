@@ -358,6 +358,83 @@ class DeliveryBranchTransferParcelController extends Controller
         return view('branch.parcel.pickupParcel.deliveryBranchTransferParcelCart', $data);
     }
 
+    public function deliveryBranchTransferParcelAddCart2(Request $request)
+    {
+        $branch_id = auth()->guard('branch')->user()->branch->id . '-' . auth()->guard('branch')->user()->branch->id;
+        //\Cart::session($branch_id)->clear();
+        //return;
+        $branch_user_id = auth()->guard('branch')->user()->id;
+
+        $parcels = Parcel::with(['merchant' => function ($query) {
+            $query->select('id', 'name', 'contact_number', 'address');
+        },])
+            ->whereIn('id', $request->parcel_invoices)
+            ->orWhereIn('parcel_invoice', $request->parcel_invoices)
+            //->whereRaw("((pickup_branch_id = ? AND status in (11, 13, 15)) OR (delivery_branch_id = ? AND status in (14,18,20)) or (delivery_branch_id = ? AND status in (25,28) AND delivery_type in (3,4)))", [$branch_id, $branch_id, $branch_id])
+            ->get();
+
+        if ($parcels->count() > 0) {
+            $cart = \Cart::session($branch_id)->getContent();
+            $cart = $cart->sortBy('id');
+
+
+            foreach ($parcels as $parcel) {
+                $cart_id = $parcel->id;
+                $flag = 0;
+
+                if (count($cart) > 0) {
+                    foreach ($cart as $item) {
+                        if ($cart_id == $item->id) {
+                            $flag++;
+                        }
+                    }
+                }
+                if ($flag == 0) {
+                    \Cart::session($branch_id)->add([
+                        'id' => $cart_id,
+                        'name' => $parcel->merchant->name,
+                        'price' => 1,
+                        'quantity' => 1,
+                        'target' => 'subtotal',
+                        'attributes' => [
+                            'parcel_invoice' => $parcel->parcel_invoice,
+                            'customer_name' => $parcel->customer_name,
+                            'customer_address' => $parcel->customer_address,
+                            'customer_contact_number' => $parcel->customer_contact_number,
+                            'merchant_name' => $parcel->merchant->name,
+                            'merchant_contact_number' => $parcel->merchant->contact_number,
+                            'option' => [],
+                        ],
+                        'associatedModel' => $parcel,
+                    ]);
+                }
+            }
+
+            $error = "";
+
+            $cart = \Cart::session($branch_id)->getContent();
+            $cart = $cart->sortBy('id');
+            $totalItem = \Cart::session($branch_id)->getTotalQuantity();
+            $getTotal = \Cart::session($branch_id)->getTotal();
+        } else {
+            $error = "Parcel Invoice Not Found";
+
+            $cart = \Cart::session($branch_id)->getContent();
+            $cart = $cart->sortBy('id');
+
+            $totalItem = \Cart::session($branch_id)->getTotalQuantity();
+            $getTotal = \Cart::session($branch_id)->getTotal();
+        }
+
+        $data = [
+            'cart' => $cart,
+            'totalItem' => $totalItem,
+            'getTotal' => $getTotal,
+            'error' => $error,
+        ];
+        return view('branch.parcel.pickupParcel.deliveryBranchTransferParcelCart2', $data);
+    }
+
     public function deliveryBranchTransferParcelDeleteCart(Request $request)
     {
 
@@ -376,6 +453,26 @@ class DeliveryBranchTransferParcelController extends Controller
             'error' => "",
         ];
         return view('branch.parcel.pickupParcel.pickupRiderRunParcelCart', $data);
+    }
+
+    public function deliveryBranchTransferParcelDeleteCart2(Request $request)
+    {
+
+        $branch_id = auth()->guard('branch')->user()->branch->id . '-' . auth()->guard('branch')->user()->branch->id;
+        $branch_user_id = auth()->guard('branch')->user()->id;
+
+        \Cart::session($branch_id)->remove($request->input('itemId'));
+
+        $cart = \Cart::session($branch_id)->getContent();
+        $cart = $cart->sortBy('id');
+
+        $data = [
+            'cart' => $cart,
+            'totalItem' => \Cart::session($branch_id)->getTotalQuantity(),
+            'getTotal' => \Cart::session($branch_id)->getTotal(),
+            'error' => "",
+        ];
+        return view('branch.parcel.pickupParcel.pickupRiderRunParcelCart2', $data);
     }
 
     public function confirmDeliveryBranchTransferGenerate(Request $request)

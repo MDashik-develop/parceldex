@@ -135,7 +135,7 @@
             <div class="customer-details">
                 @if ($parcel?->pickup_rider)
                     <h3>Pickup Rider Details</h3>
-                    <p>Pickup Rider - {{ $parcel?->pickup_rider?->name }} - {{ $parcel?->delivery_rider?->r_id }}</p>
+                    <p>Pickup Rider - {{ $parcel?->pickup_rider?->name }} - {{ $parcel?->pickup_rider?->r_id }}</p>
                 @endif
 
                 @if ($parcel?->delivery_rider)
@@ -152,7 +152,7 @@
 
                 @if ($parcel?->return_rider)
                     <h3>Return Rider Details</h3>
-                    <p>Return Rider - {{ $parcel?->return_rider?->name }}</p>
+                    <p>Return Rider - {{ $parcel?->return_rider?->name }} - {{ $parcel?->return_rider?->r_id }}</p>
                 @endif
 
             </div>

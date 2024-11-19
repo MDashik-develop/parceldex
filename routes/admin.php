@@ -355,6 +355,7 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin/'], function () {
 
     Route::get('account/merchantPaymentDeliveryList', [App\Http\Controllers\Admin\MerchantDeliveryPaymentController::class, 'merchantPaymentDeliveryList'])->name('account.merchantPaymentDeliveryList');
     Route::get('account/getMerchantPaymentDeliveryList', [App\Http\Controllers\Admin\MerchantDeliveryPaymentController::class, 'getMerchantPaymentDeliveryList'])->name('account.getMerchantPaymentDeliveryList');
+    Route::get('account/getMerchantPaymentDeliveryListExport', [App\Http\Controllers\Admin\MerchantDeliveryPaymentController::class, 'getMerchantPaymentDeliveryListExport'])->name('account.getMerchantPaymentDeliveryListExport');
 
     Route::get('account/{parcelMerchantDeliveryPayment}/merchantPaymentDeliveryAccept', [App\Http\Controllers\Admin\MerchantDeliveryPaymentController::class, 'merchantDeliveryPaymentAccept'])->name('account.merchantDeliveryPaymentAccept');
     Route::patch('account/{parcelMerchantDeliveryPayment}/merchantDeliveryPaymentAcceptConfirm', [App\Http\Controllers\Admin\MerchantDeliveryPaymentController::class, 'merchantDeliveryPaymentAcceptConfirm'])->name('account.merchantDeliveryPaymentAcceptConfirm');

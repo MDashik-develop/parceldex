@@ -1454,7 +1454,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->pickup_rider) {
             if (!empty($parcelLog->pickup_rider)) {
-                $to_user    = "Pickup Rider : " . $parcelLog->pickup_rider->name;
+                $to_user    = "Pickup Rider : " . $parcelLog->pickup_rider->name . '-' . $parcelLog->pickup_rider?->r_id;
             }
             if (!empty($parcelLog->pickup_branch)) {
                 $branch_user = (!empty($parcelLog->pickup_branch_user)) ?   " (" . $parcelLog?->pickup_branch_user?->name . ")" : " (General)";
@@ -1511,7 +1511,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->pickup_rider) {
-            $to_user    = "Pickup Rider : " . $parcelLog->pickup_rider->name;
+            $to_user    = "Pickup Rider : " . $parcelLog->pickup_rider->name . '-' . $parcelLog->pickup_rider?->r_id;;
         }
     } elseif ($status == 9) {
         return [];
@@ -1521,7 +1521,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->pickup_rider) {
-            $to_user    = "Pickup Rider : " . ($parcelLog->pickup_rider) ? $parcelLog->pickup_rider->name : "";
+            $to_user    = "Pickup Rider : " . ($parcelLog->pickup_rider) ? $parcelLog->pickup_rider->name . '-' . $parcelLog->pickup_rider?->r_id : "";
         }
     } elseif ($status == 10) {
         $status_name  = "Parcel Handover";
@@ -1531,7 +1531,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->pickup_rider) {
-            $to_user    = (!empty($parcelLog->pickup_rider)) ? "Pickup Rider : " . $parcelLog->pickup_rider->name : '';
+            $to_user    = (!empty($parcelLog->pickup_rider)) ? "Pickup Rider : " . $parcelLog->pickup_rider->name . '-' . $parcelLog->pickup_rider?->r_id : '';
 
             $branch_user = (!empty($parcelLog->pickup_branch_user)) ?   " (" . $parcelLog?->pickup_branch_user?->name . ")" : " (General)";
             $to_user  .= (!empty($parcelLog->pickup_branch)) ?   "Pickup Branch : " . $parcelLog->pickup_branch->name . $branch_user : "Default" . $branch_user;
@@ -1658,7 +1658,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name;
+            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;;
         }
     } elseif ($status == 20) {
         return [];
@@ -1668,7 +1668,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name;
+            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;
         }
     } elseif ($status == 21) {
         $status_name  = "Successfully Delivered";
@@ -1679,7 +1679,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name;
+            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;
         }
     } elseif ($status == 22) {
         return [];
@@ -1689,7 +1689,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name;
+            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;
         }
     } elseif ($status == 23) {
         //$status_name  = "Rescheduled";
@@ -1700,7 +1700,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . " (Reschedule Date : " . \Carbon\Carbon::parse($parcelLog->reschedule_parcel_date)->format('d/m/Y') . ")";
+            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id . " (Reschedule Date : " . \Carbon\Carbon::parse($parcelLog->reschedule_parcel_date)->format('d/m/Y') . ")";
         }
     } elseif ($status == 24 && $parcelLog->delivery_type == 2) {
         $status_name  = "Partial Delivery Requested by Rider";
@@ -1713,7 +1713,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name;
+            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;
         }
     } elseif ($status == 24 && $parcelLog->delivery_type == 4) {
         $status_name  = "Cancel Requested by Rider";
@@ -1726,7 +1726,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name;
+            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;
         }
     } elseif ($status == 24) {
         $status_name  = "Cancel Requested";
@@ -1739,7 +1739,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name;
+            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;;
         }
     } elseif ($status == 25 && $parcelLog->delivery_type == 1) {
         $sub_title = $parcelLog->note ?? 'N/A';
@@ -1772,7 +1772,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         } elseif ($parcelLog->delivery_branch) {
             $to_user    = $parcelLog?->delivery_branch?->name ?? "N/A";
         } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name;
+            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;
         } elseif ($parcelLog->pickup_branch) {
             $to_user    = "Pickup Branch : " . $parcelLog?->pickup_branch?->name;
         }
@@ -2006,7 +2006,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->return_rider) {
-            $to_user    = "Return Rider : " . $parcelLog->return_rider->name;
+            $to_user    = "Return Rider : " . $parcelLog->return_rider->name . '-' . $parcelLog->return_rider?->r_id;
         }
 
         $x = $parcelLog->parcel;

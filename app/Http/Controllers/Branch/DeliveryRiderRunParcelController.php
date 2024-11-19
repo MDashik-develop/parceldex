@@ -1123,6 +1123,7 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
                                     $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
                                     $new_parcel->customer_collect_amount = 0;
+                                    $new_parcel->cancel_amount_collection = 0;
                                     $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();
@@ -1197,6 +1198,7 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
                                     $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
                                     $new_parcel->customer_collect_amount = 0;
+                                    $new_parcel->cancel_amount_collection = 0;
                                     $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();
@@ -1232,6 +1234,7 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
                                     $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
                                     $new_parcel->customer_collect_amount = 0;
+                                    $new_parcel->cancel_amount_collection = 0;
                                     $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();

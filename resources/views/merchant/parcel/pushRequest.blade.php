@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('merchant.home') }}">Home</a></li>
                         <li class="breadcrumb-item active">Merchant API Request in Review List</li>
                     </ol>
                 </div>
@@ -84,7 +84,7 @@
                         <div class="card-body">
                             <div class="table-responsive">
                                 @if ($parcels->count() > 0)
-                                    <form action="{{ route('admin.savePushRequest') }}" method="POST">
+                                    <form action="{{ route('merchant.savePushRequest') }}" method="POST">
                                         @csrf
                                         <table class="table table-style table-striped">
                                             <thead>

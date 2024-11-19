@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('branch.home') }}">Home</a></li>
                         <li class="breadcrumb-item active">Merchant API Request in Review List</li>
                     </ol>
                 </div>
@@ -38,7 +38,7 @@
                         <div class="card-header">
                             <h3 class="card-title">Merchant API Request in Review List </h3>
 
-                            <form action="{{ route('admin.push.request') }}" method="GET">
+                            <form action="{{ route('branch.push.request') }}" method="GET">
                                 <div class="row input-daterange" style="margin-top: 40px">
                                     <div class="col-md-3">
                                         <label for="branch_id">Merchant </label>
@@ -82,7 +82,7 @@
                         <div class="card-body">
                             <div class="table-responsive">
                                 @if ($parcels->count() > 0)
-                                    <form action="{{ route('admin.savePushRequest') }}" method="POST">
+                                    <form action="{{ route('branch.savePushRequest') }}" method="POST">
                                         @csrf
                                         <table class="table table-style table-striped">
                                             <thead>

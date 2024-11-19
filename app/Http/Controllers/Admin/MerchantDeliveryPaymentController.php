@@ -16,8 +16,10 @@ use App\Http\Controllers\Controller;
 use App\Mail\MerchantPaymentInvoice;
 use App\Models\ParcelPaymentRequest;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\ParcelDeliveryPayment;
 use Illuminate\Support\Facades\Validator;
+use App\Exports\AdminMerchantPaymentExport;
 use App\Models\ParcelDeliveryPaymentDetail;
 use App\Models\ParcelMerchantDeliveryPayment;
 use App\Notifications\MerchantParcelNotification;
@@ -39,10 +41,14 @@ class MerchantDeliveryPaymentController extends Controller
         return view('admin.account.merchantDeliveryPayment.merchantPaymentDeliveryList', $data);
     }
 
+    public function getMerchantPaymentDeliveryListExport(Request $request)
+    {
+        $fileName = 'parcel_' . time() . '.xlsx';
+        return Excel::download(new AdminMerchantPaymentExport($request), $fileName);
+    }
 
     public function getMerchantPaymentDeliveryList(Request $request)
     {
-
         $model = ParcelMerchantDeliveryPayment::with([
             'parcel_merchant_delivery_payment_details.parcel',
             'merchant' => function ($query) {
@@ -260,14 +266,35 @@ class MerchantDeliveryPaymentController extends Controller
 
                         set_time_limit(1800);
 
+                        // Load the necessary relationships for the data
                         $parcelMerchantDeliveryPayment->load('admin', 'merchant', 'parcel_merchant_delivery_payment_details');
-                        $path = 'invoice_pdf/' . $merchant_payment_invoice  . '_' . now()->format('m-d-Y') . '.pdf';
+
+                        // Define the file path
+                        $path = 'invoice_pdf/' . $merchant_payment_invoice . '_' . now()->format('m-d-Y') . '.pdf';
                         $pdfPath = storage_path($path);
 
-                        Pdf::loadView('admin.account.merchantDeliveryPayment.printMerchantDeliveryPaymentUpdated2', compact('parcelMerchantDeliveryPayment'))->save($pdfPath)->stream('download.pdf');
+                        // Generate the PDF in landscape orientation
+                        Pdf::loadView('admin.account.merchantDeliveryPayment.printMerchantDeliveryPaymentUpdated2', compact('parcelMerchantDeliveryPayment'))
+                            ->setPaper('a4', 'landscape') // Set paper size to A4 and orientation to landscape
+                            ->save($pdfPath)             // Save the PDF to the specified path
+                            ->stream('download.pdf');    // Stream the PDF
+
+                        // Send the PDF via email
+                        Mail::to($merchant_user->email)->send(new MerchantPaymentInvoice(
+                            $merchant_user,
+                            $parcelMerchantDeliveryPayment->total_payment_amount,
+                            $merchant_payment_invoice,
+                            $pdfPath
+                        ));
+
+                        // $parcelMerchantDeliveryPayment->load('admin', 'merchant', 'parcel_merchant_delivery_payment_details');
+                        // $path = 'invoice_pdf/' . $merchant_payment_invoice  . '_' . now()->format('m-d-Y') . '.pdf';
+                        // $pdfPath = storage_path($path);
+
+                        // Pdf::loadView('admin.account.merchantDeliveryPayment.printMerchantDeliveryPaymentUpdated2', compact('parcelMerchantDeliveryPayment'))->save($pdfPath)->stream('download.pdf');
 
 
-                        Mail::to($merchant_user->email)->send(new MerchantPaymentInvoice($merchant_user, $parcelMerchantDeliveryPayment->total_payment_amount, $merchant_payment_invoice, $pdfPath));
+                        // Mail::to($merchant_user->email)->send(new MerchantPaymentInvoice($merchant_user, $parcelMerchantDeliveryPayment->total_payment_amount, $merchant_payment_invoice, $pdfPath));
 
                         //                         PAYMENT ON THE WAY:
                         // Invoice ID: PAY10003 (parcel_merchant_delivery_payment_id)

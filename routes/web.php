@@ -63,6 +63,15 @@ Route::get('/log', function () {
 });
 
 Route::get('/clear', function () {
+
+    // $message = "Payment On the Way- \nInvoice ID: 51212121 \nAmount- 5000 \n-Stay tuned to get 5 days payment service from Your trusted partner in deliveries.";
+
+    // try {
+    //     send_signup_sms('01711057407', $message);
+    //     return 'Done';
+    // } catch (\Throwable $e) {
+    //     return $e->getMessage();
+    // }
     Artisan::call('cache:clear');
     Artisan::call('view:clear');
     Artisan::call('route:clear');

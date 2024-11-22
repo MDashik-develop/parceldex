@@ -458,7 +458,8 @@ class DeliveryParcelController extends Controller
                 // Delivery Hero: 01711057407 (contact_number)
                 // -Parceldex Courier
 
-                $message = "ON THE WAY:\n" . ucwords($parcel->merchant->company_name) . " \n Parcel ID: " . $parcel->parcel_invoice . " \nCOD: " . number_format($parcel->total_collect_amount) . " Tk. \nDelivery Hero:  " . $parcel->delivery_rider->contact_number . "\n-Parceldex Courier";
+                // $message = "ON THE WAY:\n" . ucwords($parcel->merchant->company_name) . " \n Parcel ID: " . $parcel->parcel_invoice . " \nCOD: " . number_format($parcel->total_collect_amount) . " Tk. \nDelivery Hero:  " . $parcel->delivery_rider->contact_number . "\n-Parceldex Courier";
+                $message = "ON THE WAY-\n" . ucwords($parcel->merchant->company_name) . " \nParcel ID- " . $parcel->parcel_invoice . " \nCOD: " . number_format($parcel->total_collect_amount) . " Tk. \nDelivery Hero-  " . $parcel->delivery_rider->contact_number . "\nCall-09642735735\n-Parceldex Courier";
 
                 $this->send_sms($parcel->customer_contact_number, $message);
 
@@ -678,7 +679,10 @@ class DeliveryParcelController extends Controller
             if ($request->send_to == 'customer') {
                 // $message = "Provide this OTP: " . $parcel->parcel_otp . " to rider if you received parcel (" . $parcel->parcel_invoice . "). This OTP will be valid for 30 minutes. Parceldex Ltd.";
 
-                $message = "PAID PARCEL DELIVERY:  \n" . ucwords($parcel->merchant->company_name) . " \nParcel ID: " . $parcel->parcel_invoice . " \nOTP: " . $parcel->parcel_otp . " \nValid for 30 Min \nDelivery Hero:  " . $parcel->delivery_rider->contact_number . " \n-Parceldex Courier";
+                // $message = "PAID PARCEL DELIVERY:  \n" . ucwords($parcel->merchant->company_name) . " \nParcel ID: " . $parcel->parcel_invoice . " \nOTP: " . $parcel->parcel_otp . " \nValid for 30 Min \nDelivery Hero:  " . $parcel->delivery_rider->contact_number . " \n-Parceldex Courier";
+
+                $message = "PAID PARCEL DELIVERY-  \n" . ucwords($parcel->merchant->company_name) . " \nParcel ID- " . $parcel->parcel_invoice . " \nOTP-" . $parcel->parcel_otp . " \nValid for 30 Min \nDelivery Hero- " . $parcel->delivery_rider->contact_number . "\nCall-09642735735\n-Parceldex Courier";
+
 
                 //                 PAID PARCEL DELIVERY:
                 // SAREEZ BY SAKYLA (Company_Name)
@@ -722,7 +726,11 @@ class DeliveryParcelController extends Controller
 
                 // $message = "Provide this OTP: " . $parcel->parcel_otp . " to rider if you approve partial ID (" . $parcel->parcel_invoice . "). This OTP will be valid for 30 minutes. Parceldex Ltd.";
 
-                $message = "PARTIAL DELIVERY:  \nParcel ID: " . $parcel->parcel_invoice . " \nActual COD: " . number_format($parcel->total_collect_amount) . " Tk. \nPartial COD: " . number_format($parcel->customer_collect_amount) . " Tk. \nApproval OTP: " . $parcel->parcel_otp . " \nValid for 30 Min \n-Parceldex Courier";
+                // $message = "PARTIAL DELIVERY:  \nParcel ID: " . $parcel->parcel_invoice . " \nActual COD: " . number_format($parcel->total_collect_amount) . " Tk. \nPartial COD: " . number_format($parcel->customer_collect_amount) . " Tk. \nApproval OTP: " . $parcel->parcel_otp . " \nValid for 30 Min \n-Parceldex Courier";
+
+                $message = "PARTIAL DELIVERY-  \nParcel ID-" . $parcel->parcel_invoice . " \nActual COD- " . number_format($parcel->total_collect_amount) . " Tk. \nPartial COD- " . number_format($parcel->customer_collect_amount) . " Tk. \nApproval OTP- " . $parcel->parcel_otp . " \nValid for 30 Min \nCall-09642735735\n-Parceldex Courier";
+
+                
 
                 if ($this->send_sms($parcel->merchant->contact_number, $message)) {
                     return response()->json([
@@ -892,8 +900,10 @@ class DeliveryParcelController extends Controller
                     // Collected COD: 1,00,000 Tk. (customer_collect_amount)
                     // -Thank you for using-Parceldex Courier
 
-                    $message = "SUCCESSFULLY DELIVERED:\n"
-                        . ucwords($parcel->merchant->company_name) . "\nParcel ID: " . $parcel->parcel_invoice . " \nCollected COD: " . number_format($parcel->customer_collect_amount) . " \n-Thank you for using-Parceldex Courier";
+                    // $message = "SUCCESSFULLY DELIVERED:\n" . ucwords($parcel->merchant->company_name) . "\nParcel ID: " . $parcel->parcel_invoice . " \nCollected COD: " . number_format($parcel->customer_collect_amount) . " \n-Thank you for using-Parceldex Courier";
+
+                    $message = "SUCCESSFULLY DELIVERED-\n" . ucwords($parcel->merchant->company_name) . "\nParcel ID-" . $parcel->parcel_invoice . " \nCollected COD- " . number_format($parcel->customer_collect_amount) .  "\nCall-09642735735 \n-Thank you for using-Parcelex Courier";
+
 
                     $this->send_sms($parcel->merchant->contact_number, $message);
                 } // Delivery Parcel Partial Delivery

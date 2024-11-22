@@ -43,7 +43,7 @@ class MerchantDeliveryPaymentController extends Controller
 
     public function getMerchantPaymentDeliveryListExport(Request $request)
     {
-        $fileName = 'parcel_' . time() . '.xlsx';
+        $fileName = 'MerchantPaymentDeliveryListExport_' . time() . '.xlsx';
         return Excel::download(new AdminMerchantPaymentExport($request), $fileName);
     }
 
@@ -305,7 +305,9 @@ class MerchantDeliveryPaymentController extends Controller
 
                         // $message = "Dear valued Merchant, A Payment invoice " . $merchant_payment_invoice . " has been generated on " . now()->format('m-d-Y') . " and invoiced amount Tk " . number_format($parcelMerchantDeliveryPayment->total_payment_amount, 2) . " has been paid. parceldex Ltd.";
 
-                        $message = "PAYMENT ON THE WAY: \nInvoice ID: " . $merchant_payment_invoice . " \nAmount: " . number_format($parcelMerchantDeliveryPayment->total_payment_amount) . " \n-Stay tuned to get 5 days payment service from Your trusted partner in deliveries !!";
+                        // $message = "PAYMENT ON THE WAY: \nInvoice ID: " . $merchant_payment_invoice . " \nAmount: " . number_format($parcelMerchantDeliveryPayment->total_payment_amount) . " \n-Stay tuned to get 5 days payment service from Your trusted partner in deliveries !!";
+
+                        $message = "Payment On the Way- \nInvoice ID: " . $merchant_payment_invoice . " \nAmount- " . number_format($parcelMerchantDeliveryPayment->total_payment_amount) . " \n-Stay tuned to get 5 days payment service from Your trusted partner in deliveries.";
 
                         $this->send_reg_sms($merchant_user->contact_number, $message);
 

@@ -152,7 +152,7 @@
 
                 @if ($parcel?->return_rider)
                     <h3>Return Rider Details</h3>
-                    <p>Return Rider - {{ $parcel?->return_rider?->name }}  - {{ $parcel?->return_rider?->r_id }}</p>
+                    <p>Return Rider - {{ $parcel?->return_rider?->name }} - {{ $parcel?->return_rider?->r_id }}</p>
                 @endif
 
             </div>
@@ -199,6 +199,142 @@
                 @endforeach
             </div>
         @endforeach
+
+        <!-- Parcel Payment Log -->
+        @if (!empty($parcelBranchPaymentDeltails->count() > 0) || !empty($parcelMerchantPaymentDeltails->count() > 0))
+
+            @php
+                $mpayment = $parcelMerchantPaymentDeltails->count();
+                $bpayment = $parcelBranchPaymentDeltails->count();
+            @endphp
+
+            <div class="col-md-12">
+                <fieldset>
+                    <legend>Parcel Payment Log</legend>
+                    <table class="table table-style">
+                        <tr>
+                            <th style="width: 5%"> #</th>
+                            <th style="width: 10%"> Date</th>
+                            <th style="width: 10%"> Time</th>
+                            <th style="width: 25%"> Status</th>
+                            <th style="width: 25%"> To (Action)</th>
+                            <th style="width: 25%"> From</th>
+                        </tr>
+
+                        <!-- For Merchant Payment -->
+
+                        @if (!empty($parcelMerchantPaymentDeltails->count() > 0))
+
+                            @foreach ($parcelMerchantPaymentDeltails as $parcelMerchantPaymentDeltail)
+                                @php
+                                    $to_user = '';
+                                    $from_user = '';
+                                    $status = '';
+
+                                    $merchant_name = $parcelMerchantPaymentDeltail->parcel_merchant_delivery_payment
+                                        ->merchant
+                                        ? $parcelMerchantPaymentDeltail->parcel_merchant_delivery_payment->merchant
+                                            ->company_name
+                                        : 'Default';
+                                    $admin_name = $parcelMerchantPaymentDeltail->admin
+                                        ? $parcelMerchantPaymentDeltail->admin->name
+                                        : 'Default';
+
+                                    switch ($parcelMerchantPaymentDeltail->status) {
+                                        case 1:
+                                            $status = 'Accounts send paid Request';
+                                            $to_user = 'Admin : ' . $admin_name;
+                                            $from_user = 'Merchant : ' . $merchant_name;
+                                            break;
+                                        case 2:
+                                            $status = 'Merchant Paid Request Accept';
+                                            $to_user = 'Admin : ' . $admin_name;
+                                            $from_user = 'Merchant : ' . $merchant_name;
+                                            break;
+                                        case 3:
+                                            $status = 'Merchant Paid Request Reject';
+                                            $to_user = 'Admin : ' . $admin_name;
+                                            $from_user = 'Merchant : ' . $merchant_name;
+                                            break;
+                                    }
+
+                                @endphp
+                                <tr>
+                                    <td> {{ $loop->iteration }} </td>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($parcelMerchantPaymentDeltail->date_time)->format('d/m/Y') }}
+                                    </td>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($parcelMerchantPaymentDeltail->date_time)->format('H:i:s') }}
+                                    </td>
+                                    <td> {{ $status . ' (' . $parcelMerchantPaymentDeltail->parcel_merchant_delivery_payment->merchant_payment_invoice . ')' }}
+                                    </td>
+                                    <td> {{ $to_user }} </td>
+                                    <td> {{ $from_user }} </td>
+                                </tr>
+                            @endforeach
+                        @endif
+
+                        <!-- For Branch Payments -->
+                        @if (!empty($parcelBranchPaymentDeltails->count() > 0))
+
+                            @foreach ($parcelBranchPaymentDeltails as $parcelBranchPaymentDetail)
+                                @php
+                                    $to_user = '';
+                                    $from_user = '';
+                                    $status = '';
+
+                                    $branch_name = $parcelBranchPaymentDetail->parcel_delivery_payment->branch
+                                        ? $parcelBranchPaymentDetail->parcel_delivery_payment->branch->name
+                                        : 'Default';
+                                    $branch_user = $parcelBranchPaymentDetail->parcel_delivery_payment->branch_user
+                                        ? ' (' .
+                                            $parcelBranchPaymentDetail->parcel_delivery_payment->branch_user->name .
+                                            ')'
+                                        : ' (Default)';
+                                    $admin_name = $parcelBranchPaymentDetail->admin
+                                        ? $parcelBranchPaymentDetail->admin->name
+                                        : 'Default';
+
+                                    switch ($parcelBranchPaymentDetail->status) {
+                                        case 1:
+                                            $status = 'Branch send paid Request';
+                                            $to_user = 'Branch : ' . $branch_name . $branch_user;
+                                            $from_user = 'Admin : ' . $admin_name;
+                                            break;
+                                        case 2:
+                                            $status = 'Accounts Paid Request Accept';
+                                            $to_user = 'Branch : ' . $branch_name . $branch_user;
+                                            $from_user = 'Admin : ' . $admin_name;
+                                            break;
+                                        case 3:
+                                            $status = 'Accounts Paid Request Reject';
+                                            $to_user = 'Branch : ' . $branch_name . $branch_user;
+                                            $from_user = 'Admin : ' . $admin_name;
+                                            break;
+                                    }
+
+                                @endphp
+                                <tr>
+                                    <td> {{ $loop->iteration + $mpayment }} </td>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($parcelBranchPaymentDetail->date_time)->format('d/m/Y') }}
+                                    </td>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($parcelBranchPaymentDetail->date_time)->format('H:i:s') }}
+                                    </td>
+                                    <td> {{ $status . ' (' . $parcelBranchPaymentDetail->parcel_delivery_payment->payment_invoice . ')' }}
+                                    </td>
+                                    <td> {{ $to_user }} </td>
+                                    <td> {{ $from_user }} </td>
+                                </tr>
+                            @endforeach
+                        @endif
+
+                    </table>
+                </fieldset>
+            </div>
+        @endif
 
         <div class="section6 mt-3">
             <h5 class="fs-1 font-weight-bold">Share Tracking Details</h5>

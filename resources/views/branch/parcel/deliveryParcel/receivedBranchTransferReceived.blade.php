@@ -359,7 +359,24 @@
                 $('#show_delivery_branch_transfer_parcel').html(response);
                 $('.parclTR').each(function() {
                     if ($(this).data('parcel_id') == itemId) {
+                        
+                        // Find the select element in the current row
+                        let select = $(this).find(
+                                'select.delivery_branch_transfer_status');
+
+                            // Set option with value="3" as selected
+                            select.val("4"); // Update the value of the <select>
+
+                            // If using select2 or similar, refresh the dropdown UI
+                            if (select.hasClass('select2')) {
+                                select.trigger(
+                                    'change'
+                                ); // Trigger change event for the select2 plugin
+                            }
+
                         $(this).show(); // Hide the row if the data attribute matches
+
+
                     }
                 });
             }

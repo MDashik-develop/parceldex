@@ -101,31 +101,33 @@ class AdminMerchantPaymentExport implements
                     $total_collect_amount += $v_data?->parcel?->total_collect_amount;
                 }
 
-                $total_charge = 0;
                 $total_return_charge = 0;
                 $total_cod_charge = 0;
                 $total_weight_charge = 0;
                 $total_delivery_charge = 0;
 
                 foreach ($payment->parcel_merchant_delivery_payment_details as $v_data) {
-                    $total_charge += $v_data?->parcel?->total_charge;
                     $total_return_charge += $v_data?->parcel?->return_charge;
                     $total_cod_charge += $v_data?->parcel?->cod_charge;
                     $total_weight_charge += $v_data?->parcel?->weight_charge;
                     $total_delivery_charge += $v_data?->parcel?->delivery_charge;
                 }
 
+                $total = $total_delivery_charge + $total_weight_charge + $total_cod_charge + $total_return_charge;
+                
                 $data_parcel_array[] = (object)[
                     'serial' => $key + 1,
                     'payment_date' => date('d-m-Y', strtotime($payment->date_time)),
                     'merchant_name' => $payment->merchant->company_name,
                     'merchant_id' => $payment->merchant->m_id,
-                    'amount_to_be_collect' => number_format($payment->total_collect_amount, 2),
-                    'delivery_charge' => number_format($payment->total_delivery_charge, 2),
-                    'weight_charge' => number_format($payment->total_weight_charge, 2),
-                    'cod_charge' => number_format($payment->total_cod_charge, 2),
-                    'return_charge' => number_format($payment->total_return_charge, 2),
-                    'payment_method' => $payment->merchant->payment_method ?? 'N/A',
+                    'amount_to_be_collect' => number_format($total_collect_amount, 2),
+                    'collected' => number_format($customer_collect_amount, 2),
+                    'delivery_charge' => number_format($total_delivery_charge, 2),
+                    'weight_charge' => number_format($total_weight_charge, 2),
+                    'cod_charge' => number_format($total_cod_charge, 2),
+                    'return_charge' => number_format($total_return_charge, 2),
+                    'total_charge' => number_format($total, 2),
+                    'payment_method' => $payment->merchant->payment_recived_by ?? 'N/A',
                     'payment_type' => $parcel->merchant->payment_type ?? 'N/A',
                     'payment_invoice_id' => $payment->merchant_payment_invoice,
                     'routing_number' => $parcel->merchant->routing_number ?? 'N/A',
@@ -153,10 +155,12 @@ class AdminMerchantPaymentExport implements
             $row->merchant_name,
             $row->merchant_id,
             $row->amount_to_be_collect,
+            $row->collected,
             $row->delivery_charge,
             $row->weight_charge,
             $row->cod_charge,
             $row->return_charge,
+            $row->total_charge,
             $row->payment_method,
             $row->payment_type,
             $row->payment_invoice_id,
@@ -180,10 +184,12 @@ class AdminMerchantPaymentExport implements
             'Merchant Name',
             'Merchant ID',
             'Total Amount to Be Collect',
+            'Collected',
             'Total Delivery Charge',
             'Total Weight Charge',
             'Total COD charge',
             'Total Return Charge',
+            'Total Charge',
             'Payment method',
             'Payment Type',
             'Payment Invoice ID',

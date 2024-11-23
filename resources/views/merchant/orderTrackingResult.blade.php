@@ -174,33 +174,6 @@
                 ->sortKeysDesc();
         @endphp
 
-        @foreach ($logsGroupedByDate as $key => $items)
-            <div class="parcel-log">
-                <h3><span class="log-date">{{ \Carbon\Carbon::parse($key)->format('jS F, Y') }}</span></h3>
-
-                @foreach ($items as $item)
-                    @php
-                        $parcelLogStatus = returnParcelLogStatusNameForAdmin($item, $parcel->delivery_type, $parcel);
-
-                        if (!isset($parcelLogStatus['to_user'])) {
-                            continue;
-                        }
-
-                        $to_user = $parcelLogStatus['to_user'];
-                        $from_user = $parcelLogStatus['from_user'];
-                        $status = $parcelLogStatus['status_name'];
-                        $sub_title = $parcelLogStatus['sub_title'];
-                    @endphp
-                    <div class="log-item">
-                        <span class="log-time">{{ \Carbon\Carbon::parse($item->time)->format('h:i A') }}</span>
-                        {{ $status }}<br>
-                        <span class="log-details">Note: {{ empty($sub_title) ? 'N/A' : $sub_title }} <br> By -
-                            {{ $to_user }}</span>
-                    </div>
-                @endforeach
-            </div>
-        @endforeach
-
         <!-- Parcel Payment Log -->
         @if (!empty($parcelBranchPaymentDeltails->count() > 0) || !empty($parcelMerchantPaymentDeltails->count() > 0))
 
@@ -243,17 +216,17 @@
 
                                     switch ($parcelMerchantPaymentDeltail->status) {
                                         case 1:
-                                            $status = 'Accounts send paid Request';
+                                            $status = 'Invoice Prepared';
                                             $to_user = 'Admin : ' . $admin_name;
                                             $from_user = 'Merchant : ' . $merchant_name;
                                             break;
                                         case 2:
-                                            $status = 'Merchant Paid Request Accept';
+                                            $status = 'Paid';
                                             $to_user = 'Admin : ' . $admin_name;
                                             $from_user = 'Merchant : ' . $merchant_name;
                                             break;
                                         case 3:
-                                            $status = 'Merchant Paid Request Reject';
+                                            $status = 'Payment Invoice Cancel';
                                             $to_user = 'Admin : ' . $admin_name;
                                             $from_user = 'Merchant : ' . $merchant_name;
                                             break;
@@ -299,17 +272,17 @@
 
                                     switch ($parcelBranchPaymentDetail->status) {
                                         case 1:
-                                            $status = 'Branch send paid Request';
+                                            $status = 'Deposit Requested';
                                             $to_user = 'Branch : ' . $branch_name . $branch_user;
                                             $from_user = 'Admin : ' . $admin_name;
                                             break;
                                         case 2:
-                                            $status = 'Accounts Paid Request Accept';
+                                            $status = 'Deposit Accepted';
                                             $to_user = 'Branch : ' . $branch_name . $branch_user;
                                             $from_user = 'Admin : ' . $admin_name;
                                             break;
                                         case 3:
-                                            $status = 'Accounts Paid Request Reject';
+                                            $status = 'Deposit Request Declined';
                                             $to_user = 'Branch : ' . $branch_name . $branch_user;
                                             $from_user = 'Admin : ' . $admin_name;
                                             break;
@@ -336,6 +309,35 @@
                 </fieldset>
             </div>
         @endif
+
+        @foreach ($logsGroupedByDate as $key => $items)
+            <div class="parcel-log">
+                <h3><span class="log-date">{{ \Carbon\Carbon::parse($key)->format('jS F, Y') }}</span></h3>
+
+                @foreach ($items as $item)
+                    @php
+                        $parcelLogStatus = returnParcelLogStatusNameForAdmin($item, $parcel->delivery_type, $parcel);
+
+                        if (!isset($parcelLogStatus['to_user'])) {
+                            continue;
+                        }
+
+                        $to_user = $parcelLogStatus['to_user'];
+                        $from_user = $parcelLogStatus['from_user'];
+                        $status = $parcelLogStatus['status_name'];
+                        $sub_title = $parcelLogStatus['sub_title'];
+                    @endphp
+                    <div class="log-item">
+                        <span class="log-time">{{ \Carbon\Carbon::parse($item->time)->format('h:i A') }}</span>
+                        {{ $status }}<br>
+                        <span class="log-details">Note: {{ empty($sub_title) ? 'N/A' : $sub_title }} <br> By -
+                            {{ $to_user }}</span>
+                    </div>
+                @endforeach
+            </div>
+        @endforeach
+
+
 
         <div class="section6 mt-3">
             <h5 class="fs-1 font-weight-bold">Share Tracking Details</h5>

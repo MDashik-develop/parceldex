@@ -365,17 +365,17 @@
 
 
                         {{-- case 1 : --}}
-                        {{-- $status     = "Accounts send paid Request"; --}}
+                        {{-- $status     = "Invoice Prepared"; --}}
                         {{-- $to_user    = "Admin : ".$admin_name; --}}
                         {{-- $from_user  = "Merchant : ".$merchant_name; --}}
                         {{-- break; --}}
                         {{-- case 2 : --}}
-                        {{-- $status     = "Merchant Paid Request Accept"; --}}
+                        {{-- $status     = "Paid"; --}}
                         {{-- $to_user    = "Admin : ".$admin_name; --}}
                         {{-- $from_user  = "Merchant : ".$merchant_name; --}}
                         {{-- break; --}}
                         {{-- case 3 : --}}
-                        {{-- $status     = "Merchant Paid Request Reject"; --}}
+                        {{-- $status     = "Payment Invoice Cancel"; --}}
                         {{-- $to_user    = "Admin : ".$admin_name; --}}
                         {{-- $from_user  = "Merchant : ".$merchant_name; --}}
                         {{-- break; --}}
@@ -420,17 +420,17 @@
 
                         switch ($parcelBranchPaymentDetail->status) {
                         case 1:
-                        $status = 'Branch send paid Request';
+                        $status = 'Deposit Requested';
                         $to_user = 'Branch : ' . $branch_name . $branch_user;
                         $from_user = 'Admin : ' . $admin_name;
                         break;
                         case 2:
-                        $status = 'Accounts Paid Request Accept';
+                        $status = 'Deposit Accepted';
                         $to_user = 'Branch : ' . $branch_name . $branch_user;
                         $from_user = 'Admin : ' . $admin_name;
                         break;
                         case 3:
-                        $status = 'Accounts Paid Request Reject';
+                        $status = 'Deposit Request Declined';
                         $to_user = 'Branch : ' . $branch_name . $branch_user;
                         $from_user = 'Admin : ' . $admin_name;
                         break;

@@ -1753,10 +1753,20 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         $sub_title = $parcelLog->note ?? 'N/A';
         $status_name  = "Successfully Delivered";
         $class        = "success";
+        // if (!empty($parcelLog->admin)) {
+        //     $to_user    = "Admin : " . $parcelLog->admin->name;
+        // } elseif ($parcelLog->delivery_branch) {
+        //     $to_user    = !empty($parcelLog->delivery_branch) ? "Delivery Branch : " . $parcelLog?->delivery_branch?->name : "";
+        // }
+        logger($parcelLog);
         if (!empty($parcelLog->admin)) {
             $to_user    = "Admin : " . $parcelLog->admin->name;
         } elseif ($parcelLog->delivery_branch) {
-            $to_user    = !empty($parcelLog->delivery_branch) ? "Delivery Branch : " . $parcelLog?->delivery_branch?->name : "";
+            $to_user    = $parcelLog?->delivery_branch?->name ?? "N/A";
+        } elseif ($parcelLog->delivery_rider) {
+            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;
+        } elseif ($parcelLog->pickup_branch) {
+            $to_user    = "Pickup Branch : " . $parcelLog?->pickup_branch?->name;
         }
 
         $x = $parcelLog->parcel;

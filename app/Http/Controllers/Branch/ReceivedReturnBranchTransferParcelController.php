@@ -66,13 +66,13 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
                 $button = '<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" return_branch_transfer_id="' . $data->id . '" title="View Delivery Return Branch Transfer" >
                 <i class="fa fa-eye"></i> </button>';
 
-                if ($data->status == 1) {
+                //if ($data->status == 1) {
                     $button .= '&nbsp; <button class="btn btn-success received-return-branch-transfer-received-btn btn-sm" data-toggle="modal" data-target="#viewModal"  return_branch_transfer_id="' . $data->id . '"  title=" Received Return Branch Transfer Received" >
                     <i class="fa fa-check"></i> </button> ';
 
                     $button .= '&nbsp; <button class="btn btn-danger received-return-branch-transfer-reject-btn btn-sm" data-toggle="modal" data-target="#viewModal"  return_branch_transfer_id="' . $data->id . '"  title="Received Return Branch Transfer Cancel" >
                     <i class="fa fa-window-close"></i> </button> ';
-                }
+               // }
 
                 return $button;
             })

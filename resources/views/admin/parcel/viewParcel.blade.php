@@ -120,7 +120,7 @@
                 @endif
 
                 <p>{{ $parcel->customer_address }}, {{ $parcel->district->name }}, {{ $parcel->area->name }}</p>
-                <p>Merchant Instraction: {{ $parcel->parcel_note }}</p>
+                <p>Merchant Instruction: {{ $parcel->parcel_note }}</p>
             </div>
             {{-- <div class="service-charge-details">
                     <h3>Service Charge Details</h3>

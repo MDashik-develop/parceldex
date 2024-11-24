@@ -1362,7 +1362,7 @@ class PickupRiderRunParcelController extends Controller
                             // -Parceldex Courier
 
                             // $message = "Parcel from " . ucwords($parcel->merchant->company_name) . " has picked up. \nCOD: " . number_format($parcel->total_collect_amount) . " Tk. \nTrack: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->tracking_id . " \n-Parceldex Courier";
-                            $message = "Parcel from " . ucwords($parcel->merchant->company_name) . " has picked up. \nCOD- " . number_format($parcel->total_collect_amount) . " Tk.\n Track- " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->tracking_id . "\nCall-09642735735\n-Parceldex Courier";
+                            $message = "Parcel from " . ucwords($parcel->merchant->company_name) . " has picked up. \nCOD- " . number_format($parcel->total_collect_amount) . " Tk.\nTrack- " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->tracking_id . "\nCall-09642735735\n-Parceldex Courier";
                             $this->send_sms($parcel->customer_contact_number, $message);
 
                             // $parcel = Parcel::where('id', $parcel_id)->first();

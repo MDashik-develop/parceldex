@@ -1414,23 +1414,13 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
     $class          = "";
     $sub_title       = "";
 
-    $parcelMerchantPaymentDeltails = ParcelMerchantDeliveryPaymentDetail::where('parcel_id', $parcelLog->parcel->id)
-        ->orderBy('id', 'DESC')
-        ->with('parcel_merchant_delivery_payment')
-        ->get();
-
     if ($status == 1) {
         $status_name  = "Order has been Placed by Merchant";
         //$status_name  = "Pickup Request";
         $class        = "success";
+        $to_user    =  $parcelLog?->merchant?->company_name;
+        // $from_user  = (!empty($parcelLog->pickup_branch)) ?   "Pickup Branch : " . $parcelLog->pickup_branch->name . $branch_user : "Default" . $branch_user;
 
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->merchant) {
-            $to_user    = "Merchant : " . $parcelLog->merchant->company_name;
-            $branch_user = (!empty($parcelLog->pickup_branch_user)) ?   " (" . $parcelLog?->pickup_branch_user?->name . ")" : " (General)";
-            $from_user  = (!empty($parcelLog->pickup_branch)) ?   "Pickup Branch : " . $parcelLog->pickup_branch->name . $branch_user : "Default" . $branch_user;
-        }
     } elseif ($status == 2) {
         return [];
         $status_name  = "Cash Deposited";
@@ -1443,6 +1433,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
             $to_user    = "Merchant : " . $parcelLog->merchant->company_name;
         }
     } elseif ($status == 3) {
+        return [];
         // $status_name  = "Parcel Cancel";
         $status_name  = "Deleted";
         $class        = "danger";
@@ -1515,11 +1506,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         //$status_name  = "On the way to Pickup";
         $class        = "success";
 
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->pickup_rider) {
-            $to_user    = "Pickup Rider : " . $parcelLog->pickup_rider->name . '-' . $parcelLog->pickup_rider?->r_id  . '-' .  $parcelLog->pickup_rider?->branch?->name . '-' . $parcelLog->pickup_rider?->contact_number;
-        }
+        $to_user    = $parcelLog?->pickup_branch_user?->name;
     } elseif ($status == 9) {
         return [];
         $status_name  = "Pickup Rider Reject";
@@ -1534,28 +1521,19 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         $status_name  = "Parcel Handover to " . $parcelLog->pickup_branch->name;
         //$status_name  = "Pickup Rider Complete Task";
         $class        = "success";
+        $to_user    = $parcelLog?->pickup_rider?->name;
+        //  $branch_user = (!empty($parcelLog->pickup_branch_user)) ?   " (" . $parcelLog?->pickup_branch_user?->name . ")" : " (General)";
+        // $to_user  .= (!empty($parcelLog->pickup_branch)) ?   "Pickup Branch : " . $parcelLog->pickup_branch->name . $branch_user : "Default" . $branch_user;
+        //$to_user    .= (!empty($parcelLog->pickup_branch)) ? "Pickup Branch : ".$parcelLog->pickup_branch->name : '';
 
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->pickup_rider) {
-            $to_user    = (!empty($parcelLog->pickup_rider)) ? "Pickup Rider : " . $parcelLog->pickup_rider->name . '-' . $parcelLog->pickup_rider?->r_id : '';
-
-            //  $branch_user = (!empty($parcelLog->pickup_branch_user)) ?   " (" . $parcelLog?->pickup_branch_user?->name . ")" : " (General)";
-            // $to_user  .= (!empty($parcelLog->pickup_branch)) ?   "Pickup Branch : " . $parcelLog->pickup_branch->name . $branch_user : "Default" . $branch_user;
-            //$to_user    .= (!empty($parcelLog->pickup_branch)) ? "Pickup Branch : ".$parcelLog->pickup_branch->name : '';
-        }
     } elseif ($status == 11) {
         $status_name  = "Parcel Received at " . $parcelLog->pickup_branch->name;
         //$status_name  = "Picked Up";
         $class        = "success";
 
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->pickup_branch_user) {
-            $branch_user = (!empty($parcelLog->pickup_branch_user)) ?   " (" . $parcelLog?->pickup_branch_user?->name . ")" : " (General)";
-            $to_user  = (!empty($parcelLog->pickup_branch)) ?   "Pickup Branch : " . $parcelLog->pickup_branch->name . $branch_user : "Default" . $branch_user;
-            //$to_user    = "Pickup Branch : ".$parcelLog->pickup_branch->name;
-        }
+        $to_user  = $parcelLog?->pickup_branch_user?->name;
+        //$to_user    = "Pickup Branch : ".$parcelLog->pickup_branch->name;
+
     } elseif ($status == 12) {
         //$status_name  = "Branch Transfer";
 
@@ -1563,17 +1541,12 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         $status_name  = "Sent to " . $parcelLog?->pickup_branch_user?->name . " for Delivery ";
         $class        = "success";
 
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->pickup_branch_user) {
-            $branch_user = (!empty($parcelLog->pickup_branch_user)) ?   " (" . $parcelLog?->pickup_branch_user?->name . ")" : " (General)";
-            //  $to_user  = (!empty($parcelLog->pickup_branch)) ?   "Pickup Branch : " . $parcelLog->pickup_branch->name  . $branch_user : "Default" . $branch_user;
-            $to_user  = $branch_user;
+        $to_user  = $parcelLog?->pickup_branch_user?->name;
 
-            //$dbranch_user = (!empty($parcelLog->delivery_branch_user)) ?   " (" . $parcelLog->delivery_branch_user->name . ")" : " (General)";
-            //$from_user    = (!empty($parcelLog->delivery_branch)) ? "Delivery Branch : " . $parcelLog->delivery_branch->name : "Default";
-            //$from_user   .= $dbranch_user;
-        }
+        //$dbranch_user = (!empty($parcelLog->delivery_branch_user)) ?   " (" . $parcelLog->delivery_branch_user->name . ")" : " (General)";
+        //$from_user    = (!empty($parcelLog->delivery_branch)) ? "Delivery Branch : " . $parcelLog->delivery_branch->name : "Default";
+        //$from_user   .= $dbranch_user;
+
     } elseif ($status == 13) {
         return [];
         $status_name  = "Branch Transfer Cancel";
@@ -1592,16 +1565,10 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         //$status_name  = "Branch Transfer Complete";
         $class        = "success";
 
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->delivery_branch_user) {
+        //$to_user    = (!empty($parcelLog->delivery_branch)) ? "Delivery Branch : " . $parcelLog->delivery_branch->name : "Default";
+        $to_user   =  $parcelLog?->delivery_branch_user?->name;
+        //$to_user    = "Delivery Branch : ".$parcelLog->delivery_branch->name;
 
-            $dbranch_user = (!empty($parcelLog->delivery_branch_user)) ?   " (" . $parcelLog->delivery_branch_user->name . ")" : " (General)";
-            //$to_user    = (!empty($parcelLog->delivery_branch)) ? "Delivery Branch : " . $parcelLog->delivery_branch->name : "Default";
-            $to_user   .= $dbranch_user;
-
-            //$to_user    = "Delivery Branch : ".$parcelLog->delivery_branch->name;
-        }
     } elseif ($status == 15) {
         return [];
         $status_name  = "Delivery Branch Reject";
@@ -1635,15 +1602,12 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         $status_name  = "Rider Assigned for Delivery";
         $class        = "success";
 
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->delivery_branch_user) {
-            $dbranch_user = (!empty($parcelLog->delivery_branch_user)) ?   " (" . $parcelLog->delivery_branch_user->name . ")" : " (General)";
-            //$to_user    = (!empty($parcelLog->delivery_branch)) ? "Delivery Branch : " . $parcelLog->delivery_branch->name : "Default";
-            $to_user   .= $dbranch_user;
+        //$dbranch_user = $parcelLog->delivery_branch_user->name;
+        //$to_user    = (!empty($parcelLog->delivery_branch)) ? "Delivery Branch : " . $parcelLog->delivery_branch->name : "Default";
+        $to_user   = $parcelLog?->delivery_branch_user?->name;
 
-            //$to_user    = "Delivery Branch : ".$parcelLog->delivery_branch->name;
-        }
+        //$to_user    = "Delivery Branch : ".$parcelLog->delivery_branch->name;
+
     } elseif ($status == 18) {
         return [];
         $status_name  = "Delivery Run Cancel";
@@ -1663,11 +1627,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         $class        = "success";
         $sub_title = $parcelLog?->delivery_rider?->name . ' ' . $parcelLog->delivery_rider?->r_id . '-' . $parcelLog->delivery_rider?->branch?->name . '-' . $parcelLog->delivery_rider?->contact_number;
 
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name;
-        }
+        $to_user = $parcelLog?->delivery_rider?->name;
     } elseif ($status == 20) {
         return [];
         $status_name  = "Delivery Rider Reject";
@@ -1684,11 +1644,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         // $status_name  = "Delivery Rider Complete Delivery";
         $class        = "success";
 
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;
-        }
+        $to_user    = $parcelLog?->delivery_rider?->name;
     } elseif ($status == 22) {
         return [];
         $status_name  = "Partial Delivered";
@@ -1705,11 +1661,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         $sub_title = $parcelLog->note . "\n (Reschedule Date : " . \Carbon\Carbon::parse($parcelLog->reschedule_parcel_date)->format('d/m/Y') . ")" ?? 'N/A';
         $class        = "success";
 
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;
-        }
+        $to_user    = $parcelLog?->delivery_rider?->name;
     } elseif ($status == 24 && $parcelLog->delivery_type == 2) {
         $status_name  = "Partial Delivery Requested by Rider";
         $sub_title = $parcelLog->note ?? 'N/A';
@@ -1717,12 +1669,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         //$status_name  = "Delivery Rider Return";
         $class        = "warning";
-
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;
-        }
+        $to_user    = $parcelLog?->delivery_rider?->name;
     } elseif ($status == 24 && $parcelLog->delivery_type == 4) {
         $status_name  = "Cancel Requested by Rider";
         $sub_title = $parcelLog->note ?? 'N/A';
@@ -1731,11 +1678,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         //$status_name  = "Delivery Rider Return";
         $class        = "warning";
 
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;
-        }
+        $to_user    = $parcelLog?->delivery_rider?->name;
     } elseif ($status == 24) {
         $status_name  = "Cancel Requested";
         $sub_title = $parcelLog->note ?? 'N/A';
@@ -1744,11 +1687,8 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         //$status_name  = "Delivery Rider Return";
         $class        = "warning";
 
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;;
-        }
+
+        $to_user    = $parcelLog?->delivery_rider?->name;
     } elseif ($status == 25 && $parcelLog->delivery_type == 1) {
         $sub_title = $parcelLog->note ?? 'N/A';
         $status_name  = "Successfully Delivered";
@@ -1758,16 +1698,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         // } elseif ($parcelLog->delivery_branch) {
         //     $to_user    = !empty($parcelLog->delivery_branch) ? "Delivery Branch : " . $parcelLog?->delivery_branch?->name : "";
         // }
-        logger($parcelLog);
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->delivery_branch) {
-            $to_user    = $parcelLog?->delivery_branch?->name ?? "N/A";
-        } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;
-        } elseif ($parcelLog->pickup_branch) {
-            $to_user    = "Pickup Branch : " . $parcelLog?->pickup_branch?->name;
-        }
+
+        $to_user = $parcelLog?->delivery_branch?->name;
+
 
         $x = $parcelLog->parcel;
 
@@ -1785,15 +1718,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         //     $to_user    = !empty($parcelLog->delivery_branch) ? "Delivery Branch : " . $parcelLog?->delivery_branch?->name : "";
         // }
 
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->delivery_branch) {
-            $to_user    = $parcelLog?->delivery_branch?->name ?? "N/A";
-        } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name . '-' . $parcelLog->delivery_rider?->r_id;
-        } elseif ($parcelLog->pickup_branch) {
-            $to_user    = "Pickup Branch : " . $parcelLog?->pickup_branch?->name;
-        }
+        $to_user = $parcelLog?->delivery_branch?->name;
 
         $sub_title = $parcelLog->note . 'Verified by OTP & COD-' . $parcelLog->parcel->customer_collect_amount . 'TK'  ?? 'N/A';
         $status_name  = "Partial Delivered";
@@ -1809,11 +1734,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
             $status_name  = "Partial Cancelled";
         }
     } elseif ($status == 25 && $parcelLog->delivery_type == 3) {
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->delivery_branch) {
-            $to_user    = !empty($parcelLog->delivery_branch) ? "Delivery Branch : " . $parcelLog?->delivery_branch?->name : "";
-        }
+        $to_user = $parcelLog?->delivery_branch?->name;
 
         $sub_title = $parcelLog->note ?? 'N/A';
         $status_name  = "Hold Parcel Received at " . $parcelLog?->delivery_branch?->name;
@@ -1821,15 +1742,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         $class        = "success";
     } elseif ($status == 25 && $parcelLog->delivery_type == 4) {
         $sub_title = $parcelLog->note . "\n Collected : " . $parcelLog->parcel->cancel_amount_collection  ?? 'N/A';
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->delivery_branch) {
-            $to_user    = $parcelLog?->delivery_branch?->name ?? "N/A";
-        } elseif ($parcelLog->delivery_rider) {
-            $to_user    = "Delivery Rider : " . $parcelLog?->delivery_rider?->name;
-        } elseif ($parcelLog->pickup_branch) {
-            $to_user    = "Pickup Branch : " . $parcelLog?->pickup_branch?->name;
-        }
+        $to_user = $parcelLog?->delivery_branch?->name;
 
         $x = $parcelLog->parcel;
 
@@ -1965,11 +1878,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         //$status_name  = "Return Branch Run Start";
         $class        = "success";
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->return_branch) {
-            $to_user    = !empty($parcelLog->return_branch) ? "Return Branch : " . $parcelLog->return_branch->name : "";
-        }
+
+        $to_user    = $parcelLog?->return_branch_user?->name;
+
 
         $x = $parcelLog->parcel;
 
@@ -2052,11 +1963,9 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
 
         //$status_name  = "Return Branch Run Complete";
         $class        = "success";
-        if (!empty($parcelLog->admin)) {
-            $to_user    = "Admin : " . $parcelLog->admin->name;
-        } elseif ($parcelLog->return_branch) {
-            $to_user    = !empty($parcelLog->return_branch) ? "Return Branch : " . $parcelLog->return_branch->name : "";
-        }
+
+        $to_user  = $parcelLog?->return_branch_user?->name;
+
 
         $x = $parcelLog->parcel;
 
@@ -2073,7 +1982,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
     } elseif ($status == 0 && isset($parcel) && $parcel?->is_push) {
         $status_name  = "In Review API";
         $class        = "success";
-        $to_user      = "Merchant : " . $parcelLog->merchant->company_name;
+        $to_user      =  $parcelLog?->merchant?->company_name;
     }
 
     // if ($parcelLog->parcel->payment_type == 5) {

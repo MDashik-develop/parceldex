@@ -987,7 +987,7 @@ class MerchantController extends Controller
         //     return response()->json(['error' => $validator->errors()]);
         // }
 
-        \DB::beginTransaction();
+        // \DB::beginTransaction();
         try {
 
             $trade_license = null;
@@ -1107,8 +1107,8 @@ class MerchantController extends Controller
 
         } catch (\Exception $e) {
 
-            dd($e->getMessage());
-            \DB::rollback();
+            // dd($e->getMessage());
+            // \DB::rollback();
             // $this->setMessage('Database Error Found', 'danger');
             //return redirect()->back()->withInput();
             return back()->with('error', 'Something went wrong, please try again.');

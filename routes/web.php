@@ -1,65 +1,129 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\RiderRun;
 use App\Mail\WelcomeMail;
 use App\Models\ParcelLog;
 use App\Models\Application;
+use App\Models\Parcel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
 Route::get('/log', function () {
-    if (Auth::guard('admin')->check()) {
-        return "admin";
-    } elseif (Auth::guard('branch')->check()) {
-        return "branch";
-    } elseif (Auth::guard('merchant')->check()) {
-        return "merchant";
-    } elseif (Auth::guard('warehouse')->check()) {
-        return "warehouse";
-    } else {
-        return 'nai';
+    $parcel = Parcel::find(10);
+    $parcelLogs = ParcelLog::where('parcel_id', $parcel->id)->orderBy('id', 'DESC')->get();
+
+    $logsGroupedByDate = $parcelLogs->whereIn('status', [0, 100, 1, 8, 10, 11, 12, 14, 17, 19, 21, 23, 24, 25, 31, 36])
+        ->groupBy(function ($item) {
+            return \Carbon\Carbon::parse($item['date'])->format('Y-m-d');
+        })
+        ->sortKeysDesc();
+
+    // $logsGroupedByDate = $parcelLogs
+    //     ->whereIn('status', [0, 100, 1, 8, 10, 11, 12, 14, 17, 19, 21, 23, 24, 25, 31, 36])
+    //     ->groupBy(function ($item) {
+    //         return Carbon::parse($item['date'])->format('Y-m-d');
+    //     })
+    //     ->map(function ($logs) {
+    //         return $logs->sortByDesc(function ($log) {
+    //             return Carbon::createFromFormat('h:i A', $log['time']);
+    //         });
+    //     })
+    //     ->sortKeysDesc();
+
+    // $logsGroupedByDate = $parcelLogs
+    //     ->whereIn('status', [0, 100, 1, 8, 10, 11, 12, 14, 17, 19, 21, 23, 24, 25, 31, 36])
+    //     ->groupBy(function ($item) {
+    //         return Carbon::parse($item['date'])->format('Y-m-d');
+    //     })
+    //     ->map(function ($logs) {
+    //         return $logs->sortByDesc(function ($log) {
+    //             $time = trim($log['time']);
+    //             try {
+    //                 return Carbon::createFromFormat('h:i A', $time);
+    //             } catch (\Exception $e) {
+    //                 // Handle invalid time format gracefully
+    //                 return Carbon::minValue(); // Use a fallback time for invalid entries
+    //             }
+    //         });
+    //     })
+    //     ->sortKeysDesc();
+
+    foreach ($logsGroupedByDate as $dateKey => $items) {
+        $logs = [];
+
+        foreach ($items as $item) {
+            $parcelLogStatus = returnParcelLogStatusNameForAdmin($item, $parcel->delivery_type, $parcel);
+
+            if (!isset($parcelLogStatus['to_user'])) {
+                continue;
+            }
+
+            $logItem = [
+                'time' => Carbon::parse($item->time)->format('h:i A'),
+                'status' => $parcelLogStatus['status_name'],
+                'details' => $parcelLogStatus['sub_title'] . ' By - ' . $parcelLogStatus['to_user'],
+            ];
+
+            $logs[] = $logItem;
+        }
     }
 
-    $model = RiderRun::with([
-        'rider' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
-        'rider_run_details.parcel'
-    ])
-        // ->whereHas('rider_run_details.parcel', function ($query) {
-        //     $query->where('merchant_id', auth()->guard('merchant')->user()->id);
-        // })
-        ->where('run_type', 3)
-        ->orderBy('id', 'desc')
-        ->select();
-
-    dd($model->get());
-
-    $logs = ParcelLog::where('parcel_id', 9076)->get()->map(function ($log) {
-        $name = '';
-
-        if ($log->pickup_branch_user) {
-            $name = $log->pickup_branch_user->name;
-        } elseif ($log->delivery_branch_user) {
-            $name = $log->delivery_branch_user->name;
-        } else if ($log->return_branch_user) {
-            $name = $log->return_branch_user->name;
-        }
-
-        return [
-            'id' => $log->id,
-            'parcel_id' => $log->parcel_id,
-            'status' => $log->status,
-            'action_by' => $name,
-            'admin_id' => $log->admin_id,
-            'merchant_id' => $log->merchant_id,
-            'action_at' => $log->date . ' ' . $log->time,
-        ];
-    });
-
     return response()->json($logs);
+
+
+    // if (Auth::guard('admin')->check()) {
+    //     return "admin";
+    // } elseif (Auth::guard('branch')->check()) {
+    //     return "branch";
+    // } elseif (Auth::guard('merchant')->check()) {
+    //     return "merchant";
+    // } elseif (Auth::guard('warehouse')->check()) {
+    //     return "warehouse";
+    // } else {
+    //     return 'nai';
+    // }
+
+    // $model = RiderRun::with([
+    //     'rider' => function ($query) {
+    //         $query->select('id', 'name', 'contact_number', 'address');
+    //     },
+    //     'rider_run_details.parcel'
+    // ])
+    //     // ->whereHas('rider_run_details.parcel', function ($query) {
+    //     //     $query->where('merchant_id', auth()->guard('merchant')->user()->id);
+    //     // })
+    //     ->where('run_type', 3)
+    //     ->orderBy('id', 'desc')
+    //     ->select();
+
+    // dd($model->get());
+
+    // $logs = ParcelLog::where('parcel_id', 10)->get()->map(function ($log) {
+    //     $name = '';
+
+    //     if ($log->pickup_branch_user) {
+    //         $name = $log->pickup_branch_user->name;
+    //     } elseif ($log->delivery_branch_user) {
+    //         $name = $log->delivery_branch_user->name;
+    //     } else if ($log->return_branch_user) {
+    //         $name = $log->return_branch_user->name;
+    //     }
+
+    //     return [
+    //         'id' => $log->id,
+    //         'parcel_id' => $log->parcel_id,
+    //         'status' => $log->status,
+    //         'action_by' => $name,
+    //         'admin_id' => $log->admin_id,
+    //         'merchant_id' => $log->merchant_id,
+    //         'action_at' => $log->date . ' ' . $log->time,
+    //     ];
+    // });
+
+    // return response()->json($logs);
 });
 
 Route::get('/clear', function () {

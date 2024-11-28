@@ -2041,9 +2041,9 @@ class ParcelController extends Controller
             'rider_note' => $parcel->note,
         ];
 
-        $parcelLogs = ParcelLog::where('parcel_id', $parcel->id)->orderBy('id', 'asc')->get();
+        $parcelLogs = ParcelLog::where('parcel_id', $parcel->id)->orderBy('id', 'DESC')->get();
 
-        $logsGroupedByDate = $parcelLogs
+        $logsGroupedByDate = $parcelLogs->whereIn('status', [0, 100, 1, 8, 10, 11, 12, 14, 17, 19, 21, 23, 24, 25, 31, 36])
             ->groupBy(function ($item) {
                 return \Carbon\Carbon::parse($item['date'])->format('Y-m-d');
             })

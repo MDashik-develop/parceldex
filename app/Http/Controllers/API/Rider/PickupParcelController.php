@@ -822,6 +822,7 @@ class PickupParcelController extends Controller
                 ParcelLog::create([
                     'parcel_id'       => $request->parcel_id,
                     'pickup_rider_id' => $rider_id,
+                    'pickup_branch_id' => $parcel->pickup_branch_id,
                     'date'            => date('Y-m-d'),
                     'time'            => date('H:i:s'),
                     'status'          => 10,

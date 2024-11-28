@@ -459,7 +459,7 @@ class DeliveryParcelController extends Controller
                 // -Parceldex Courier
 
                 // $message = "ON THE WAY:\n" . ucwords($parcel->merchant->company_name) . " \n Parcel ID: " . $parcel->parcel_invoice . " \nCOD: " . number_format($parcel->total_collect_amount) . " Tk. \nDelivery Hero:  " . $parcel->delivery_rider->contact_number . "\n-Parceldex Courier";
-                $message = "ON THE WAY-\n" . ucwords($parcel->merchant->company_name) . " \nParcel ID- " . $parcel->parcel_invoice . " \nCOD: " . number_format($parcel->total_collect_amount) . " Tk. \nDelivery Hero-  " . $parcel->delivery_rider->contact_number . "\nCall-09642735735\n-Parceldex Courier";
+                $message = "ON THE WAY\n" . ucwords($parcel->merchant->company_name) . " \nParcel ID- " . $parcel->parcel_invoice . " \nCOD: " . number_format($parcel->total_collect_amount) . " Tk. \nDelivery Hero-  " . $parcel->delivery_rider->contact_number . "\nParceldex Courier";
 
                 $this->send_sms($parcel->customer_contact_number, $message);
 
@@ -681,7 +681,7 @@ class DeliveryParcelController extends Controller
 
                 // $message = "PAID PARCEL DELIVERY:  \n" . ucwords($parcel->merchant->company_name) . " \nParcel ID: " . $parcel->parcel_invoice . " \nOTP: " . $parcel->parcel_otp . " \nValid for 30 Min \nDelivery Hero:  " . $parcel->delivery_rider->contact_number . " \n-Parceldex Courier";
 
-                $message = "PAID PARCEL DELIVERY-  \n" . ucwords($parcel->merchant->company_name) . " \nParcel ID- " . $parcel->parcel_invoice . " \nOTP-" . $parcel->parcel_otp . " \nValid for 30 Min \nDelivery Hero- " . $parcel->delivery_rider->contact_number . "\nCall-09642735735\n-Parceldex Courier";
+                $message = "PAID PARCEL DELIVERY \n" . ucwords($parcel->merchant->company_name) . " \nParcel ID- " . $parcel->parcel_invoice . " \nOTP-" . $parcel->parcel_otp . " \nValid for 30 Min \nDelivery Hero- " . $parcel->delivery_rider->contact_number . "\nParceldex Courier";
 
 
                 //                 PAID PARCEL DELIVERY:
@@ -728,9 +728,9 @@ class DeliveryParcelController extends Controller
 
                 // $message = "PARTIAL DELIVERY:  \nParcel ID: " . $parcel->parcel_invoice . " \nActual COD: " . number_format($parcel->total_collect_amount) . " Tk. \nPartial COD: " . number_format($parcel->customer_collect_amount) . " Tk. \nApproval OTP: " . $parcel->parcel_otp . " \nValid for 30 Min \n-Parceldex Courier";
 
-                $message = "PARTIAL DELIVERY-  \nParcel ID-" . $parcel->parcel_invoice . " \nActual COD- " . number_format($parcel->total_collect_amount) . " Tk. \nPartial COD- " . number_format($parcel->customer_collect_amount) . " Tk. \nApproval OTP- " . $parcel->parcel_otp . " \nValid for 30 Min \nCall-09642735735\n-Parceldex Courier";
+                $message = "PARTIAL DELIVERY \nParcel ID-" . $parcel->parcel_invoice . " \nActual COD- " . number_format($parcel->total_collect_amount) . " Tk. \nPartial COD- " . number_format($parcel->customer_collect_amount) . " Tk. \nApproval OTP- " . $parcel->parcel_otp . " \nValid for 30 Min \n-Parceldex Courier";
 
-                
+
 
                 if ($this->send_sms($parcel->merchant->contact_number, $message)) {
                     return response()->json([
@@ -902,7 +902,7 @@ class DeliveryParcelController extends Controller
 
                     // $message = "SUCCESSFULLY DELIVERED:\n" . ucwords($parcel->merchant->company_name) . "\nParcel ID: " . $parcel->parcel_invoice . " \nCollected COD: " . number_format($parcel->customer_collect_amount) . " \n-Thank you for using-Parceldex Courier";
 
-                    $message = "SUCCESSFULLY DELIVERED-\n" . ucwords($parcel->merchant->company_name) . "\nParcel ID-" . $parcel->parcel_invoice . " \nCollected COD- " . number_format($parcel->customer_collect_amount) .  "\nCall-09642735735 \n-Thank you for using-Parcelex Courier";
+                    $message = "SUCCESSFULLY DELIVERED\n" . ucwords($parcel->merchant->company_name) . "\nParcel ID-" . $parcel->parcel_invoice . " \nCollected COD- " . number_format($customer_collect_amount) .  "\nCall-09642735735 \n-Thank you for using-Parcelex Courier";
 
 
                     $this->send_sms($parcel->merchant->contact_number, $message);
@@ -928,8 +928,9 @@ class DeliveryParcelController extends Controller
                 $parcel_log_update_data['note'] = $parcel_note;
                 ParcelLog::create($parcel_log_update_data);
 
-                if ($request->cancel_amount_collection) {
-                    $parcel = Parcel::find($request->parcel_id);
+                $parcel = Parcel::find($request->parcel_id);
+
+                if ($parcel->status == 24 && $request->cancel_amount_collection) {
                     $parcel->cancel_amount_collection = $request->cancel_amount_collection;
                     $parcel->save();
                 }

@@ -203,6 +203,7 @@
                                                 @php
                                                     //  dd($parcel);
                                                     $s_charge = 0;
+                                                    $s_collected = 0;
                                                     $returnCharge = 0;
                                                     if ($parcel->delivery_type == 4 || $parcel->delivery_type == 2) {
                                                         $returnCharge = $parcel->merchant_service_area_return_charge;
@@ -231,11 +232,12 @@
                                                         $parcel->weight_package_charge -
                                                         $parcel->delivery_charge;
 
-                                                    $payable_amount =
-                                                        $change -
-                                                        $parcel->cod_charge -
-                                                        $returnCharge +
-                                                        $parcel->cancel_amount_collection;
+                                                    // $payable_amount =
+                                                    //     $change -
+                                                    //     $parcel->cod_charge -
+                                                    //     $returnCharge +
+                                                    //     $parcel->cancel_amount_collection;
+
                                                 @endphp
                                                 <tr style="background-color: #f4f4f4;">
                                                     <td class="text-center">
@@ -272,12 +274,15 @@
                                                             @php
                                                                 $t_collected_amount +=
                                                                     $parcel->cancel_amount_collection;
+
+                                                                $s_collected += $parcel->cancel_amount_collection;
                                                             @endphp
                                                             {{ number_format($parcel->cancel_amount_collection, 2) }}
                                                         @elseif($parcel->status == 25 && ($parcel->delivery_type == 1 || $parcel->delivery_type == 2))
                                                             {{ number_format($parcel->customer_collect_amount, 2) }}
                                                             @php
                                                                 $t_collected_amount += $parcel->customer_collect_amount;
+                                                                $s_collected += $parcel->customer_collect_amount;
                                                             @endphp
                                                         @else
                                                             {{ number_format(0, 2) }}
@@ -322,7 +327,7 @@
 
                                                     </td>
                                                     <td class="text-right "
-                                                        id="view_total_charge_amount{{ $parcel->id }}">
+                                                        id="view_payable_amount{{ $parcel->id }}">
                                                         @php
                                                             $s_charge +=
                                                                 $parcel->weight_package_charge +
@@ -337,10 +342,15 @@
 
                                                     </td>
                                                     <td class="text-right "
-                                                        id="view_total_charge_amount{{ $parcel->id }}">
-                                                        {{ number_format($payable_amount, 2) }}
+                                                        id="view_total_payable_amount{{ $parcel->id }}">
                                                         @php
-                                                            $t_payable_amount += $payable_amount;
+                                                            $x = $s_collected - $s_charge;
+                                                        @endphp
+                                                        {{ number_format($x, 2) }}
+                                                        @php
+                                                            //$t_payable_amount += $payable_amount;
+                                                            // $t_payable_amount += ($t_collected_amount - $t_charge);
+                                                            $t_payable_amount += $x;
                                                         @endphp
                                                     </td>
                                                 </tr>
@@ -487,6 +497,7 @@
             var total_charge = total_charge_amount - cod_charge - return_charge;
             // console.log(parcel_id,return_charge,total_charge_amount,total_charge);
             $(`#view_total_charge_amount${parcel_id}`).text(total_charge.toFixed(2));
+            $(`#view_payable_amount${parcel_id}`).text(total_charge.toFixed(2));
         }
 
 

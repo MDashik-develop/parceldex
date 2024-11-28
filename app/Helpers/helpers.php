@@ -289,7 +289,7 @@ function returnParcelStatusNameForAdmin($status, $delivery_type, $payment_type)
         $status_name  = "Delivery Complete";
         $class        = "success";
     } elseif ($status == 25 && $delivery_type == 2) {
-        $status_name  = "Partial Delivery";
+        $status_name  = "Partial Delivered";
         $class        = "success";
     } elseif ($status == 25 && $delivery_type == 3) {
         $status_name  = "Reschedule Delivery";
@@ -507,7 +507,7 @@ function returnParcelStatusForAdmin($status, $delivery_type, $payment_type = nul
         $status_name  = "Delivered";
         $class        = "success";
     } elseif ($status >= 25 && $delivery_type == 2) {
-        $status_name  = "Partial Delivery";
+        $status_name  = "Partial Delivered";
         $class        = "success";
     } elseif ($status >= 25 && $delivery_type == 3) {
         $status_name  = "Reschedule Delivery";
@@ -691,7 +691,7 @@ function returnDeliveryStatusForAdmin($status, $delivery_type, $payment_type)
             $status_name  = "Delivered";
             $class        = "success";
         } elseif ($status >= 25 && $delivery_type == 2) {
-            $status_name  = "Partial Delivery";
+            $status_name  = "Partial Delivered";
             $class        = "success";
         } elseif ($delivery_type == 3) {
             $status_name  = "Reschedule";
@@ -851,6 +851,8 @@ function returnParcelStatusNameForBranch($status, $delivery_type, $payment_type,
     $status_name    = "";
     $class          = "";
 
+    $x = Parcel::where('parcel_invoice', $parcel->parcel_invoice)->first();
+
     $returnableParcel   = ($delivery_type == 2 || $delivery_type == 4);
     $deliveredParcel    = ($delivery_type == 1 || $delivery_type == 2);
 
@@ -928,13 +930,18 @@ function returnParcelStatusNameForBranch($status, $delivery_type, $payment_type,
         $status_name  = "Rider Requested for Cancel";
         $class        = "warning";
     } elseif ($status >= 25 && $delivery_type == 1) {
-        $status_name  = "Delivered";
+        if ($x->exchange == 'yes') {
+            $status_name  = "Exchanged";
+        } elseif ($x->exchange == 'no') {
+            $status_name  = "Delivered";
+        }
+        //$status_name  = "Delivered";
         $class        = "success";
     } elseif ($status == 25 && $delivery_type == 2) {
-        $status_name  = "Partial Delivery";
+        $status_name  = "Partial Delivered";
         $class        = "success";
     } elseif ($status == 25 && $delivery_type == 3) {
-        $status_name  = "Reschedule Delivery";
+        $status_name  = "Delivery Rescheduled";
         $class        = "success";
     } elseif ($status == 25 && $delivery_type == 4) {
         $status_name  = "Cancelled";
@@ -1114,6 +1121,8 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
     $returnableParcel   = ($delivery_type == 2 || $delivery_type == 4);
     $deliveredParcel    = ($delivery_type == 1 || $delivery_type == 2);
 
+    $x = Parcel::where('parcel_invoice', $parcel_invoice)->first();
+
     if ($status == 1) {
         $status_name  = "Pick Requested";
         $class        = "warning";
@@ -1188,7 +1197,11 @@ function returnParcelStatusNameForMerchant($status, $delivery_type, $payment_typ
         $status_name  = "Cancel Approval Pending";
         $class        = "warning";
     } elseif ($status == 25 && $delivery_type == 1) {
-        $status_name  = "Delivered";
+        if ($x->exchange == 'yes') {
+            $status_name  = "Exchanged";
+        } elseif ($x->exchange == 'no') {
+            $status_name  = "Delivered";
+        }
         $class        = "success";
     } elseif ($status == 25 && $delivery_type == 2) {
         $status_name  = "Partial Delivered";
@@ -1432,7 +1445,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         $class        = "success";
         $to_user  = $parcelLog?->pickup_branch_user?->name;
     } elseif ($status == 12) {
-        $sub_title = 'Transfer ID - ' . $parcelLog->parcel?->deliveryBranchTransferDetails?->delivery_branch_transfer;
+        $sub_title = 'Transfer ID - ' . $parcelLog->parcel?->deliveryBranchTransferDetailsMH?->delivery_branch_transfer?->delivery_transfer_invoice;
         $status_name  = "Sent to " . $parcelLog?->pickup_branch_user?->name . " for Delivery ";
         $class        = "success";
         $to_user  = $parcelLog?->pickup_branch_user?->name;
@@ -1478,9 +1491,15 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         $sub_title = $parcelLog->note ?? 'N/A';
         $status_name  = "Successfully Delivered";
         $class        = "success";
-        $to_user = $parcelLog?->delivery_branch?->name;
+        $to_user = $parcelLog?->delivery_branch_user?->name;
 
         $x = $parcelLog->parcel;
+
+        if ($x->exchange == 'yes') {
+            $status_name  = "Exchanged";
+        } elseif ($x->exchange == 'no') {
+            $status_name  = "Delivered";
+        }
 
         if ($x->suborder && $x->exchange == 'yes' && $x->parent_delivery_type == 1) {
             $status_name  = "Exchange Collected";
@@ -1490,7 +1509,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
             $status_name  = "Partial Cancelled";
         }
     } elseif ($status == 25 && $parcelLog->delivery_type == 2) {
-        $to_user = $parcelLog?->delivery_branch?->name;
+        $to_user = $parcelLog?->delivery_branch_user?->name;
 
         $sub_title = $parcelLog->note . 'Verified by OTP & COD-' . $parcelLog?->parcel?->customer_collect_amount . 'TK'  ?? 'N/A';
         $status_name  = "Partial Delivered";
@@ -1506,7 +1525,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
             $status_name  = "Partial Cancelled";
         }
     } elseif ($status == 25 && $parcelLog->delivery_type == 3) {
-        $to_user = $parcelLog?->delivery_branch?->name;
+        $to_user = $parcelLog?->delivery_branch_user?->name;
 
         $sub_title = $parcelLog->note ?? 'N/A';
         $status_name  = "Hold Parcel Received at " . $parcelLog?->delivery_branch?->name;
@@ -1514,7 +1533,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         $class        = "success";
     } elseif ($status == 25 && $parcelLog->delivery_type == 4) {
         $sub_title = $parcelLog->note . "\n Collected : " . $parcelLog?->parcel?->cancel_amount_collection  ?? 'N/A';
-        $to_user = $parcelLog?->delivery_branch?->name;
+        $to_user = $parcelLog?->delivery_branch_user?->name;
 
         $x = $parcelLog->parcel;
 

@@ -1,5 +1,5 @@
 <div class="modal-header bg-default">
-    <h4 class="modal-title">Rider Run Reconciliation</h4>
+    <h4 class="modal-title">Rider Run Reconciliation </h4>
     <button type="button" class="close bg-danger" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -142,7 +142,7 @@
                                             {{ \Carbon\Carbon::parse($rider_run_detail->complete_date_time)->format('d/m/Y H:i:s') }} <br>
                                             @endif
                                         </td>
-                                        <td class="text-center"> {{ $rider_run_detail->parcel->merchant->name }} </td>
+                                        <td class="text-center"> {{ $rider_run_detail->parcel->merchant->company_name }} </td>
                                         <td class="text-center"> {{ $rider_run_detail->parcel->customer_name }} </td>
                                         <td class="text-center">
                                             <select name="status[]"  class="form-control select2 rider_run_status" style="width: 100%" onchange="return rider_run_status()">

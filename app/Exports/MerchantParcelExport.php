@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use Carbon\Carbon;
+use App\Models\Area;
 use App\Models\Parcel;
 use App\Models\BookingParcel;
 use Illuminate\Support\Collection;
@@ -13,6 +14,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithProperties;
+use App\Models\MerchantServiceAreaReturnCharge;
 use App\Models\ParcelMerchantDeliveryPaymentDetail;
 
 class MerchantParcelExport implements
@@ -183,7 +185,42 @@ class MerchantParcelExport implements
                     }
                 }
 
-                $totalCharge = $parcel->weight_package_charge + $parcel->cod_charge + $parcel->delivery_charge + $parcel->merchant_service_area_return_charge;
+                $merchant_service_area_return_charge = 0;
+
+                if ($parcel->status == 25 && $parcel->delivery_type == 4) {
+                    $merchant_service_area_return_charge = $parcel->merchant_service_area_return_charge;
+                } elseif ($parcel->status == 25 && $parcel->delivery_type == 2) {
+                    $merchant_service_area_return_charge = $parcel->merchant_service_area_return_charge;
+                } elseif ($parcel->exchange == 'yes' && $parcel->status == 25 && ($parcel->delivery_type == 1 || $parcel->delivery_type == 2)) {
+                    $merchant_service_area_return_charge = $parcel->merchant_service_area_return_charge;
+                }
+
+
+                // if ($parcel->suborder) {
+                //     $mainParcel = Parcel::where('parcel_invoice', $parcel->suborder)->first();
+
+                //     $area = Area::with('district')->where('id', $mainParcel->merchant->area_id)->first();
+                //     $service_area_id = $area->district->service_area_id;
+                //     $merchantServiceAreaReturnCharge = MerchantServiceAreaReturnCharge::where([
+                //         'service_area_id' => $service_area_id,
+                //         'merchant_id' => $mainParcel->merchant->id,
+                //     ])->first();
+
+
+                //     if ($merchantServiceAreaReturnCharge && !empty($merchantServiceAreaReturnCharge->return_charge)) {
+                //         $merchant_service_area_return_charge = $merchantServiceAreaReturnCharge->return_charge;
+                //     }
+
+                //     if ($parcel->status == 25 && $parcel->delivery_type == 2) {
+                //         $merchant_service_area_return_charge = $mainParcel->merchant_service_area_return_charge;
+                //     }
+                // } else {
+                //     if ($parcel->status == 25 && $parcel->delivery_type == 4) {
+                //         $merchant_service_area_return_charge = $parcel->merchant_service_area_return_charge;
+                //     }
+                // }
+
+                $totalCharge = $parcel->weight_package_charge + $parcel->cod_charge + $parcel->delivery_charge + $merchant_service_area_return_charge;
 
                 $a = ParcelMerchantDeliveryPaymentDetail::where('parcel_id', $parcel->id)->where('status', 2)->first();
 
@@ -208,7 +245,8 @@ class MerchantParcelExport implements
                     'weight_charge' => $parcel->weight_package_charge != 0 ? $parcel->weight_package_charge : '0',
                     'cod_charge' => $parcel->cod_charge != 0 ? $parcel->cod_charge : '0',
                     'delivery_charge' => $parcel->delivery_charge != 0 ? $parcel->delivery_charge : '0',
-                    'return_charge' => $parcel->merchant_service_area_return_charge != 0 ? $parcel->merchant_service_area_return_charge : '0',
+                    'return_charge' => $merchant_service_area_return_charge,
+                    //'return_charge' => $parcel->merchant_service_area_return_charge != 0 ? $parcel->merchant_service_area_return_charge : '0',
                     'total_charge' => $totalCharge != 0 ? $totalCharge : '0',
                     'parcel_note' => $parcel->parcel_note,
                     'logs_note' => $logs_note,

@@ -626,6 +626,18 @@ class DeliveryBranchTransferParcelController extends Controller
                             'delivery_branch_user_id' => $branch_user_id,
                             'date' => date('Y-m-d'),
                             'time' => date('H:i:s'),
+                            'status' => 12,
+                            'delivery_type' => $parcel->delivery_type,
+                        ]);
+
+                        ParcelLog::create([
+                            'parcel_id' => $parcel_id,
+                            'pickup_branch_id' => $branch_id,
+                            'pickup_branch_user_id' => $branch_user_id,
+                            'delivery_branch_id' => $request->input('branch_id'),
+                            'delivery_branch_user_id' => $branch_user_id,
+                            'date' => date('Y-m-d'),
+                            'time' => date('H:i:s'),
                             'status' => 14,
                             'delivery_type' => $parcel->delivery_type,
                         ]);
@@ -649,6 +661,7 @@ class DeliveryBranchTransferParcelController extends Controller
                         ParcelLog::create([
                             'parcel_id' => $parcel_id,
                             'pickup_branch_id' => $branch_id,
+                            'pickup_branch_user_id' => $branch_user_id,
                             'delivery_branch_id' => $request->input('branch_id'),
                             'delivery_branch_user_id' => $branch_user_id,
                             'date' => date('Y-m-d'),

@@ -223,6 +223,14 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="https://documenter.getpostman.com/view/6163789/2sAYBXAqfK" target="_blank"
+                        class="nav-link">
+                        <i class="fas fa-clipboard-list fa-lg text-success"></i>
+                        <p>API Documentation</p>
+                    </a>
+                </li>
+
                 <!--<li class="nav-item">-->
                 <!--    <a href="{{ route('frontend.home') }}" class="nav-link " target="_blank">-->
                 <!--        <i class="fas fa-globe fa-lg text-success"></i>-->

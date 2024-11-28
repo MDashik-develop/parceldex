@@ -944,28 +944,29 @@ class ParcelController extends Controller
                 return $customer_info;
             })
             ->addColumn('amount', function ($data) {
-                $amount = '<p><strong>Amount to be Collect: ৳ </strong>' . $data->total_collect_amount . '</p>';
+                $amount = '<p><strong>Amount to be Collect: </strong>' . $data->total_collect_amount . '</p>';
 
                 if ($data->status == 21 || $data->status == 22) {
-                    $amount .= '<p><strong>Collected: ৳ </strong>' . $data->customer_collect_amount . '</p>';
+                    $amount .= '<p><strong>Collected: </strong>' . $data->customer_collect_amount . '</p>';
                 }
 
                 if ($data->status == 25) {
 
                     if ($data->delivery_type == 1 || $data->delivery_type == 2) {
-                        $amount .= '<p><strong>Collected: ৳ </strong>' . $data->customer_collect_amount . '</p>';
+                        $amount .= '<p><strong>Collected: </strong>' . $data->customer_collect_amount . '</p>';
                     }
 
                     if ($data->delivery_type == 4) {
-                        $amount .= '<p><strong>Collected: ৳ </strong>' . $data->cancel_amount_collection . '</p>';
+                        $amount .= '<p><strong>Collected: </strong>' . $data->cancel_amount_collection . '</p>';
                     }
                 }
 
                 if ($data->status == 24) {
-                    $amount .= '<p><strong>Collected: ৳ </strong>' . $data->cancel_amount_collection . '</p>';
+                    $amount .= '<p><strong>Collected: </strong>' . $data->cancel_amount_collection . '</p>';
                 }
 
-                $amount .= '<p><strong>Delivery Charge:  ৳ </strong>' . $data->delivery_charge . '</p>';
+                $amount .= '<p><strong>Delivery Charge:  </strong>' . $data->delivery_charge . '</p>';
+                $amount .= '<p><strong>Weight Charge:  </strong>' . $data->weight_charge . '</p>';
                 // $amount .= '<p><strong>Delivery Charge: </strong>'.$data->total_charge.'</p>';
                 // $amount .= '<p><strong>COD Charge: </strong>'.$data->cod_charge.'</p>';
                 return $amount;
@@ -1555,6 +1556,7 @@ class ParcelController extends Controller
                     $merchant_order_id = isset($row['merchant_order_id']) ? $row['merchant_order_id'] : null;
                     $customer_name = isset($row['customer_name']) ? $row['customer_name'] : null;
                     $customer_contact_number = isset($row['customer_contact_number']) ? $row['customer_contact_number'] : null;
+                    $customer_contact_number2 = isset($row['customer_contact_number2']) ? $row['customer_contact_number2'] : null;
                     $customer_address = isset($row['customer_address']) ? $row['customer_address'] : null;
                     $area_id = isset($row['area_id']) ? $row['area_id'] : null;
                     $product_details = isset($row['product_details']) ? $row['product_details'] : null;
@@ -1752,6 +1754,7 @@ class ParcelController extends Controller
                                 'customer_name' => $customer_name,
                                 'customer_address' => $customer_address,
                                 'customer_contact_number' => $customer_contact_number,
+                                'customer_contact_number2' => $customer_contact_number2,
                                 'product_details' => $product_details,
                                 'district_id' => $district_id,
                                 'upazila_id' => $upazila_id,

@@ -1060,7 +1060,6 @@ class DeliveryRiderRunParcelController extends Controller
 
                         $parcel_log_create_data = [
                             'parcel_id' => $parcel_id[$i],
-                            'pickup_branch_id' => auth()->guard('branch')->user()->id,
                             'date' => date('Y-m-d'),
                             'note' => $complete_note[$i],
                             'time' => date('H:i:s'),
@@ -1091,6 +1090,8 @@ class DeliveryRiderRunParcelController extends Controller
                                 $parcel_update_data['delivery_type'] = 1;
                                 $parcel_update_data['delivery_date'] = date("Y-m-d");
                                 $parcel_log_create_data['status'] = 25;
+                                $parcel_log_create_data['delivery_branch_id'] = auth()->guard('branch')->user()->branch->id;
+                                $parcel_log_create_data['delivery_branch_user_id'] = auth()->guard('branch')->user()->id;
                                 $sms_delivery_status = 1;
                                 $sms_delivery_type = "Delivered";
 
@@ -1124,18 +1125,19 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
                                     $new_parcel->customer_collect_amount = 0;
                                     $new_parcel->cancel_amount_collection = 0;
-                                    $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                    $new_parcel->merchant_service_area_return_charge = 0;
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();
                                     $new_parcel->parent_delivery_type = 1;
                                     $new_parcel->save();
 
-                                    $parcel->merchant_service_area_return_charge = 0;
+                                    $parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
                                     $parcel->save();
 
                                     $new_parcel_log = [
                                         'parcel_id' => $new_parcel->id,
-                                        'delivery_branch_id' => auth()->guard('branch')->user()->id,
+                                        'delivery_branch_id' => auth()->guard('branch')->user()->branch->id,
+                                        'delivery_branch_user_id' => auth()->guard('branch')->user()->id,
                                         'date' => date('Y-m-d'),
                                         'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
                                         'time' => date('H:i:s'),
@@ -1166,6 +1168,8 @@ class DeliveryRiderRunParcelController extends Controller
                                 $parcel_update_data['delivery_type'] = 2;
                                 $parcel_update_data['delivery_date'] = date("Y-m-d");
                                 $parcel_log_create_data['status'] = 25;
+                                $parcel_log_create_data['delivery_branch_id'] = auth()->guard('branch')->user()->branch->id;
+                                $parcel_log_create_data['delivery_branch_user_id'] = auth()->guard('branch')->user()->id;
                                 $sms_delivery_status = 1;
                                 $sms_delivery_type = "Delivered";
 
@@ -1199,18 +1203,19 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
                                     $new_parcel->customer_collect_amount = 0;
                                     $new_parcel->cancel_amount_collection = 0;
-                                    $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                    $new_parcel->merchant_service_area_return_charge = 0;
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();
                                     $new_parcel->parent_delivery_type = 2;
                                     $new_parcel->save();
 
-                                    $parcel->merchant_service_area_return_charge = 0;
+                                    $parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
                                     $parcel->save();
 
                                     $new_parcel_log = [
                                         'parcel_id' => $new_parcel->id,
-                                        'delivery_branch_id' => auth()->guard('branch')->user()->id,
+                                        'delivery_branch_id' => auth()->guard('branch')->user()->branch->id,
+                                        'delivery_branch_user_id' => auth()->guard('branch')->user()->id,
                                         'date' => date('Y-m-d'),
                                         'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
                                         'time' => date('H:i:s'),
@@ -1235,18 +1240,19 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
                                     $new_parcel->customer_collect_amount = 0;
                                     $new_parcel->cancel_amount_collection = 0;
-                                    $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                    $new_parcel->merchant_service_area_return_charge = 0;
                                     $new_parcel->delivery_date = now()->toDateString();
                                     $new_parcel->created_at = now();
                                     $new_parcel->parent_delivery_type = 2;
                                     $new_parcel->save();
 
-                                    $parcel->merchant_service_area_return_charge = 0;
+                                    $parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
                                     $parcel->save();
 
                                     $new_parcel_log = [
                                         'parcel_id' => $new_parcel->id,
-                                        'delivery_branch_id' => auth()->guard('branch')->user()->id,
+                                        'delivery_branch_id' => auth()->guard('branch')->user()->branch->id,
+                                        'delivery_branch_user_id' => auth()->guard('branch')->user()->id,
                                         'date' => date('Y-m-d'),
                                         'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
                                         'time' => date('H:i:s'),
@@ -1257,25 +1263,6 @@ class DeliveryRiderRunParcelController extends Controller
                                     ParcelLog::create($new_parcel_log);
                                 }
 
-                                // $new_parcel = $parcel->replicate();
-                                // $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
-                                // $new_parcel->suborder = $parcel->parcel_invoice;
-                                // $new_parcel->delivery_type = 4;
-                                // $new_parcel->status = 25;
-                                // $new_parcel->total_collect_amount = $confirm_amount_to_be_collect - $confirm_customer_collect_amount;
-                                // $new_parcel->delivery_charge = 0;
-                                // $new_parcel->merchant_service_area_charge = 0;
-                                // $new_parcel->cod_percent = 0;
-                                // $new_parcel->cod_charge = 0;
-                                // $new_parcel->weight_package_charge = 0;
-                                // $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
-                                // $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
-                                // $new_parcel->customer_collect_amount = 0;
-                                // $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
-                                // $new_parcel->delivery_date = now()->toDateString();
-                                // $new_parcel->created_at = now();
-                                // $new_parcel->save();
-
                                 break;
 
                             case 23:
@@ -1285,6 +1272,8 @@ class DeliveryRiderRunParcelController extends Controller
                                 $parcel_update_data['delivery_type'] = 3;
                                 $parcel_log_create_data['status'] = 25;
                                 $parcel_log_create_data['reschedule_parcel_date'] = $reschedule_parcel_date[$i];
+                                $parcel_log_create_data['delivery_branch_id'] = auth()->guard('branch')->user()->branch->id;
+                                $parcel_log_create_data['delivery_branch_user_id'] = auth()->guard('branch')->user()->id;
                                 $sms_delivery_status = 0;
                                 $sms_delivery_type = "";
                                 break;
@@ -1299,6 +1288,8 @@ class DeliveryRiderRunParcelController extends Controller
                                 $parcel_update_data['customer_collect_amount'] = 0;
                                 $parcel_update_data['cod_charge'] = 0;
                                 $parcel_log_create_data['status'] = 25;
+                                $parcel_log_create_data['delivery_branch_id'] = auth()->guard('branch')->user()->branch->id;
+                                $parcel_log_create_data['delivery_branch_user_id'] = auth()->guard('branch')->user()->id;
                                 $sms_delivery_status = 1;
                                 $sms_delivery_type = "Canceled";
                                 break;

@@ -56,6 +56,11 @@ class Parcel extends Model
         return $this->belongsTo(DeliveryBranchTransferDetail::class, 'parcel_id');
     }
 
+    public function deliveryBranchTransferDetailsMH()
+    {
+        return $this->hasOne(DeliveryBranchTransferDetail::class, 'parcel_id');
+    }
+
     public function merchant_shops()
     {
         return $this->belongsTo(MerchantShop::class, 'shop_id')->withDefault(['shop_name' => 'Shop Name']);

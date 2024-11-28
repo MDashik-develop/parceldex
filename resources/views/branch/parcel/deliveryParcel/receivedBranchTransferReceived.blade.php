@@ -9,6 +9,33 @@
     \Cart::session($branch_id)->clear();
 @endphp
 <div class="modal-body">
+    @if ($deliveryBranchTransfer->delivery_branch_transfer_details->count() > 0)
+        <div class="col-md-12 row mb-3" style="margin-top: 20px;">
+            <div class="col-md-12">
+                <fieldset id="div_delivery_branch_transfer_parcel" style="display: none">
+                    <legend>Delivery Branch Transfer Parcel </legend>
+                    <div class="row">
+                        <div class="col-sm-12" id="show_delivery_branch_transfer_parcel">
+
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="col-md-12 row mb-3" style="margin-top: 20px;">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <input type="text" name="parcel_invoice" id="parcel_invoice" class="form-control"
+                        placeholder="Enter Parcel Invoice Barcode"
+                        style="font-size: 20px; box-shadow: 0 0 5px rgb(62, 196, 118);
+                                    padding: 3px 0px 3px 3px;
+                                    margin: 5px 1px 3px 0px;
+                                    border: 1px solid rgb(62, 196, 118);">
+                </div>
+            </div>
+        </div>
+    @endif
     <form role="form"
         action="{{ route('branch.parcel.confirmReceivedBranchTransferReceived', $deliveryBranchTransfer->id) }}"
         id="confirmAssignDeliveryBranch" method="POST" enctype="multipart/form-data"
@@ -150,31 +177,6 @@
                             </div>
                         </div>
                         @if ($deliveryBranchTransfer->delivery_branch_transfer_details->count() > 0)
-                            <div class="col-md-12 row mb-3" style="margin-top: 20px;">
-                                <div class="col-md-12">
-                                    <fieldset id="div_delivery_branch_transfer_parcel" style="display: none">
-                                        <legend>Delivery Branch Transfer Parcel </legend>
-                                        <div class="row">
-                                            <div class="col-sm-12" id="show_delivery_branch_transfer_parcel">
-
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12 row mb-3" style="margin-top: 20px;">
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <input type="text" name="parcel_invoice" id="parcel_invoice"
-                                            class="form-control" placeholder="Enter Parcel Invoice Barcode"
-                                            style="font-size: 20px; box-shadow: 0 0 5px rgb(62, 196, 118);
-                                    padding: 3px 0px 3px 3px;
-                                    margin: 5px 1px 3px 0px;
-                                    border: 1px solid rgb(62, 196, 118);">
-                                    </div>
-                                </div>
-                            </div>
                             <fieldset>
                                 <legend>Transfer Parcel</legend>
                                 <table class="table table-style table-striped">
@@ -267,12 +269,12 @@
         $("#total_transfer_received_parcel").val(complete);
     }
 
-    $("#confirmAssignDeliveryBranch").on("keydown", function(e) {
-        if (e.key === "Enter") {
-            e.preventDefault(); // Prevent form submission on Enter
-            console.log("Enter key prevented for form submission.");
-        }
-    });
+    // $("#confirmAssignDeliveryBranch").on("keydown", function(e) {
+    //     if (e.key === "Enter") {
+    //         e.preventDefault(); // Prevent form submission on Enter
+    //         console.log("Enter key prevented for form submission.");
+    //     }
+    // });
 
     $("#parcel_invoice").on("trigger change", function(e) {
         var invoice_id = $(this).val();
@@ -359,20 +361,20 @@
                 $('#show_delivery_branch_transfer_parcel').html(response);
                 $('.parclTR').each(function() {
                     if ($(this).data('parcel_id') == itemId) {
-                        
+
                         // Find the select element in the current row
                         let select = $(this).find(
-                                'select.delivery_branch_transfer_status');
+                            'select.delivery_branch_transfer_status');
 
-                            // Set option with value="3" as selected
-                            select.val("4"); // Update the value of the <select>
+                        // Set option with value="3" as selected
+                        select.val("4"); // Update the value of the <select>
 
-                            // If using select2 or similar, refresh the dropdown UI
-                            if (select.hasClass('select2')) {
-                                select.trigger(
-                                    'change'
-                                ); // Trigger change event for the select2 plugin
-                            }
+                        // If using select2 or similar, refresh the dropdown UI
+                        if (select.hasClass('select2')) {
+                            select.trigger(
+                                'change'
+                            ); // Trigger change event for the select2 plugin
+                        }
 
                         $(this).show(); // Hide the row if the data attribute matches
 

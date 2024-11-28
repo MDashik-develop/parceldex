@@ -244,22 +244,22 @@
                 }
 
 
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}"
-                    },
-                    url: "{{ route('branch.parcel.returnBranchTransferParcelClearCart') }}",
-                    error: function(xhr) {
-                        alert("An error occurred: " + xhr.status + " " + xhr.statusText);
-                    },
-                    success: function(response) {
-                        // console.log(response);
-                        $("#show_return_branch_transfer_parcel").html(response);
-                        return false;
-                    }
-                });
+                // $.ajax({
+                //     cache: false,
+                //     type: "POST",
+                //     data: {
+                //         _token: "{{ csrf_token() }}"
+                //     },
+                //     url: "{{ route('branch.parcel.returnBranchTransferParcelClearCart') }}",
+                //     error: function(xhr) {
+                //         alert("An error occurred: " + xhr.status + " " + xhr.statusText);
+                //     },
+                //     success: function(response) {
+                //         // console.log(response);
+                //         $("#show_return_branch_transfer_parcel").html(response);
+                //         return false;
+                //     }
+                // });
             });
 
 

@@ -167,147 +167,15 @@
 
         @php
             $logsGroupedByDate = $parcelLogs
+                ->whereIn('status', [0, 100, 1, 8, 10, 11, 12, 14, 17, 19, 21, 23, 24, 25, 31, 36])
                 ->groupBy(function ($item) {
                     return \Carbon\Carbon::parse($item['date'])->format('Y-m-d');
                 })
                 ->sortKeysDesc();
+
+            //logger($logsGroupedByDate);
+
         @endphp
-
-        <!-- Parcel Payment Log -->
-        {{-- @if (!empty($parcelBranchPaymentDeltails->count() > 0) || !empty($parcelMerchantPaymentDeltails->count() > 0))
-
-            @php
-                $mpayment = $parcelMerchantPaymentDeltails->count();
-                $bpayment = $parcelBranchPaymentDeltails->count();
-            @endphp
-
-            <div class="col-md-12">
-                <fieldset>
-                    <legend>Parcel Payment Log</legend>
-                    <table class="table table-style">
-                        <tr>
-                            <th style="width: 5%"> #</th>
-                            <th style="width: 10%"> Date</th>
-                            <th style="width: 10%"> Time</th>
-                            <th style="width: 25%"> Status</th>
-                            <th style="width: 25%"> To (Action)</th>
-                            <th style="width: 25%"> From</th>
-                        </tr>
-
-                        <!-- For Merchant Payment -->
-
-                        @if (!empty($parcelMerchantPaymentDeltails->count() > 0))
-
-                            @foreach ($parcelMerchantPaymentDeltails as $parcelMerchantPaymentDeltail)
-                                @php
-                                    $to_user = '';
-                                    $from_user = '';
-                                    $status = '';
-
-                                    $merchant_name = $parcelMerchantPaymentDeltail->parcel_merchant_delivery_payment
-                                        ->merchant
-                                        ? $parcelMerchantPaymentDeltail->parcel_merchant_delivery_payment->merchant
-                                            ->company_name
-                                        : 'Default';
-                                    $admin_name = $parcelMerchantPaymentDeltail->admin
-                                        ? $parcelMerchantPaymentDeltail->admin->name
-                                        : 'Default';
-
-                                    switch ($parcelMerchantPaymentDeltail->status) {
-                                        case 1:
-                                            $status = 'Invoice Prepared';
-                                            $to_user = 'Admin : ' . $admin_name;
-                                            $from_user = 'Merchant : ' . $merchant_name;
-                                            break;
-                                        case 2:
-                                            $status = 'Paid';
-                                            $to_user = 'Admin : ' . $admin_name;
-                                            $from_user = 'Merchant : ' . $merchant_name;
-                                            break;
-                                        case 3:
-                                            $status = 'Payment Invoice Cancel';
-                                            $to_user = 'Admin : ' . $admin_name;
-                                            $from_user = 'Merchant : ' . $merchant_name;
-                                            break;
-                                    }
-
-                                @endphp
-                                <tr>
-                                    <td> {{ $loop->iteration }} </td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($parcelMerchantPaymentDeltail->date_time)->format('d/m/Y') }}
-                                    </td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($parcelMerchantPaymentDeltail->date_time)->format('H:i:s') }}
-                                    </td>
-                                    <td> {{ $status . ' (' . $parcelMerchantPaymentDeltail->parcel_merchant_delivery_payment->merchant_payment_invoice . ')' }}
-                                    </td>
-                                    <td> {{ $to_user }} </td>
-                                    <td> {{ $from_user }} </td>
-                                </tr>
-                            @endforeach
-                        @endif
-
-                        <!-- For Branch Payments -->
-                        @if (!empty($parcelBranchPaymentDeltails->count() > 0))
-
-                            @foreach ($parcelBranchPaymentDeltails as $parcelBranchPaymentDetail)
-                                @php
-                                    $to_user = '';
-                                    $from_user = '';
-                                    $status = '';
-
-                                    $branch_name = $parcelBranchPaymentDetail->parcel_delivery_payment->branch
-                                        ? $parcelBranchPaymentDetail->parcel_delivery_payment->branch->name
-                                        : 'Default';
-                                    $branch_user = $parcelBranchPaymentDetail->parcel_delivery_payment->branch_user
-                                        ? ' (' .
-                                            $parcelBranchPaymentDetail->parcel_delivery_payment->branch_user->name .
-                                            ')'
-                                        : ' (Default)';
-                                    $admin_name = $parcelBranchPaymentDetail->admin
-                                        ? $parcelBranchPaymentDetail->admin->name
-                                        : 'Default';
-
-                                    switch ($parcelBranchPaymentDetail->status) {
-                                        case 1:
-                                            $status = 'Deposit Requested';
-                                            $to_user = 'Branch : ' . $branch_name . $branch_user;
-                                            $from_user = 'Admin : ' . $admin_name;
-                                            break;
-                                        case 2:
-                                            $status = 'Deposit Accepted';
-                                            $to_user = 'Branch : ' . $branch_name . $branch_user;
-                                            $from_user = 'Admin : ' . $admin_name;
-                                            break;
-                                        case 3:
-                                            $status = 'Deposit Request Declined';
-                                            $to_user = 'Branch : ' . $branch_name . $branch_user;
-                                            $from_user = 'Admin : ' . $admin_name;
-                                            break;
-                                    }
-
-                                @endphp
-                                <tr>
-                                    <td> {{ $loop->iteration + $mpayment }} </td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($parcelBranchPaymentDetail->date_time)->format('d/m/Y') }}
-                                    </td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($parcelBranchPaymentDetail->date_time)->format('H:i:s') }}
-                                    </td>
-                                    <td> {{ $status . ' (' . $parcelBranchPaymentDetail->parcel_delivery_payment->payment_invoice . ')' }}
-                                    </td>
-                                    <td> {{ $to_user }} </td>
-                                    <td> {{ $from_user }} </td>
-                                </tr>
-                            @endforeach
-                        @endif
-
-                    </table>
-                </fieldset>
-            </div>
-        @endif --}}
 
         @foreach ($logsGroupedByDate as $key => $items)
             <div class="parcel-log">
@@ -317,9 +185,9 @@
                     @php
                         $parcelLogStatus = returnParcelLogStatusNameForAdmin($item, $parcel->delivery_type, $parcel);
 
-                        if (!isset($parcelLogStatus['to_user'])) {
-                            continue;
-                        }
+                        // if (!isset($parcelLogStatus['to_user'])) {
+                        //     continue;
+                        // }
 
                         $to_user = $parcelLogStatus['to_user'];
                         $from_user = $parcelLogStatus['from_user'];

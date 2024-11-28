@@ -85,12 +85,20 @@ class ParcelController extends Controller
                 $query->select('id', 'name', 'company_name', 'contact_number', 'address');
             },
         ])
-            ->where('delivery_branch_id', $branch_id)
-            ->orWhere('return_branch_id', $branch_id)
-            ->orWhere(function ($query) use ($branch_id) {
-                $query->where('status', '<=', 11)
-                    ->where('pickup_branch_id', $branch_id);
+            ->where(function ($query) use ($branch_id) {
+                $query->where('delivery_branch_id', $branch_id)
+                    ->orWhere('return_branch_id', $branch_id)
+                    ->orWhere(function ($subQuery) use ($branch_id) {
+                        $subQuery->where('status', '<=', 11)
+                            ->where('pickup_branch_id', $branch_id);
+                    });
             })
+            // ->where('delivery_branch_id', $branch_id)
+            // ->orWhere('return_branch_id', $branch_id)
+            // ->orWhere(function ($q) use ($branch_id) {
+            //     $q->where('status', '<=', 11)->where('pickup_branch_id', $branch_id);
+            // })
+
             // ->where('status', '!=', 0)
             ->whereRaw($where_condition)
             ->select();
@@ -324,7 +332,7 @@ class ParcelController extends Controller
                 $date_time   = $data->date . " " . date("h:i A", strtotime($data->created_at));
                 $parcel_info = '<p><strong>Merchant Order ID: </strong>' . $data->merchant_order_id . '</p>';
                 // $parcel_info .= '<p><strong>Parcel OTP: </strong>' . $data->parcel_code . '</p>';
-                $parcel_info .= '<p><strong>OTP: </strong>' . $abc . '</p>';
+                // $parcel_info .= '<p><strong>OTP: </strong>' . $abc . '</p>';
                 $parcel_info .= '<p><strong>Service Type: </strong>' . optional($data->service_type)->title . '</p>';
                 $parcel_info .= '<p><strong>Item Type: </strong>' . optional($data->item_type)->title . '</p>';
                 $parcel_info .= '<p><strong>Exchange: </strong>' . $data->exchange . '</p>';
@@ -363,28 +371,29 @@ class ParcelController extends Controller
                 return $customer_info;
             })
             ->addColumn('amount', function ($data) {
-                $amount = '<p><strong>Amount to be Collect: ৳ </strong>' . $data->total_collect_amount . '</p>';
+                $amount = '<p><strong>Amount to be Collect: </strong>' . $data->total_collect_amount . '</p>';
 
                 if ($data->status == 21 || $data->status == 22) {
-                    $amount .= '<p><strong>Collected: ৳ </strong>' . $data->customer_collect_amount . '</p>';
+                    $amount .= '<p><strong>Collected: </strong>' . $data->customer_collect_amount . '</p>';
                 }
 
                 if ($data->status == 25) {
 
                     if ($data->delivery_type == 1 || $data->delivery_type == 2) {
-                        $amount .= '<p><strong>Collected: ৳ </strong>' . $data->customer_collect_amount . '</p>';
+                        $amount .= '<p><strong>Collected: </strong>' . $data->customer_collect_amount . '</p>';
                     }
 
                     if ($data->delivery_type == 4) {
-                        $amount .= '<p><strong>Collected: ৳ </strong>' . $data->cancel_amount_collection . '</p>';
+                        $amount .= '<p><strong>Collected: </strong>' . $data->cancel_amount_collection . '</p>';
                     }
                 }
 
                 if ($data->status == 24) {
-                    $amount .= '<p><strong>Collected: ৳ </strong>' . $data->cancel_amount_collection . '</p>';
+                    $amount .= '<p><strong>Collected: </strong>' . $data->cancel_amount_collection . '</p>';
                 }
 
-                $amount .= '<p><strong>Delivery Charge:  ৳ </strong>' . $data->delivery_charge . '</p>';
+                $amount .= '<p><strong>Delivery Charge:  </strong>' . $data->delivery_charge . '</p>';
+                $amount .= '<p><strong>Weight Charge:  </strong>' . $data->weight_charge . '</p>';
                 // $amount .= '<p><strong>Delivery Charge: </strong>'.$data->total_charge.'</p>';
                 // $amount .= '<p><strong>COD Charge: </strong>'.$data->cod_charge.'</p>';
                 return $amount;

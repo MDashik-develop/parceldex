@@ -395,7 +395,7 @@
                             $status = $parcelLogStatus['status_name'];
                             $sub_title = $parcelLogStatus['sub_title'];
                         @endphp
-                        <div class="log-item {{ $index >= 3 ? 'hidden' : '' }}">
+                        <div class="log-item {{ $index >= 4 ? 'hidden' : '' }}">
                             <span class="log-time">{{ \Carbon\Carbon::parse($item->date)->format('jS F, Y') }}
                                 {{ \Carbon\Carbon::parse($item->time)->format('h:i A') }}</span>
                             {{ $status }}<br>

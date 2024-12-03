@@ -328,6 +328,9 @@
 
         <div class="parcel-log">
             <div class="log-items-container">
+                @php
+                    $x = 0;
+                @endphp
                 @foreach ($logsGroupedByDate as $index => $item)
                     @php
                         $parcelLogStatus = returnParcelLogStatusNameForAdmin($item, $parcel->delivery_type, $parcel);
@@ -340,9 +343,11 @@
                         $from_user = $parcelLogStatus['from_user'];
                         $status = $parcelLogStatus['status_name'];
                         $sub_title = $parcelLogStatus['sub_title'];
+                        $x++;
                     @endphp
-                    <div class="log-item {{ $index >= 3 ? 'hidden' : '' }}">
-                        <span class="log-time">{{ \Carbon\Carbon::parse($item->date)->format('jS F, Y') }}
+                    <div class="log-item {{ $x >= 4 ? 'hidden' : '' }}">
+                        <span class="log-time">
+                            {{ \Carbon\Carbon::parse($item->date)->format('jS F, Y') }}
                             {{ \Carbon\Carbon::parse($item->time)->format('h:i A') }}</span>
                         {{ $status }}<br>
                         <span class="log-details">Note: {{ empty($sub_title) ? 'N/A' : $sub_title }} <br> By -
@@ -558,6 +563,13 @@
 </style>
 
 <script>
+    $(document).ready(function() {
+        // Reload the page when the modal is closed
+        $('#viewModal').on('hidden.bs.modal', function() {
+            location.reload();
+        });
+    });
+
     $(document).ready(function() {
         // Event delegation for the toggle button
         $(document).on('click', '.toggle-btn', function() {

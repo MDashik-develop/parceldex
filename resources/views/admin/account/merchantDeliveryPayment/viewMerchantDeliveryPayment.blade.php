@@ -27,7 +27,7 @@
                                     </td>
                                 </tr>
 
-                                @if ($parcelMerchantDeliveryPayment->status != 1)
+                                @if ($parcelMerchantDeliveryPayment?->status != 1)
                                     <tr>
                                         <th style="width: 40%">Paid Date </th>
                                         <td style="width: 10%"> : </td>
@@ -51,7 +51,7 @@
                                     </td>
                                 </tr>
 
-                                <!--@if ($parcelMerchantDeliveryPayment->status != 1)
+                                <!--@if ($parcelMerchantDeliveryPayment?->status != 1)
 -->
                                 <!--    <tr>-->
                                 <!--        <th style="width: 40%">Total Received Payment Parcel </th>-->
@@ -70,7 +70,7 @@
                                     <th style="width: 40%">Status </th>
                                     <td style="width: 10%"> : </td>
                                     <td style="width: 50%">
-                                        @switch($parcelMerchantDeliveryPayment->status)
+                                        @switch($parcelMerchantDeliveryPayment?->status)
                                             @case(1)
                                                 <div class="badge badge-success"> Send Request </div>
                                             @break
@@ -166,10 +166,10 @@
                                     @foreach ($parcelMerchantDeliveryPayment->parcel_merchant_delivery_payment_details as $parcel_merchant_delivery_payment_detail)
                                         @php
                                             $parcelStatus = returnParcelStatusNameForMerchant(
-                                                $parcel_merchant_delivery_payment_detail->parcel->status,
-                                                $parcel_merchant_delivery_payment_detail->parcel->delivery_type,
-                                                $parcel_merchant_delivery_payment_detail->parcel->payment_type,
-                                                $parcel_merchant_delivery_payment_detail->parcel->parcel_invoice,
+                                                $parcel_merchant_delivery_payment_detail->parcel?->status,
+                                                $parcel_merchant_delivery_payment_detail->parcel?->delivery_type,
+                                                $parcel_merchant_delivery_payment_detail->parcel?->payment_type,
+                                                $parcel_merchant_delivery_payment_detail->parcel?->parcel_invoice,
                                             );
 
                                         @endphp
@@ -178,26 +178,26 @@
                                         <tr>
                                             <td class="text-center"> {{ $loop->iteration }} </td>
                                             <td class="text-center">
-                                                {{ $parcel_merchant_delivery_payment_detail->parcel->parcel_invoice }}
+                                                {{ $parcel_merchant_delivery_payment_detail?->parcel?->parcel_invoice }}
                                             </td>
                                             <td class="text-center">
-                                                {{ $parcel_merchant_delivery_payment_detail->parcel->merchant_order_id }}
+                                                {{ $parcel_merchant_delivery_payment_detail?->parcel?->merchant_order_id }}
                                             </td>
                                             <td class="text-center">
 
                                                 {{ $parcelStatus['status_name'] }}
                                             </td>
                                             <td class="text-center">
-                                                {{ $parcel_merchant_delivery_payment_detail->parcel->customer_name }}
+                                                {{ $parcel_merchant_delivery_payment_detail?->parcel?->customer_name }}
                                             </td>
                                             <td class="text-center">
-                                                {{ $parcel_merchant_delivery_payment_detail->parcel->customer_contact_number }}
+                                                {{ $parcel_merchant_delivery_payment_detail?->parcel?->customer_contact_number }}
                                             </td>
                                             <td class="text-center">
-                                                {{ number_format($parcel_merchant_delivery_payment_detail->parcel->total_collect_amount, 2) }}
+                                                {{ number_format($parcel_merchant_delivery_payment_detail?->parcel?->total_collect_amount, 2) }}
                                             </td>
                                             <td class="text-center">
-                                                {{ number_format($parcel_merchant_delivery_payment_detail->parcel->cancel_amount_collection != 0 ? $parcel_merchant_delivery_payment_detail->parcel->cancel_amount_collection : $parcel_merchant_delivery_payment_detail->collected_amount, 2) }}
+                                                {{ number_format($parcel_merchant_delivery_payment_detail?->parcel?->cancel_amount_collection != 0 ? $parcel_merchant_delivery_payment_detail?->parcel?->cancel_amount_collection : $parcel_merchant_delivery_payment_detail->collected_amount, 2) }}
                                             </td>
                                             <td class="text-center">
                                                 {{ number_format($parcel_merchant_delivery_payment_detail->weight_package_charge, 2) }}

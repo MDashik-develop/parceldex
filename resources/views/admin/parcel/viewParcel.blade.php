@@ -166,12 +166,28 @@
         </div>
 
         @php
-            $logsGroupedByDate = $parcelLogs
-                ->whereIn('status', [0, 100, 1, 8, 10, 11, 12, 14, 17, 19, 21, 23, 24, 25, 31, 36])
-                ->groupBy(function ($item) {
-                    return \Carbon\Carbon::parse($item['date'])->format('Y-m-d');
-                })
-                ->sortKeysDesc();
+            $logsGroupedByDate = $parcelLogs->whereIn('status', [
+                0,
+                100,
+                1,
+                8,
+                10,
+                11,
+                12,
+                14,
+                17,
+                19,
+                21,
+                23,
+                24,
+                25,
+                31,
+                36,
+            ]);
+            // ->groupBy(function ($item) {
+            //     return \Carbon\Carbon::parse($item['date'])->format('Y-m-d');
+            // })
+            // ->sortKeysDesc();
         @endphp
 
         <!-- Parcel Payment Log -->
@@ -310,11 +326,9 @@
             </div>
         @endif
 
-        @foreach ($logsGroupedByDate as $key => $items)
-            <div class="parcel-log">
-                <h3><span class="log-date">{{ \Carbon\Carbon::parse($key)->format('jS F, Y') }}</span></h3>
-
-                @foreach ($items as $item)
+        <div class="parcel-log">
+            <div class="log-items-container">
+                @foreach ($logsGroupedByDate as $index => $item)
                     @php
                         $parcelLogStatus = returnParcelLogStatusNameForAdmin($item, $parcel->delivery_type, $parcel);
 
@@ -327,15 +341,22 @@
                         $status = $parcelLogStatus['status_name'];
                         $sub_title = $parcelLogStatus['sub_title'];
                     @endphp
-                    <div class="log-item">
-                        <span class="log-time">{{ \Carbon\Carbon::parse($item->time)->format('h:i A') }}</span>
+                    <div class="log-item {{ $index >= 3 ? 'hidden' : '' }}">
+                        <span class="log-time">{{ \Carbon\Carbon::parse($item->date)->format('jS F, Y') }}
+                            {{ \Carbon\Carbon::parse($item->time)->format('h:i A') }}</span>
                         {{ $status }}<br>
                         <span class="log-details">Note: {{ empty($sub_title) ? 'N/A' : $sub_title }} <br> By -
                             {{ $to_user }}</span>
                     </div>
                 @endforeach
             </div>
-        @endforeach
+
+            @if (count($logsGroupedByDate) > 3)
+                <button style="background-color: #f87326; font-size: 18px; border-radius: 5px;"
+                    class="btn toggle-btn mt-3 text-white font-weight-bolder px-2 border-0">Show More <i
+                        class="fas fa-angle-down"></i></button>
+            @endif
+        </div>
 
 
         <div class="section6 mt-3">
@@ -365,6 +386,10 @@
 </div>
 
 <style>
+    .hidden {
+        display: none;
+    }
+
     .parcel-details-container {
         background-color: #fff;
         padding: 20px;
@@ -502,6 +527,24 @@
 </style>
 
 <script>
+    $(document).ready(function() {
+        // Event delegation for the toggle button
+        $(document).on('click', '.toggle-btn', function() {
+            const logContainer = $(this).prev('.log-items-container'); // Get the log container
+            const hiddenItems = logContainer.find('.hidden'); // Find all hidden log items
+
+            if (hiddenItems.length > 0) {
+                // Show all hidden items and update button text
+                hiddenItems.removeClass('hidden');
+                $(this).html('Show Less <i class="fas fa-angle-up"></i>');
+            } else {
+                // Hide items beyond the first 3 and update button text
+                logContainer.find('.log-item').slice(3).addClass('hidden');
+                $(this).html('Show More <i class="fas fa-angle-down"></i>');
+            }
+        });
+    });
+
     $(document).ready(function() {
         $('#copyButton').click(function() {
             // Get the text from the <p> tag

@@ -341,6 +341,7 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin/'], function () {
     Route::delete('parcel/merchantDeliveryPaymentDelete', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'merchantPaymentDeliveryDelete'])->name('parcel.merchantDeliveryPaymentDelete');
 
     Route::post('parcel/printMerchantDeliveryPaymentList', [App\Http\Controllers\Admin\ParcelPaymentRequestController::class, 'printMerchantDeliveryPaymentList'])->name('parcel.printMerchantDeliveryPaymentList');
+    Route::get('account/{parcelMerchantDeliveryPayment}/exportMerchantDeliveryPayment', [App\Http\Controllers\Admin\MerchantDeliveryPaymentController::class, 'exportMerchantDeliveryPayment'])->name('account.exportMerchantDeliveryPayment');
 
 
 

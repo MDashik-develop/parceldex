@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Exports\AdminMerchantPaymentExport;
 use App\Models\ParcelDeliveryPaymentDetail;
 use App\Models\ParcelMerchantDeliveryPayment;
+use App\Exports\MerchantDeliveryPaymentExport;
 use App\Notifications\MerchantParcelNotification;
 use App\Models\ParcelMerchantDeliveryPaymentDetail;
 use App\Notifications\MerchantPaymentInvoiceNotification;
@@ -129,7 +130,7 @@ class MerchantDeliveryPaymentController extends Controller
                 $button .= '&nbsp; <a href="' . route('admin.account.printMerchantDeliveryPayment', $data->id) . '" class="btn btn-success btn-sm" title="Print Merchant Delivery Payment" target="_blank">
                 <i class="fas fa-print"></i> </a>';
 
-                $button .= '&nbsp; <a class="btn btn-primary btn-sm" href="' . route('merchant.account.exportMerchantDeliveryPayment', $data->id) . '" title="Export Delivery Payment" target="_blank">
+                $button .= '&nbsp; <a class="btn btn-primary btn-sm" href="' . route('admin.account.exportMerchantDeliveryPayment', $data->id) . '" title="Export Delivery Payment" target="_blank">
                 <i class="fas fa-file-excel"></i> </a>';
 
                 if ($data->status == 1) {
@@ -155,6 +156,7 @@ class MerchantDeliveryPaymentController extends Controller
                 $customer_collect_amount = 0;
                 foreach ($data->parcel_merchant_delivery_payment_details as $v_data) {
                     $customer_collect_amount += $v_data?->parcel?->customer_collect_amount;
+                    $customer_collect_amount += $v_data?->parcel?->cancel_amount_collection;
                 }
                 return $customer_collect_amount;
             })
@@ -322,6 +324,17 @@ class MerchantDeliveryPaymentController extends Controller
             }
         }
         return response()->json($response);
+    }
+
+    public function exportMerchantDeliveryPayment($id)
+    {
+        $parcelMerchantDeliveryPayment = ParcelMerchantDeliveryPayment::where('id', $id)->first();
+        // dd($parcelMerchantDeliveryPayment->merchant_payment_invoice);
+        $fileName = 'parcel_delivery_payment_' . $parcelMerchantDeliveryPayment->merchant_payment_invoice . '_' . time() . '.xlsx';
+        return Excel::download(new MerchantDeliveryPaymentExport($id), $fileName);
+
+        // $parcelMerchantDeliveryPayment->load('admin', 'merchant', 'parcel_merchant_delivery_payment_details');
+        // return view('merchant.account.viewMerchantDeliveryPayment', compact('parcelMerchantDeliveryPayment'));
     }
 
 

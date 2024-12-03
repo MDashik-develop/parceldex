@@ -53,37 +53,37 @@ class MerchantDeliveryPaymentExport implements
 
         foreach ($parcelMerchantDeliveryPayment->parcel_merchant_delivery_payment_details as $key => $parcel_merchant_delivery_payment_detail) {
 
-            $parcelStatus = returnParcelStatusNameForMerchant($parcel_merchant_delivery_payment_detail?->parcel?->status, $parcel_merchant_delivery_payment_detail?->parcel?->delivery_type, $parcel_merchant_delivery_payment_detail?->parcel?->payment_type, $parcel_merchant_delivery_payment_detail?->parcel?->parcel_invoice);
+            $parcelStatus = returnParcelStatusNameForMerchant($parcel_merchant_delivery_payment_detail->parcel->status, $parcel_merchant_delivery_payment_detail->parcel->delivery_type, $parcel_merchant_delivery_payment_detail->parcel->payment_type, $parcel_merchant_delivery_payment_detail->parcel->parcel_invoice);
 
             $data_parcel_array[] = (object)[
                 'serial' => $key + 1,
-                'parcel_invoice' => $parcel_merchant_delivery_payment_detail?->parcel?->parcel_invoice,
-                'order_id' => $parcel_merchant_delivery_payment_detail?->parcel?->merchant_order_id ?? "---",
+                'parcel_invoice' => $parcel_merchant_delivery_payment_detail->parcel->parcel_invoice,
+                'order_id' => $parcel_merchant_delivery_payment_detail->parcel->merchant_order_id ?? "---",
                 'status' => $parcelStatus['status_name'],
-                'delivery_branch_date' => date('d-M-Y', strtotime($parcel_merchant_delivery_payment_detail?->parcel?->delivery_branch_date)),
+                'delivery_branch_date' => date('d-M-Y', strtotime($parcel_merchant_delivery_payment_detail->parcel->delivery_branch_date)),
 
-                'customer_name' => $parcel_merchant_delivery_payment_detail?->parcel?->customer_name,
-                'customer_contact_number' => $parcel_merchant_delivery_payment_detail?->parcel?->customer_contact_number,
+                'customer_name' => $parcel_merchant_delivery_payment_detail->parcel->customer_name,
+                'customer_contact_number' => $parcel_merchant_delivery_payment_detail->parcel->customer_contact_number,
 
-                'total_collect_amount' => $parcel_merchant_delivery_payment_detail?->parcel?->total_collect_amount,
-                //'collected_amount' => $parcel_merchant_delivery_payment_detail?->parcel?->cancel_amount_collection != 0 ? $parcel_merchant_delivery_payment_detail?->parcel?->cancel_amount_collection : $parcel_merchant_delivery_payment_detail->collected_amount,
-                'collected_amount' => $parcel_merchant_delivery_payment_detail?->parcel?->cancel_amount_collection + $parcel_merchant_delivery_payment_detail?->parcel?->customer_collect_amount,
+                'total_collect_amount' => $parcel_merchant_delivery_payment_detail->parcel->total_collect_amount,
+                //'collected_amount' => $parcel_merchant_delivery_payment_detail->parcel->cancel_amount_collection != 0 ? $parcel_merchant_delivery_payment_detail->parcel->cancel_amount_collection : $parcel_merchant_delivery_payment_detail->collected_amount,
+                'collected_amount' => $parcel_merchant_delivery_payment_detail->parcel->cancel_amount_collection + $parcel_merchant_delivery_payment_detail->parcel->customer_collect_amount,
                 'weight_package_charge' => $parcel_merchant_delivery_payment_detail->weight_package_charge,
                 'cod_charge' => $parcel_merchant_delivery_payment_detail->cod_charge,
                 'delivery_charge' => $parcel_merchant_delivery_payment_detail->delivery_charge,
                 'return_charge' => $parcel_merchant_delivery_payment_detail->return_charge,
-                'total_charge' => ($parcel_merchant_delivery_payment_detail?->parcel?->total_charge + $parcel_merchant_delivery_payment_detail->return_charge),
+                'total_charge' => ($parcel_merchant_delivery_payment_detail->parcel->total_charge + $parcel_merchant_delivery_payment_detail->return_charge),
                 'paid_amount' => $parcel_merchant_delivery_payment_detail->paid_amount,
 
             ];
 
-            $total_collect_amount += $parcel_merchant_delivery_payment_detail?->parcel?->total_collect_amount;
+            $total_collect_amount += $parcel_merchant_delivery_payment_detail->parcel->total_collect_amount;
             $collected_amount += $parcel_merchant_delivery_payment_detail->collected_amount;
             $weight_package_charge += $parcel_merchant_delivery_payment_detail->weight_package_charge;
             $cod_charge += $parcel_merchant_delivery_payment_detail->cod_charge;
             $delivery_charge += $parcel_merchant_delivery_payment_detail->delivery_charge;
             $return_charge += $parcel_merchant_delivery_payment_detail->return_charge;
-            $total_charge += ($parcel_merchant_delivery_payment_detail?->parcel?->total_charge + $parcel_merchant_delivery_payment_detail->return_charge);
+            $total_charge += ($parcel_merchant_delivery_payment_detail->parcel->total_charge + $parcel_merchant_delivery_payment_detail->return_charge);
             $paid_amount += $parcel_merchant_delivery_payment_detail->paid_amount;
         }
 

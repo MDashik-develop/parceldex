@@ -94,6 +94,7 @@ class AdminMerchantPaymentExport implements
                 $customer_collect_amount = 0;
                 foreach ($payment->parcel_merchant_delivery_payment_details as $v_data) {
                     $customer_collect_amount += $v_data?->parcel?->customer_collect_amount;
+                    $customer_collect_amount += $v_data?->parcel?->cancel_amount_collection;
                 }
 
                 $total_collect_amount = 0;
@@ -114,7 +115,7 @@ class AdminMerchantPaymentExport implements
                 }
 
                 $total = $total_delivery_charge + $total_weight_charge + $total_cod_charge + $total_return_charge;
-                
+
                 $data_parcel_array[] = (object)[
                     'serial' => $key + 1,
                     'payment_date' => date('d-m-Y', strtotime($payment->date_time)),

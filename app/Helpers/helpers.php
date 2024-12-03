@@ -1446,7 +1446,7 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         $to_user  = $parcelLog?->pickup_branch_user?->name;
     } elseif ($status == 12) {
         $sub_title = 'Transfer ID - ' . $parcelLog->parcel?->deliveryBranchTransferDetailsMH?->delivery_branch_transfer?->delivery_transfer_invoice;
-        $status_name  = "Sent to " . $parcelLog?->pickup_branch_user?->name . " for Delivery ";
+        $status_name  = "Sent to " . $parcelLog?->pickup_branch?->name . " for Delivery ";
         $class        = "success";
         $to_user  = $parcelLog?->pickup_branch_user?->name;
     } elseif ($status == 14) {

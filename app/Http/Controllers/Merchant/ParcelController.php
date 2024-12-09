@@ -221,7 +221,7 @@ class ParcelController extends Controller
                         'merchant_service_area_charge' => $merchant_service_area_charge,
                         'merchant_service_area_return_charge' => $merchant_service_area_return_charge,
                         'cod_percent' => $cod_percent,
-                        'cod_charge' => $cod_charge,
+                        'cod_charge' => ceil($cod_charge),
                         'total_charge' => $total_charge,
                         'status' => 1,
                     ];
@@ -402,7 +402,7 @@ class ParcelController extends Controller
                 'merchant_service_area_return_charge' => $request->input('merchant_service_area_return_charge'),
                 'total_collect_amount' => $request->input('total_collect_amount') ?? 0,
                 'cod_percent' => $request->input('cod_percent'),
-                'cod_charge' => $request->input('cod_charge'),
+                'cod_charge' => ceil($request->input('cod_charge')),
                 'total_charge' => $request->input('total_charge'),
                 'item_type_charge' => $request->input('item_type_charge'),
                 'service_type_charge' => $request->input('service_type_charge'),
@@ -1377,7 +1377,7 @@ class ParcelController extends Controller
             'merchant_service_area_return_charge' => $request->input('merchant_service_area_return_charge'),
             'total_collect_amount' => $request->input('total_collect_amount') ?? 0,
             'cod_percent' => $request->input('cod_percent'),
-            'cod_charge' => $request->input('cod_charge'),
+            'cod_charge' => ceil($request->input('cod_charge')),
             'total_charge' => $request->input('total_charge'),
             'delivery_option_id' => $request->input('delivery_option_id'),
             'product_value' => $request->input('product_value'),
@@ -1667,71 +1667,6 @@ class ParcelController extends Controller
                                 }
                             }
 
-                            // // Item Type Package Charge
-                            // if ($item_type_id) {
-                            //     $itemType = ItemType::with([
-                            //         // 'service_area' => function ($query) use ($service_area_id) {
-                            //         //     $query->where('service_area_id', '=', $service_area_id);
-                            //         // },
-                            //     ])->where(['id' => $item_type_id])->first();
-                            //     if (!$itemType) {
-                            //         $itemType = ItemType::where('id', $item_type_id)->first();
-
-                            //         dd($itemType);
-                            //     }
-                            //     $item_type_charge = $itemType->rate;
-                            //     if (!empty($itemType->service_area)) {
-                            //         $item_type_charge = $itemType->service_area->rate;
-                            //     }
-                            // }
-                            // if (empty($itemType) || !$item_type_id) {
-                            //     $itemType = ItemType::with([
-                            //         'service_area' => function ($query) use ($service_area_id) {
-                            //             $query->where('service_area_id', '=', $service_area_id);
-                            //         },
-                            //     ])->where(['status' => 1])->first();
-
-                            //     $item_type_charge = $itemType->rate;
-                            //     if (!empty($itemType->service_area)) {
-                            //         $item_type_charge = $itemType->service_area->rate;
-                            //     }
-                            // }
-
-
-
-                            //         // Service Type Package Charge
-                            //         if ($service_type_id) {
-                            //             $serviceType = ServiceType::with([
-                            //                 'service_area' => function ($query) use ($service_area_id) {
-                            //                     $query->where('service_area_id', '=', $service_area_id);
-                            //                 },
-                            //             ])->where(['id' => $service_type_id])->first();
-                            //             if (!$serviceType) {
-                            //                 $serviceType = ServiceType::where('id', $service_type_id)->first();
-
-                            //                 dd($serviceType);
-                            //             }
-                            //             $service_type_charge = $serviceType->rate;
-                            //             if (!empty($serviceType->service_area)) {
-                            //                 $service_type_charge = $serviceType->service_area->rate;
-                            //             }
-                            //         }
-                            //         if (empty($serviceType) || !$service_type_id) {
-                            //             $serviceType = ServiceType::with([
-                            //                 'service_area' => function ($query) use ($service_area_id) {
-                            //                     $query->where('service_area_id', '=', $service_area_id);
-                            //                 },
-                            //             ])->where(['status' => 1])->first();
-
-                            //             $service_type_charge = $serviceType->rate;
-                            //             if (!empty($serviceType->service_area)) {
-                            //                 $service_type_charge = $serviceType->service_area->rate;
-                            //             }
-                            //         }
-
-
-
-
                             // Set Merchant Insert Parcel Calculation
                             $delivery_charge = $merchant_service_area_charge;
                             $cod_charge = 0;
@@ -1771,7 +1706,7 @@ class ParcelController extends Controller
                                 'merchant_service_area_return_charge' => $merchant_service_area_return_charge,
                                 'total_collect_amount' => $collection_amount ?? 0,
                                 'cod_percent' => $cod_percent,
-                                'cod_charge' => $cod_charge,
+                                'cod_charge' => ceil($cod_charge),
                                 'total_charge' => $total_charge,
                                 'parcel_note' => $remark,
                                 'delivery_option_id' => 1,

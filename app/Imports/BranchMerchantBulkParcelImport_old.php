@@ -231,7 +231,7 @@ class BranchMerchantBulkParcelImport implements
                             'merchant_service_area_return_charge' => $merchant_service_area_return_charge  ?? 0,
                             'total_collect_amount'         => $collection_amount ?? 0,
                             'cod_percent'                  => $cod_percent  ?? 0,
-                            'cod_charge'                   => $cod_charge  ?? 0,
+                            'cod_charge'                   => ceil($cod_charge  ?? 0),
                             'total_charge'                 => $total_charge  ?? 0,
                             'parcel_note'                  => $remark,
                             'delivery_option_id'           => 1,
@@ -299,11 +299,7 @@ class BranchMerchantBulkParcelImport implements
         return 1000;
     }
 
-    public static function afterImport(AfterImport $event)
-    {
-    }
+    public static function afterImport(AfterImport $event) {}
 
-    public function onFailure(Failure ...$failure)
-    {
-    }
+    public function onFailure(Failure ...$failure) {}
 }

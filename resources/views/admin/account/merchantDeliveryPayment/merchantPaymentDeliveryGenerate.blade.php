@@ -162,7 +162,7 @@
                                     <thead>
                                         <tr
                                             style="background-color: #a2bbca !important; font-family: Arial Black;font-size: 14px">
-                                            <th colspan="12" class="text-left">
+                                            <th colspan="13" class="text-left">
                                                 <button type="button" id="addParcelInvoice" class="btn btn-info">Add
                                                     Payment Amount</button>
                                             </th>
@@ -295,12 +295,20 @@
                                                             $t_weight_package_charge += $parcel->weight_package_charge;
                                                         @endphp
                                                     </td>
+                                                    <input type="hidden" id="weight_charge{{ $parcel->id }}"
+                                                        value="{{ floatval($parcel->weight_package_charge) }}"
+                                                        parcel_id="{{ $parcel->id }}"
+                                                        class="form-control text-center weight_charge" step="any" />
                                                     <td class="text-right">
                                                         {{ number_format($parcel->delivery_charge, 2) }} <br>
                                                         @php
                                                             $t_delivery_charge += $parcel->delivery_charge;
                                                         @endphp
                                                     </td>
+                                                    <input type="hidden" id="delivery_charge{{ $parcel->id }}"
+                                                        value="{{ floatval($parcel->delivery_charge) }}"
+                                                        parcel_id="{{ $parcel->id }}"
+                                                        class="form-control text-center delivery_charge" step="any" />
                                                     <td class="text-right">
                                                         {{-- {{ number_format($parcel->cod_charge,2) }} --}}
 
@@ -312,6 +320,15 @@
                                                             $t_cod_charge += $parcel->cod_charge;
                                                         @endphp
                                                     </td>
+                                                    @php
+                                                        $s_charge +=
+                                                            $parcel->weight_package_charge +
+                                                            $parcel->delivery_charge +
+                                                            $parcel->cod_charge +
+                                                            $returnCharge;
+
+                                                        $t_charge += $s_charge;
+                                                    @endphp
                                                     <td class="text-right">
                                                         <input type="number" id="return_charge{{ $parcel->id }}"
                                                             value="{{ $returnCharge }}" parcel_id="{{ $parcel->id }}"
@@ -319,28 +336,23 @@
                                                             step="any" />
 
                                                         <input type="hidden" id="total_charge_amount{{ $parcel->id }}"
-                                                            value="{{ $change }}" />
+                                                            value="{{ $s_charge }}" />
 
                                                         @php
                                                             $t_returnCharge += $returnCharge;
                                                         @endphp
 
                                                     </td>
-                                                    <td class="text-right "
-                                                        id="view_payable_amount{{ $parcel->id }}">
-                                                        @php
-                                                            $s_charge +=
-                                                                $parcel->weight_package_charge +
-                                                                $parcel->delivery_charge +
-                                                                $parcel->cod_charge +
-                                                                $returnCharge;
+                                                    <td class="text-right " id="view_payable_amount{{ $parcel->id }}">
 
-                                                            $t_charge += $s_charge;
-                                                        @endphp
 
                                                         {{ number_format($s_charge, 2) }}
 
                                                     </td>
+                                                    <input type="hidden" id="collected{{ $parcel->id }}"
+                                                        value="{{ floatval($s_collected) }}"
+                                                        parcel_id="{{ $parcel->id }}"
+                                                        class="form-control text-center collected" step="any" />
                                                     <td class="text-right "
                                                         id="view_total_payable_amount{{ $parcel->id }}">
                                                         @php
@@ -357,15 +369,15 @@
                                             @endforeach
                                             <tr>
                                                 <td colspan="6"></td>
-                                                <td style="text-align: right">{{ $t_collected_amount }}</td>
-                                                <td style="text-align: right">{{ $t_weight_package_charge }}</td>
-                                                <td style="text-align: right">{{ $t_delivery_charge }}</td>
-                                                <td style="text-align: right">{{ $t_cod_charge }}</td>
-                                                <td style="text-align: right">{{ $t_returnCharge }}</td>
-                                                <td style="text-align: right">
+                                                <td id="total_collected" style="text-align: right">{{ $t_collected_amount }}</td>
+                                                <td id="total_weight_charge" style="text-align: right">{{ $t_weight_package_charge }}</td>
+                                                <td id="total_delivery_charge" style="text-align: right">{{ $t_delivery_charge }}</td>
+                                                <td id="total_cod_charge" style="text-align: right">{{ $t_cod_charge }}</td>
+                                                <td id="total_return_charge" style="text-align: right">{{ $t_returnCharge }}</td>
+                                                <td id="total_charge" style="text-align: right">
                                                     {{ $t_charge }}
                                                 </td>
-                                                <td style="text-align: right">{{ $t_payable_amount }}</td>
+                                                <td id="total_payable_amount" style="text-align: right">{{ $t_payable_amount }}</td>
                                             </tr>
                                         @endif
                                     </tbody>
@@ -491,13 +503,59 @@
         }
 
         function calculatePayableChange(parcel_id) {
+            var collected = returnNumber($(`#collected${parcel_id}`).val());
             var cod_charge = returnNumber($(`#cod_charge${parcel_id}`).val());
-            var total_charge_amount = returnNumber($(`#total_charge_amount${parcel_id}`).val());
+            var delivery_charge = returnNumber($(`#delivery_charge${parcel_id}`).val());
+            var weight_charge = returnNumber($(`#weight_charge${parcel_id}`).val());
+            //var total_charge_amount = returnNumber($(`#total_charge_amount${parcel_id}`).val());
             var return_charge = returnNumber($(`#return_charge${parcel_id}`).val());
-            var total_charge = total_charge_amount - cod_charge - return_charge;
-            // console.log(parcel_id,return_charge,total_charge_amount,total_charge);
-            $(`#view_total_charge_amount${parcel_id}`).text(total_charge.toFixed(2));
+            var total_charge = cod_charge + delivery_charge + weight_charge + return_charge;
+            //console.log(cod_charge, delivery_charge, weight_charge, return_charge, total_charge, collected);
             $(`#view_payable_amount${parcel_id}`).text(total_charge.toFixed(2));
+            var totalCollected = collected - total_charge;
+            $(`#view_total_payable_amount${parcel_id}`).text(totalCollected.toFixed(2));
+
+
+            let total_collected = 0;
+            let total_cod_charge = 0;
+            let total_return_charge = 0;
+            let total_delivery_charge = 0;
+            let total_weight_charge = 0;
+            let grand_total_charge = 0;
+            let grand_payable_amount = 0;
+
+            $('.collected').each(function() {
+                let value = parseFloat($(this).val()) || 0;
+                total_collected += value;
+            });
+
+            $('.cod_charge').each(function() {
+                let value = parseFloat($(this).val()) || 0;
+                total_cod_charge += value;
+            });
+
+            $('.return_charge').each(function() {
+                let value = parseFloat($(this).val()) || 0;
+                total_return_charge += value;
+            });
+
+            $('.delivery_charge').each(function() {
+                let value = parseFloat($(this).val()) || 0;
+                total_delivery_charge += value;
+            });
+
+            $('.weight_charge').each(function() {
+                let value = parseFloat($(this).val()) || 0;
+                total_weight_charge += value;
+            });
+
+            grand_total_charge = total_cod_charge + total_return_charge + total_delivery_charge + total_weight_charge;
+            grand_payable_amount = total_collected - grand_total_charge;
+
+            $('#total_cod_charge').text(total_cod_charge.toFixed(2));
+            $('#total_return_charge').text(total_return_charge.toFixed(2));
+            $('#total_charge').text(grand_total_charge.toFixed(2));
+            $('#total_payable_amount').text(grand_payable_amount.toFixed(2));
         }
 
 

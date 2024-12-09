@@ -276,10 +276,36 @@ class MerchantDeliveryPaymentController extends Controller
                         $pdfPath = storage_path($path);
 
                         // Generate the PDF in landscape orientation
+                        // Pdf::loadView('admin.account.merchantDeliveryPayment.printMerchantDeliveryPaymentUpdated2', compact('parcelMerchantDeliveryPayment'))
+                        //     ->setPaper('a4', 'landscape') // Set paper size to A4 and orientation to landscape
+                        //     ->save($pdfPath)             // Save the PDF to the specified path
+                        //     ->stream('download.pdf');    // Stream the PDF
+
+                        // Pdf::loadView('admin.account.merchantDeliveryPayment.printMerchantDeliveryPaymentUpdated2', compact('parcelMerchantDeliveryPayment'))
+                        //     ->setPaper('a4', 'landscape') // Set paper size to A4 and orientation to landscape
+                        //     ->setOptions([
+                        //         'margin-top' => 0,
+                        //         'margin-bottom' => 0,
+                        //         'margin-left' => 0,
+                        //         'margin-right' => 0,
+                        //     ])
+                        //     ->save($pdfPath)             // Save the PDF to the specified path
+                        //     ->stream('download.pdf');    // Stream the PDF
+
                         Pdf::loadView('admin.account.merchantDeliveryPayment.printMerchantDeliveryPaymentUpdated2', compact('parcelMerchantDeliveryPayment'))
-                            ->setPaper('a4', 'landscape') // Set paper size to A4 and orientation to landscape
-                            ->save($pdfPath)             // Save the PDF to the specified path
-                            ->stream('download.pdf');    // Stream the PDF
+                            ->setPaper('a4', 'landscape')
+                            ->setOptions([
+                                'isHtml5ParserEnabled' => true,
+                                'isRemoteEnabled' => true,
+                                'defaultFont' => 'sans-serif',
+                                'margin-top' => 0,
+                                'margin-bottom' => 0,
+                                'margin-left' => 0,
+                                'margin-right' => 0,
+                                // 'defaultFont' => 'sans-serif',  // Use a reliable default font
+                            ])
+                            ->save($pdfPath)
+                            ->stream('download.pdf');
 
                         // Send the PDF via email
                         Mail::to($merchant_user->email)->send(new MerchantPaymentInvoice(
@@ -309,7 +335,7 @@ class MerchantDeliveryPaymentController extends Controller
 
                         // $message = "PAYMENT ON THE WAY: \nInvoice ID: " . $merchant_payment_invoice . " \nAmount: " . number_format($parcelMerchantDeliveryPayment->total_payment_amount) . " \n-Stay tuned to get 5 days payment service from Your trusted partner in deliveries !!";
 
-                        $message = "Payment On the Way- \nInvoice ID: " . $merchant_payment_invoice . " \nAmount- " . number_format($parcelMerchantDeliveryPayment->total_payment_amount) . " \n-Stay tuned to get 5 days payment service from Your trusted partner in deliveries.";
+                        $message = "Payment On the Way \nInvoice ID: " . $merchant_payment_invoice . " \nAmount- " . number_format($parcelMerchantDeliveryPayment->total_payment_amount) . " \n-Stay tuned to get 5 days payment service from Your trusted partner in deliveries.";
 
                         $this->send_reg_sms($merchant_user->contact_number, $message);
 

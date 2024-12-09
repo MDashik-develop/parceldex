@@ -7,69 +7,53 @@
     <title>Merchant Delivery Payment| {{ session()->get('company_name') ?? config('app.name', 'Flier Express') }}
     </title>
     <style>
-        html,
-        body {
-            height: 100%;
+        <style>@page {
             margin: 0;
-            min-height: 100%;
+            /* Remove all default margins */
+            size: A4 landscape;
+            /* Ensure A4 landscape is explicitly set */
         }
 
         body {
             font-size: 10px !important;
             font-family: Arial, sans-serif;
-            /* background: url('{{ public_path('image/invoice-bg.png') }}') no-repeat center center fixed; */
-            /* background-size: cover; */
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            /* Ensure padding/borders don't increase dimensions */
         }
 
         .container {
             background-color: rgba(255, 255, 255, 0.9);
-            /* Slightly transparent background */
-            /* padding: 20px; */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             width: 100%;
-            max-width: 800px;
+            height: calc(100% - 1px);
+            /* Adjusts for potential rounding issues */
+            max-height: 100%;
+            /* Ensures no overflow */
+            /* Prevents any content spill */
+            /* Prevents overflow */
+            /* Adjust the container height to ensure it matches the page */
+            padding: 10px;
+            /* Add padding for internal spacing */
+            box-sizing: border-box;
             overflow: hidden;
-        }
-
-        .header,
-        .footer {
-            margin: 20px 0;
-        }
-
-        .header img {
-            max-width: 150px;
+            /* Prevent content overflow */
         }
 
         .section {
             display: inline-block;
             width: 45%;
             vertical-align: top;
-            margin: 10px;
+            margin: 10px 2%;
         }
 
         .section h2 {
             text-align: center;
             text-decoration: underline;
-        }
-
-        table>tbody>tr>td,
-        table>tbody>tr>th,
-        table>tfoot>tr>td,
-        table>tfoot>tr>th,
-        table>thead>tr>td,
-        table>thead>tr>th {
-            padding: 2px;
-            line-height: 1;
-        }
-
-        table {
-            margin-bottom: .0rem;
-        }
-
-        table td,
-        table th {
-            padding: .0rem;
         }
 
         table {
@@ -88,7 +72,13 @@
 
         th,
         td {
-            width: 8%;
+            width: auto;
+            /* Allow dynamic column sizing */
+        }
+
+        .table.table-bordered {
+            margin: 2rem auto;
+            /* Center the table */
         }
     </style>
 </head>
@@ -96,7 +86,7 @@
 <body>
     <div class="container">
         <section
-            style="text-align: center; font-size: 26px; font-weight: bold; color: #00509d; margin-top: 2rem; margin-bottom: 2rem;">
+            style="text-align: center; font-size: 26px; font-weight: bold; color: #00509d; margin: 0 0 2rem 0; padding: 0;">
             Parceldex Payment
             Statement</section>
 

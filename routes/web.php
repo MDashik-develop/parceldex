@@ -15,7 +15,7 @@ Route::get('/log', function () {
     $parcel = Parcel::find(10);
     $parcelLogs = ParcelLog::where('parcel_id', $parcel->id)->orderBy('id', 'DESC')->get();
 
-    $logsGroupedByDate = $parcelLogs->whereIn('status', [0, 100, 1, 8, 10, 11, 12, 14, 17, 19, 21, 23, 24, 25, 31, 36])
+    $logsGroupedByDate = $parcelLogs->whereIn('status', [0, 100, 1, 5, 10, 11, 12, 14, 17, 19, 21, 23, 24, 25, 31, 36])
         ->groupBy(function ($item) {
             return \Carbon\Carbon::parse($item['date'])->format('Y-m-d');
         })

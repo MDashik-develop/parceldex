@@ -1431,8 +1431,8 @@ function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel =
         $status_name  = "Order has been Placed by Merchant";
         $class        = "success";
         $to_user    =  $parcelLog?->merchant?->company_name;
-    } elseif ($status == 8) {
-        $sub_title = $parcelLog?->delivery_rider?->name . ' ' . $parcelLog?->delivery_rider?->r_id . '-' . $parcelLog?->delivery_rider?->branch?->name . '-' . $parcelLog?->delivery_rider?->contact_number;
+    } elseif ($status == 5) {
+        $sub_title = $parcelLog?->pickup_rider?->name . ' ' . $parcelLog?->pickup_rider?->r_id . '-' . $parcelLog?->pickup_rider?->branch?->name . '-' . $parcelLog?->pickup_rider?->contact_number;
         $status_name  = "Rider Assigned for Pickup";
         $class        = "success";
         $to_user    = $parcelLog?->pickup_branch_user?->name;

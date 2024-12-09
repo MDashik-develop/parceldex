@@ -9,6 +9,7 @@ dist/
 /node_modules
 /public/hot
 /public/storage
+/storage/invoice_pdf
 /storage/*.key
 /vendor
 .env

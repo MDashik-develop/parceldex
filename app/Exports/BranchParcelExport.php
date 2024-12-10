@@ -62,7 +62,7 @@ class BranchParcelExport implements
                 $query->select('id', 'name', 'm_id', 'company_name', 'contact_number', 'address');
             },
         ])
-            ->where('delivery_branch_id', $branch_id)
+            //->where('delivery_branch_id', $branch_id)
             ->whereRaw($where_condition)
             ->select();
 
@@ -201,7 +201,7 @@ class BranchParcelExport implements
                     'picked_up_date' => Carbon::parse($parcel->parcel_logs->where('status', 11)->first()?->date . ' ' . $parcel->parcel_logs->where('status', 11)->first()?->time)->format('d-m-Y h:i A'),
                     'service_area' => $parcel?->district?->service_area?->name ?? 'N/A',
                     'payment_invoice_id' => $a?->parcel_merchant_delivery_payment?->merchant_payment_invoice ?? '',
-                    'number_of_attempt' => $parcel->number_of_attempt,
+                    'number_of_attempt' => $parcel->number_of_attempt ?? 0,
                 ];
             }
         }

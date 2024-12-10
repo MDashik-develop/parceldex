@@ -437,7 +437,7 @@ class DeliveryBranchTransferParcelController extends Controller
 
     public function deliveryBranchTransferParcelAddCart3(Request $request)
     {
-        $branch_id = auth()->guard('branch')->user()->branch->id . '-' . auth()->guard('branch')->user()->branch->id;
+        $branch_id = auth()->guard('branch')->user()->branch->id . '-' . auth()->guard('branch')->user()->branch->id . '-' . auth()->guard('branch')->user()->branch->id;
         //\Cart::session($branch_id)->clear();
         //return;
         $branch_user_id = auth()->guard('branch')->user()->id;
@@ -509,7 +509,7 @@ class DeliveryBranchTransferParcelController extends Controller
             'getTotal' => $getTotal,
             'error' => $error,
         ];
-        return view('branch.parcel.pickupParcel.deliveryBranchTransferParcelCart2', $data);
+        return view('branch.parcel.pickupParcel.deliveryBranchTransferParcelCart3', $data);
     }
 
     public function deliveryBranchTransferParcelDeleteCart(Request $request)
@@ -550,6 +550,26 @@ class DeliveryBranchTransferParcelController extends Controller
             'error' => "",
         ];
         return view('branch.parcel.pickupParcel.pickupRiderRunParcelCart2', $data);
+    }
+
+    public function deliveryBranchTransferParcelDeleteCart3(Request $request)
+    {
+
+        $branch_id = auth()->guard('branch')->user()->branch->id . '-' . auth()->guard('branch')->user()->branch->id . '-' . auth()->guard('branch')->user()->branch->id;
+        $branch_user_id = auth()->guard('branch')->user()->id;
+
+        \Cart::session($branch_id)->remove($request->input('itemId'));
+
+        $cart = \Cart::session($branch_id)->getContent();
+        $cart = $cart->sortBy('id');
+
+        $data = [
+            'cart' => $cart,
+            'totalItem' => \Cart::session($branch_id)->getTotalQuantity(),
+            'getTotal' => \Cart::session($branch_id)->getTotal(),
+            'error' => "",
+        ];
+        return view('branch.parcel.pickupParcel.pickupRiderRunParcelCart3', $data);
     }
 
     public function confirmDeliveryBranchTransferGenerate(Request $request)

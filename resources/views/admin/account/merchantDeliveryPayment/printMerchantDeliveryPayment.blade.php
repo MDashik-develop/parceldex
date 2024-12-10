@@ -290,7 +290,8 @@
                         </tr>
                         @php
 
-                            $totalCollectionAmount += $parcel_merchant_delivery_payment_detail->collected_amount;
+                            $totalCollectionAmount += $parcel_merchant_delivery_payment_detail?->parcel?->cancel_amount_collection + $parcel_merchant_delivery_payment_detail?->parcel?->customer_collect_amount;
+
                             $total_weight_package_charge +=
                                 $parcel_merchant_delivery_payment_detail->weight_package_charge;
                             $total_cod_charge += $parcel_merchant_delivery_payment_detail->cod_charge;

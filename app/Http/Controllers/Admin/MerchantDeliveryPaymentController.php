@@ -639,7 +639,7 @@ class MerchantDeliveryPaymentController extends Controller
                     'parcel_merchant_delivery_payment_id' => $parcelMerchantDeliveryPayment->id,
                     'parcel_id' => $parcel_id,
                     'collected_amount' => $item->attributes->customer_collect_amount,
-                    'cod_charge' => $item->attributes->cod_charge,
+                    'cod_charge' => ceil($item->attributes->cod_charge),
                     'delivery_charge' => $item->attributes->delivery_charge,
                     'weight_package_charge' => $item->attributes->weight_package_charge,
                     'return_charge' => $item->attributes->return_charge,
@@ -649,7 +649,7 @@ class MerchantDeliveryPaymentController extends Controller
                 Parcel::where('id', $parcel_id)->update([
                     'payment_type' => 4,
                     'return_charge' => $item->attributes->return_charge,
-                    'cod_charge' => $item->attributes->cod_charge,
+                    'cod_charge' => ceil($item->attributes->cod_charge),
                     'merchant_paid_amount' => $item->price,
                 ]);
 

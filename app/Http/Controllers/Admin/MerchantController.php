@@ -1009,7 +1009,7 @@ class MerchantController extends Controller
             $company_name = $request->input('company_name');
             $contact_number = $request->input('contact_number');
             $password = $request->input('password') ?? 12345;
-            $otp_token = random_int(100000, 999999);
+            $otp_token = random_int(1000, 9999);
 
             $data = [
                 'm_id' => $this->returnUniqueMerchantId(),

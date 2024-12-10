@@ -1081,7 +1081,7 @@ class DeliveryRiderRunParcelController extends Controller
                                 if ($collection_amount != 0 && $cod_percent != 0) {
                                     $cod_charge = ($collection_amount / 100) * $cod_percent;
                                     $parcel_update_data['total_charge'] = $charge_without_cod + $cod_charge;
-                                    $parcel_update_data['cod_charge'] = $cod_charge;
+                                    $parcel_update_data['cod_charge'] = ceil($cod_charge);
                                 }
                                 //update cod charge end
 
@@ -1159,7 +1159,7 @@ class DeliveryRiderRunParcelController extends Controller
                                 if ($collection_amount != 0 && $cod_percent != 0) {
                                     $cod_charge = ($collection_amount / 100) * $cod_percent;
                                     $parcel_update_data['total_charge'] = $charge_without_cod + $cod_charge;
-                                    $parcel_update_data['cod_charge'] = $cod_charge;
+                                    $parcel_update_data['cod_charge'] = ceil($cod_charge);
                                 }
                                 //update cod charge end
 

@@ -1359,7 +1359,7 @@ class PickupRiderRunParcelController extends Controller
                             //                             Parcel from SAREEZ BY SAKYLA  (Company_Name) has picked up.
                             // COD: 1,00,000 Tk. (total_collect_amount)
                             // Track: https://parceldex.com/orderTracking?trackingBox=231220YD80083
-                            // -Parceldex Courier
+                            // Parceldex Courier
 
                             $message = "Parcel from " . ucwords($parcel->merchant->company_name) . " has picked up. \nCOD- " . number_format($parcel->total_collect_amount) . " Tk.\nTrack- " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->tracking_id . "\nParceldex Courier";
 

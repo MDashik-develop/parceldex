@@ -235,7 +235,7 @@ class AuthController extends Controller
             $contact_number = $request->input('contact_number');
             $company_name   = $request->input('company_name');
 
-            $otp_token      = random_int(100000, 999999);
+            $otp_token      = random_int(1000, 9999);
 
 
             $data     = [
@@ -385,7 +385,7 @@ class AuthController extends Controller
             $contact_number = $request->input('contact_number');
             $company_name   = $request->input('company_name');
 
-            $otp_token      = random_int(100000, 999999);
+            $otp_token      = random_int(1000, 9999);
 
 
             $data     = [
@@ -715,7 +715,7 @@ class AuthController extends Controller
 
         if ($merchant) {
 
-            $otp_token = random_int(100000, 999999);
+            $otp_token = random_int(1000, 9999);
 
             Merchant::where('id', $merchant->id)->update([
                 'otp_token'         => $otp_token,

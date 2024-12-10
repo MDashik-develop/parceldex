@@ -200,6 +200,8 @@
                                                 <td class="text-center">
                                                     {{ $delivery_branch_transfer_detail->parcel->parcel_invoice }}
                                                 </td>
+                                                <input type="hidden" class="parcel_invoice"
+                                                    value="{{ $delivery_branch_transfer_detail->parcel->parcel_invoice }}" />
                                                 <td class="text-center">
                                                     {{ $delivery_branch_transfer_detail->parcel->merchant_order_id }}
                                                 </td>
@@ -278,6 +280,20 @@
 
     $("#parcel_invoice").on("trigger change", function(e) {
         var invoice_id = $(this).val();
+
+        const filteredValues = $(".parcel_invoice")
+            .map(function() {
+                return $(this).val();
+            })
+            .get()
+            .filter(value => value === invoice_id);
+
+        if (!filteredValues.length) {
+            $(this).val('');
+            toastr.error('Parcel Id not found');
+            return false;
+        }
+
         var parcel_invoices = [invoice_id];
 
         if (invoice_id != "") {

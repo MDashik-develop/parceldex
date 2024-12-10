@@ -594,7 +594,7 @@ class DeliveryParcelController extends Controller
         $parcel = Parcel::where('id', $request->get('parcel_id'))
             ->where('delivery_rider_id', $rider_id)->first();
 
-        $parcel->parcel_otp = random_int(100000, 999999);
+        $parcel->parcel_otp = random_int(1000, 9999);
         $parcel->parcel_otp_expired_at = now()->addMinutes(30)->toDateTimeString();
         $parcel->save();
 

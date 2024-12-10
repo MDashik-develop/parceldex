@@ -966,7 +966,7 @@ class ParcelController extends Controller
                 }
 
                 $amount .= '<p><strong>Delivery Charge:  </strong>' . $data->delivery_charge . '</p>';
-                $amount .= '<p><strong>Weight Charge:  </strong>' . $data->weight_charge . '</p>';
+                $amount .= '<p><strong>Weight Charge:  </strong>' . $data->weight_package_charge . '</p>';
                 // $amount .= '<p><strong>Delivery Charge: </strong>'.$data->total_charge.'</p>';
                 // $amount .= '<p><strong>COD Charge: </strong>'.$data->cod_charge.'</p>';
                 return $amount;

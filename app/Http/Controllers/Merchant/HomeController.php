@@ -304,18 +304,15 @@ class HomeController extends Controller
         $data['total_customer_collect_amount_due_oc'] = $awc;
 
 
-        $statusRange = range(11, 25);
+        $statusRange = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
         $deliveryTypes = [1, 2, 3, 4, null];
-        $paymentTypes = [null];
 
         $data['total_to_be_collected']     = Parcel::where('merchant_id', $merchant_id)
             ->whereNull('suborder')
             ->whereNull('payment_type')
-            ->where(function ($query) use ($statusRange, $deliveryTypes, $paymentTypes) {
+            ->where(function ($query) use ($statusRange, $deliveryTypes) {
                 $query->whereIn('status', $statusRange)
-                    ->orWhereIn('delivery_type', $deliveryTypes)
-                    ->orWhereNull('payment_type');
-                // ->orWhereNotNull('payment_type');
+                    ->orWhereIn('delivery_type', $deliveryTypes);
             })
             ->sum('total_collect_amount');
 
@@ -340,18 +337,15 @@ class HomeController extends Controller
         //     // ->whereRaw('delivery_type in (?,?) and payment_type in (?,?,?) and payment_request_status = ?', [1,2,2,4,6,0])
         //     ->count();
 
-        $statusRange = range(11, 25);
+        $statusRange = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
         $deliveryTypes = [1, 2, 3, 4, null];
-        $paymentTypes = [null];
 
         $data['total_to_be_collectedoc']     = Parcel::where('merchant_id', $merchant_id)
             ->whereNull('suborder')
             ->whereNull('payment_type')
-            ->where(function ($query) use ($statusRange, $deliveryTypes, $paymentTypes) {
+            ->where(function ($query) use ($statusRange, $deliveryTypes) {
                 $query->whereIn('status', $statusRange)
-                    ->orWhereIn('delivery_type', $deliveryTypes)
-                    ->orWhereNull('payment_type');
-                // ->orWhereNotNull('payment_type');
+                    ->orWhereIn('delivery_type', $deliveryTypes);
             })
             ->count();
 
@@ -523,7 +517,7 @@ class HomeController extends Controller
         $total_charge_amount = $cod_charge + $delivery_charge + $weight_package_charge + $return_charge3;
 
         //dd($cod_charge, $delivery_charge, $weight_package_charge, $return_charge3);
-        $minus1 = $cod_charge + $delivery_charge + $weight_package_charge + $return_charge3;
+        $minus1 = $cod_charge + $delivery_charge + $weight_package_charge;
 
         $data['total_service_charge']      =  $minus1;
 

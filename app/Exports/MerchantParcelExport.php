@@ -196,30 +196,6 @@ class MerchantParcelExport implements
                 }
 
 
-                // if ($parcel->suborder) {
-                //     $mainParcel = Parcel::where('parcel_invoice', $parcel->suborder)->first();
-
-                //     $area = Area::with('district')->where('id', $mainParcel->merchant->area_id)->first();
-                //     $service_area_id = $area->district->service_area_id;
-                //     $merchantServiceAreaReturnCharge = MerchantServiceAreaReturnCharge::where([
-                //         'service_area_id' => $service_area_id,
-                //         'merchant_id' => $mainParcel->merchant->id,
-                //     ])->first();
-
-
-                //     if ($merchantServiceAreaReturnCharge && !empty($merchantServiceAreaReturnCharge->return_charge)) {
-                //         $merchant_service_area_return_charge = $merchantServiceAreaReturnCharge->return_charge;
-                //     }
-
-                //     if ($parcel->status == 25 && $parcel->delivery_type == 2) {
-                //         $merchant_service_area_return_charge = $mainParcel->merchant_service_area_return_charge;
-                //     }
-                // } else {
-                //     if ($parcel->status == 25 && $parcel->delivery_type == 4) {
-                //         $merchant_service_area_return_charge = $parcel->merchant_service_area_return_charge;
-                //     }
-                // }
-
                 $totalCharge = $parcel->weight_package_charge + $parcel->cod_charge + $parcel->delivery_charge + $merchant_service_area_return_charge;
 
                 $a = ParcelMerchantDeliveryPaymentDetail::where('parcel_id', $parcel->id)->where('status', 2)->first();

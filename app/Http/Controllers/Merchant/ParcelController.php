@@ -1513,7 +1513,6 @@ class ParcelController extends Controller
         try {
 
             $import = new MerchantBulkParcelImport();
-            // dd($import);
 
             $import->import($file);
             if ($import->failures()->isNotEmpty()) {
@@ -1540,7 +1539,6 @@ class ParcelController extends Controller
 
     public function merchantBulkParcelImportEntry(Request $request)
     {
-
         $merchant_id = auth()->guard('merchant')->user()->id;
         $branch_id = auth()->guard('merchant')->user()->branch->id;
 

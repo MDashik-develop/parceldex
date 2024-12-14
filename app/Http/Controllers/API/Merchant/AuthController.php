@@ -300,12 +300,66 @@ class AuthController extends Controller
                 $message    = "Dear {$company_name}, ";
                 $message    .= "Your OTP is {$otp_token} From Parceldex ltd. Please Confirm your account and keep it secret.";
 
-                $this->send_reg_sms($contact_number, $message);
+                // $this->send_reg_sms($contact_number, $message);
+
+                // return response()->json([
+                //     'success'  => 200,
+                //     'message'  => "Merchant OTP Has been send Successfully",
+                // ], 200);
+
+
+                Merchant::where('id', $merchant->id)->update([
+                    'status'            => 1,
+                    'otp_token'         => null,
+                    'otp_token_status'  => 1,
+                ]);
+
+                $token =  Auth::guard('merchant_api')->claims(['name' => 'beaconcourier'])->login($merchant);
+
+                $service_area_charges =  auth()->guard('merchant_api')->user()->service_area_charges;
+
+                $new_service_area = [];
+
+                foreach ($service_area_charges as $service_area_charge) {
+                    $new_service_area[] = [
+                        'name' => $service_area_charge->name,
+                        'cod_charge' => $service_area_charge->cod_charge,
+                        'cod_charge' => $service_area_charge->cod_charge,
+                        'weight_type' => $service_area_charge->weight_type,
+                        'charge' => $service_area_charge->pivot->charge,
+                    ];
+                }
+
+                unset(
+                    $merchant->service_area_charges,
+                    $merchant->store_password,
+                    $merchant->created_admin_id,
+                    $merchant->updated_admin_id,
+                    $merchant->created_at,
+                    $merchant->updated_at
+                );
+
+                $cod_charge = $merchant->cod_charge;
+                if (isNull($merchant->cod_charge)) {
+                    $cod_charge = -1;
+                }
 
                 return response()->json([
                     'success'  => 200,
-                    'message'  => "Merchant OTP Has been send Successfully",
+                    'message'  => "Merchant Login Successfully",
+                    'token'    => $token,
+                    'merchant' => $merchant,
+                    'cod_charge_percent' => $cod_charge,
+                    'service_area_charges' => $new_service_area,
                 ], 200);
+                // }
+
+
+                // return response()->json([
+                //     'success' => 401,
+                //     'message' => "Confirm Token Doesn't Matched",
+                //     'error'   => "Unauthorized",
+                // ], 401);
             }
         } catch (\Exception $e) {
             return response()->json([
@@ -450,7 +504,7 @@ class AuthController extends Controller
                 $message    = "Dear {$company_name}, ";
                 $message    .= "Your OTP is {$otp_token}. Please Confirm your account.";
 
-                $this->send_sms($contact_number, $message);
+                //$this->send_sms($contact_number, $message);
 
                 //                return response()->json([
                 //                    'success'  => 200,

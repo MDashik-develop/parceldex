@@ -49,7 +49,7 @@
                                                 <th width="10%"> Product Details</th>
                                                 <th width="5%"> Weight</th>
                                                 <!-- <th> Item Type</th>
-                                                                                            <th> Service Type</th> -->
+                                                                                                <th> Service Type</th> -->
                                                 <th width="7%"> Collection Amount</th>
                                                 <th width="5%">Exchange</th>
                                                 <th width="5%"> Remarks</th>
@@ -160,10 +160,10 @@
                                                         <select class="form-control"
                                                             name="parcel[{{ $key }}][exchange]">
                                                             <option value="yes"
-                                                                {{ $import_parcel['exchange'] == 'yes' ? 'selected' : '' }}>
+                                                                {{ $import_parcel['exchange'] == 'Yes' ? 'selected' : '' }}>
                                                                 Yes</option>
                                                             <option value="no"
-                                                                {{ $import_parcel['exchange'] == 'no' ? 'selected' : '' }}>
+                                                                {{ $import_parcel['exchange'] == 'No' ? 'selected' : '' }}>
                                                                 No</option>
                                                         </select>
                                                     </td>

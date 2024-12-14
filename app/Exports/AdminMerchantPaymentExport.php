@@ -110,7 +110,7 @@ class AdminMerchantPaymentExport implements
                 foreach ($payment->parcel_merchant_delivery_payment_details as $v_data) {
                     $total_return_charge += $v_data?->parcel?->return_charge;
                     $total_cod_charge += $v_data?->parcel?->cod_charge;
-                    $total_weight_charge += $v_data?->parcel?->weight_charge;
+                    $total_weight_charge += $v_data?->parcel?->weight_package_charge;
                     $total_delivery_charge += $v_data?->parcel?->delivery_charge;
                 }
 

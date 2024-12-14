@@ -35,3 +35,6 @@ ALTER TABLE `parcels` ADD `parent_delivery_type` TINYINT NULL AFTER `delivery_ty
 15-
 
 9355
+
+
+TRUNCATE delivery_branch_transfers; TRUNCATE delivery_branch_transfer_details; TRUNCATE parcels; TRUNCATE parcel_delivery_payments; TRUNCATE parcel_delivery_payment_details; TRUNCATE parcel_logs; TRUNCATE parcel_merchant_delivery_payments; TRUNCATE parcel_merchant_delivery_payment_details; TRUNCATE parcel_payment_requests; TRUNCATE return_branch_transfers; TRUNCATE return_branch_transfer_details; TRUNCATE rider_payments; TRUNCATE rider_runs; TRUNCATE rider_run_details;

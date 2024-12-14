@@ -399,6 +399,8 @@ class MerchantDeliveryPaymentController extends Controller
             ")
             ->get();
 
+        $data['parcels'] = [];
+
         return view('admin.account.merchantDeliveryPayment.merchantPaymentDeliveryGenerate', $data);
     }
 

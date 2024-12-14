@@ -909,7 +909,7 @@ class ParcelController extends Controller
                 'weight_package_charge' => $parcel->weight_package_charge,
                 'cod_percent' => $parcel->cod_percent,
                 'collectable_amount' => $parcel->total_collect_amount ?? 0,
-                'collected_amount' => $parcel->customer_collect_amount ? $parcel->cancel_amount_collection : 0,
+                'collected_amount' => $parcel->customer_collect_amount == 0 ? $parcel->cancel_amount_collection : $parcel->customer_collect_amount,
                 'cod_charge' => $parcel->cod_charge ?? 0,
                 'delivery_charge' => $parcel->delivery_charge,
                 'total_charge' => $parcel->total_charge,

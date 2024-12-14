@@ -1286,6 +1286,14 @@ class DeliveryRiderRunParcelController extends Controller
                                     $parcel_update_data['total_charge'] = ($parcel->total_charge - $parcel->cod_charge);
                                 }
 
+                                $parcel_update_data['customer_collect_amount'] = 0;
+                                $parcel_update_data['cod_charge'] = 0;
+                                $parcel_log_create_data['status'] = 25;
+                                $parcel_log_create_data['delivery_branch_id'] = auth()->guard('branch')->user()->branch->id;
+                                $parcel_log_create_data['delivery_branch_user_id'] = auth()->guard('branch')->user()->id;
+                                $sms_delivery_status = 1;
+                                $sms_delivery_type = "Canceled";
+
                                 $cod_percent = $parcel->cod_percent;
                                 $charge_without_cod = $parcel->total_charge - $parcel->cod_charge;
                                 $collection_amount = $confirm_customer_collect_amount ?? 0;
@@ -1295,14 +1303,6 @@ class DeliveryRiderRunParcelController extends Controller
                                     $parcel_update_data['total_charge'] = $charge_without_cod + $cod_charge;
                                     $parcel_update_data['cod_charge'] = ceil($cod_charge);
                                 }
-
-                                $parcel_update_data['customer_collect_amount'] = 0;
-                                $parcel_update_data['cod_charge'] = 0;
-                                $parcel_log_create_data['status'] = 25;
-                                $parcel_log_create_data['delivery_branch_id'] = auth()->guard('branch')->user()->branch->id;
-                                $parcel_log_create_data['delivery_branch_user_id'] = auth()->guard('branch')->user()->id;
-                                $sms_delivery_status = 1;
-                                $sms_delivery_type = "Canceled";
                                 break;
 
                             default:

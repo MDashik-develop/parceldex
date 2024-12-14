@@ -16,9 +16,11 @@ use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ReceivedReturnBranchTransferParcelController extends Controller {
+class ReceivedReturnBranchTransferParcelController extends Controller
+{
 
-    public function receivedReturnBranchTransferList() {
+    public function receivedReturnBranchTransferList()
+    {
         $data               = [];
         $data['main_menu']  = 'returnParcel';
         $data['child_menu'] = 'receivedReturnBranchTransferList';
@@ -27,7 +29,8 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
         return view('branch.parcel.returnParcel.receivedReturnBranchTransferList', $data);
     }
 
-    public function getReceivedReturnBranchTransferList(Request $request) {
+    public function getReceivedReturnBranchTransferList(Request $request)
+    {
         $branch_user_id = auth()->guard('branch')->user()->id;
         $branch_id      = auth()->guard('branch')->user()->branch->id;
 
@@ -45,67 +48,26 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
             ->addIndexColumn()
             ->editColumn('status', function ($data) {
                 switch ($data->status) {
-                    case 1 : $status_name  = "Return Request"; $class  = "success";break;
-                    case 2 : $status_name  = "Return Request Cancel"; $class  = "danger";break;
-                    case 3 : $status_name  = "Return Request Accept"; $class  = "success";break;
-                    case 4 : $status_name  = "Return Request Reject"; $class  = "danger";break;
-                    default:$status_name = "None"; $class = "success";break;
-                }
-                return '<p class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</p>';
-            })
-            ->editColumn('create_date_time', function ($data) {
-                return date('d-m-Y H:i:s', strtotime($data->create_date_time));
-            })
-            ->editColumn('reject_date_time', function ($data) {
-                return ($data->reject_date_time) ? date('d-m-Y H:i:s', strtotime($data->reject_date_time)) : "";
-            })
-            ->editColumn('received_date_time', function ($data) {
-                return ($data->received_date_time) ? date('d-m-Y H:i:s', strtotime($data->received_date_time)) : "";
-            })
-            ->addColumn('action', function ($data) {
-                $button = '<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" return_branch_transfer_id="' . $data->id . '" title="View Delivery Return Branch Transfer" >
-                <i class="fa fa-eye"></i> </button>';
-
-                //if ($data->status == 1) {
-                    $button .= '&nbsp; <button class="btn btn-success received-return-branch-transfer-received-btn btn-sm" data-toggle="modal" data-target="#viewModal"  return_branch_transfer_id="' . $data->id . '"  title=" Received Return Branch Transfer Received" >
-                    <i class="fa fa-check"></i> </button> ';
-
-                    $button .= '&nbsp; <button class="btn btn-danger received-return-branch-transfer-reject-btn btn-sm" data-toggle="modal" data-target="#viewModal"  return_branch_transfer_id="' . $data->id . '"  title="Received Return Branch Transfer Cancel" >
-                    <i class="fa fa-window-close"></i> </button> ';
-               // }
-
-                return $button;
-            })
-            ->rawColumns(['status', 'action', 'create_date_time', 'reject_date_time', 'received_date_time'])
-            ->make(true);
-    }
-
-    public function printReceivedReturnBranchTransferList(Request $request) {
-        $branch_user_id = auth()->guard('branch')->user()->id;
-        $branch_id      = auth()->guard('branch')->user()->branch->id;
-
-        $model = ReturnBranchTransfer::with(
-            [
-                'from_branch' => function ($query) {
-                    $query->select('id', 'name', 'contact_number', 'address');
-                },
-            ]
-        )
-            ->whereRaw('to_branch_id = ? and status != 2', [$branch_id])
-            ->orderBy('id', 'desc')
-            ->select();
-        $returnBranchTransfers=$model->get();
-        return view('branch.parcel.returnParcel.printReceivedReturnBranchTransferList', compact('returnBranchTransfers'));
-
-        return DataTables::of($model)
-            ->addIndexColumn()
-            ->editColumn('status', function ($data) {
-                switch ($data->status) {
-                    case 1 : $status_name  = "Return Request"; $class  = "success";break;
-                    case 2 : $status_name  = "Return Request Cancel"; $class  = "danger";break;
-                    case 3 : $status_name  = "Return Request Accept"; $class  = "success";break;
-                    case 4 : $status_name  = "Return Request Reject"; $class  = "danger";break;
-                    default:$status_name = "None"; $class = "success";break;
+                    case 1:
+                        $status_name  = "Return Request";
+                        $class  = "success";
+                        break;
+                    case 2:
+                        $status_name  = "Return Request Cancel";
+                        $class  = "danger";
+                        break;
+                    case 3:
+                        $status_name  = "Return Request Accept";
+                        $class  = "success";
+                        break;
+                    case 4:
+                        $status_name  = "Return Request Reject";
+                        $class  = "danger";
+                        break;
+                    default:
+                        $status_name = "None";
+                        $class = "success";
+                        break;
                 }
                 return '<p class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</p>';
             })
@@ -136,7 +98,80 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
             ->make(true);
     }
 
-    public function viewReceivedReturnBranchTransfer(Request $request, ReturnBranchTransfer $returnBranchTransfer) {
+    public function printReceivedReturnBranchTransferList(Request $request)
+    {
+        $branch_user_id = auth()->guard('branch')->user()->id;
+        $branch_id      = auth()->guard('branch')->user()->branch->id;
+
+        $model = ReturnBranchTransfer::with(
+            [
+                'from_branch' => function ($query) {
+                    $query->select('id', 'name', 'contact_number', 'address');
+                },
+            ]
+        )
+            ->whereRaw('to_branch_id = ? and status != 2', [$branch_id])
+            ->orderBy('id', 'desc')
+            ->select();
+        $returnBranchTransfers = $model->get();
+        return view('branch.parcel.returnParcel.printReceivedReturnBranchTransferList', compact('returnBranchTransfers'));
+
+        return DataTables::of($model)
+            ->addIndexColumn()
+            ->editColumn('status', function ($data) {
+                switch ($data->status) {
+                    case 1:
+                        $status_name  = "Return Request";
+                        $class  = "success";
+                        break;
+                    case 2:
+                        $status_name  = "Return Request Cancel";
+                        $class  = "danger";
+                        break;
+                    case 3:
+                        $status_name  = "Return Request Accept";
+                        $class  = "success";
+                        break;
+                    case 4:
+                        $status_name  = "Return Request Reject";
+                        $class  = "danger";
+                        break;
+                    default:
+                        $status_name = "None";
+                        $class = "success";
+                        break;
+                }
+                return '<p class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</p>';
+            })
+            ->editColumn('create_date_time', function ($data) {
+                return date('d-m-Y H:i:s', strtotime($data->create_date_time));
+            })
+            ->editColumn('reject_date_time', function ($data) {
+                return ($data->reject_date_time) ? date('d-m-Y H:i:s', strtotime($data->reject_date_time)) : "";
+            })
+            ->editColumn('received_date_time', function ($data) {
+                return ($data->received_date_time) ? date('d-m-Y H:i:s', strtotime($data->received_date_time)) : "";
+            })
+            ->addColumn('action', function ($data) {
+                $button = '<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" return_branch_transfer_id="' . $data->id . '" title="View Delivery Return Branch Transfer" >
+                <i class="fa fa-eye"></i> </button>';
+
+                if ($data->status == 1) {
+                    $button .= '&nbsp; <button class="btn btn-success received-return-branch-transfer-received-btn btn-sm" data-toggle="modal" data-target="#viewModal"  return_branch_transfer_id="' . $data->id . '"  title=" Received Return Branch Transfer Received" >
+                    <i class="fa fa-check"></i> </button> ';
+
+                    $button .= '&nbsp; <button class="btn btn-danger received-return-branch-transfer-reject-btn btn-sm" data-toggle="modal" data-target="#viewModal"  return_branch_transfer_id="' . $data->id . '"  title="Received Return Branch Transfer Cancel" >
+                    <i class="fa fa-window-close"></i> </button> ';
+                }
+
+                return $button;
+            })
+            ->rawColumns(['status', 'action', 'create_date_time', 'reject_date_time', 'received_date_time'])
+            ->make(true);
+    }
+
+    public function viewReceivedReturnBranchTransfer(Request $request, ReturnBranchTransfer $returnBranchTransfer)
+    {
         $returnBranchTransfer->load([
             'from_branch' => function ($query) {
                 $query->select('id', 'name', 'contact_number', 'address');
@@ -149,7 +184,8 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
         return view('branch.parcel.returnParcel.viewReceivedReturnBranchTransfer', compact('returnBranchTransfer'));
     }
 
-    public function receivedReturnBranchTransferReceived(Request $request, ReturnBranchTransfer $returnBranchTransfer) {
+    public function receivedReturnBranchTransferReceived(Request $request, ReturnBranchTransfer $returnBranchTransfer)
+    {
         $returnBranchTransfer->load([
             'from_branch' => function ($query) {
                 $query->select('id', 'name', 'contact_number', 'address');
@@ -162,7 +198,8 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
         return view('branch.parcel.returnParcel.receivedReturnBranchTransferReceived', compact('returnBranchTransfer'));
     }
 
-    public function confirmReceivedReturnBranchTransferReceived(Request $request, ReturnBranchTransfer $returnBranchTransfer) {
+    public function confirmReceivedReturnBranchTransferReceived(Request $request, ReturnBranchTransfer $returnBranchTransfer)
+    {
         $validator = Validator::make($request->all(), [
             'transfer_note'                  => 'sometimes',
             'received_date'                  => 'required',
@@ -181,7 +218,7 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
 
             $total_transfer_received_parcel = $request->input('total_transfer_received_parcel');
 
-            if($total_transfer_received_parcel != 0){
+            if ($total_transfer_received_parcel != 0) {
                 $data = [
                     'received_date_time'             => $request->input('received_date') . ' ' . date('H:i:s'),
                     'total_transfer_received_parcel' => $request->input('total_transfer_received_parcel'),
@@ -189,8 +226,7 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
                     'note'                           => $request->input('transfer_note'),
                     'status'                         => 3,
                 ];
-            }
-            else{
+            } else {
                 $data = [
                     'cancel_date_time'               => $request->input('received_date') . ' ' . date('H:i:s'),
                     'total_transfer_received_parcel' => 0,
@@ -216,9 +252,9 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
                         'status' => $return_branch_transfer_status[$i],
                     ]);
 
-                    $status = 29 ;
+                    $status = 29;
                     if ($return_branch_transfer_status[$i] == 3) {
-                        $status = 28 ;
+                        $status = 28;
                     }
 
                     Parcel::where('id', $parcel_id[$i])->update([
@@ -228,7 +264,7 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
                         'return_branch_id'      => $branch_id,
                         'return_branch_user_id' => $branch_user_id,
                     ]);
-                    $parcel=Parcel::where('id', $parcel_id[$i])->first();
+                    $parcel = Parcel::where('id', $parcel_id[$i])->first();
                     ParcelLog::create([
                         'parcel_id'             => $parcel_id[$i],
                         'return_branch_id'      => $branch_id,
@@ -256,15 +292,15 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
             } else {
                 $response = ['error' => 'Received Return Branch Transfer Received Failed'];
             }
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             \DB::rollback();
             $response = ['error' => 'Database Error'];
         }
         return response()->json($response);
-
     }
 
-    public function receivedReturnBranchTransferReject(Request $request, ReturnBranchTransfer $returnBranchTransfer) {
+    public function receivedReturnBranchTransferReject(Request $request, ReturnBranchTransfer $returnBranchTransfer)
+    {
         $returnBranchTransfer->load([
             'from_branch' => function ($query) {
                 $query->select('id', 'name', 'contact_number', 'address');
@@ -277,7 +313,8 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
         return view('branch.parcel.returnParcel.receivedReturnBranchTransferReject', compact('returnBranchTransfer'));
     }
 
-    public function confirmReceivedReturnBranchTransferReject(Request $request, ReturnBranchTransfer $returnBranchTransfer) {
+    public function confirmReceivedReturnBranchTransferReject(Request $request, ReturnBranchTransfer $returnBranchTransfer)
+    {
         $validator = Validator::make($request->all(), [
             'transfer_note'               => 'sometimes',
             'reject_date'                 => 'required',
@@ -316,7 +353,7 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
                         'return_branch_id'          => $branch_id,
                         'return_branch_user_id'     => $branch_user_id,
                     ]);
-                    $parcel=Parcel::where('id', $returnBranchTransferDetail->parcel_id)->first();
+                    $parcel = Parcel::where('id', $returnBranchTransferDetail->parcel_id)->first();
                     ParcelLog::create([
                         'parcel_id'                 => $returnBranchTransferDetail->parcel_id,
                         'return_branch_id'          => $branch_id,
@@ -340,14 +377,15 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
             } else {
                 $response = ['error' => 'Received Return Branch Transfer Reject Failed'];
             }
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             \DB::rollback();
             $response = ['error' => 'Database Error'];
         }
         return response()->json($response);
     }
 
-    public function deliveryBranchTransferGenerate() {
+    public function deliveryBranchTransferGenerate()
+    {
         $branch_id = auth()->guard('branch')->user()->id;
         \Cart::session($branch_id)->clear();
 
@@ -362,9 +400,10 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
             ->select('id', 'name', 'contact_number', 'address')
             ->get();
 
-        $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number');
-        },
+        $data['parcels'] = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number');
+            },
         ])
             ->where([
                 'pickup_branch_id' => $branch_id,
@@ -376,16 +415,18 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
         return view('branch.parcel.pickupParcel.deliveryBranchTransferGenerate', $data);
     }
 
-    public function returnDeliveryBranchTransferParcel(Request $request) {
+    public function returnDeliveryBranchTransferParcel(Request $request)
+    {
         $branch_id = auth()->guard('branch')->user()->id;
         $parcel_invoice    = $request->input('parcel_invoice');
         $merchant_order_id = $request->input('merchant_order_id');
 
         if (!empty($parcel_invoice) || !empty($merchant_order_id)) {
 
-            $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-                $query->select('id', 'name', 'contact_number');
-            },
+            $data['parcels'] = Parcel::with([
+                'merchant' => function ($query) {
+                    $query->select('id', 'name', 'contact_number');
+                },
             ])
                 ->where(function ($query) use ($branch_id, $parcel_invoice, $merchant_order_id) {
                     $query->whereIn('status', [10, 12]);
@@ -403,7 +444,6 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
                             'merchant_order_id' => $merchant_order_id,
                         ]);
                     }
-
                 })
                 ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id')
                 ->get();
@@ -414,12 +454,14 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
         return view('branch.parcel.pickupParcel.deliveryBranchTransferParcel', $data);
     }
 
-    public function deliveryBranchTransferParcelAddCart(Request $request) {
+    public function deliveryBranchTransferParcelAddCart(Request $request)
+    {
         $branch_id = auth()->guard('branch')->user()->id;
 
-        $parcels = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $parcels = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
             ->whereIn('id', $request->parcel_invoices)
             ->where([
@@ -443,9 +485,7 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
                         if ($cart_id == $item->id) {
                             $flag++;
                         }
-
                     }
-
                 }
 
                 if ($flag == 0) {
@@ -467,7 +507,6 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
                         'associatedModel' => $parcel,
                     ]);
                 }
-
             }
 
             $error = "";
@@ -495,7 +534,8 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
         return view('branch.parcel.pickupParcel.deliveryBranchTransferParcelCart', $data);
     }
 
-    public function deliveryBranchTransferParcelDeleteCart(Request $request) {
+    public function deliveryBranchTransferParcelDeleteCart(Request $request)
+    {
 
         $branch_id = auth()->guard('branch')->user()->id;
         \Cart::session($branch_id)->remove($request->input('itemId'));
@@ -511,5 +551,4 @@ class ReceivedReturnBranchTransferParcelController extends Controller {
         ];
         return view('branch.parcel.pickupParcel.pickupRiderRunParcelCart', $data);
     }
-
 }

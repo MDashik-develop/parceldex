@@ -810,7 +810,9 @@ class ParcelController extends Controller
                     }
 
                     if (strtolower($request->input('filter_action')) == "waiting_delivery") {
-                        $query->whereRaw('status >= ? and status <= ? and (delivery_type is null or delivery_type = "") or delivery_type in (?)', [16, 24, 3]);
+                        //$query->whereRaw('status >= ? and status <= ? and (delivery_type is null or delivery_type = "") or delivery_type in (?)', [16, 24, 3]);
+                        $query->whereIn('status', [16, 17, 18, 19, 20, 21, 22, 23, 24])
+                            ->whereIn('delivery_type', [1, 2, 3, 4, null]);
                     }
 
                     /*                    if (strtolower($request->input('filter_action')) == "delivery") {

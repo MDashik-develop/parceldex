@@ -84,7 +84,7 @@ class MerchantDeliveryPaymentExport implements
             $delivery_charge += $parcel_merchant_delivery_payment_detail->delivery_charge;
             $return_charge += $parcel_merchant_delivery_payment_detail->return_charge;
 
-            $total_charge += $cod_charge + $delivery_charge + $return_charge + $weight_package_charge;
+            $total_charge += $parcel_merchant_delivery_payment_detail->cod_charge + $parcel_merchant_delivery_payment_detail->delivery_charge +  $parcel_merchant_delivery_payment_detail->return_charge + $parcel_merchant_delivery_payment_detail->weight_package_charge;
 
             // $total_charge += ($parcel_merchant_delivery_payment_detail->parcel->total_charge + $parcel_merchant_delivery_payment_detail->return_charge);
             $paid_amount += $parcel_merchant_delivery_payment_detail->paid_amount;

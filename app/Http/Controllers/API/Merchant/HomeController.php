@@ -21,43 +21,74 @@ class HomeController extends Controller
         $data = [];
 
         $x = Parcel::where('merchant_id', $merchant_id)
-            ->where('status', '>=', 25)
-            ->whereIn('delivery_type', [1, 2, 4])
-            ->whereIn('payment_type', [2, 4, 6])
+            ->whereRaw("
+                ((parcels.delivery_type in (1) AND parcels.payment_type IN (2,6))
+                OR (parcels.delivery_type in (2) AND parcels.payment_type IN (2,6))
+                OR (parcels.delivery_type in (4) AND (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
+            ")
+            // ->where('status', '>=', 25)
+            // ->whereIn('delivery_type', [1, 2, 4])
+            // ->whereIn('payment_type', [2, 4, 6])
             ->sum('customer_collect_amount');
 
         $y = Parcel::where('merchant_id', $merchant_id)
-            ->where('status', '>=', 25)
-            ->whereIn('delivery_type', [1, 2, 4])
-            ->whereIn('payment_type', [2, 4, 6])
+            ->whereRaw("
+                ((parcels.delivery_type in (1) AND parcels.payment_type IN (2,6))
+                OR (parcels.delivery_type in (2) AND parcels.payment_type IN (2,6))
+                OR (parcels.delivery_type in (4) AND (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
+            ")
+            // ->where('status', '>=', 25)
+            // ->whereIn('delivery_type', [1, 2, 4])
+            // ->whereIn('payment_type', [2, 4, 6])
             ->sum('cancel_amount_collection');
 
         $total_customer_collect_amount = $x + $y;
 
         $delivery_charge = Parcel::where('merchant_id', $merchant_id)
-            ->where('status', '>=', 25)
-            ->whereIn('delivery_type', [1, 2, 4])
-            ->whereIn('payment_type', [2, 4, 6])
+            ->whereRaw("
+                ((parcels.delivery_type in (1) AND parcels.payment_type IN (2,6))
+                OR (parcels.delivery_type in (2) AND parcels.payment_type IN (2,6))
+                OR (parcels.delivery_type in (4) AND (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
+            ")
+            // ->where('status', '>=', 25)
+            // ->whereIn('delivery_type', [1, 2, 4])
+            // ->whereIn('payment_type', [2, 4, 6])
             ->sum('delivery_charge');
 
         $cod_charge = Parcel::where('merchant_id', $merchant_id)
-            ->where('status', '>=', 25)
-            ->whereIn('delivery_type', [1, 2, 4])
-            ->whereIn('payment_type', [2, 4, 6])
+            ->whereRaw("
+                ((parcels.delivery_type in (1) AND parcels.payment_type IN (2,6))
+                OR (parcels.delivery_type in (2) AND parcels.payment_type IN (2,6))
+                OR (parcels.delivery_type in (4) AND (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
+            ")
+            // ->where('status', '>=', 25)
+            // ->whereIn('delivery_type', [1, 2, 4])
+            // ->whereIn('payment_type', [2, 4, 6])
             ->sum('cod_charge');
 
         $weight_package_charge = Parcel::where('merchant_id', $merchant_id)
-            ->where('status', '>=', 25)
-            ->whereIn('delivery_type', [1, 2, 4])
-            ->whereIn('payment_type', [2, 4, 6])
+            ->whereRaw("
+                ((parcels.delivery_type in (1) AND parcels.payment_type IN (2,6))
+                OR (parcels.delivery_type in (2) AND parcels.payment_type IN (2,6))
+                OR (parcels.delivery_type in (4) AND (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
+            ")
+            // ->where('status', '>=', 25)
+            // ->whereIn('delivery_type', [1, 2, 4])
+            // ->whereIn('payment_type', [2, 4, 6])
             ->sum('weight_package_charge');
 
         $return_charge1 = 0;
 
         $return_charge_amount_query = Parcel::where('merchant_id', $merchant_id)
-            ->where('status', '>=', 25)
-            ->whereIn('delivery_type', [1, 2, 4])
-            ->whereIn('payment_type', [2, 4, 6])->get();
+            ->whereRaw("
+                ((parcels.delivery_type in (1) AND parcels.payment_type IN (2,6))
+                OR (parcels.delivery_type in (2) AND parcels.payment_type IN (2,6))
+                OR (parcels.delivery_type in (4) AND (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
+            ")
+            // ->where('status', '>=', 25)
+            // ->whereIn('delivery_type', [1, 2, 4])
+            // ->whereIn('payment_type', [2, 4, 6])
+            ->get();
 
         foreach ($return_charge_amount_query as $parcel) {
             if ($parcel->delivery_type == 4 || $parcel->delivery_type == 2) {

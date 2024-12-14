@@ -1416,6 +1416,14 @@ function returnPaymentStatusForMerchant($status, $delivery_type, $payment_type)
     ];
 }
 
+function normalizeToZero($value) {
+    if (is_null($value) || empty($value) || $value === 0 || $value === "0") {
+        return 0;
+    }
+    
+    return $value; // Keep the original value if it doesn't meet the condition
+}
+
 
 // -------------------------------
 function returnParcelLogStatusNameForAdmin($parcelLog, $delivery_type, $parcel = null)

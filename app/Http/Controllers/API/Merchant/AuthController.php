@@ -206,7 +206,7 @@ class AuthController extends Controller
                 'error'   => $Validator->errors(),
             ], 401);
         }
-        \DB::beginTransaction();
+        //\DB::beginTransaction();
         try {
 
             $image_name      = null;
@@ -283,7 +283,7 @@ class AuthController extends Controller
             if ($check) {
 
                 $email_verification = $merchant->email_verifications()->save(new EmailVerification($data_verification));
-                \DB::commit();
+                //\DB::commit();
 
                 /** For Notification and Counter */
                 $admin_users = Admin::all();

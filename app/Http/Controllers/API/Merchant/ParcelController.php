@@ -895,7 +895,7 @@ class ParcelController extends Controller
 
             $collected_amount = 0;
 
-            if ((in_array($parcel->status, [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36])) && $parcel->delivery_type == 4) {
+            if (in_array($parcel->status, [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]) && $parcel->delivery_type == 4) {
                 $collected_amount = $parcel->cancel_amount_collection;
             } else {
                 $collected_amount = $parcel->customer_collect_amount;

@@ -75,7 +75,10 @@ class HomeController extends Controller
             ->sum('total_collect_amount');
 
         $data['total_waiting_delivery_parcel'] = Parcel::where('merchant_id', $merchant_id)
-            ->whereRaw('(status >= ? and status <= ?) and (delivery_type is null or delivery_type = "" or delivery_type = ?)', [16, 24, 3])->count();
+            ->whereIn('status', [16, 17, 18, 19, 20, 21, 22, 23, 24])
+            ->whereIn('delivery_type', [1, 2, 3, 4, null])->count();
+            
+        //  ->whereRaw('(status >= ? and status <= ?) and (delivery_type is null or delivery_type = "" or delivery_type = ?)', [16, 24, 3])->count();
 
         // ->whereRaw('(status != ? and status >= ? and status <= ?) and (delivery_type is null or delivery_type = "" or delivery_type = ?)', [3, 16, 25, 3])
 

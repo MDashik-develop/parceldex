@@ -270,7 +270,7 @@
                                                     </td>
 
                                                     <td class="text-right">
-                                                        @if ($parcel->status == 25 && $parcel->delivery_type == 4)
+                                                        @if (in_array($parcel->status, [24,25,26,27,28,29,30,31,32,33,34,35,36]) && $parcel->delivery_type == 4)
                                                             @php
                                                                 $t_collected_amount +=
                                                                     $parcel->cancel_amount_collection;

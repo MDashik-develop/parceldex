@@ -21,30 +21,69 @@ class HomeController extends Controller
         $data = [];
 
         $x = Parcel::where('merchant_id', $merchant_id)
-            ->where('status', '=', 25)
+            ->where('status', '>=', 25)
             ->whereIn('delivery_type', [1, 2, 4])
-            ->where(function ($query) {
-                $query->whereIn('payment_type', [1, 2, 3, 6])->orWhereNull('payment_type');
-            })
+            ->whereIn('payment_type', [2, 4, 6])
             ->sum('customer_collect_amount');
 
         $y = Parcel::where('merchant_id', $merchant_id)
-            ->where('status', '=', 25)
+            ->where('status', '>=', 25)
             ->whereIn('delivery_type', [1, 2, 4])
-            ->where(function ($query) {
-                $query->whereIn('payment_type', [1, 2, 3, 6])->orWhereNull('payment_type');
-            })
+            ->whereIn('payment_type', [2, 4, 6])
             ->sum('cancel_amount_collection');
 
         $total_customer_collect_amount = $x + $y;
 
-        $total_charge_amount = Parcel::where('merchant_id', $merchant_id)
-            ->where('status', '=', 25)
+        $delivery_charge = Parcel::where('merchant_id', $merchant_id)
+            ->where('status', '>=', 25)
             ->whereIn('delivery_type', [1, 2, 4])
-            ->where(function ($query) {
-                $query->whereIn('payment_type', [1, 2, 3, 6])->orWhereNull('payment_type');
-            })
-            ->sum('total_charge');
+            ->whereIn('payment_type', [2, 4, 6])
+            ->sum('delivery_charge');
+
+        $cod_charge = Parcel::where('merchant_id', $merchant_id)
+            ->where('status', '>=', 25)
+            ->whereIn('delivery_type', [1, 2, 4])
+            ->whereIn('payment_type', [2, 4, 6])
+            ->sum('cod_charge');
+
+        $weight_package_charge = Parcel::where('merchant_id', $merchant_id)
+            ->where('status', '>=', 25)
+            ->whereIn('delivery_type', [1, 2, 4])
+            ->whereIn('payment_type', [2, 4, 6])
+            ->sum('weight_package_charge');
+
+        $return_charge1 = 0;
+
+        $return_charge_amount_query = Parcel::where('merchant_id', $merchant_id)
+            ->where('status', '>=', 25)
+            ->whereIn('delivery_type', [1, 2, 4])
+            ->whereIn('payment_type', [2, 4, 6])->get();
+
+        foreach ($return_charge_amount_query as $parcel) {
+            if ($parcel->delivery_type == 4 || $parcel->delivery_type == 2) {
+                $return_charge1 += $parcel->merchant_service_area_return_charge;
+            } elseif (
+                $parcel->suborder &&
+                $parcel->exchange == 'yes' &&
+                $parcel->parent_delivery_type == 1
+            ) {
+                $return_charge1 += $parcel->merchant_service_area_return_charge;
+            } elseif (
+                $parcel->suborder &&
+                $parcel->exchange == 'yes' &&
+                $parcel->parent_delivery_type == 2
+            ) {
+                $return_charge1 += $parcel->merchant_service_area_return_charge;
+            } elseif (
+                $parcel->suborder &&
+                $parcel->exchange == 'no' &&
+                $parcel->parent_delivery_type == 2
+            ) {
+                $return_charge1 += $parcel->merchant_service_area_return_charge;
+            }
+        }
+
+        $total_charge_amount = $delivery_charge + $cod_charge + $weight_package_charge + $return_charge1;
 
         $data['total_pending_payment'] =  number_format($total_customer_collect_amount - $total_charge_amount, 2, '.', '');
 
@@ -77,7 +116,7 @@ class HomeController extends Controller
         $data['total_waiting_delivery_parcel'] = Parcel::where('merchant_id', $merchant_id)
             ->whereIn('status', [16, 17, 18, 19, 20, 21, 22, 23, 24])
             ->whereIn('delivery_type', [1, 2, 3, 4, null])->count();
-            
+
         //  ->whereRaw('(status >= ? and status <= ?) and (delivery_type is null or delivery_type = "" or delivery_type = ?)', [16, 24, 3])->count();
 
         // ->whereRaw('(status != ? and status >= ? and status <= ?) and (delivery_type is null or delivery_type = "" or delivery_type = ?)', [3, 16, 25, 3])

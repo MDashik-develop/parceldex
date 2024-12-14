@@ -893,6 +893,13 @@ class ParcelController extends Controller
             $paymentParcelStatus = returnPaymentStatusForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type);
             $payment_status_name = $paymentParcelStatus['status_name'];
 
+            $collected_amount = 0;
+
+            if ((in_array($parcel->status, [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36])) && $parcel->delivery_type == 4) {
+                $collected_amount = $parcel->cancel_amount_collection;
+            } else {
+                $collected_amount = $parcel->customer_collect_amount;
+            }
 
             $new_parcels[] = [
                 'id' => $parcel->id,
@@ -908,8 +915,9 @@ class ParcelController extends Controller
                 'weight_package_name' => $parcel->weight_package->name,
                 'weight_package_charge' => $parcel->weight_package_charge,
                 'cod_percent' => $parcel->cod_percent,
-                'collectable_amount' => normalizeToZero($parcel->total_collect_amount),
-                'collected_amount' => $parcel->customer_collect_amount == 0 ? normalizeToZero($parcel->cancel_amount_collection) : normalizeToZero($parcel->customer_collect_amount),
+                'collectable_amount' => $parcel->total_collect_amount,
+                //'collected_amount' => $parcel->customer_collect_amount == 0 ? normalizeToZero($parcel->cancel_amount_collection) : normalizeToZero($parcel->customer_collect_amount),
+                'collected_amount' => $collected_amount,
                 'cod_charge' => $parcel->cod_charge ?? 0,
                 'delivery_charge' => $parcel->delivery_charge,
                 'total_charge' => $parcel->total_charge,

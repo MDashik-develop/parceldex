@@ -21,7 +21,7 @@ Route::group(['middleware' => 'warehouse', 'prefix'=>'warehouse/'], function () 
     Route::get('profile', [App\Http\Controllers\Warehouse\HomeController::class, 'profile'] )->name('profile');
 
     //================ Common Route  ================================
-        Route::get('parcel/{parcel}/viewParcel', [App\Http\Controllers\Warehouse\ParcelController::class, 'viewParcel'] )->name('parcel.viewParcel');
+        // Route::get('parcel/{parcel}/viewParcel', [App\Http\Controllers\Warehouse\ParcelController::class, 'viewParcel'] )->name('parcel.viewParcel');
     //================ Common Route  ================================
 
     // Rider & Merchent List By Branch

@@ -18,11 +18,11 @@ class BookingParcelExportController extends Controller
 
     public function bookingParcelListExport(Request $request)
     {
-//        dd($request->all());
-        if("pdf" == $request->download_type) {
+        // dd($request->all());
+        if ("pdf" == $request->download_type) {
             $file_name = "booking_parcel_list_" . Carbon::now()->format("Y_m_d") . ".pdf";
             return $this->excel->download(new BookingParcelExport($request), $file_name, Excel::DOMPDF);
-        }else {
+        } else {
             $file_name = "booking_parcel_list_" . Carbon::now()->format("Y_m_d") . ".xlsx";
             return $this->excel->download(new BookingParcelExport($request), $file_name);
         }

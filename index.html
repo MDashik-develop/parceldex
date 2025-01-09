@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ session()->get('company_name') ?? config('app.name', 'Inventory') }}</title>
+    <title>Courier Label</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -124,7 +124,7 @@
 
     <div class="label">
         <div class="d-flex align-items-end mb-2">
-            <img src="/black-logo.png" alt="Logo" width="170">
+            <img src="Parceldex LogoBlack .png" alt="Logo" width="170"> 
             <strong style="font-size: 11px;font-weight: bolder;font-style: italic;">COURIER</strong>
         </div>
         <hr class="my-2 mb-0" style="opacity: 1;border: 1px solid black;">
@@ -132,31 +132,23 @@
             <img alt="Barcode" id="barcode">
         </div>
         <div class="section">
-            <strong>Marchant: {{ $parcel->merchant->company_name }}</strong> <br>
-            <strong>Mobile: {{ $parcel->merchant->business_address }}</strong> <br>
-            <strong>Order ID: {{ $parcel->merchant_order_id }}</strong>
+            <strong>Marchant: Sareez by Sakyla (M04567)</strong> <br>
+            <strong>Mobile: 01866370585</strong> <br>
+            <strong>Order ID: 1234</strong>
         </div>
         <hr class="my-0 mb-2" style="opacity: 1;border: 1px solid black;">
         <div class="section">
-            <strong>Customer: {{ $parcel->customer_name }}</strong>
+            <strong>Customer: Raja Khan</strong>
             <div>
-                {{ $parcel->customer_address }}
+                12A, Floor, Elliot Road, Kolkata Public Day School,
+                Kolkata, PIN: 700016, West Bengal, IN
             </div>
-            <strong>Mobile: {{ $parcel->customer_contact_number }}
-                {{ $parcel->customer_contact_number2 ? ', ' . $parcel->customer_contact_number2 : '' }}</strong>
+            <strong>Mobile: 01866370585, 01866370585</strong>
         </div>
         <table class="table table-bordered text-center" style="border-color: black;">
             <tr>
-                <th>{{ $parcel->area->name }}</th>
-
-                @if ($parcel?->district?->service_area?->name ?? 'N/A' == 'Outside City')
-                    <th>{{ 'OSD' }}</th>
-                @elseif ($parcel?->district?->service_area?->name ?? 'N/A' == 'Inside City')
-                    <th>{{ 'ISD' }}</th>
-                @else
-                    <th>{{ 'SUB' }}</th>
-                @endif
-
+                <th>Budda Hub</th>
+                <th>Inside City</th>
             </tr>
         </table>
         <div class="d-flex gap-2">
@@ -164,13 +156,11 @@
             <div class="info">
                 <table class="table table-bordered text-center" style="border-color: black;">
                     <tr>
-                        <th>{{ $parcel->total_collect_amount ? 'COD: ' . $parcel->total_collect_amount . ' TK' : 'PAID' }}
-                        </th>
-                        <th>{{ $parcel->weight_package->name }}</th>
+                        <th>COD</th>
+                        <th>Weight</th>
                     </tr>
                     <tr>
-                        <th colspan="2">{{ $parcel->delivery_branch_id ? $parcel->delivery_branch->name : '.' }}
-                        </th>
+                        <th colspan="2">Hub Name</th>
                     </tr>
                 </table>
             </div>
@@ -180,9 +170,9 @@
             <div><strong>Call:</strong> 01866370585</div>
         </div>
         <hr class="my-0" style="opacity: 1;border: 1px solid black;">
-        <div class="d-flex justify-content-between wrap">
-            <div>Print By: {{ auth('merchant')->user()->name ?? 'Guest' }}</div>
-            <div>{{ date('j F g:i a') }}</div>
+        <div class="d-flex justify-content-between">
+            <div>Print By: Raja Khan</div>
+            <div>7 Januyary 6:37pm</div>
         </div>
     </div>
 
@@ -190,7 +180,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        JsBarcode("#barcode", "{{ $parcel->parcel_invoice }}", {
+        JsBarcode("#barcode", "Hi!", {
             // format: "pharmacode",
             // lineColor: "#0aa",
             // width: 4,
@@ -203,20 +193,10 @@
     <!-- Your script that uses QRCode -->
     <script>
         var qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: "{{ $parcel->parcel_invoice }}",
+            text: "https://example.com",
             width: 80,
             height: 80
         });
-    </script>
-
-    <script>
-        // Automatically trigger the print dialog when the page loads
-        window.print();
-
-        // Close the window after printing
-        window.onafterprint = function() {
-            window.close(); // Close the current window/tab
-        };
     </script>
 </body>
 

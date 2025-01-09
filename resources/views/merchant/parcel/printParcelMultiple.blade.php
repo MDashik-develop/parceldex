@@ -1,173 +1,223 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ session()->get('company_name') ?? config('app.name', 'Inventory') }}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-    {{--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">--}}
-
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .div-table {
-            display: table;
-            width: 100%;
-            border-left: 1px solid #000000;
-            border-top: 1px solid #000000;
-            /*margin: 10px;*/
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        .div-table-row {
-            display: table-row;
-            width: auto;
-            clear: both;
+        .label {
+            width: 400px;
+            height: 600px;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .div-table-col {
-            float: left; /* fix for  buggy browsers */
-            display: table-column;
-            border-bottom: 1px solid #000000;
-            border-right: 1px solid #000000;
-            margin: 0px;
+        .label .hedding {
+            font-size: 17px;
+            color: #343a40;
+            border-bottom: 2px solid #6c757d;
+            padding-bottom: 5px;
         }
 
-        p {
-            margin: 0 0 5px;
+        .section {
+            margin-bottom: 10px;
+            font-size: 17px;
+            line-height: 1.6;
         }
 
-        .button {
-            border: none;
-            color: white;
-            padding: 15px 32px;
+        .barcode {
             text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
+            margin: 15px 0;
+        }
+
+        .barcode img {
+            max-width: 100%;
+        }
+
+        .info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .info div {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            /* background-color: #e9ecef; */
+            border-radius: 5px;
+            padding: 5px;
+            margin: 0 5px;
+        }
+
+        .footer {
+            text-align: right;
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 10px;
         }
     </style>
 
-    <script type="text/javascript">
-        function printPage() {
-            var button = document.getElementById('print');
-            button.style.display = 'none';
-            window.print();
-            window.close();
+    <style>
+        @page {
+            size: 400px 600px;
+            /* margin: 30mm 45mm 30mm 45mm; */
+            margin: 0;
+            /* change the margins as you want them to be. */
         }
 
-        function cancelPage() {
-            window.close();
+        @media print {
+
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f8f9fa;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                gap: 0px;
+                flex-wrap: wrap;
+            }
+
+            .label {
+                width: 400px;
+                height: 600px;
+                padding: 20px;
+                background: #fff;
+                border: 1px solid #dee2e6;
+                border-radius: 0px;
+                box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
+            }
         }
-    </script>
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <!-- Include the QRCode library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 
-<body class="labelPrint">
-<span id="print" style="float: right; margin-bottom: 20px">
-    <button class="button" style="background-color: #4CAF50;" onclick="printPage()">Print</button>
-    <button class="button" style="background-color: #f44336;" onclick="cancelPage()">Cancel</button>
-</span>
-<style>
-    .div-table {
-        display: table;
-        width: 100%;
-        border-left: 1px solid #000000;
-        border-top: 1px solid #000000;
-        /*margin: 10px;*/
-    }
+<body>
 
-    .div-table-row {
-        display: table-row;
-        width: auto;
-        clear: both;
-    }
+    @foreach ($parcels as $parcel)
+        <div class="label">
+            <div class="d-flex align-items-end mb-2">
+                <img src="/black-logo.png" alt="Logo" width="170">
+                <strong style="font-size: 11px;font-weight: bolder;font-style: italic;">COURIER</strong>
+            </div>
+            <hr class="my-2 mb-0" style="opacity: 1;border: 1px solid black;">
+            <div class="d-flex justify-content-center">
+                <img alt="Barcode" id="barcode-{{ $parcel->id }}">
+            </div>
+            <div class="section">
+                <strong>Marchant: {{ $parcel->merchant->company_name }}</strong> <br>
+                <strong>Mobile: {{ $parcel->merchant->business_address }}</strong> <br>
+                <strong>Order ID: {{ $parcel->merchant_order_id }}</strong>
+            </div>
+            <hr class="my-0 mb-2" style="opacity: 1;border: 1px solid black;">
+            <div class="section">
+                <strong>Customer: {{ $parcel->customer_name }}</strong>
+                <div>
+                    {{ $parcel->customer_address }}
+                </div>
+                <strong>Mobile: {{ $parcel->customer_contact_number }}
+                    {{ $parcel->customer_contact_number2 ? ', ' . $parcel->customer_contact_number2 : '' }}</strong>
+            </div>
+            <table class="table table-bordered text-center" style="border-color: black;">
+                <tr>
+                    <th>{{ $parcel->area->name }}</th>
 
-    .div-table-col {
-        float: left; /* fix for  buggy browsers */
-        display: table-column;
-        border-bottom: 1px solid #000000;
-        border-right: 1px solid #000000;
-        margin: 0;
-    }
+                    @if ($parcel?->district?->service_area?->name ?? 'N/A' == 'Outside City')
+                        <th>{{ 'OSD' }}</th>
+                    @elseif ($parcel?->district?->service_area?->name ?? 'N/A' == 'Inside City')
+                        <th>{{ 'ISD' }}</th>
+                    @else
+                        <th>{{ 'SUB' }}</th>
+                    @endif
 
-    p {
-        margin: 0 0 0;
-    }
-</style>
-<div id="printArea">
-    @foreach($parcels as $parcel)
-        <div class="div-table">
-            <div class="div-table-row">
-                <div class="div-table-col" style="width: 100%; text-align: center; font-size: 20px">
-                    <strong>{{session()->get('company_name')}}</strong>
+                </tr>
+            </table>
+            <div class="d-flex gap-2">
+                <div id="qrcode-{{ $parcel->id }}"></div>
+                <div class="info">
+                    <table class="table table-bordered text-center" style="border-color: black;">
+                        <tr>
+                            <th>{{ $parcel->total_collect_amount ? 'COD: ' . $parcel->total_collect_amount . ' TK' : 'PAID' }}
+                            </th>
+                            <th>{{ $parcel->weight_package->name }}</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2">{{ $parcel->delivery_branch_id ? $parcel->delivery_branch->name : '.' }}
+                            </th>
+                        </tr>
+                    </table>
                 </div>
             </div>
-            <div class="div-table-row">
-                <div class="div-table-col" style="width: 15%; height: 40px; text-align: right;border-right: 0;">
-                    <strong style="margin-right: 5px">Merchant:</strong>
-                </div>
-                <div class="div-table-col" style="width: 85%;height: 40px;margin-right: -1px">
-                    <strong style="margin-left: 5px">{{ $parcel->merchant->company_name }}</strong>
-                    {{--            <p style="margin-left: 5px">{{ $parcel->merchant->business_address }}</p>--}}
-                    <p style="margin-left: 5px">{{ $parcel->merchant->contact_number }}</p>
-                </div>
+            <div class="d-flex justify-content-between">
+                <div>www.parceldex.com</div>
+                <div><strong>Call:</strong> 01866370585</div>
             </div>
-            <div class="div-table-row">
-                <div class="div-table-col" style="width: 15%; height: 75px; text-align: right;border-right: 0">
-                    <strong style="margin-right: 5px">Customer:</strong>
-                </div>
-                <div class="div-table-col" style="width: 70%;height: 75px;border-right: 0">
-                    <strong style="margin-left: 5px">{{$parcel->customer_name }}</strong>
-                    <p style="margin-left: 5px">{{  $parcel->customer_address  }}</p>
-                    <p style="margin-left: 5px">{{ $parcel->customer_contact_number }}</p>
-                </div>
-
-                <div class="div-table-col" style="width: 15%; height: 75px; text-align: center;margin-right: -1px">
-                    <p style="margin-top: 10px">TK: {{$parcel->total_collect_amount}}</p>
-                </div>
+            <hr class="my-0" style="opacity: 1;border: 1px solid black;">
+            <div class="d-flex justify-content-between wrap">
+                <div>Print By: {{ auth('merchant')->user()->name ?? 'Guest' }}</div>
+                <div>{{ date('j F g:i a') }}</div>
             </div>
-
-            <div class="div-table-row" style="text-align: center">
-                <div class="div-table-col" style="width: 33%;margin-right: -1px">
-                    <strong>Invoice: {{ $parcel->merchant_order_id }}</strong>
-                </div>
-                <div class="div-table-col" style="width: 33%;margin-right: -1px">
-                    <strong>Area: {{$parcel->area->name}}</strong>
-                </div>
-                <div class="div-table-col" style="width: 34%;margin-right: -1px">
-                    <strong>HUB: {{ optional($parcel->pickup_branch)->name }}</strong>
-                </div>
-            </div>
-            <div class="div-table-row" style="text-align: center">
-                <div class="div-table-col" style="width: 100%;">
-                    {{ $parcel->product_details }}
-                </div>
-            </div>
-            <div class="div-table-row" style="text-align: center;">
-                <div class="div-table-col" style="width: 20%;height: 102px;margin-right: -1px;padding-bottom: 1px">
-                    <img class="img-qr_code"
-                         src="data:image/png; base64,{{ \DNS2D::getBarcodePNG($parcel->parcel_invoice, 'QRCODE') }}"
-                         alt="QR code"
-                         style="height:55px; width:55px;margin: 10px"/>
-                </div>
-                <div class="div-table-col" style="width: 80%;height: 80px;margin-right: -1px">
-                    <img class="img-bar_code"
-                         src="data:image/png; base64,{{ \DNS1D::getBarcodePNG($parcel->parcel_invoice, 'C128', 2, 30) }}"
-                         alt="barcode"
-                         style="height:50px; width:70%; margin-top: 5px;"/>
-                    <p class="align-center"> {{ $parcel->parcel_invoice }}</p>
-                </div>
-                <div class="div-table-col" style="width: 40%;height: 22px;margin-right: -1px">
-                    <strong>Parcel ID: {{ $parcel->parcel_invoice }}</strong>
-                </div>
-                <div class="div-table-col" style="width: 40%;height: 22px;margin-right: -1px">
-                    <strong>
-                        Created: {{ $parcel->created_at->format("Y-m-d h:i") }}
-                    </strong>
-                </div>
-            </div>
-
         </div>
 
-        <p style='overflow:hidden;page-break-before:always;'></p>
+        <script>
+            JsBarcode("#barcode-{{ $parcel->id }}", "{{ $parcel->parcel_invoice }}", {
+                // format: "pharmacode",
+                // lineColor: "#0aa",
+                // width: 4,
+                height: 30,
+                fontSize: 15
+                // displayValue: false
+            });
+
+            new QRCode(document.getElementById("qrcode-{{ $parcel->id }}"), {
+                text: "{{ $parcel->parcel_invoice }}",
+                width: 80,
+                height: 80
+            });
+        </script>
     @endforeach
-</div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Automatically trigger the print dialog when the page loads
+        window.print();
+
+        // Close the window after printing
+        window.onafterprint = function() {
+            window.close(); // Close the current window/tab
+        };
+    </script>
+
 </body>
+
 </html>

@@ -125,15 +125,15 @@
     @foreach ($parcels as $parcel)
         <div class="label">
             <div class="d-flex align-items-end mb-2">
-                <img src="/black-logo.png" alt="Logo" width="170">
+                <img src="/black-logo.png" alt="Logo" width="170" id="myImage">
                 <strong style="font-size: 11px;font-weight: bolder;font-style: italic;">COURIER</strong>
             </div>
-            <hr class="my-2 mb-0" style="opacity: 1;border: 1px solid black;">
+            <hr class="my-2 mb-1" style="opacity: 1;border: 1px solid black;">
             <div class="d-flex justify-content-center">
                 <img alt="Barcode" id="barcode-{{ $parcel->id }}">
             </div>
             <div class="section">
-                <strong>Marchant: {{ $parcel->merchant->company_name }}</strong> <br>
+                <strong>Marchant: {{ $parcel->merchant->company_name }} ({{ $parcel->merchant->m_id }})</strong> <br>
                 <strong>Mobile: {{ $parcel->merchant->business_address }}</strong> <br>
                 <strong>Order ID: {{ $parcel->merchant_order_id }}</strong>
             </div>
@@ -143,8 +143,7 @@
                 <div>
                     {{ $parcel->customer_address }}
                 </div>
-                <strong>Mobile: {{ $parcel->customer_contact_number }}
-                    {{ $parcel->customer_contact_number2 ? ', ' . $parcel->customer_contact_number2 : '' }}</strong>
+                <strong>Mobile: {{ $parcel->customer_contact_number }}{{ $parcel->customer_contact_number2 ? ', ' . $parcel->customer_contact_number2 : '' }}</strong>
             </div>
             <table class="table table-bordered text-center" style="border-color: black;">
                 <tr>
@@ -191,7 +190,7 @@
             JsBarcode("#barcode-{{ $parcel->id }}", "{{ $parcel->parcel_invoice }}", {
                 // format: "pharmacode",
                 // lineColor: "#0aa",
-                // width: 4,
+                // width: 5,
                 height: 30,
                 fontSize: 15
                 // displayValue: false
@@ -210,11 +209,25 @@
 
     <script>
         // Automatically trigger the print dialog when the page loads
-        window.print();
+        window.addEventListener('load', function() {
+            window.print();
+        });
+
+        // Method 2: Using document.addEventListener
+        document.addEventListener('DOMContentLoaded', function() {
+            window.print();
+        });
 
         // Close the window after printing
         window.onafterprint = function() {
             window.close(); // Close the current window/tab
+        };
+
+        var img = document.getElementById('myImage');
+
+        // Add an onload event listener to the image
+        img.onload = function() {
+            window.print();
         };
     </script>
 

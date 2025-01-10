@@ -127,12 +127,12 @@
             <img src="/black-logo.png" alt="Logo" width="170">
             <strong style="font-size: 11px;font-weight: bolder;font-style: italic;">COURIER</strong>
         </div>
-        <hr class="my-2 mb-0" style="opacity: 1;border: 1px solid black;">
+        <hr class="my-2 mb-1" style="opacity: 1;border: 1px solid black;">
         <div class="d-flex justify-content-center">
             <img alt="Barcode" id="barcode">
         </div>
         <div class="section">
-            <strong>Marchant: {{ $parcel->merchant->company_name }}</strong> <br>
+            <strong>Marchant: {{ $parcel->merchant->company_name }} ({{$parcel->merchant->m_id}})</strong> <br>
             <strong>Mobile: {{ $parcel->merchant->business_address }}</strong> <br>
             <strong>Order ID: {{ $parcel->merchant_order_id }}</strong>
         </div>
@@ -142,8 +142,7 @@
             <div>
                 {{ $parcel->customer_address }}
             </div>
-            <strong>Mobile: {{ $parcel->customer_contact_number }}
-                {{ $parcel->customer_contact_number2 ? ', ' . $parcel->customer_contact_number2 : '' }}</strong>
+            <strong>Mobile: {{ $parcel->customer_contact_number }}{{ $parcel->customer_contact_number2 ? ', ' . $parcel->customer_contact_number2 : '' }}</strong>
         </div>
         <table class="table table-bordered text-center" style="border-color: black;">
             <tr>
@@ -215,7 +214,7 @@
 
         // Close the window after printing
         window.onafterprint = function() {
-            window.close(); // Close the current window/tab
+            // window.close(); // Close the current window/tab
         };
     </script>
 </body>

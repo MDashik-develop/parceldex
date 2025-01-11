@@ -402,7 +402,7 @@
     $(document).ready(function() {
         // Reload the page when the modal is closed
         $('#viewModal').on('hidden.bs.modal', function() {
-            location.reload();
+            // location.reload();
         });
     });
 

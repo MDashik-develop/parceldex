@@ -148,15 +148,6 @@
             <table class="table table-bordered text-center" style="border-color: black;">
                 <tr>
                     <th>{{ $parcel->area->name }}</th>
-
-                    @if ($parcel?->district?->service_area?->name ?? 'N/A' == 'Outside City')
-                        <th>{{ 'OSD' }}</th>
-                    @elseif ($parcel?->district?->service_area?->name ?? 'N/A' == 'Inside City')
-                        <th>{{ 'ISD' }}</th>
-                    @else
-                        <th>{{ 'SUB' }}</th>
-                    @endif
-
                 </tr>
             </table>
             <div class="d-flex gap-2">
@@ -169,7 +160,7 @@
                             <th>{{ $parcel->weight_package->name }}</th>
                         </tr>
                         <tr>
-                            <th colspan="2">{{ $parcel->delivery_branch_id ? $parcel->delivery_branch->name : '.' }}
+                            <th colspan="2">{{ $parcel?->district?->service_area?->name }}
                             </th>
                         </tr>
                     </table>

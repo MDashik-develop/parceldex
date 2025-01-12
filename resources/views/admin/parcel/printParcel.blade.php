@@ -155,14 +155,16 @@
             <div id="qrcode"></div>
             <div class="info">
                 <table class="table table-bordered text-center" style="border-color: black;">
-                    <tr>
-                        <th>{{ $parcel->total_collect_amount ? 'COD: ' . $parcel->total_collect_amount . ' BDT' : 'PAID' }}
-                        </th>
-                    </tr>
-                    <tr>
-                        <th colspan="2">{{ $parcel?->district?->service_area?->name }}
-                        </th>
-                    </tr>
+                    <tbody style="font-size: 34px;">
+                        <tr>
+                            <th>{{ $parcel->total_collect_amount ? 'COD: ' . $parcel->total_collect_amount . ' BDT' : 'PAID' }}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="2">{{ $parcel?->district?->service_area?->name }}
+                            </th>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>

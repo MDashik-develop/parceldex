@@ -96,6 +96,8 @@
                 var url = "{{ route('admin.parcel.viewParcel', ":parcel_id") }}";
                 url = url.replace(':parcel_id', parcel_id);
                 $('#showResult').html('');
+                $('#showResult').remove();
+
                 if(parcel_id.length != 0){
                     $.ajax({
                         cache   : false,

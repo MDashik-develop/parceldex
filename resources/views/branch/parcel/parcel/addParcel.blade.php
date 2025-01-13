@@ -25,10 +25,9 @@
                 <div class="col-md-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">Add New Parcel </h3>
+                            <h3 class="card-title">Add New Parcel</h3>
 
                             <div class="card-tools">
-
 
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
                                         class="fas fa-minus"></i>
@@ -67,7 +66,7 @@
 
                                                         <table class="table merchant_info">
                                                             <tr>
-                                                                <th style="width: 40%">Merchant Company </th>
+                                                                <th style="width: 40%">Merchant Company</th>
                                                                 <td style="width: 10%"> : </td>
                                                                 <td style="width: 50%"> </td>
                                                             </tr>
@@ -77,7 +76,12 @@
                                                                 <td style="width: 50%"> </td>
                                                             </tr>
                                                             <tr>
-                                                                <th style="width: 40%">Merchant Contact </th>
+                                                                <th style="width: 40%">Merchant Contact</th>
+                                                                <td style="width: 10%"> : </td>
+                                                                <td style="width: 50%"> </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="width: 40%">Merchant ID</th>
                                                                 <td style="width: 10%"> : </td>
                                                                 <td style="width: 50%"> </td>
                                                             </tr>
@@ -781,6 +785,11 @@
                                     "<td style=\"width: 10%\"> : </td>\n" +
                                     "<td style=\"width: 50%\"> " + response.merchant_data
                                     .contact_number + " </td>\n" +
+                                    "<tr>\n" +
+                                    "<th style=\"width: 40%\">Merchant ID </th>\n" +
+                                    "<td style=\"width: 10%\"> : </td>\n" +
+                                    "<td style=\"width: 50%\"> " + response.merchant_data
+                                    .m_id + " </td>\n" +
                                     "</tr>";
 
                                 $(".merchant_info").html(html);

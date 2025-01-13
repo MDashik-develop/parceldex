@@ -130,7 +130,7 @@
         <hr class="my-2 mb-1" style="opacity: 1;border: 1px solid black;">
         <div class="d-flex justify-content-center flex-wrap">
             <img alt="Barcode" id="barcode" style="width: 100%;height: 35px;">
-            <div style="text-align: center">{{ $parcel->parcel_invoice }}</div>
+            <div style="text-align: center">  {{ $parcel->parcel_invoice }}</div>
         </div>
         <div class="section mb-0">
             <strong>Marchant: {{ $parcel->merchant->company_name }} ({{ $parcel->merchant->m_id }})</strong> <br>

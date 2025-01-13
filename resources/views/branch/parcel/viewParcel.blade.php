@@ -570,9 +570,9 @@
         });
     });
 
-    var hiddenLog = true;
-
+    
     $(document).ready(function() {
+        let hiddenLog = true;
         // Event delegation for the toggle button
         $(document).on('click', '.toggle-btn', function() {
             const logContainer = $(this).prev('.log-items-container'); // Get the log container

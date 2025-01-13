@@ -546,10 +546,12 @@
             const hiddenItems = logContainer.find('.hidden'); // Find all hidden log items
 
             if (hiddenLog) {
+                var hiddenLog = false;
                 // Show all hidden items and update button text
                 hiddenItems.removeClass('hidden');
                 $(this).html('Show Less <i class="fas fa-angle-up"></i>');
             } else {
+                var hiddenLog = true;
                 // Hide items beyond the first 3 and update button text
                 logContainer.find('.log-item').slice(3).addClass('hidden');
                 $(this).html('Show More <i class="fas fa-angle-down"></i>');

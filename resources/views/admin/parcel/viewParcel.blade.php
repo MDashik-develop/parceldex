@@ -539,13 +539,15 @@
         });
     });
 
+    var hiddenLog = true;
+
     $(document).ready(function() {
         // Event delegation for the toggle button
         $(document).on('click', '.toggle-btn', function() {
             const logContainer = $(this).prev('.log-items-container'); // Get the log container
             const hiddenItems = logContainer.find('.hidden'); // Find all hidden log items
 
-            if (hiddenItems.length > 0) {
+            if (hiddenLog) {
                 // Show all hidden items and update button text
                 hiddenItems.removeClass('hidden');
                 $(this).html('Show Less <i class="fas fa-angle-up"></i>');

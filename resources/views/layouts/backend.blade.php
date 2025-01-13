@@ -82,7 +82,7 @@
         }
 
         fieldset.scheduler-border {
-            border: 1px solid #0062cc !important;
+            border: 1px solid #f87326 !important;
             padding: 10px !important;
             margin: 10px !important;
             border-radius: 5px;

@@ -1088,7 +1088,7 @@
     }
 
     fieldset {
-        border: 2px solid #007bff96 !important;
+        border: 2px solid #f8732696 !important;
         margin: 0 !important;
         xmin-width: 0 !important;
         padding: 3px !important;

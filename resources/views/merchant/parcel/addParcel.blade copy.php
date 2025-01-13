@@ -1,7 +1,5 @@
 @extends('layouts.merchant_layout.merchant_layout')
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
 @section('content')
     <div class="content-header">
         <div class="container-fluid">
@@ -23,133 +21,60 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 mb-2">
-
+                    <a href="{{ route('merchant.parcel.merchantBulkParcelImport') }}" class="btn btn-success float-right"
+                        style="margin-right: 20px;">
+                        <i class="fas fa-file-excel"></i> Merchant Bulk Parcel Import
+                    </a>
                 </div>
 
                 <div class="col-md-12">
-                    <div class="card">
+                    <div class="card card-info">
                         <div class="card-header">
-                            <div class="d-flex justify-content-between">
-                                <div class="d-flex gap-3 align-items-center">
-                                    <div class="text-bold">Data Entry</div>
-                                    <button type="button" class="btn btn-primary" style="width: 80px;"
-                                        onclick="activeFullForm()" id="full_button">Full</button>
-                                    <button type="button" class="btn btn-outline-primary" style="width: 80px;"
-                                        onclick="activeShortForm()" id="short_button">Short</button>
-                                </div>
-
-                                <a href="{{ route('merchant.parcel.merchantBulkParcelImport') }}"
-                                    class="btn btn-success float-right" style="margin-right: 20px;">
-                                    <i class="fas fa-file-excel"></i> To Create Multiple Order Try Bulk Import
-                                </a>
+                            <h3 class="card-title">Add New Parcel </h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                        class="fas fa-minus"></i>
+                                </button>
                             </div>
-
                         </div>
-
-                        <style>
-                            .form-control {
-                                display: block;
-                                width: 100%;
-                                height: calc(2.25rem + 2px);
-                                padding: .375rem .75rem;
-                                font-size: 1rem;
-                                font-weight: 400;
-                                line-height: 1.5;
-                                color: #495057;
-                                background-color: #fff;
-                                background-clip: padding-box;
-                                border: 1px solid #f87326;
-                                border-radius: .25rem;
-                                box-shadow: none;
-                                transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-                            }
-
-                            .form-control:focus {
-                                color: #495057;
-                                background-color: #fff;
-                                border-color: #f87326;
-                                caret-color: #f87326;
-                                outline: 0;
-                                box-shadow: none;
-                            }
-
-                            .select2-selection {
-                                overflow: hidden !important;
-                            }
-
-                            .select2-selection__rendered {
-                                white-space: normal !important;
-                                word-break: break-all !important;
-                            }
-
-                            .select2-container .select2-selection--single {
-                                height: 40px !important;
-                            }
-
-                            .select2-container--default .select2-selection--single .select2-selection__rendered {
-                                line-height: 30px !important;
-                            }
-
-                            .select2-container--default .select2-selection--single .select2-selection__arrow {
-                                height: 26px !important;
-                                position: absolute !important;
-                                top: 7px !important;
-                                right: 1px !important;
-                                width: 20px !important;
-                            }
-
-                            .select2-container--default .select2-selection--single {
-                                border: 1px solid #f87326 !important;
-                            }
-                        </style>
-
                         <div class="card-body">
                             <div class="col-md-12">
-
-                                <form role="form" id="full-form" action="{{ route('merchant.parcel.store') }}"
-                                    method="POST" enctype="multipart/form-data" onsubmit="return createForm()">
+                                <form role="form" action="{{ route('merchant.parcel.store') }}" method="POST"
+                                    enctype="multipart/form-data" onsubmit="return createForm()">
                                     @csrf
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="col-md-12">
                                                     <fieldset>
-                                                        {{-- <legend>Customer Information</legend> --}}
+                                                        <legend>Customer Information</legend>
                                                         <div class="row">
 
                                                             <div class="col-md-12">
                                                                 <div class="form-group">
                                                                     <label for="customer_contact_number">Customer
-                                                                        Contact Number<span
-                                                                            class="text-danger">*</span></label>
+                                                                        Contact Number <code>*</code></label>
                                                                     <input type="text" name="customer_contact_number"
                                                                         id="customer_contact_number"
                                                                         value="{{ old('customer_contact_number') }}"
                                                                         class="form-control"
-                                                                        placeholder="কাস্টমারের মোবাইল নাম্বার লিখুন"
-                                                                        required>
-                                                                    <div class="d-flex gap-3">
-                                                                        <div>
-                                                                            <span class="font-weight-bold text-success"
-                                                                                id="complete"></span>
-                                                                            <span class="font-weight-bold text-success"
-                                                                                id="p_complete"></span>
-                                                                        </div>
-                                                                        <div>
-                                                                            <span class="font-weight-bold text-warning"
-                                                                                id="pending"></span> <span
-                                                                                class="font-weight-bold text-warning"
-                                                                                id="p_pending"></span>
-                                                                        </div>
-                                                                        <div>
-                                                                            <span class="font-weight-bold text-danger"
-                                                                                id="cancel"></span>
-                                                                            <span class="font-weight-bold text-danger"
-                                                                                id="p_cancel"></span>
-                                                                        </div>
-                                                                    </div>
+                                                                        placeholder="Customer Contact Number" required>
                                                                 </div>
                                                             </div>
+
+                                                            <span class="font-weight-bold text-success" id="complete"
+                                                                style="margin-right: 5px; margin-left: 20px;"> </span> <span
+                                                                class="font-weight-bold text-success" id="p_complete"
+                                                                style="margin-right: 10px;"></span>
+
+                                                            <span class="font-weight-bold text-warning" id="pending"
+                                                                style="margin-right: 5px;"></span> <span
+                                                                class="font-weight-bold text-warning" id="p_pending"
+                                                                style="margin-right: 10px;"></span>
+
+                                                            <span class="font-weight-bold text-danger" id="cancel"
+                                                                style="margin-right: 5px;"></span> <span
+                                                                class="font-weight-bold text-danger" id="p_cancel"></span>
 
 
                                                             <div class="col-md-12">
@@ -161,42 +86,37 @@
                                                                         id="customer_contact_number2"
                                                                         value="{{ old('customer_contact_number2') }}"
                                                                         class="form-control"
-                                                                        placeholder="কাস্টমারের ২য় মোবাইল নাম্বার লিখুন (যদি থাকে)">
-
-                                                                    <div class="d-flex gap-3">
-                                                                        <div>
-                                                                            <span class="font-weight-bold text-success"
-                                                                                id="complete2">
-                                                                            </span>
-                                                                            <span class="font-weight-bold text-success"id="p_complete2"></span>
-                                                                        </div>
-                                                                        <div>
-                                                                            <span class="font-weight-bold text-warning"
-                                                                                id="pending2"></span>
-                                                                                <span
-                                                                                class="font-weight-bold text-warning"
-                                                                                id="p_pending2"></span>
-                                                                        </div>
-                                                                        <div>
-                                                                            <span class="font-weight-bold text-danger"
-                                                                                id="cancel2"></span>
-                                                                            <span class="font-weight-bold text-danger"
-                                                                                id="p_cancel2"></span>
-                                                                        </div>
-                                                                    </div>
-
+                                                                        placeholder="Customer Alternative Contact Number">
                                                                 </div>
                                                             </div>
+
+                                                            <span class="font-weight-bold text-success" id="complete2"
+                                                                style="margin-right: 5px; margin-left: 20px;"> </span> <span
+                                                                class="font-weight-bold text-success" id="p_complete2"
+                                                                style="margin-right: 10px;"></span>
+
+                                                            <span class="font-weight-bold text-warning" id="pending2"
+                                                                style="margin-right: 5px;"></span> <span
+                                                                class="font-weight-bold text-warning" id="p_pending2"
+                                                                style="margin-right: 10px;"></span>
+
+                                                            <span class="font-weight-bold text-danger" id="cancel2"
+                                                                style="margin-right: 5px;"></span> <span
+                                                                class="font-weight-bold text-danger" id="p_cancel2"></span>
+
+
+
+
 
                                                             <div class="col-md-12">
                                                                 <div class="form-group">
                                                                     <label for="customer_name">Customer Name
-                                                                        <span class="text-danger">*</span></label>
+                                                                        <code>*</code></label>
                                                                     <input type="text" name="customer_name"
                                                                         id="customer_name"
                                                                         value="{{ old('customer_name') }}"
-                                                                        class="form-control"
-                                                                        placeholder="কাস্টমারের নাম লিখুন" required>
+                                                                        class="form-control" placeholder="Customer Name"
+                                                                        required>
                                                                 </div>
                                                             </div>
 
@@ -204,19 +124,17 @@
                                                             <div class="col-md-12">
                                                                 <div class="form-group">
                                                                     <label for="customer_address">Customer Address
-                                                                        <span class="text-danger">*</span></label>
+                                                                        <code>*</code></label>
                                                                     <input type="text" name="customer_address"
                                                                         id="customer_address"
                                                                         value="{{ old('customer_address') }}"
                                                                         class="form-control"
-                                                                        placeholder="কাস্টমারের সম্পুর্ণ ঠিকানা লিখুন"
-                                                                        required>
+                                                                        placeholder="Customer Address" required>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6 col-sm-12">
                                                                 <div class="form-group">
-                                                                    <label for="district_id"> Districts <span
-                                                                            class="text-danger">*</span>
+                                                                    <label for="district_id"> Districts <code>*</code>
                                                                     </label>
                                                                     <select name="district_id" id="district_id"
                                                                         class="form-control select2" style="width: 100%">
@@ -230,7 +148,7 @@
                                                             </div>
                                                             {{-- <div class="col-md-4 col-sm-12">
                                                             <div class="form-group">
-                                                                <label for="upazila_id"> Thana/Upazila <span class="text-danger">*</span>
+                                                                <label for="upazila_id"> Thana/Upazila <code>*</code>
                                                                 </label>
                                                                 <select name="upazila_id" id="upazila_id"
                                                                     class="form-control select2" style="width: 100%"
@@ -241,8 +159,7 @@
                                                         </div> --}}
                                                             <div class="col-md-6 col-sm-12">
                                                                 <div class="form-group">
-                                                                    <label for="area_id"> Area <span
-                                                                            class="text-danger">*</span></label>
+                                                                    <label for="area_id"> Area <code>*</code></label>
                                                                     <select name="area_id" id="area_id"
                                                                         class="form-control select2" style="width: 100%"
                                                                         disabled>
@@ -372,8 +289,10 @@
 
                                             <div class="col-md-6">
 
+
+
                                                 <fieldset>
-                                                    {{-- <legend>Parcel Information</legend> --}}
+                                                    <legend>Parcel Information</legend>
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <div class="form-group">
@@ -382,38 +301,38 @@
                                                                 <input type="text" name="merchant_order_id"
                                                                     id="merchant_order_id"
                                                                     value="{{ old('merchant_order_id') }}"
-                                                                    class="form-control"
-                                                                    placeholder="মার্চেন্ট অর্ডার আইডি যদি থাকে">
+                                                                    class="form-control" placeholder="Merchant Order ID">
                                                             </div>
                                                         </div>
 
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="total_collect_amount">COD Amount<span
-                                                                        class="text-danger">*</span></label>
+                                                                <label for="total_collect_amount">Amount to be
+                                                                    Collect<code>*</code></label>
                                                                 <input type="number" name="total_collect_amount"
                                                                     id="total_collect_amount"
                                                                     value="{{ old('total_collect_amount') }}"
-                                                                    class="form-control"
-                                                                    placeholder="ডেলিভারি চার্জ সহ ক‍্যাশ যা কালেক্ট হবে লিখুন">
+                                                                    class="form-control" placeholder="0.00">
                                                             </div>
                                                         </div>
 
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="product_value">Actual Product Price</label>
+                                                                <label for="product_value">Product
+                                                                    Value<code>*</code></label>
                                                                 <input type="number" name="product_value"
                                                                     id="product_value" value="{{ old('product_value') }}"
-                                                                    class="form-control"
-                                                                    placeholder="পন‍্যের বিক্রীত মূল্য লিখুন"
+                                                                    class="form-control" placeholder="1200.00"
                                                                     min="1" required>
                                                             </div>
                                                         </div>
 
+
+
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="weight_package_id">Product Weight
-                                                                    <span class="text-danger">*</span> </label>
+                                                                    <code>*</code> </label>
                                                                 <select name="weight_package_id" id="weight_package_id"
                                                                     class="form-control select2" style="width: 100%"
                                                                     disabled>
@@ -427,7 +346,7 @@
                                                         <div class="col-md-6 col-sm-12">
                                                             <div class="form-group">
                                                                 <label for="">Exchange
-                                                                    <span class="text-danger">*</span> </label>
+                                                                    <code>*</code> </label>
                                                                 <select name="exchange" class="form-control select2"
                                                                     style="width: 100%">
                                                                     <option value="yes">Yes
@@ -437,6 +356,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
+
 
                                                         <div class="col-md-12">
                                                             <div class="form-group">
@@ -444,15 +364,13 @@
                                                                 <input type="text" name="product_details"
                                                                     id="product_details"
                                                                     value="{{ old('product_details') }}"
-                                                                    class="form-control"
-                                                                    placeholder="পন‍্যের বিবরন লিখুন">
+                                                                    class="form-control" placeholder="product details">
                                                             </div>
                                                         </div>
-
                                                         <div class="col-md-12">
                                                             <div class="form-group">
-                                                                <label for="parcel_note">Special Instructions</label>
-                                                                <textarea name="parcel_note" id="parcel_note" class="form-control" placeholder="বিশেষ নির্দেশনা লিখুন (যদি থাকে)"></textarea>
+                                                                <label for="parcel_note">Remark</label>
+                                                                <textarea name="parcel_note" id="parcel_note" class="form-control" placeholder="Parcel Remark"></textarea>
                                                             </div>
                                                         </div>
 
@@ -470,277 +388,10 @@
                                                     </div>
                                                 </fieldset>
 
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </form>
-
-                                <form role="form" id="short-form" style="display: none"
-                                    action="{{ route('merchant.parcel.store') }}" method="POST"
-                                    enctype="multipart/form-data" onsubmit="return createForm()">
-                                    @csrf
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="col-md-12">
-                                                    <fieldset>
-                                                        {{-- <legend>Customer Information</legend> --}}
-
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="customer_contact_number">Customer
-                                                                        Contact Number<span
-                                                                            class="text-danger">*</span></label>
-                                                                    <input type="text" name="customer_contact_number"
-                                                                        id="customer_contact_number"
-                                                                        value="{{ old('customer_contact_number') }}"
-                                                                        class="form-control"
-                                                                        placeholder="কাস্টমারের মোবাইল নাম্বার লিখুন"
-                                                                        required>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="customer_name">Customer Name
-                                                                        <span class="text-danger">*</span></label>
-                                                                    <input type="text" name="customer_name"
-                                                                        id="customer_name"
-                                                                        value="{{ old('customer_name') }}"
-                                                                        class="form-control"
-                                                                        placeholder="কাস্টমারের নাম লিখুন" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <span class="font-weight-bold text-success" id="complete"
-                                                            style="margin-right: 5px; margin-left: 20px;"> </span>
-                                                        <span class="font-weight-bold text-success" id="p_complete"
-                                                            style="margin-right: 10px;"></span>
-
-                                                        <span class="font-weight-bold text-warning" id="pending"
-                                                            style="margin-right: 5px;"></span> <span
-                                                            class="font-weight-bold text-warning" id="p_pending"
-                                                            style="margin-right: 10px;"></span>
-
-                                                        <span class="font-weight-bold text-danger" id="cancel"
-                                                            style="margin-right: 5px;"></span> <span
-                                                            class="font-weight-bold text-danger" id="p_cancel"></span>
-
-                                                        <span class="font-weight-bold text-success" id="complete2"
-                                                            style="margin-right: 5px; margin-left: 20px;"> </span>
-                                                        <span class="font-weight-bold text-success" id="p_complete2"
-                                                            style="margin-right: 10px;"></span>
-
-                                                        <span class="font-weight-bold text-warning" id="pending2"
-                                                            style="margin-right: 5px;"></span> <span
-                                                            class="font-weight-bold text-warning" id="p_pending2"
-                                                            style="margin-right: 10px;"></span>
-
-                                                        <span class="font-weight-bold text-danger" id="cancel2"
-                                                            style="margin-right: 5px;"></span> <span
-                                                            class="font-weight-bold text-danger" id="p_cancel2"></span>
-
-                                                        <div class="row">
-
-                                                            <div class="col-md-12">
-                                                                <div class="form-group">
-                                                                    <label for="customer_address">Customer Address
-                                                                        <span class="text-danger">*</span></label>
-                                                                    <input type="text" name="customer_address"
-                                                                        id="customer_address"
-                                                                        value="{{ old('customer_address') }}"
-                                                                        class="form-control"
-                                                                        placeholder="কাস্টমারের সম্পুর্ণ ঠিকানা লিখুন"
-                                                                        required>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </fieldset>
-                                                </div>
-                                                <div class="col-md-12" style="display: none;">
-                                                    <fieldset>
-                                                        <input type="hidden" id="merchant_full_address"
-                                                            value="{{ $merchant->address }}">
-                                                        <input type="hidden" id="merchant_business_address"
-                                                            value="{{ $merchant->business_address }}">
-                                                        <legend>Parcel Charge</legend>
-                                                        <table class="table ">
-
-                                                            <tr>
-                                                                <th style="width: 40%">Weight Package</th>
-                                                                <td style="width: 10%"> :</td>
-                                                                <td style="width: 50%">
-                                                                    <span id="view_weight_package">Not Confirm </span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th style="width: 40%">Service Type</th>
-                                                                <td style="width: 10%"> :</td>
-                                                                <td style="width: 50%">
-                                                                    <span id="view_service_type">Not Confirm </span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th style="width: 40%">Item Type</th>
-                                                                <td style="width: 10%"> :</td>
-                                                                <td style="width: 50%">
-                                                                    <span id="view_item_type">Not Confirm </span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th style="width: 40%">Collection Amount</th>
-                                                                <td style="width: 10%"> :</td>
-                                                                <td style="width: 50%">
-                                                                    <span id="view_collection_amount">0.00</span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th style="width: 40%">Cod Percent</th>
-                                                                <td style="width: 10%"> :</td>
-                                                                <td style="width: 50%">
-                                                                    <span id="view_cod_percent">
-                                                                        @php
-                                                                            $cod_percent = $merchant->cod_charge
-                                                                                ? $merchant->cod_charge
-                                                                                : 0;
-                                                                        @endphp
-                                                                        0 %
-                                                                    </span>
-                                                                    <input type="hidden" id="confirm_cod_percent"
-                                                                        name="cod_percent" value="0">
-                                                                    <input type="hidden"
-                                                                        id="confirm_merchant_cod_percent"
-                                                                        value="{{ $cod_percent }}">
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th style="width: 40%">Weight Charge</th>
-                                                                <td style="width: 10%"> :</td>
-                                                                <td style="width: 50%">
-                                                                    <span id="view_weight_package_charge">0.00</span>
-                                                                    <input type="hidden"
-                                                                        id="confirm_weight_package_charge"
-                                                                        name="weight_package_charge" value="0">
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th style="width: 40%">Cod Charge</th>
-                                                                <td style="width: 10%"> :</td>
-                                                                <td style="width: 50%">
-                                                                    <span id="view_cod_charge">0.00</span>
-                                                                    <input type="hidden" id="confirm_cod_charge"
-                                                                        name="cod_charge" value="0">
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th style="width: 40%">Delivery Charge</th>
-                                                                <td style="width: 10%"> :</td>
-                                                                <td style="width: 50%">
-                                                                    <span id="view_delivery_charge">0.00</span>
-                                                                    <input type="hidden" id="confirm_delivery_charge"
-                                                                        name="delivery_charge" value="0">
-                                                                    <input type="hidden"
-                                                                        id="confirm_merchant_service_area_charge"
-                                                                        name="merchant_service_area_charge"
-                                                                        value="0">
-                                                                    <input type="hidden"
-                                                                        id="confirm_merchant_service_area_return_charge"
-                                                                        name="merchant_service_area_return_charge"
-                                                                        value="0">
-                                                                    <input type="hidden"
-                                                                        id="only_merchant_service_area_charge"
-                                                                        name="only_merchant_service_area_charge"
-                                                                        value="0">
-
-                                                                    <input type="hidden" id="item_type_charge"
-                                                                        name="item_type_charge" value="0">
-                                                                    <input type="hidden" id="service_type_charge"
-                                                                        name="service_type_charge" value="0">
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th style="width: 40%">Total Charge</th>
-                                                                <td style="width: 10%"> :</td>
-                                                                <td style="width: 50%">
-                                                                    <span id="view_total_charge">0.00</span>
-                                                                    <input type="hidden" id="confirm_total_charge"
-                                                                        name="total_charge" value="0">
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                    </fieldset>
-
-                                                </div>
-
-                                            </div>
-
-                                            <div class="col-md-6">
-
-                                                <fieldset>
-                                                    {{-- <legend>Parcel Information</legend> --}}
-                                                    <div class="row">
-
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="total_collect_amount">COD Amount<span
-                                                                        class="text-danger">*</span></label>
-                                                                <input type="number" name="total_collect_amount"
-                                                                    id="total_collect_amount"
-                                                                    value="{{ old('total_collect_amount') }}"
-                                                                    class="form-control"
-                                                                    placeholder="ডেলিভারি চার্জ সহ ক‍্যাশ যা কালেক্ট হবে লিখুন">
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-md-6 col-sm-12">
-                                                            <div class="form-group">
-                                                                <label for="">Exchange
-                                                                    <span class="text-danger">*</span> </label>
-                                                                <select name="exchange" class="form-control select2"
-                                                                    style="width: 100%">
-                                                                    <option value="yes">Yes
-                                                                    </option>
-                                                                    <option selected value="no">No
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-md-12">
-                                                            <div class="form-group">
-                                                                <label for="parcel_note">Special Instructions</label>
-                                                                <textarea name="parcel_note" id="parcel_note" class="form-control" placeholder="বিশেষ নির্দেশনা লিখুন (যদি থাকে)"></textarea>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-md-12 text-right">
-                                                            <input type="hidden" name="select_pickup_address"
-                                                                id="select_pickup_address" value="1">
-                                                            <input type="hidden" name="delivery_option_id"
-                                                                id="delivery_option_id" value="1">
-                                                            <input type="hidden" name="pickup_address"
-                                                                id="pickup_address" value="{{ $merchant->address }}">
-
-                                                            <button type="submit" class="btn btn-success">Submit</button>
-                                                            {{-- <button type="reset" class="btn btn-primary">Reset</button> --}}
-                                                        </div>
-                                                    </div>
-                                                </fieldset>
-
-
                                             </div>
                                         </div>
                                     </div>
                                 </form>
-
-                                <div class="text-center text-md text-bold">Today Total Entries <span
-                                        class="text-primary border p-2">10</span></div>
-                                <div class="text-center text-md text-bold">* PickUp Time <span
-                                        class="text-primary">4pm-10pm</span> Approx</div>
                             </div>
                         </div>
                     </div>
@@ -762,36 +413,6 @@
 @endpush
 
 @push('script_js')
-    {{-- toggle form --}}
-
-    <script>
-        function activeFullForm() {
-            document.getElementById("full-form").style.display = "block";
-            document.getElementById("short-form").style.display = "none";
-            let full_button = document.getElementById("full_button");
-            let short_button = document.getElementById("short_button");
-
-            full_button.classList.remove("btn-outline-primary");
-            full_button.classList.add("btn-primary");
-
-            short_button.classList.add("btn-outline-primary");
-            short_button.classList.remove("btn-primary");
-        }
-
-        function activeShortForm() {
-            document.getElementById("full-form").style.display = "none";
-            document.getElementById("short-form").style.display = "block";
-            let full_button = document.getElementById("full_button");
-            let short_button = document.getElementById("short_button");
-
-            full_button.classList.remove("btn-primary");
-            full_button.classList.add("btn-outline-primary");
-
-            short_button.classList.add("btn-primary");
-            short_button.classList.remove("btn-outline-primary");
-        }
-    </script>
-
     <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 
 

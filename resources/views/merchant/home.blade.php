@@ -287,10 +287,10 @@
                             <span class="info-box-number"> {{ $total_pending_parcel }}
                                 @if ($counter_data['total_parcel'] > 0)
                                     <sup><small
-                                            style="color: #007bff; font-size: 15px;">{{ number_format(($total_pending_parcel * 100) / $counter_data['total_parcel'], 2) }}%</small></sup>
+                                            style="color: #f87326; font-size: 15px;">{{ number_format(($total_pending_parcel * 100) / $counter_data['total_parcel'], 2) }}%</small></sup>
                                 @else
                                     <sup><small
-                                            style="color: #007bff; font-size: 15px;">{{ number_format(0, 2) }}%</small></sup>
+                                            style="color: #f87326; font-size: 15px;">{{ number_format(0, 2) }}%</small></sup>
                                 @endif
 
 
@@ -347,10 +347,10 @@
                             <span class="info-box-number">{{ $counter_data['total_delivery_complete_parcel'] }}
                                 @if ($counter_data['total_parcel'] > 0)
                                     <sup><small
-                                            style="color: #007bff; font-size: 15px;">{{ number_format(($counter_data['total_delivery_complete_parcel'] * 100) / $counter_data['total_parcel'], 2) }}%</small></sup>
+                                            style="color: #f87326; font-size: 15px;">{{ number_format(($counter_data['total_delivery_complete_parcel'] * 100) / $counter_data['total_parcel'], 2) }}%</small></sup>
                                 @else
                                     <sup><small
-                                            style="color: #007bff; font-size: 15px;">{{ number_format(0, 2) }}%</small></sup>
+                                            style="color: #f87326; font-size: 15px;">{{ number_format(0, 2) }}%</small></sup>
                                 @endif
 
 
@@ -372,11 +372,11 @@
                             <span class="info-box-number">{{ $counter_data['total_partial_delivery_complete_parcel'] }}
                                 @if ($counter_data['total_parcel'] > 0)
                                     <sup><small
-                                            style="color: #007bff; font-size: 15px;">{{ number_format(($counter_data['total_partial_delivery_complete_parcel'] * 100) / $counter_data['total_parcel'], 2) }}%</small></sup>
+                                            style="color: #f87326; font-size: 15px;">{{ number_format(($counter_data['total_partial_delivery_complete_parcel'] * 100) / $counter_data['total_parcel'], 2) }}%</small></sup>
                             </span>
                         @else
                             <sup><small
-                                    style="color: #007bff; font-size: 15px;">{{ number_format(0, 2) }}%</small></sup></span>
+                                    style="color: #f87326; font-size: 15px;">{{ number_format(0, 2) }}%</small></sup></span>
                             @endif
 
 
@@ -404,10 +404,10 @@
                             <span class="info-box-number"> {{ $total_cancel_parcel }}
                                 @if ($counter_data['total_parcel'] > 0)
                                     <sup><small
-                                            style="color: #007bff; font-size: 15px;">{{ number_format(($total_cancel_parcel * 100) / $counter_data['total_parcel'], 2) }}%</small></sup>
+                                            style="color: #f87326; font-size: 15px;">{{ number_format(($total_cancel_parcel * 100) / $counter_data['total_parcel'], 2) }}%</small></sup>
                                 @else
                                     <sup><small
-                                            style="color: #007bff; font-size: 15px;">{{ number_format(0, 2) }}%</small></sup>
+                                            style="color: #f87326; font-size: 15px;">{{ number_format(0, 2) }}%</small></sup>
                                 @endif
 
 
@@ -434,10 +434,10 @@
                             <span class="info-box-number"> {{ $total_pending_return }}
                                 @if ($total_cancel_parcel > 0)
                                     <sup><small
-                                            style="color: #007bff; font-size: 15px;">{{ number_format(($total_pending_return * 100) / $total_cancel_parcel, 2) }}%</small></sup>
+                                            style="color: #f87326; font-size: 15px;">{{ number_format(($total_pending_return * 100) / $total_cancel_parcel, 2) }}%</small></sup>
                                 @else
                                     <sup><small
-                                            style="color: #007bff; font-size: 15px;">{{ number_format(0, 2) }}%</small></sup>
+                                            style="color: #f87326; font-size: 15px;">{{ number_format(0, 2) }}%</small></sup>
                                 @endif
 
 
@@ -463,10 +463,10 @@
                             <span class="info-box-number"> {{ $total_return }}
                                 @if ($total_cancel_parcel > 0)
                                     <sup><small
-                                            style="color: #007bff; font-size: 15px;">{{ number_format(($total_return * 100) / $total_cancel_parcel, 2) }}%</small></sup>
+                                            style="color: #f87326; font-size: 15px;">{{ number_format(($total_return * 100) / $total_cancel_parcel, 2) }}%</small></sup>
                                 @else
                                     <sup><small
-                                            style="color: #007bff; font-size: 15px;">{{ number_format(0, 2) }}%</small></sup>
+                                            style="color: #f87326; font-size: 15px;">{{ number_format(0, 2) }}%</small></sup>
                                 @endif
 
 
@@ -493,7 +493,7 @@
 
                     <!-- TABLE: LATEST ORDERS -->
                     <div class="card">
-                        <div class="card-header border-transparent" style="background: #0069d9; color: #fff">
+                        <div class="card-header border-transparent" style="background: #f87326; color: #fff">
 
                             <h3 class="card-title">Latest Orders</h3>
 
@@ -567,7 +567,7 @@
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="card-header border-transparent" style="background: #0069d9; color: #fff">
+                            <div class="card-header border-transparent" style="background: #f87326; color: #fff">
 
                                 <h3 class="card-title">Paymet Summary</h3>
 

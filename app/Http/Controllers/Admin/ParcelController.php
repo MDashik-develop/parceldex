@@ -173,6 +173,7 @@ class ParcelController extends Controller
                 $model->whereDate('date', '<=', $request->get('to_date'));
             }
         }
+
         if ($request->has('parcel_status') && !is_null($parcel_status) && $parcel_status != 0) {
             if ($parcel_status == 1) {
                 // $model->whereRaw('status >= 25 and delivery_type in (1,2) and payment_type IS NULL');
@@ -207,6 +208,22 @@ class ParcelController extends Controller
                 $model->whereRaw('status in (21)');
             } elseif ($parcel_status == 12) {
                 $model->whereRaw('status >= 25 and delivery_type in(3)');
+            } elseif ($parcel_status == 13) {
+                $model->whereRaw('status = 25 and delivery_type in (2)');
+            } elseif ($parcel_status == 14) {
+                $model->whereRaw('status = 36 and delivery_type in (4)');
+            } elseif ($parcel_status == 17) {
+                $model->whereRaw('status = 24 and delivery_type in (4)');
+            } elseif ($parcel_status == 18) {
+                $model->whereRaw('status = 0');
+            }
+        }
+        // dd($model);
+        if ($request->has('payment_status')) {
+            if ($request->get('payment_status') == 'Paid') {
+                $model->whereRaw('payment_type = 6 and status in (21, 22,23,24, 25, 26, 27, 28,29, 30,31,32,33,34,35, 36) and delivery_type in (1,2,4)');
+            } elseif ($request->get('payment_status') == 'Unpaid') {
+                $model->whereRaw('payment_type in (1,2,3,4,5, null) and status in (21, 22,23,24, 25, 26, 27, 28,29, 30,31,32,33,34,35, 36)');
             }
         }
 
@@ -225,7 +242,7 @@ class ParcelController extends Controller
                 }
 
                 // $date_time =  $data->date . " " . date("h:i A", strtotime($data->created_at));
-                $date_time =   $data->created_at->format('Y-m-d h:i A');
+                $date_time = $data->created_at->format('Y-m-d h:i A');
 
                 return '<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" parcel_id="' . $data->id . '"  title="Parcel View">
                 ' . $data->parcel_invoice . ' </button><br></span> <p><strong></strong>' . $date_time . '</p>' . $x;
@@ -241,7 +258,7 @@ class ParcelController extends Controller
                 // } else {
                 //     $date_time = $data->date ? Carbon::parse($data->date)->format('d-m-Y') : 'N/A';
                 // }
-
+    
                 $xLog = $data->parcel_logs->sortByDesc('id')->first();
 
                 $date_time = Carbon::parse($xLog?->date . ' ' . $xLog?->time)->format('d-m-Y h:i A');
@@ -258,13 +275,13 @@ class ParcelController extends Controller
                 // $status_name = $parcelStatus['status_name'];
                 // $class = $parcelStatus['class'];
                 // $return .= '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <br>';
-
+    
 
                 // $parcelStatus = returnReturnStatusForAdmin($data->status, $data->delivery_type, $data->payment_type);
                 // $status_name = $parcelStatus['status_name'];
                 // $class = $parcelStatus['class'];
                 // $return .= '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
-                $date  = $data?->merchantDeliveryPayment?->created_at->format('d-m-Y h:i A');
+                $date = $data?->merchantDeliveryPayment?->created_at->format('d-m-Y h:i A');
                 $x = '';
                 $payment_invoice = $data?->merchantDeliveryPayment?->payment_invoice;
                 if ($date && $payment_invoice) {
@@ -275,7 +292,7 @@ class ParcelController extends Controller
                 $parcelStatus = returnPaymentStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
-                $time = isset($parcelStatus['time']) ?  $parcelStatus['time'] : '';
+                $time = isset($parcelStatus['time']) ? $parcelStatus['time'] : '';
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
 
@@ -283,7 +300,7 @@ class ParcelController extends Controller
                 $parcelStatus = returnReturnStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
                 $status_name = $parcelStatus['status_name'];
                 $class = $parcelStatus['class'];
-                $time        = isset($parcelStatus['time']) ?  $parcelStatus['time'] : '';
+                $time = isset($parcelStatus['time']) ? $parcelStatus['time'] : '';
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
             ->addColumn('action', function ($data) {
@@ -310,7 +327,7 @@ class ParcelController extends Controller
                     //     $button .= '&nbsp; <button class="btn btn-danger pickup-cancel btn-sm" parcel_id="' . $data->id . '" title="Parcel Cancel">
                     //                     <i class="far fa-window-close"></i>
                     //                 </button>';
-
+    
                     //     $button .= '&nbsp;  <a class="btn btn-secondary btn-sm" href="' . route('admin.parcel.editParcel', $data->id) . '"   title="Parcel Edit">
                     //                     <i class="fas fa-pencil-alt"></i>
                     //             </a>';
@@ -417,19 +434,19 @@ class ParcelController extends Controller
             })
 
             ->rawColumns([
-                'parcel_invoice',
-                'parcel_status',
-                'payment_status',
-                'return_status',
-                'action',
-                'image',
-                'parcel_info',
-                'company_info',
-                'customer_info',
-                'amount',
-                'remarks',
-                'print',
-            ])
+                    'parcel_invoice',
+                    'parcel_status',
+                    'payment_status',
+                    'return_status',
+                    'action',
+                    'image',
+                    'parcel_info',
+                    'company_info',
+                    'customer_info',
+                    'amount',
+                    'remarks',
+                    'print',
+                ])
             ->make(true);
     }
 

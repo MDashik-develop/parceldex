@@ -39,21 +39,20 @@
                                     <select name="parcel_status" id="parcel_status" class="form-control select2"
                                         style="width: 100%">
                                         <option value="0">Select Parcel Status</option>
-                                        {{-- <option value="1">Complete Delivery </option> --}}
-                                        {{-- <option value="2">Partial Delivery </option> --}}
-                                        {{-- <option value="3">Return Parcel </option> --}}
-                                        {{-- <option value="4">Waiting For Pickup</option> --}}
-                                        {{-- <option value="5">Waiting For Delivery </option> --}}
-                                        {{-- <option value="6">Cancel Parcel </option> --}}
 
                                         <option value="1">Delivered</option>
-                                        <option value="2">Delivery Pending</option>
-                                        <option value="3">Cancelled </option>
-                                        <option value="4">Paid</option>
-                                        <option value="5">Unpaid</option>
+                                        <option value="11">Delivery Approval Pending</option>
+                                        <option value="13">Partial Delivered</option>
+                                        <option value="3">Cancelled</option>
+                                        <option value="14">Returned Parcel</option>
+                                        <option value="17">Cancel Request</option>
+                                        <option value="2">Waiting For Delivery</option>
+                                        <option value="7">Pickup Request</option>
+                                        <option value="18">In Review API</option>
                                         <option value="6">Return Complete</option>
-                                        <option value="7">Pickup Pending</option>
-                                        <option value="8">Rescheduled Delivery</option>
+                                        <option value="10">Branch Transfer</option>
+                                        <option value="8">Branch Transfer Complete</option>
+                                        <option value="9">Pickup Complete</option>
 
                                     </select>
                                 </div>

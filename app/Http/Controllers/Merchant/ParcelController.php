@@ -38,7 +38,7 @@ class ParcelController extends Controller
                 // $merchant_id = $request->input('merchant_id');
                 //  $branch_id = $request->input('branch_id');
                 $from_date = $request->input('from_date');
-                $to_date   = $request->input('to_date');
+                $to_date = $request->input('to_date');
                 $merchant_id = auth()->guard('merchant')->user()->id;
 
                 $query->where('merchant_id', $merchant_id);
@@ -46,13 +46,13 @@ class ParcelController extends Controller
                 // if ($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0) {
                 //     $query->where('merchant_id', $request->input('merchant_id'));
                 // }
-
+    
                 // if ($request->has('branch_id') && !is_null($branch_id) && $branch_id != '' && $branch_id != 0) {
                 //     $query->whereHas('merchant', function ($query) use ($branch_id) {
                 //         $query->where('branch_id', $branch_id);
                 //     });
                 // }
-
+    
                 if ($request->has('from_date') && !is_null($from_date) && $from_date !== '') {
                     $fromDateTime = Carbon::parse($request->input('from_date'));
                     $query->where('created_at', '>=', $fromDateTime);
@@ -67,14 +67,14 @@ class ParcelController extends Controller
             ->select()
             ->get();
 
-        $data               = [];
-        $data['main_menu']  = 'push-request';
+        $data = [];
+        $data['main_menu'] = 'push-request';
         $data['child_menu'] = 'push-request';
         $data['page_title'] = 'Push Request';
-        $data['collapse']   = 'sidebar-collapse';
-        $data['merchants']   = Merchant::where('status', 1)->get();
-        $data['branches']   = Branch::where('status', 1)->get();
-        $data['parcels']   = $parcels;
+        $data['collapse'] = 'sidebar-collapse';
+        $data['merchants'] = Merchant::where('status', 1)->get();
+        $data['branches'] = Branch::where('status', 1)->get();
+        $data['parcels'] = $parcels;
         $data['districts'] = District::where([
             ['status', '=', 1],
         ])->get();
@@ -130,7 +130,7 @@ class ParcelController extends Controller
                         if ($code_charge_percent != 0) {
                             $merchantServiceAreaCodCharge = MerchantServiceAreaCodCharge::where([
                                 'service_area_id' => $district->service_area_id,
-                                'merchant_id'     => $parcel->merchant?->id,
+                                'merchant_id' => $parcel->merchant?->id,
                             ])->first();
 
                             if ($merchantServiceAreaCodCharge) {
@@ -209,7 +209,7 @@ class ParcelController extends Controller
 
                     $item_type_charge = $request->input('item_type_charge') ?? 0;
                     $service_type_charge = $request->input('service_type_charge') ?? 0;
-                    $delivery_charge =  $delivery_charge + $item_type_charge + $service_type_charge;
+                    $delivery_charge = $delivery_charge + $item_type_charge + $service_type_charge;
                     $total_charge = $delivery_charge + $cod_charge + $weight_package_charge;
 
                     $data = [
@@ -502,9 +502,9 @@ class ParcelController extends Controller
         $data['main_menu'] = 'return';
         $data['child_menu'] = 'returnList';
         $data['page_title'] = 'Return List';
-        $data['collapse']   = 'sidebar-collapse';
-        $data['riders']     = Rider::where([
-            'status'    => 1
+        $data['collapse'] = 'sidebar-collapse';
+        $data['riders'] = Rider::where([
+            'status' => 1
         ])
             ->select('id', 'name', 'contact_number', 'address')
             ->get();
@@ -540,7 +540,7 @@ class ParcelController extends Controller
         //     ->select();
 
         //dd($model->get());
-        if ($request->has('run_status') && ! is_null($request->get('run_status')) && $request->get('run_status') != 0) {
+        if ($request->has('run_status') && !is_null($request->get('run_status')) && $request->get('run_status') != 0) {
             $model->where('status', $request->get('run_status'));
         } elseif ($request->get('run_status') == '') {
             $model->whereIn('status', [1, 2]);
@@ -548,13 +548,13 @@ class ParcelController extends Controller
             $model->whereIn('status', [1, 2, 3, 4]);
         }
 
-        if ($request->has('rider_id') && ! is_null($request->get('rider_id')) && $request->get('rider_id') != 0) {
+        if ($request->has('rider_id') && !is_null($request->get('rider_id')) && $request->get('rider_id') != 0) {
             $model->where('rider_id', $request->get('rider_id'));
         }
-        if ($request->has('from_date') && ! is_null($request->get('from_date')) && $request->get('from_date') != 0) {
+        if ($request->has('from_date') && !is_null($request->get('from_date')) && $request->get('from_date') != 0) {
             $model->whereDate('create_date_time', '>=', $request->get('from_date'));
         }
-        if ($request->has('to_date') && ! is_null($request->get('to_date')) && $request->get('to_date') != 0) {
+        if ($request->has('to_date') && !is_null($request->get('to_date')) && $request->get('to_date') != 0) {
             $model->whereDate('create_date_time', '<=', $request->get('to_date'));
         }
 
@@ -578,20 +578,20 @@ class ParcelController extends Controller
             ->editColumn('status', function ($data) {
                 switch ($data->status) {
                     case 1:
-                        $status_name  = "Run Create";
-                        $class  = "success";
+                        $status_name = "Run Create";
+                        $class = "success";
                         break;
                     case 2:
-                        $status_name  = "Run Start";
-                        $class  = "success";
+                        $status_name = "Run Start";
+                        $class = "success";
                         break;
                     case 3:
-                        $status_name  = "Run Cancel";
-                        $class  = "danger";
+                        $status_name = "Run Cancel";
+                        $class = "danger";
                         break;
                     case 4:
-                        $status_name  = "Run Complete";
-                        $class  = "success";
+                        $status_name = "Run Complete";
+                        $class = "success";
                         break;
                     default:
                         $status_name = "None";
@@ -604,17 +604,17 @@ class ParcelController extends Controller
             ->addColumn('action', function ($data) {
                 // $button = '<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" rider_run_id="' . $data->id . '" >
                 // <i class="fa fa-eye"></i> </button>';
-
+    
                 // $button .= '&nbsp; <a href="' . route('branch.parcel.printReturnRiderRun', $data->id) . '" class="btn btn-success btn-sm" title="Print Return Rider Run" target="_blank">
                 //     <i class="fas fa-print"></i> </a>';
-
+    
                 // if ($data->status == 1) {
                 //     $button .= '&nbsp; <button class="btn btn-success btn-sm run-start-btn" rider_run_id="' . $data->id . '" title="Return Run Start">
                 //     <i class="far fa-play-circle"></i> </button>';
-
+    
                 //     $button .= '&nbsp; <button class="btn btn-warning btn-sm run-cancel-btn" rider_run_id="' . $data->id . '" title="Return Run Cancel">
                 //     <i class="far fa-window-close"></i> </button>';
-
+    
                 //     $button .= '&nbsp; <a href="' . route('branch.parcel.editReturnRiderRun', $data->id) . '" class="btn btn-info btn-sm" title="Edit Return Run" >
                 //         <i class="fas fa-edit"></i> </a>';
                 // }
@@ -653,7 +653,8 @@ class ParcelController extends Controller
                 $from_date = $request->input('from_date');
                 $to_date = $request->input('to_date');
 
-                if (($request->has('parcel_status') && !is_null($parcel_status))
+                if (
+                    ($request->has('parcel_status') && !is_null($parcel_status))
                     || ($request->has('parcel_invoice') && !is_null($parcel_invoice))
                     || ($request->has('customer_contact_number') && !is_null($customer_contact_number))
                     || ($request->has('customer_contact_number2') && !is_null($customer_contact_number2))
@@ -795,7 +796,7 @@ class ParcelController extends Controller
                 }
 
                 // $date_time =  $data->date . " " . date("h:i A", strtotime($data->created_at));
-                $date_time =   $data->created_at->format('Y-m-d h:i A');
+                $date_time = $data->created_at->format('Y-m-d h:i A');
 
                 return '<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" parcel_id="' . $data->id . '"  title="Parcel View">
                 ' . $data->parcel_invoice . ' </button><br></span> <p><strong></strong>' . $date_time . '</p>' . $x;
@@ -827,7 +828,7 @@ class ParcelController extends Controller
                 return '<span class="  text-bold badge badge-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span> <p><strong></strong>' . $date_time . '</p><p><strong>Attempt: </strong>' . $data->number_of_attempt . '</p>';
             })
             ->editColumn('payment_status', function ($data) {
-                $date  = $data?->merchantDeliveryPayment?->created_at->format('d-m-Y h:i A');
+                $date = $data?->merchantDeliveryPayment?->created_at->format('d-m-Y h:i A');
                 $x = '';
                 $payment_invoice = $data?->merchantDeliveryPayment?->payment_invoice;
                 if ($date && $payment_invoice) {
@@ -835,16 +836,16 @@ class ParcelController extends Controller
                 }
 
                 $parcelStatus = returnPaymentStatusForMerchant($data->status, $data->delivery_type, $data->payment_type);
-                $status_name  = $parcelStatus['status_name'];
-                $class        = $parcelStatus['class'];
-                $time        = isset($parcelStatus['time']) ?  $parcelStatus['time'] : '';
+                $status_name = $parcelStatus['status_name'];
+                $class = $parcelStatus['class'];
+                $time = isset($parcelStatus['time']) ? $parcelStatus['time'] : '';
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
             ->editColumn('return_status', function ($data) {
                 $parcelStatus = returnReturnStatusForAdmin($data->status, $data->delivery_type, $data->payment_type, $data);
-                $status_name  = $parcelStatus['status_name'];
-                $class        = $parcelStatus['class'];
-                $time        = isset($parcelStatus['time']) ?  $parcelStatus['time'] : '';
+                $status_name = $parcelStatus['status_name'];
+                $class = $parcelStatus['class'];
+                $time = isset($parcelStatus['time']) ? $parcelStatus['time'] : '';
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span><br>' . $time;
             })
             // ->editColumn('payment_status', function ($data) {
@@ -1056,14 +1057,16 @@ class ParcelController extends Controller
                 $customer_contact_number = $request->input('customer_contact_number');
                 $from_date = $request->input('from_date');
                 $to_date = $request->input('to_date');
-                if (($request->has('parcel_status') && !is_null($parcel_status))
+                if (
+                    ($request->has('parcel_status') && !is_null($parcel_status))
                     || ($request->has('parcel_invoice') && !is_null($parcel_invoice))
                     || ($request->has('customer_contact_number') && !is_null($customer_contact_number))
                     || ($request->has('merchant_order_id') && !is_null($merchant_order_id))
                     || ($request->has('from_date') && !is_null($from_date))
                     || ($request->has('to_date') && !is_null($to_date))
                 ) {
-                    if ((!is_null($parcel_invoice) && !is_null($parcel_invoice))
+                    if (
+                        (!is_null($parcel_invoice) && !is_null($parcel_invoice))
                         || (!is_null($merchant_order_id) && !is_null($merchant_order_id))
                         || (!is_null($customer_contact_number) && !is_null($customer_contact_number))
                     ) {
@@ -1778,5 +1781,23 @@ class ParcelController extends Controller
         \session()->forget('import_parcel');
         $this->setMessage('Import Parcel reset successful!', 'success');
         return redirect()->route('merchant.parcel.merchantBulkParcelImport');
+    }
+
+    // parcel search
+    public function search(Request $request)
+    {
+
+        $keyword = $request->get('search');
+        $parcels = Parcel::where('parcel_invoice', 'like', '%' . $keyword . '%')
+            ->orWhere('customer_name', 'like', '%' . $keyword . '%')
+            ->orWhere('customer_contact_number', 'like', '%' . $keyword . '%')
+            ->orWhere('customer_contact_number2', 'like', '%' . $keyword . '%')
+            ->orWhere('merchant_order_id', 'like', '%' . $keyword . '%')
+            ->orWhere('merchant_order_id', 'like', '%' . $keyword . '%')
+            ->limit(10)
+            ->get();
+
+        return $parcels;
+
     }
 }

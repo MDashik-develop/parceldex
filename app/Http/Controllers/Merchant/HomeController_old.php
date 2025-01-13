@@ -17,13 +17,15 @@ use App\Models\ParcelLog;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class HomeController extends Controller {
+class HomeController extends Controller
+{
 
-    public function home() {
+    public function home()
+    {
         $merchant = auth()->guard('merchant')->user();
         $merchant_id = $merchant->id;
-        $data               = [];
-        $data['main_menu']  = 'home';
+        $data = [];
+        $data['main_menu'] = 'home';
         $data['child_menu'] = 'home';
         $data['page_title'] = 'Home';
 
@@ -34,12 +36,12 @@ class HomeController extends Controller {
 
 
 
-        $counter_data   = parent::returnDashboardCounterForMerchant($merchant_id);
+        $counter_data = parent::returnDashboardCounterForMerchant($merchant_id);
 
-        $data['counter_data']   = $counter_data;
+        $data['counter_data'] = $counter_data;
 
 
-//        $data['total_parcel']               = Parcel::where('merchant_id', $merchant_id)
+        //        $data['total_parcel']               = Parcel::where('merchant_id', $merchant_id)
 //                                            ->count();
 //
 //        $data['total_cancel_parcel']    = Parcel::where('merchant_id', $merchant_id)
@@ -95,56 +97,70 @@ class HomeController extends Controller {
 //                                                ->sum('merchant_paid_amount');
 
 
-        $total_customer_collect_amount      = Parcel::where('merchant_id', $merchant_id)
-            ->where('status', '>=',25)
-            ->whereRaw('delivery_type in (?,?) and payment_type in (?,?,?) and payment_request_status = ?', [1,2,2,4,6,0])
+        $total_customer_collect_amount = Parcel::where('merchant_id', $merchant_id)
+            ->where('status', '>=', 25)
+            ->whereRaw('delivery_type in (?,?) and payment_type in (?,?,?) and payment_request_status = ?', [1, 2, 2, 4, 6, 0])
             ->sum('customer_collect_amount');
 
-        $total_charge_amount                = Parcel::where('merchant_id', $merchant_id)
-            ->where('status', '>=',25)
-            ->whereRaw('delivery_type in (?,?) and payment_type in (?,?,?) and payment_request_status = ?', [1,2,2,4,6,0])
+        $total_charge_amount = Parcel::where('merchant_id', $merchant_id)
+            ->where('status', '>=', 25)
+            ->whereRaw('delivery_type in (?,?) and payment_type in (?,?,?) and payment_request_status = ?', [1, 2, 2, 4, 6, 0])
             ->sum('total_charge');
 
-        $payment_request_data                = ParcelPaymentRequest::whereRaw("merchant_id = '{$merchant_id}' AND status < 5 AND status NOT IN (3)")->get();
+        $payment_request_data = ParcelPaymentRequest::whereRaw("merchant_id = '{$merchant_id}' AND status < 5 AND status NOT IN (3)")->get();
 
         $data['total_pending_payment'] = number_format($total_customer_collect_amount - $total_charge_amount, 2, '.', '');
 
-        $data['news']   = Notice::whereRaw('type = 2 and publish_for IN (0,2)')->orderBy('id', 'DESC')->first();
-//dd($data);
+        $data['news'] = Notice::whereRaw('type = 2 and publish_for IN (0,2)')->orderBy('id', 'DESC')->first();
+        //dd($data);
         return view('merchant.home', $data);
     }
 
-    public function orderTracking($parcel_invoice = '') {
-
-        $data               = [];
-        $data['main_menu']  = 'orderTracking';
+    public function orderTracking($parcel_invoice = '')
+    {
+        $data = [];
+        $data['main_menu'] = 'orderTracking';
         $data['child_menu'] = 'orderTracking';
         $data['parcel_invoice'] = urldecode($parcel_invoice);
         $data['page_title'] = 'Order Tracking';
         return view('merchant.orderTracking', $data);
     }
 
-    public function returnOrderTrackingResult(Request $request) {
-        $parcel_invoice     = $request->input('parcel_invoice');
-        $merchant_order_id  = $request->input('merchant_order_id');
+    public function returnOrderTrackingResult(Request $request)
+    {
+        $parcel_invoice = $request->input('parcel_invoice');
+        $merchant_order_id = $request->input('merchant_order_id');
 
-        if((!is_null($parcel_invoice) && $parcel_invoice != '') || (!is_null($merchant_order_id) && $merchant_order_id != '')){
-            $parcel = Parcel::with('district', 'upazila', 'area', 'merchant',
-                    'weight_package', 'pickup_branch', 'pickup_rider',
-                    'delivery_branch', 'delivery_rider')
-                    ->where('merchant_id', auth()->guard('merchant')->user()->id )
-                    ->where(function($query) use ($parcel_invoice, $merchant_order_id){
-                        if(!is_null($parcel_invoice)){
-                            $query->where('parcel_invoice','like', "%$parcel_invoice");
-                        }
-                        elseif(!is_null($merchant_order_id)){
-                            $query->where('merchant_order_id','like', "%$merchant_order_id");
-                        }
-                    })
-                    ->first();
-            if($parcel){
-                $parcelLogs = ParcelLog::with('pickup_branch', 'pickup_rider', 'delivery_branch',
-                    'delivery_rider', 'admin', 'merchant')
+        if ((!is_null($parcel_invoice) && $parcel_invoice != '') || (!is_null($merchant_order_id) && $merchant_order_id != '')) {
+            $parcel = Parcel::with(
+                'district',
+                'upazila',
+                'area',
+                'merchant',
+                'weight_package',
+                'pickup_branch',
+                'pickup_rider',
+                'delivery_branch',
+                'delivery_rider'
+            )
+                ->where('merchant_id', auth()->guard('merchant')->user()->id)
+                ->where(function ($query) use ($parcel_invoice, $merchant_order_id) {
+                    if (!is_null($parcel_invoice)) {
+                        $query->where('parcel_invoice', 'like', "%$parcel_invoice");
+                    } elseif (!is_null($merchant_order_id)) {
+                        $query->where('merchant_order_id', 'like', "%$merchant_order_id");
+                    }
+                })
+                ->first();
+            if ($parcel) {
+                $parcelLogs = ParcelLog::with(
+                    'pickup_branch',
+                    'pickup_rider',
+                    'delivery_branch',
+                    'delivery_rider',
+                    'admin',
+                    'merchant'
+                )
                     ->where('parcel_id', $parcel->id)
                     ->orderBy('id', 'desc')
                     ->get();
@@ -155,60 +171,63 @@ class HomeController extends Controller {
 
     }
 
-    public function profile() {
-        $data               = [];
-        $data['main_menu']  = 'profile';
+    public function profile()
+    {
+        $data = [];
+        $data['main_menu'] = 'profile';
         $data['child_menu'] = 'profile';
         $data['page_title'] = 'Profile';
-        $data['merchant']   = Merchant::with(['branch', 'district', 'upazila', 'area', 'service_area_charges'])->where('id', auth()->guard('merchant')->user()->id)->first();
+        $data['merchant'] = Merchant::with(['branch', 'district', 'upazila', 'area', 'service_area_charges'])->where('id', auth()->guard('merchant')->user()->id)->first();
         return view('merchant.profile', $data);
     }
 
 
-    public function updateProfile(){
-        $data               = [];
-        $data['main_menu']  = 'profile';
+    public function updateProfile()
+    {
+        $data = [];
+        $data['main_menu'] = 'profile';
         $data['child_menu'] = 'profile';
         $data['page_title'] = 'Update Profile';
-        $data['merchant']   = Merchant::with(['branch', 'district', 'upazila', 'area', 'service_area_charges'])->where('id', auth()->guard('merchant')->user()->id)->first();
+        $data['merchant'] = Merchant::with(['branch', 'district', 'upazila', 'area', 'service_area_charges'])->where('id', auth()->guard('merchant')->user()->id)->first();
 
-        $data['districts']    = District::where('status', 1)->get();
-        $data['upazilas']     = Upazila::where('district_id', $data['merchant']->district_id)->get();
-        $data['areas']        = Area::where('upazila_id', $data['merchant']->upazila_id)->get();
+        $data['districts'] = District::where('status', 1)->get();
+        $data['upazilas'] = Upazila::where('district_id', $data['merchant']->district_id)->get();
+        $data['areas'] = Area::where('upazila_id', $data['merchant']->upazila_id)->get();
         return view('merchant.updateProfile', $data);
     }
 
 
 
-    public function confirmUpdateProfile(Request $request){
+    public function confirmUpdateProfile(Request $request)
+    {
 
         $merchant = Merchant::find(auth()->guard('merchant')->user()->id);
 
 
         $validator = Validator::make($request->all(), [
-            'company_name'      => 'required',
-            'name'              => 'required',
-            'email'             => 'required|email|unique:merchants,email,' . $merchant->id,
-            'image'             => 'sometimes|image|max:3000',
-            'password'          => 'sometimes|nullable|min:5',
-            'address'           => 'sometimes',
-            'contact_number'    => 'required',
-            'district_id'       => 'required',
-//            'upazila_id'        => 'required',
-            'area_id'           => 'required',
-            'business_address'  => 'sometimes',
-            'fb_url'            => 'sometimes',
-            'web_url'           => 'sometimes',
+            'company_name' => 'required',
+            'name' => 'required',
+            'email' => 'required|email|unique:merchants,email,' . $merchant->id,
+            'image' => 'sometimes|image|max:3000',
+            'password' => 'sometimes|nullable|min:5',
+            'address' => 'sometimes',
+            'contact_number' => 'required',
+            'district_id' => 'required',
+            //            'upazila_id'        => 'required',
+            'area_id' => 'required',
+            'business_address' => 'sometimes',
+            'fb_url' => 'sometimes',
+            'web_url' => 'sometimes',
             'bank_account_name' => 'sometimes',
-            'bank_account_no'   => 'sometimes',
-            'bank_name'         => 'sometimes',
-            'bkash_number'      => 'sometimes',
-            'nagad_number'      => 'sometimes',
-            'rocket_name'       => 'sometimes',
-            'nid_no'            => 'sometimes',
-            'nid_card'          => 'sometimes|image|max:3000',
-            'trade_license'     => 'sometimes|image|max:3000',
-            'tin_certificate'   => 'sometimes|image|max:3000',
+            'bank_account_no' => 'sometimes',
+            'bank_name' => 'sometimes',
+            'bkash_number' => 'sometimes',
+            'nagad_number' => 'sometimes',
+            'rocket_name' => 'sometimes',
+            'nid_no' => 'sometimes',
+            'nid_card' => 'sometimes|image|max:3000',
+            'trade_license' => 'sometimes|image|max:3000',
+            'tin_certificate' => 'sometimes|image|max:3000',
         ], [
             'name.unique' => 'This Email Already Exist',
         ]);
@@ -220,9 +239,9 @@ class HomeController extends Controller {
         \DB::beginTransaction();
         try {
 
-            $image_name      = $merchant->image;
-            $trade_license   = $merchant->trade_license;
-            $nid_card        = $merchant->nid_card;
+            $image_name = $merchant->image;
+            $trade_license = $merchant->trade_license;
+            $nid_card = $merchant->nid_card;
             $tin_certificate = $merchant->tin_certificate;
 
             if ($request->hasFile('image')) {
@@ -282,38 +301,38 @@ class HomeController extends Controller {
             }
 
             $data = [
-                'name'              => $request->input('name'),
-                'email'             => $request->input('email'),
-                'company_name'      => $request->input('company_name'),
-                'address'           => $request->input('address'),
-                'contact_number'    => $request->input('contact_number'),
-                'district_id'       => $request->input('district_id'),
-//                'upazila_id'        => $request->input('upazila_id'),
-                'area_id'           => $request->input('area_id'),
-                'business_address'  => $request->input('business_address'),
-                'fb_url'            => $request->input('fb_url'),
-                'web_url'           => $request->input('web_url'),
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'company_name' => $request->input('company_name'),
+                'address' => $request->input('address'),
+                'contact_number' => $request->input('contact_number'),
+                'district_id' => $request->input('district_id'),
+                //                'upazila_id'        => $request->input('upazila_id'),
+                'area_id' => $request->input('area_id'),
+                'business_address' => $request->input('business_address'),
+                'fb_url' => $request->input('fb_url'),
+                'web_url' => $request->input('web_url'),
                 'bank_account_name' => $request->input('bank_account_name'),
-                'bank_account_no'   => $request->input('bank_account_no'),
-                'bank_name'         => $request->input('bank_name'),
-                'bkash_number'      => $request->input('bkash_number'),
-                'nagad_number'      => $request->input('nagad_number'),
-                'rocket_name'       => $request->input('rocket_name'),
-                'nid_no'            => $request->input('nid_no'),
-                'image'             => $image_name,
-                'trade_license'     => $trade_license,
-                'nid_card'          => $nid_card,
-                'tin_certificate'   => $tin_certificate,
+                'bank_account_no' => $request->input('bank_account_no'),
+                'bank_name' => $request->input('bank_name'),
+                'bkash_number' => $request->input('bkash_number'),
+                'nagad_number' => $request->input('nagad_number'),
+                'rocket_name' => $request->input('rocket_name'),
+                'nid_no' => $request->input('nid_no'),
+                'image' => $image_name,
+                'trade_license' => $trade_license,
+                'nid_card' => $nid_card,
+                'tin_certificate' => $tin_certificate,
                 'payment_recived_by' => $request->input('payment_recived_by'),
-                'date'              => date('Y-m-d'),
-                'status'            => 1,
-                'updated_admin_id'  => auth()->guard('admin')->user()->id,
+                'date' => date('Y-m-d'),
+                'status' => 1,
+                'updated_admin_id' => auth()->guard('admin')->user()->id,
             ];
 
             $password = $request->input('password');
 
             if ($password) {
-                $data['password']       = bcrypt($password);
+                $data['password'] = bcrypt($password);
                 $data['store_password'] = $password;
             }
 
@@ -330,7 +349,7 @@ class HomeController extends Controller {
                 return redirect()->back()->withInput();
             }
 
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             \DB::rollback();
             $this->setMessage('Database Error Found', 'danger');
             return redirect()->back()->withInput();
@@ -338,15 +357,17 @@ class HomeController extends Controller {
 
     }
 
-    public function coverageArea() {
-        $data               = [];
-        $data['main_menu']  = 'coverageArea';
+    public function coverageArea()
+    {
+        $data = [];
+        $data['main_menu'] = 'coverageArea';
         $data['child_menu'] = 'coverageArea';
         $data['page_title'] = 'Coverage Area';
         return view('merchant.coverageArea', $data);
     }
 
-    public function getCoverageAreas(Request $request) {
+    public function getCoverageAreas(Request $request)
+    {
         $model = Area::with('district')->where('status', 1)->select();
         return DataTables::of($model)
             ->addIndexColumn()
@@ -354,15 +375,17 @@ class HomeController extends Controller {
             ->make(true);
     }
 
-    public function serviceCharge() {
-        $data               = [];
-        $data['main_menu']  = 'serviceCharge';
+    public function serviceCharge()
+    {
+        $data = [];
+        $data['main_menu'] = 'serviceCharge';
         $data['child_menu'] = 'serviceCharge';
         $data['page_title'] = 'Service Charge ';
         return view('merchant.serviceCharge', $data);
     }
 
-    public function getServiceCharges(Request $request) {
+    public function getServiceCharges(Request $request)
+    {
         $model = WeightPackage::where('status', 1)->select();
         return DataTables::of($model)
             ->addIndexColumn()

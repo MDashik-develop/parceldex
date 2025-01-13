@@ -260,7 +260,7 @@ class MerchantDeliveryPaymentController extends Controller
                                 'date_time' => date('Y-m-d H:i:s'),
                             ]);
 
-                        \DB::commit();
+                        
 
                         // $this->adminDashboardCounterEvent();
 
@@ -340,12 +340,14 @@ class MerchantDeliveryPaymentController extends Controller
                         $this->send_reg_sms($merchant_user->contact_number, $message);
 
                         $response = ['success' => 'Payment Confirmed Successfully'];
+                        \DB::commit();
                     } else {
                         $response = ['error' => 'Database Error Found'];
+                        \DB::rollback();
                     }
                 } catch (\Exception $e) {
                     \DB::rollback();
-                    $response = ['error' => $e];
+                    $response = ['error' => $e->getMessage()];
                 }
             }
         }

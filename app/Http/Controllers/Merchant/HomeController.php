@@ -24,8 +24,8 @@ class HomeController extends Controller
     {
         $merchant = auth()->guard('merchant')->user();
         $merchant_id = $merchant->id;
-        $data               = [];
-        $data['main_menu']  = 'home';
+        $data = [];
+        $data['main_menu'] = 'home';
         $data['child_menu'] = 'home';
         $data['page_title'] = 'Home';
 
@@ -36,11 +36,11 @@ class HomeController extends Controller
 
 
 
-        $counter_data   = parent::returnDashboardCounterForMerchant($merchant_id);
+        $counter_data = parent::returnDashboardCounterForMerchant($merchant_id);
 
-        $data['counter_data']   = $counter_data;
+        $data['counter_data'] = $counter_data;
 
-        $data['recent_order']               = Parcel::where('merchant_id', $merchant_id)
+        $data['recent_order'] = Parcel::where('merchant_id', $merchant_id)
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
@@ -132,75 +132,75 @@ class HomeController extends Controller
 
 
         $current_date = date('Y-m-d');
-        $temp_date1 =  date('Y-m-d', strtotime('-1 day', strtotime($current_date)));
-        $temp_date2 =  date('Y-m-d', strtotime('-2 day', strtotime($current_date)));
-        $temp_date3 =  date('Y-m-d', strtotime('-3 day', strtotime($current_date)));
-        $temp_date4 =  date('Y-m-d', strtotime('-4 day', strtotime($current_date)));
-        $temp_date5 =  date('Y-m-d', strtotime('-5 day', strtotime($current_date)));
-        $temp_date6 =  date('Y-m-d', strtotime('-6 day', strtotime($current_date)));
+        $temp_date1 = date('Y-m-d', strtotime('-1 day', strtotime($current_date)));
+        $temp_date2 = date('Y-m-d', strtotime('-2 day', strtotime($current_date)));
+        $temp_date3 = date('Y-m-d', strtotime('-3 day', strtotime($current_date)));
+        $temp_date4 = date('Y-m-d', strtotime('-4 day', strtotime($current_date)));
+        $temp_date5 = date('Y-m-d', strtotime('-5 day', strtotime($current_date)));
+        $temp_date6 = date('Y-m-d', strtotime('-6 day', strtotime($current_date)));
 
 
 
-        $data['today_total_pickupcomplete']    = Parcel::where('merchant_id', $merchant_id)
+        $data['today_total_pickupcomplete'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('pickup_branch_date = ? ', [date("Y-m-d")])
             ->count();
 
-        $data['yesterdayPickupcomplete']    = Parcel::where('merchant_id', $merchant_id)
+        $data['yesterdayPickupcomplete'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('pickup_branch_date = ? ', [$temp_date1])
             ->count();
 
-        $data['towDaysAgoPickupcomplete']    = Parcel::where('merchant_id', $merchant_id)
+        $data['towDaysAgoPickupcomplete'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('pickup_branch_date = ? ', [$temp_date2])
             ->count();
 
-        $data['threeDaysAgoPickupcomplete']    = Parcel::where('merchant_id', $merchant_id)
+        $data['threeDaysAgoPickupcomplete'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('pickup_branch_date = ? ', [$temp_date3])
             ->count();
 
-        $data['fourDaysAgoPickupcomplete']    = Parcel::where('merchant_id', $merchant_id)
+        $data['fourDaysAgoPickupcomplete'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('pickup_branch_date = ? ', [$temp_date4])
             ->count();
 
-        $data['fiveDaysAgoPickupcomplete']    = Parcel::where('merchant_id', $merchant_id)
+        $data['fiveDaysAgoPickupcomplete'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('pickup_branch_date = ? ', [$temp_date5])
             ->count();
 
-        $data['sixDaysAgoPickupcomplete']    = Parcel::where('merchant_id', $merchant_id)
+        $data['sixDaysAgoPickupcomplete'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('pickup_branch_date = ? ', [$temp_date6])
             ->count();
 
 
-        $data['today_total_delivery']  = Parcel::where('merchant_id', $merchant_id)
+        $data['today_total_delivery'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('delivery_rider_date = ? ', [$current_date])
             ->whereRaw('status >= ? and delivery_type in (?)', [25, 1])
             ->count();
-        $data['yesterdayDeliveryComplete']  = Parcel::where('merchant_id', $merchant_id)
+        $data['yesterdayDeliveryComplete'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('delivery_rider_date = ? ', [$temp_date1])
             ->whereRaw('status >= ? and delivery_type in (?)', [25, 1])
             ->count();
 
 
-        $data['twoDeliveryComplete']  = Parcel::where('merchant_id', $merchant_id)
+        $data['twoDeliveryComplete'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('delivery_rider_date = ? ', [$temp_date2])
             ->whereRaw('status >= ? and delivery_type in (?)', [25, 1])
             ->count();
 
-        $data['threeDeliveryComplete']  = Parcel::where('merchant_id', $merchant_id)
+        $data['threeDeliveryComplete'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('delivery_rider_date = ? ', [$temp_date3])
             ->whereRaw('status >= ? and delivery_type in (?)', [25, 1])
             ->count();
 
-        $data['fourDeliveryComplete']  = Parcel::where('merchant_id', $merchant_id)
+        $data['fourDeliveryComplete'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('delivery_rider_date = ? ', [$temp_date4])
             ->whereRaw('status >= ? and delivery_type in (?)', [25, 1])
             ->count();
 
-        $data['fiveDeliveryComplete']  = Parcel::where('merchant_id', $merchant_id)
+        $data['fiveDeliveryComplete'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('delivery_rider_date = ? ', [$temp_date5])
             ->whereRaw('status >= ? and delivery_type in (?)', [25, 1])
             ->count();
 
-        $data['sixDeliveryComplete']  = Parcel::where('merchant_id', $merchant_id)
+        $data['sixDeliveryComplete'] = Parcel::where('merchant_id', $merchant_id)
             ->whereRaw('delivery_rider_date = ? ', [$temp_date6])
             ->whereRaw('status >= ? and delivery_type in (?)', [25, 1])
             ->count();
@@ -211,7 +211,7 @@ class HomeController extends Controller
 
 
 
-        $data['total_deleted_parcel']    = Parcel::where('merchant_id', $merchant_id)
+        $data['total_deleted_parcel'] = Parcel::where('merchant_id', $merchant_id)
             ->whereBetween('status', [2, 3])
             // ->whereRaw('(status >3 and status <25) or (status = 1)')
             ->count();
@@ -307,7 +307,7 @@ class HomeController extends Controller
         $statusRange = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
         $deliveryTypes = [1, 2, 3, 4, null];
 
-        $data['total_to_be_collected']     = Parcel::where('merchant_id', $merchant_id)
+        $data['total_to_be_collected'] = Parcel::where('merchant_id', $merchant_id)
             ->whereNull('suborder')
             ->whereNull('payment_type')
             ->where(function ($query) use ($statusRange, $deliveryTypes) {
@@ -340,7 +340,7 @@ class HomeController extends Controller
         $statusRange = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
         $deliveryTypes = [1, 2, 3, 4, null];
 
-        $data['total_to_be_collectedoc']     = Parcel::where('merchant_id', $merchant_id)
+        $data['total_to_be_collectedoc'] = Parcel::where('merchant_id', $merchant_id)
             ->whereNull('suborder')
             ->whereNull('payment_type')
             ->where(function ($query) use ($statusRange, $deliveryTypes) {
@@ -371,7 +371,7 @@ class HomeController extends Controller
             ->count();
 
 
-        $data['parcel_in_process']      = Parcel::where('merchant_id', $merchant_id)
+        $data['parcel_in_process'] = Parcel::where('merchant_id', $merchant_id)
             ->where(function ($query) {
                 $query->whereBetween('status', [10, 24])
                     ->orWhere('delivery_type', 3);
@@ -380,12 +380,12 @@ class HomeController extends Controller
             ->sum('total_collect_amount');
 
 
-        $data['total_charge']      = Parcel::where('merchant_id', $merchant_id)
+        $data['total_charge'] = Parcel::where('merchant_id', $merchant_id)
             ->where('status', '>=', 25)
             ->whereRaw('delivery_type in (?,?,?)', [1, 2, 4])
             ->sum('total_charge');
 
-        $data['return_charge']      = Parcel::where('merchant_id', $merchant_id)
+        $data['return_charge'] = Parcel::where('merchant_id', $merchant_id)
             ->where('status', '>=', 25)
             ->whereRaw('delivery_type in (?,?,?)', [1, 2, 4])
             ->sum('return_charge');
@@ -399,26 +399,26 @@ class HomeController extends Controller
         // $data['due_amount'] -= $data['total_charge'];
 
 
-        $data['total_cancel_parcel']    = Parcel::where('merchant_id', $merchant_id)
+        $data['total_cancel_parcel'] = Parcel::where('merchant_id', $merchant_id)
             ->whereIn('status', [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36])
             ->where('delivery_type', 4)
             ->whereNull('suborder')
             ->count();
 
-        $data['total_cancel_parcel_p']    = Parcel::where('merchant_id', $merchant_id)
+        $data['total_cancel_parcel_p'] = Parcel::where('merchant_id', $merchant_id)
             ->whereIn('status', [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36])
             ->where('delivery_type', 4)
             ->whereNull('suborder')
             ->count();
 
-        $data['today_cancel_parcel']    = Parcel::where('merchant_id', $merchant_id)
+        $data['today_cancel_parcel'] = Parcel::where('merchant_id', $merchant_id)
             ->where('delivery_type', '4')
             ->where('status', '>=', 24)
             ->whereRaw('delivery_branch_date = ? ', [date("Y-m-d")])
             ->whereNull('suborder')
             ->count();
 
-        $data['total_pending_parcel']    = Parcel::where('merchant_id', $merchant_id)
+        $data['total_pending_parcel'] = Parcel::where('merchant_id', $merchant_id)
             ->whereNull('suborder')
             ->whereIn('status', [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24])
             ->orWhere(function ($query) {
@@ -446,23 +446,23 @@ class HomeController extends Controller
             ->count();
 
 
-        $data['merchant_cancel_parcel']    = Parcel::where('merchant_id', $merchant_id)
+        $data['merchant_cancel_parcel'] = Parcel::where('merchant_id', $merchant_id)
             ->where('status', 3)
             ->count();
 
-        $data['total_pickup_pending']    = Parcel::where('merchant_id', $merchant_id)
+        $data['total_pickup_pending'] = Parcel::where('merchant_id', $merchant_id)
             //->whereNull('suborder')
             ->whereIn('status', [1, 2, 4, 5, 6, 7, 8, 9, 10])
             ->count();
 
 
-        $data['today_total_picked_up']    = Parcel::where('merchant_id', $merchant_id)
+        $data['today_total_picked_up'] = Parcel::where('merchant_id', $merchant_id)
             ->where('pickup_branch_date', '=', now()->format('Y-m-d'))
             ->where('status', '>=', 11)
             ->whereNull('suborder')
             ->count();
 
-        $data['today_total_pickup']    = Parcel::where('merchant_id', $merchant_id)
+        $data['today_total_pickup'] = Parcel::where('merchant_id', $merchant_id)
             //->whereRaw('pickup_branch_date = ? ', [date("Y-m-d")])
             ->where('pickup_branch_date', '=', now()->format('Y-m-d'))
             ->whereIn('status', [1, 2, 4])
@@ -519,7 +519,7 @@ class HomeController extends Controller
         //dd($cod_charge, $delivery_charge, $weight_package_charge, $return_charge3);
         $minus1 = $cod_charge + $delivery_charge + $weight_package_charge;
 
-        $data['total_service_charge']      =  $minus1;
+        $data['total_service_charge'] = $minus1;
 
         $data['total_service_charge_oc'] = Parcel::where('merchant_id', $merchant_id)
             ->where('status', '>=', 25)
@@ -540,7 +540,7 @@ class HomeController extends Controller
             ->whereIn('payment_type', [2, 4, 6])
             ->sum('cancel_amount_collection');
 
-        $total_customer_collect_amount      = $x + $y;
+        $total_customer_collect_amount = $x + $y;
 
         $total_charge_amount_query = Parcel::where('merchant_id', $merchant_id)
             ->where('status', '>=', 25)
@@ -585,12 +585,12 @@ class HomeController extends Controller
 
         $total_charge_amount = $cod_charge + $delivery_charge + $weight_package_charge + $return_charge1;
 
-        $payment_request_data                = ParcelPaymentRequest::whereRaw("merchant_id = '{$merchant_id}' AND status < 5 AND status NOT IN (3)")->get();
+        $payment_request_data = ParcelPaymentRequest::whereRaw("merchant_id = '{$merchant_id}' AND status < 5 AND status NOT IN (3)")->get();
 
-        $data['total_pending_payment'] =  number_format($total_customer_collect_amount - $total_charge_amount, 2, '.', '');
+        $data['total_pending_payment'] = number_format($total_customer_collect_amount - $total_charge_amount, 2, '.', '');
 
-        $data['news']   = Notice::whereRaw('type = 2 and publish_for IN (0,2)')->orderBy('id', 'DESC')->first();
-        $data['parcel_invoice']   = null;
+        $data['news'] = Notice::whereRaw('type = 2 and publish_for IN (0,2)')->orderBy('id', 'DESC')->first();
+        $data['parcel_invoice'] = null;
 
         //dd($data);
         return view('merchant.home', $data);
@@ -598,9 +598,8 @@ class HomeController extends Controller
 
     public function orderTracking($parcel_invoice = '')
     {
-
-        $data               = [];
-        $data['main_menu']  = 'orderTracking';
+        $data = [];
+        $data['main_menu'] = 'orderTracking';
         $data['child_menu'] = 'orderTracking';
         $data['parcel_invoice'] = urldecode($parcel_invoice);
         $data['page_title'] = 'Order Tracking';
@@ -609,8 +608,8 @@ class HomeController extends Controller
 
     public function returnOrderTrackingResult(Request $request)
     {
-        $parcel_invoice     = $request->input('parcel_invoice');
-        $merchant_order_id  = $request->input('merchant_order_id');
+        $parcel_invoice = $request->input('parcel_invoice');
+        $merchant_order_id = $request->input('merchant_order_id');
 
         if ((!is_null($parcel_invoice) && $parcel_invoice != '') || (!is_null($merchant_order_id) && $merchant_order_id != '')) {
             $parcel = Parcel::with(
@@ -656,26 +655,26 @@ class HomeController extends Controller
 
     public function profile()
     {
-        $data               = [];
-        $data['main_menu']  = 'profile';
+        $data = [];
+        $data['main_menu'] = 'profile';
         $data['child_menu'] = 'profile';
         $data['page_title'] = 'Profile';
-        $data['merchant']   = Merchant::with(['branch', 'district', 'upazila', 'area', 'service_area_charges'])->where('id', auth()->guard('merchant')->user()->id)->first();
+        $data['merchant'] = Merchant::with(['branch', 'district', 'upazila', 'area', 'service_area_charges'])->where('id', auth()->guard('merchant')->user()->id)->first();
         return view('merchant.profile', $data);
     }
 
 
     public function updateProfile()
     {
-        $data               = [];
-        $data['main_menu']  = 'profile';
+        $data = [];
+        $data['main_menu'] = 'profile';
         $data['child_menu'] = 'profile';
         $data['page_title'] = 'Update Profile';
-        $data['merchant']   = Merchant::with(['branch', 'district', 'upazila', 'area', 'service_area_charges'])->where('id', auth()->guard('merchant')->user()->id)->first();
+        $data['merchant'] = Merchant::with(['branch', 'district', 'upazila', 'area', 'service_area_charges'])->where('id', auth()->guard('merchant')->user()->id)->first();
 
-        $data['districts']    = District::where('status', 1)->get();
-        $data['upazilas']     = Upazila::where('district_id', $data['merchant']->district_id)->get();
-        $data['areas']        = Area::where('upazila_id', $data['merchant']->upazila_id)->get();
+        $data['districts'] = District::where('status', 1)->get();
+        $data['upazilas'] = Upazila::where('district_id', $data['merchant']->district_id)->get();
+        $data['areas'] = Area::where('upazila_id', $data['merchant']->upazila_id)->get();
         return view('merchant.updateProfile', $data);
     }
 
@@ -689,31 +688,31 @@ class HomeController extends Controller
 
 
         $validator = Validator::make($request->all(), [
-            'company_name'      => 'required',
-            'name'              => 'required',
-            'email'             => 'required|email|unique:merchants,email,' . $merchant->id,
-            'image'             => 'sometimes|image|max:3000',
-            'password'          => 'sometimes|nullable|min:5',
-            'address'           => 'sometimes',
-            'contact_number'    => 'required',
-            'district_id'       => 'required',
+            'company_name' => 'required',
+            'name' => 'required',
+            'email' => 'required|email|unique:merchants,email,' . $merchant->id,
+            'image' => 'sometimes|image|max:3000',
+            'password' => 'sometimes|nullable|min:5',
+            'address' => 'sometimes',
+            'contact_number' => 'required',
+            'district_id' => 'required',
             //            'upazila_id'        => 'required',
-            'area_id'           => 'required',
-            'business_address'  => 'sometimes',
-            'fb_url'            => 'sometimes',
-            'web_url'           => 'sometimes',
+            'area_id' => 'required',
+            'business_address' => 'sometimes',
+            'fb_url' => 'sometimes',
+            'web_url' => 'sometimes',
             'bank_account_name' => 'sometimes',
-            'bank_account_no'   => 'sometimes',
-            'bank_route_no'     => 'sometimes',
-            'bank_branch_name'  => 'sometimes',
-            'bank_name'         => 'sometimes',
-            'bkash_number'      => 'sometimes',
-            'nagad_number'      => 'sometimes',
-            'rocket_name'       => 'sometimes',
-            'nid_no'            => 'sometimes',
-            'nid_card'          => 'sometimes|image|max:3000',
-            'trade_license'     => 'sometimes|image|max:3000',
-            'tin_certificate'   => 'sometimes|image|max:3000',
+            'bank_account_no' => 'sometimes',
+            'bank_route_no' => 'sometimes',
+            'bank_branch_name' => 'sometimes',
+            'bank_name' => 'sometimes',
+            'bkash_number' => 'sometimes',
+            'nagad_number' => 'sometimes',
+            'rocket_name' => 'sometimes',
+            'nid_no' => 'sometimes',
+            'nid_card' => 'sometimes|image|max:3000',
+            'trade_license' => 'sometimes|image|max:3000',
+            'tin_certificate' => 'sometimes|image|max:3000',
         ], [
             'name.unique' => 'This Email Already Exist',
         ]);
@@ -725,9 +724,9 @@ class HomeController extends Controller
         \DB::beginTransaction();
         try {
 
-            $image_name      = $merchant->image;
-            $trade_license   = $merchant->trade_license;
-            $nid_card        = $merchant->nid_card;
+            $image_name = $merchant->image;
+            $trade_license = $merchant->trade_license;
+            $nid_card = $merchant->nid_card;
             $tin_certificate = $merchant->tin_certificate;
 
             if ($request->hasFile('image')) {
@@ -778,33 +777,33 @@ class HomeController extends Controller
             }
 
             $data = [
-                'name'              => $request->input('name'),
-                'email'             => $request->input('email'),
-                'company_name'      => $request->input('company_name'),
-                'address'           => $request->input('address'),
-                'contact_number'    => $request->input('contact_number'),
-                'district_id'       => $request->input('district_id'),
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'company_name' => $request->input('company_name'),
+                'address' => $request->input('address'),
+                'contact_number' => $request->input('contact_number'),
+                'district_id' => $request->input('district_id'),
                 //                'upazila_id'        => $request->input('upazila_id'),
-                'area_id'           => $request->input('area_id'),
-                'business_address'  => $request->input('business_address'),
-                'fb_url'            => $request->input('fb_url'),
-                'web_url'           => $request->input('web_url'),
+                'area_id' => $request->input('area_id'),
+                'business_address' => $request->input('business_address'),
+                'fb_url' => $request->input('fb_url'),
+                'web_url' => $request->input('web_url'),
                 'bank_account_name' => $request->input('bank_account_name'),
-                'bank_account_no'   => $request->input('bank_account_no'),
-                'bank_route_no'     => $request->input('bank_route_no'),
-                'bank_branch_name'  => $request->input('bank_branch_name'),
-                'bank_name'         => $request->input('bank_name'),
-                'bkash_number'      => $request->input('bkash_number'),
-                'nagad_number'      => $request->input('nagad_number'),
-                'rocket_name'       => $request->input('rocket_name'),
-                'nid_no'            => $request->input('nid_no'),
-                'image'             => $image_name,
-                'trade_license'     => $trade_license,
-                'nid_card'          => $nid_card,
-                'tin_certificate'   => $tin_certificate,
+                'bank_account_no' => $request->input('bank_account_no'),
+                'bank_route_no' => $request->input('bank_route_no'),
+                'bank_branch_name' => $request->input('bank_branch_name'),
+                'bank_name' => $request->input('bank_name'),
+                'bkash_number' => $request->input('bkash_number'),
+                'nagad_number' => $request->input('nagad_number'),
+                'rocket_name' => $request->input('rocket_name'),
+                'nid_no' => $request->input('nid_no'),
+                'image' => $image_name,
+                'trade_license' => $trade_license,
+                'nid_card' => $nid_card,
+                'tin_certificate' => $tin_certificate,
                 'payment_recived_by' => $request->input('payment_recived_by'),
-                'date'              => date('Y-m-d'),
-                'status'            => 1,
+                'date' => date('Y-m-d'),
+                'status' => 1,
             ];
 
 
@@ -813,7 +812,7 @@ class HomeController extends Controller
             $password = $request->input('password');
 
             if ($password) {
-                $data['password']       = bcrypt($password);
+                $data['password'] = bcrypt($password);
                 $data['store_password'] = $password;
             }
 
@@ -841,8 +840,8 @@ class HomeController extends Controller
 
     public function coverageArea()
     {
-        $data               = [];
-        $data['main_menu']  = 'coverageArea';
+        $data = [];
+        $data['main_menu'] = 'coverageArea';
         $data['child_menu'] = 'coverageArea';
         $data['page_title'] = 'Coverage Area';
         return view('merchant.coverageArea', $data);
@@ -859,8 +858,8 @@ class HomeController extends Controller
 
     public function serviceCharge()
     {
-        $data               = [];
-        $data['main_menu']  = 'serviceCharge';
+        $data = [];
+        $data['main_menu'] = 'serviceCharge';
         $data['child_menu'] = 'serviceCharge';
         $data['page_title'] = 'Service Charge ';
         return view('merchant.serviceCharge', $data);

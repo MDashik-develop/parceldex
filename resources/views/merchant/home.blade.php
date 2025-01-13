@@ -118,69 +118,10 @@
 
     <div class="content">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="newsbar">
-                        <marquee onMouseOver="stop()" onMouseOut="start()">
-                            @if ($news)
-                                <h3 class="news-item"><a href="#" class="view-news-modal" data-toggle="modal"
-                                        data-target="#viewNewsModal"
-                                        details="{{ $news->short_details }}">{{ $news->title }}</a></h3>
-                            @else
-                                <h3 class="news-item">Don't have any news</h3>
-                            @endif
-                        </marquee>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="row admin_client_info justify-content-center">
-                <div class="col-lg-2 col-md-4" style="padding: 0px 5px !important;">
-                    <button type="button" class="btn btn-primary btn-block" href="#"
-                        style=" border-radius: 4px; background-color: transparent; border: 1px solid #ccc; color: inherit; font-weight: bold !important; padding: 7px 0 !important;">
-                        Available Balance ( {{ number_format($total_pending_payment, 2) }})
-                    </button>
-                </div>
-
-                <div class="col-lg-2 col-md-4 col-sm-4 text-center"
-                    @if ($total_pending_payment <= 0) style="font-size: large; padding: 0px; border-radius: 1.5rem;" @endif
-                    style=" font-size: x-large; padding: 0px;!important; border-radius: 1.5rem;">
-                    <a href="https://play.google.com/store/apps/details?id=com.parceldexltd.merchant&pcampaignid=web_share"
-                        target="_blank"><img height="40" src="{{ asset('image/playstore.jpg') }}"></a>
-
-                    <a href="https://play.google.com/store/apps/details?id=com.parceldexltd.merchant&pcampaignid=web_share"
-                        target="_blank"><img height="40" src="{{ asset('image/appstore.jpg') }}"></a>
-                </div>
-
-
-                <div class="col-lg-5 col-md-8 col-sm-8">
-                    <div class="form-group">
-                        <input type="text" name="parcel_invoice" id="parcel_invoice" value="{{ $parcel_invoice }}"
-                            class="form-control" placeholder="Enter Parcel Invoice Or Order ID Or Customer Number"
-                            onkeypress="return add_parcel(event)"
-                            style="font-size: 20px; 
-                                padding: 3px 0px 3px 3px;   
-                                margin: 5px 1px 3px 0px;
-                                border: 2px solid rgb(62, 196, 118);">
-                    </div>
-                </div>
-
-                <div class="col-lg-2 col-md-4 col-sm-4" style="margin: auto 0; text-align: left;">
-                    <button type="button" class="btn btn-info btn-block" onclick="return parcelResult()">
-                        Search
-                    </button>
-                </div>
-            </div>
-
-            <div class="col-md-8 offset-md-2 p-3" id="show_order_tracking_result">
-
-            </div>
 
             <!-- Info boxes -->
 
-            <div class="row" style="margin-top: 20px;">
-
+            <div class="row" style="margin-top: 0px;">
 
                 <div class="col-sm-6 col-md-3">
                     <div class="info-box">

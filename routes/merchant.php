@@ -85,7 +85,8 @@ Route::group(['middleware' => 'merchant', 'prefix' => 'merchant/'], function () 
     Route::get('parcel/getParcelList', [App\Http\Controllers\Merchant\ParcelController::class, 'getParcelList'])->name('parcel.getParcelList');
     Route::get('parcel/printParcelList', [App\Http\Controllers\Merchant\ParcelController::class, 'printParcelList'])->name('parcel.printParcelList');
     Route::post('parcel/printParcelMultiple', [App\Http\Controllers\Merchant\ParcelController::class, 'printParcelMultiple'])->name('parcel.printParcelMultiple');
-
+    Route::get('parcel/search', [App\Http\Controllers\Merchant\ParcelController::class, 'search'])->name('parcel.search');
+    
     Route::post('parcel/excelAllParcelList', [App\Http\Controllers\Merchant\ParcelController::class, 'excelAllParcelList'])->name('parcel.excelAllParcelList');
 
 

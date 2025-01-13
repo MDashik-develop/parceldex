@@ -132,7 +132,7 @@
             <img alt="Barcode" id="barcode" style="width: 100%;height: 35px;">
             <div style="text-align: center">{{ $parcel->parcel_invoice }}</div>
         </div>
-        <div class="section">
+        <div class="section mb-0">
             <strong>Marchant: {{ $parcel->merchant->company_name }} ({{ $parcel->merchant->m_id }})</strong> <br>
             <strong>Mobile: {{ $parcel->merchant->contact_number }}</strong> <br>
             <strong>Order ID: {{ $parcel->merchant_order_id }}</strong>
@@ -154,10 +154,10 @@
         <div class="d-flex gap-2">
             <div id="qrcode"></div>
             <div class="info">
-                <table class="table table-bordered text-center" style="border-color: black;">
+                <table class="table table-bordered text-center mb-0" style="border-color: black;">
                     <tbody style="font-size: 34px;">
                         <tr>
-                            <th>{{ $parcel->total_collect_amount ? 'COD: ' . $parcel->total_collect_amount . ' BDT' : 'PAID' }}
+                            <th>{{ $parcel->total_collect_amount ? 'COD: ' . number_format($parcel->total_collect_amount) . ' BDT' : 'PAID' }}
                             </th>
                         </tr>
                         <tr>

@@ -17,6 +17,7 @@ use App\Models\Rider;
 use App\Models\RiderRun;
 use App\Models\RiderRunDetail;
 use App\Models\WeightPackage;
+use App\Notifications\MerchantParcelNotification;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
@@ -296,15 +297,15 @@ class PickupRiderRunParcelController extends Controller
             if (count($rows)) {
                 $currentDate = date("ymd");
                 $data = [
-                    'run_invoice'      => $this->returnUniqueRiderRunInvoice(),
-                    'rider_id'         => $rider_id,
-                    'branch_id'        => $branch_id,
-                    'branch_user_id'   => $branch_user_id,
+                    'run_invoice' => $this->returnUniqueRiderRunInvoice(),
+                    'rider_id' => $rider_id,
+                    'branch_id' => $branch_id,
+                    'branch_user_id' => $branch_user_id,
                     'create_date_time' => $date . ' ' . date('H:i:s'),
                     'total_run_parcel' => 0,
-                    'note'             => $note,
-                    'run_type'         => 1,
-                    'status'           => 2,
+                    'note' => $note,
+                    'run_type' => 1,
+                    'status' => 2,
                 ];
                 $riderRun = RiderRun::create($data);
                 $rider_run_id = $riderRun->id;
@@ -1024,6 +1025,7 @@ class PickupRiderRunParcelController extends Controller
             if ($riderRun) {
                 $cart = \Cart::session($branch_id)->getContent();
                 $cart = $cart->sortBy('id');
+                $merchant_numbers = [];
 
                 foreach ($cart as $item) {
                     $parcel_id = $item->id;
@@ -1055,6 +1057,7 @@ class PickupRiderRunParcelController extends Controller
                     /** parcel notification */
                     $parcel = Parcel::where('id', $parcel_id)->first();
                     $merchant_user = Merchant::where('id', $parcel->merchant_id)->first();
+                    $merchant_numbers[] = $merchant_user->contact_number;
 
                     // $merchant_user->notify(new MerchantParcelNotification($parcel));
 
@@ -1064,6 +1067,14 @@ class PickupRiderRunParcelController extends Controller
                 }
 
                 \DB::commit();
+
+                // send sms to merchant
+                $merchant_numbers = array_unique($merchant_numbers);
+                $rider = Rider::where('id', $request->input('rider_id'))->first();
+
+                foreach ($merchant_numbers ?? [] as $number) {
+                    $this->send_sms($number, "Pick Rider Assigned\nRider: $rider->name\nMobile: $rider->contact_number\nPlease make sure your parcel is ready.\n-Parceldex Courier");
+                }
 
                 // $this->adminDashboardCounterEvent();
                 $this->setMessage('Pickup Rider Run Insert Successfully', 'success');

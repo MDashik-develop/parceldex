@@ -408,13 +408,6 @@
                                 <p>All Parcel List </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.parcel.orderTracking') }}"
-                                class="nav-link {{ $child_menu == 'orderTracking' ? 'active' : '' }}">
-                                <i class="fas fa-map-marker"></i>
-                                <p>Order Tracking </p>
-                            </a>
-                        </li>
                     </ul>
                 </li>
 

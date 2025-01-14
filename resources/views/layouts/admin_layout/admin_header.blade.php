@@ -122,7 +122,7 @@
                                 data.forEach(d => {
                                     html += `
                               <div class="link-container">
-                                  <a href="/merchant/orderTracking/${d.parcel_invoice}" class="w-full d-block link">
+                                  <a href="/admin/parcel/orderTracking/${d.parcel_invoice}" class="w-full d-block link">
                                       ID: ${d.parcel_invoice} Name: ${d.customer_name}
                                   </a>
                               </div>`;

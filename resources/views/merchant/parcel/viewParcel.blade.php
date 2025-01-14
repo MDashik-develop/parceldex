@@ -9,7 +9,6 @@
         <div class="header">
             <div class="header-item strong-header">
                 Consignment ID - {{ $parcel->parcel_invoice }}
-                - {{ $parcel->created_at->format('d-m-Y') }}
             </div>
 
             @php
@@ -92,7 +91,6 @@
                 <section style="display: flex; align-content: center;">
                     <section>
                         <p>Merchant Oder ID</p>
-                        <p>Products Details</p>
                         <p>Exchange Parcel</p>
                         <p>Product Weight</p>
                         <p>Amount to be Collect</strong></p>
@@ -100,13 +98,12 @@
                     </section>
                     <section class="pl-100">
                         <p>: {{ $parcel->merchant_order_id ?? ' --- ' }}</p>
-                        <p>: {{ $parcel->product_details ?? ' --- ' }}</p>
                         <p>: {{ $parcel->exchange }}</p>
                         <p>: {{ $parcel->weight_package->name }}</p>
-                        <p>: <strong>{{ number_format($parcel->total_collect_amount, 2) }}
+                        <p>: {{ number_format($parcel->total_collect_amount, 2) }}
                                 Tk</p>
-                        <p>: <strong>{{ number_format($parcel->cancel_amount_collection > 0 ? $parcel->cancel_amount_collection : $parcel->customer_collect_amount, 2) }}
-                                Tk</strong></p>
+                        <p>: {{ number_format($parcel->cancel_amount_collection > 0 ? $parcel->cancel_amount_collection : $parcel->customer_collect_amount, 2) }}
+                                Tk<</p>
                     </section>
             </div>
         </div>
@@ -114,13 +111,14 @@
         <div class="section">
             <div class="customer-details">
                 <h3>Customer Details</h3>
-                <p><strong>{{ $parcel->customer_name }} - {{ $parcel->customer_contact_number }}</strong></p>
+                <p>{{ $parcel->customer_name }} - {{ $parcel->customer_contact_number }}</p>
                 @if ($parcel->customer_contact_number2)
                     <p>Alternative Number {{ $parcel->customer_contact_number2 }}</p>
                 @endif
 
                 <p>{{ $parcel->customer_address }}, {{ $parcel->district->name }}, {{ $parcel->area->name }}</p>
                 <p>Merchant Instraction: {{ $parcel->parcel_note }}</p>
+                <p>Product Details: {{ $parcel->product_details ?? ' --- ' }}</p>
             </div>
             {{-- <div class="service-charge-details">
                     <h3>Service Charge Details</h3>

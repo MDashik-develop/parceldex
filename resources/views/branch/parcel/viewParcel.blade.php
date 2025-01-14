@@ -9,7 +9,6 @@
         <div class="header">
             <div class="header-item strong-header">
                 Consignment ID - {{ $parcel->parcel_invoice }}
-                - {{ $parcel->created_at->format('d-m-Y') }}
             </div>
 
             @php
@@ -79,8 +78,8 @@
         <div class="section">
             <div class="merchant-details">
                 <h3>Merchant Details</h3>
-                <p><strong>{{ $parcel->merchant->company_name }} -
-                        {{ $parcel->merchant->contact_number }}</strong></p>
+                <p>{{ $parcel->merchant->company_name }} -
+                    {{ $parcel->merchant->contact_number }}</p>
                 <p>{{ $parcel?->merchant?->area?->name . ' - ' . $parcel?->merchant?->branch?->name }}</p>
 
                 <h3 class="mt-4">Delivery Branch Details</h3>
@@ -92,20 +91,18 @@
                 <section style="display: flex; align-content: center;">
                     <section>
                         <p>Merchant Oder ID</p>
-                        <p>Products Details</p>
                         <p>Exchange Parcel</p>
                         <p>Product Weight</p>
-                        <p>Amount to be Collect</strong></p>
+                        <p>Amount to be Collect</p>
                         <p>Collected Amount</p>
                     </section>
                     <section class="pl-100">
                         <p>: {{ $parcel->merchant_order_id ?? ' --- ' }}</p>
-                        <p>: {{ $parcel->product_details ?? ' --- ' }}</p>
                         <p>: {{ $parcel->exchange }}</p>
                         <p>: {{ $parcel->weight_package->name }}</p>
-                        <p>: <strong>{{ number_format($parcel->total_collect_amount, 2) }}
-                                Tk</p>
-                        <p>: <strong>{{ number_format($parcel->cancel_amount_collection > 0 ? $parcel->cancel_amount_collection : $parcel->customer_collect_amount, 2) }}
+                        <p>: <strong>{{ number_format($parcel->total_collect_amount, 0) }}
+                                Tk </strong></p>
+                        <p>: <strong>{{ number_format($parcel->cancel_amount_collection > 0 ? $parcel->cancel_amount_collection : $parcel->customer_collect_amount, 0) }}
                                 Tk</strong></p>
                     </section>
             </div>
@@ -114,13 +111,14 @@
         <div class="section">
             <div class="customer-details">
                 <h3>Customer Details</h3>
-                <p><strong>{{ $parcel->customer_name }} - {{ $parcel->customer_contact_number }}</strong></p>
+                <p>{{ $parcel->customer_name }} - {{ $parcel->customer_contact_number }}</p>
                 @if ($parcel->customer_contact_number2)
                     <p>Alternative Number {{ $parcel->customer_contact_number2 }}</p>
                 @endif
 
                 <p>{{ $parcel->customer_address }}, {{ $parcel->district->name }}, {{ $parcel->area->name }}</p>
-                <p>Merchant Instraction: {{ $parcel->parcel_note }}</p>
+                <p>Merchant Instruction: {{ $parcel->parcel_note }}</p>
+                <p>Products Details: {{ $parcel->product_details ?? ' --- ' }}</p>
             </div>
             {{-- <div class="service-charge-details">
                     <h3>Service Charge Details</h3>
@@ -152,7 +150,7 @@
 
                 @if ($parcel?->return_rider)
                     <h3>Return Rider Details</h3>
-                    <p>Return Rider - {{ $parcel?->return_rider?->name }}</p>
+                    <p>Return Rider - {{ $parcel?->return_rider?->name }} - {{ $parcel?->return_rider?->r_id }}</p>
                 @endif
 
             </div>
@@ -293,7 +291,7 @@
                                             $from_user = 'Admin : ' . $admin_name;
                                             break;
                                         case 2:
-                                            $status = 'Deposit Accepted';
+                                            $status = 'Deposit Accept';
                                             $to_user = 'Branch : ' . $branch_name . $branch_user;
                                             $from_user = 'Admin : ' . $admin_name;
                                             break;
@@ -362,37 +360,6 @@
                         class="fas fa-angle-down"></i></button>
             @endif
         </div>
-
-
-
-
-        {{-- @foreach ($logsGroupedByDate as $key => $items)
-            <div class="parcel-log">
-                <h3><span class="log-date">{{ \Carbon\Carbon::parse($key)->format('jS F, Y') }}</span></h3>
-
-                @foreach ($items as $item)
-                    @php
-                        $parcelLogStatus = returnParcelLogStatusNameForAdmin($item, $parcel->delivery_type, $parcel);
-
-                        if (!isset($parcelLogStatus['to_user'])) {
-                            continue;
-                        }
-
-                        $to_user = $parcelLogStatus['to_user'];
-                        $from_user = $parcelLogStatus['from_user'];
-                        $status = $parcelLogStatus['status_name'];
-                        $sub_title = $parcelLogStatus['sub_title'];
-                    @endphp
-                    <div class="log-item">
-                        <span class="log-time">{{ \Carbon\Carbon::parse($item->time)->format('h:i A') }}</span>
-                        {{ $status }}<br>
-                        <span class="log-details">Note: {{ empty($sub_title) ? 'N/A' : $sub_title }} <br> By -
-                            {{ $to_user }}</span>
-                    </div>
-                @endforeach
-            </div>
-        @endforeach --}}
-
 
 
         <div class="section6 mt-3">
@@ -570,9 +537,11 @@
         });
     });
 
-    
+
     $(document).ready(function() {
+
         let hiddenLog = true;
+
         // Event delegation for the toggle button
         $(document).on('click', '.toggle-btn', function() {
             const logContainer = $(this).prev('.log-items-container'); // Get the log container
@@ -591,7 +560,6 @@
             }
         });
     });
-
 
     $(document).ready(function() {
         $('#copyButton').click(function() {

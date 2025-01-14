@@ -74,6 +74,14 @@
         /* color: #c65716; */
         text-decoration: none;
     }
+
+    .click-nav-link:focus {
+        outline: none;
+    }
+
+    .click-nav-link:focus-visible {
+        outline: none;
+    }
 </style>
 
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -98,6 +106,7 @@
         </div>
     </div>
 
+    <div id="click-test"></div>
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
@@ -107,7 +116,7 @@
         </li>
 
         <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#">
+            <a class="nav-link click-nav-link" data-toggle="dropdown" href="#">
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20"
                     viewBox="0 0 50 50">
                     <path
@@ -124,7 +133,7 @@
         </li>
 
         <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#">
+            <a class="nav-link click-nav-link" data-toggle="dropdown" href="#">
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20"
                     viewBox="0 0 50 50">
                     <path
@@ -148,13 +157,6 @@
                 @endif
             </div>
         </li>
-
-
-        {{-- <merchant-parcel-notification
-            :userid="{{ auth()->guard('merchant')->user()->id }}"
-            :unreads="{{ auth()->guard('merchant')->user()->unreadNotifications }}"
-            :readunreads="{{ auth()->guard('merchant')->user()->notifications }}"
-            :notifylisturl="'{{ route('merchant.parcel.notification') }}'"></merchant-parcel-notification> --}}
 
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{{ route('merchant.logout') }}" class="nav-link">
@@ -234,6 +236,13 @@
                 $('#searchResult').toggle();
             }, 1000)
 
+        });
+
+        // click eliment
+        document.querySelectorAll('.click-nav-link').forEach((link) => {
+            link.dispatchEvent(new MouseEvent('click', {
+                bubbles: true
+            }));
         });
 
     });

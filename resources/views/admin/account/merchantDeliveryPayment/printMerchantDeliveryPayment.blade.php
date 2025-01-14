@@ -1,346 +1,294 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Merchant Delivery Payment| {{ session()->get('company_name') ?? config('app.name', 'Flier Express') }}
     </title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <link href='https://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet'>
-    <link href='https://fonts.googleapis.com/css?family=IBM Plex Mono' rel='stylesheet'>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        .font-14 {
+            font-size: 14px;
+        }
+
         body {
-            font-size: 10px !important;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        .col-md-1 {
-            width: 8%;
-            float: left;
+        .label {
+            width: 297mm;
+            height: 210mm;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .col-md-2 {
-            width: 16%;
-            float: left;
+        .label .hedding {
+            font-size: 17px;
+            color: #343a40;
+            border-bottom: 2px solid #6c757d;
+            padding-bottom: 5px;
         }
 
-        .col-md-3 {
-            width: 25%;
-            float: left;
+        .section {
+            margin-bottom: 10px;
+            font-size: 17px;
+            line-height: 1.6;
         }
 
-        .col-md-4 {
-            width: 33%;
-            float: left;
+        .barcode {
+            text-align: center;
+            margin: 15px 0;
         }
 
-        .col-md-5 {
-            width: 42%;
-            float: left;
+        .barcode img {
+            max-width: 100%;
         }
 
-        .col-md-6 {
-            width: 50%;
-            float: left;
-        }
-
-        .col-md-7 {
-            width: 58%;
-            float: left;
-        }
-
-        .col-md-8 {
-            width: 66%;
-            float: left;
-        }
-
-        .col-md-9 {
-            width: 75%;
-            float: left;
-        }
-
-        .col-md-10 {
-            width: 83%;
-            float: left;
-        }
-
-        .col-md-11 {
-            width: 92%;
-            float: left;
-        }
-
-        .col-md-12 {
+        .info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
             width: 100%;
-            float: left;
+            flex-wrap: wrap;
         }
 
-        .table>tbody>tr>td,
-        .table>tbody>tr>th,
-        .table>tfoot>tr>td,
-        .table>tfoot>tr>th,
-        .table>thead>tr>td,
-        .table>thead>tr>th {
-            padding: 2px;
-            line-height: 1;
+        .info div {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            /* background-color: #e9ecef; */
+            border-radius: 5px;
+            padding: 5px;
+            margin: 0 5px;
         }
 
-        .table {
-            margin-bottom: .0rem;
-        }
-
-        .table td,
-        .table th {
-            padding: .0rem;
+        .footer {
+            text-align: right;
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 10px;
         }
     </style>
+
+    <style>
+        @page {
+            size: 297mm 210mm;
+            /* margin: 30mm 45mm 30mm 45mm; */
+            margin: 0;
+            /* change the margins as you want them to be. */
+        }
+
+        @media print {
+
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f8f9fa;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                gap: 0px;
+                flex-wrap: wrap;
+            }
+
+            .label {
+                width: 297mm;
+                height: 210mm;
+                padding: 20px;
+                background: #fff;
+                border: 1px solid #dee2e6;
+                border-radius: 0px;
+                box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
+            }
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <!-- Include the QRCode library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
-<script type="text/javascript">
-    window.print();
-    window.onafterprint = function(event) {
-        window.close();
-    };
-</script>
 
 <body>
 
-    <div class="col-md-12" style="margin-top: 40px;">
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
-            <table width="100%" style="margin-top: 3rem">
-                <thead>
-                    <tr>
-                        <td class="text-center text-bold">
-                            <img src="{{ asset('uploads/application/') . '/' . session()->get('company_photo') }}"
-                                style="width: 80%; height: 30px">
-                        </td>
-                    </tr>
-                </thead>
+    <div class="label font-14">
+        <h5><strong>Parceldex Payment Summary</strong></h5>
+        <hr class="my-2" style="opacity: 1;border: 1px solid black;">
+
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <strong>Invoice To</strong><br>
+                <strong>{{ $parcelMerchantDeliveryPayment->merchant->company_name }}</strong><br>
+                <span>{{ $parcelMerchantDeliveryPayment->merchant->address }}</span><br>
+                <span>Email: {{ $parcelMerchantDeliveryPayment->merchant->email }}</span><br>
+                <span>Mobile: {{ $parcelMerchantDeliveryPayment->merchant->contact_number }}</span><br>
+            </div>
+
+            <table class="table w-auto table-striped table-bordered font-14">
+                <tr>
+                    <th>Invoice Date</th>
+                    <td>{{ \Carbon\Carbon::parse($parcelMerchantDeliveryPayment->date_time)->format('d/m/Y') }}</td>
+                </tr>
+                <tr>
+                    <th>Invoice #</th>
+                    <td>{{ $parcelMerchantDeliveryPayment->merchant_payment_invoice }}</td>
+                </tr>
+                <tr>
+                    <th>Total Paid Amount</th>
+                    <td>{{ number_format($parcelMerchantDeliveryPayment->total_payment_amount, 0) }}</td>
+                </tr>
+                <tr>
+                    <th>Adjustment</th>
+                    <td>534</td>
+                </tr>
             </table>
         </div>
-        <div class="col-md-4"></div>
-    </div>
 
-    <div class="col-md-12" style="margin-top: 20px;">
-        {{-- <div class="col-md-4">
-        <table width="100%" style="margin-top: 3rem">
+        <table class="table w-auto table-bordered" style="font-size: 12px">
             <thead>
-            <tr>
-                <td class="text-center text-bold">
-                    <img src="{{ asset('uploads/application/') . '/' . session()->get('company_photo') }}"
-                         style="width: 80%; height: 30px">
-                </td>
-            </tr>
+                <tr class="table-active text-center">
+                    <th>SL</th>
+                    <th>Con. ID</th>
+                    <th>Order ID</th>
+                    <th>Customer Name</th>
+                    <th>Phone Number</th>
+                    <th>Delivery Area</th>
+                    <th>Status</th>
+                    <th>Product Price</th>
+                    <th>Collected</th>
+                    <th>Delivery Charge</th>
+                    <th>COD Charge</th>
+                    <th>Weight Charge</th>
+                    <th>Return Charge</th>
+                    <th>Total Service Charge</th>
+                    <th>Paid Amount</th>
+                </tr>
             </thead>
-        </table>
-    </div> --}}
-        <div class="col-md-6">
-            <table class="table table-bordered" width="100%" style="margin-top: 3rem">
-                <caption class="text-center text-bold">
-                    <span style="font-size: 16px; font-weight: bold">
-                        Payment
-                    </span>
-                </caption>
-                <tr>
-                    <th style="width: 40%"> ID</th>
-                    <td style="width: 10%"> :</td>
-                    <td style="width: 50%" class="text-center">
-                        {{ $parcelMerchantDeliveryPayment->merchant_payment_invoice }} </td>
-                </tr>
-                <tr>
-                    <th style="width: 40%"> Date</th>
-                    <td style="width: 10%"> :</td>
-                    <td style="width: 50%" class="text-center">
-                        {{ \Carbon\Carbon::parse($parcelMerchantDeliveryPayment->date_time)->format('d/m/Y') }} </td>
-                </tr>
-                <tr>
-                    <th style="width: 40%">Total Parcel</th>
-                    <td style="width: 10%"> :</td>
-                    <td style="width: 50%" class="text-right">
-                        {{ $parcelMerchantDeliveryPayment->total_payment_parcel }} </td>
-                </tr>
-                <tr>
-                    <th style="width: 40%">Total Amount</th>
-                    <td style="width: 10%"> :</td>
-                    <td style="width: 50%" class="text-right">
-                        {{ number_format($parcelMerchantDeliveryPayment->total_payment_amount, 2) }} </td>
-                </tr>
-                <tr>
-                    <th style="width: 40%"> Reference</th>
-                    <td style="width: 10%"> :</td>
-                    <td style="width: 50%" class="text-center"> {{ $parcelMerchantDeliveryPayment->transfer_reference }}
-                    </td>
-                </tr>
-                <tr>
-                    <th style="width: 40%"> Note</th>
-                    <td style="width: 10%"> :</td>
-                    <td style="width: 50%"> {{ $parcelMerchantDeliveryPayment->note }} </td>
-                </tr>
-            </table>
-        </div>
-        <div class="col-md-6">
-            <table class="table table-bordered" width="100%" style="margin-top: 3rem">
-                <caption class="text-center text-bold">
-                    <span style="font-size: 16px; font-weight: bold">
-                        Merchant
-                    </span>
-                </caption>
-                <tr>
-                    <th style="width: 40%"> Name</th>
-                    <td style="width: 10%"> :</td>
-                    <td style="width: 50%"> {{ $parcelMerchantDeliveryPayment->merchant->company_name }} </td>
-                </tr>
-                <tr>
-                    <th style="width: 40%"> Contact</th>
-                    <td style="width: 10%"> :</td>
-                    <td style="width: 50%"> {{ $parcelMerchantDeliveryPayment->merchant->contact_number }} </td>
-                </tr>
-                <tr>
-                    <th style="width: 40%"> Address</th>
-                    <td style="width: 10%"> :</td>
-                    <td style="width: 50%"> {{ $parcelMerchantDeliveryPayment->merchant->address }} </td>
-                </tr>
-            </table>
-        </div>
-    </div>
+            <tbody>
+                @php
+                    $total_product_price = 0;
+                    $total_collected = 0;
+                    $total_delivery_charge = 0;
+                    $total_cod_charge = 0;
+                    $total_wight_charge = 0;
+                    $total_return_charge = 0;
+                    $total_service_charge = 0;
+                    $total_paid_amount = 0;
+                @endphp
 
-    <div class="col-md-12" style="margin-top: 20px;">
-        @if ($parcelMerchantDeliveryPayment->parcel_merchant_delivery_payment_details->count() > 0)
-            <table class="table table-bordered" width="100%" style="margin-top: 3rem">
-                <thead>
-                    <tr>
-                        <th width="5%" class="text-center"> SL</th>
-                        <th width="10%" class="text-center">Invoice</th>
-                        <th width="10%" class="text-center">Order ID</th>
-                        <th width="10%" class="text-center">Status</th>
-                        <th width="10%" class="text-center">Customer Name</th>
-                        <th width="10%" class="text-center">Customer Number</th>
-                        <th width="8%" class="text-center">Amount to be Collect</th>
-                        <th width="10%" class="text-center">Collected</th>
-                        <th width="10%" class="text-center"> Weight Charge</th>
-                        <th width="10%" class="text-center"> COD Charge</th>
-                        <th width="10%" class="text-center">Delivery</th>
-                        <th width="10%" class="text-center">Return</th>
-                        <th width="10%" class="text-center">Total Charge</th>
-                        <th width="10%" class="text-center">Paid Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
+                @foreach ($parcelMerchantDeliveryPayment->parcel_merchant_delivery_payment_details as $key => $item)
                     @php
-                        $totalCollectionAmount = 0;
-                        $total_weight_package_charge = 0;
-                        $total_cod_charge = 0;
-                        $total_delivery_charge = 0;
-                        $total_return_charge = 0;
-                        $total_paid_amount = 0;
-                        $total_charge = 0;
-                        $total_collect_amount = 0;
+                        $total_charge =
+                            $item->parcel?->delivery_charge +
+                            $item->parcel?->cod_charge +
+                            $item->parcel?->weight_package_charge +
+                            $item->parcel?->return_charge;
+
+                        $collected_amount = $item->parcel?->customer_collect_amount
+                            ? $item->parcel->customer_collect_amount
+                            : $item->parcel->cancel_amount_collection;
+
+                        $total_product_price += $item->parcel->product_price;
+                        $total_collected += $collected_amount;
+                        $total_delivery_charge += $item->parcel->delivery_charge;
+                        $total_cod_charge += $item->parcel->cod_charge;
+                        $total_wight_charge += $item->parcel->weight_package_charge;
+                        $total_return_charge += $item->parcel->return_charge;
+                        $total_service_charge += $total_charge;
+                        $total_paid_amount += $collected_amount - $total_charge;
 
                     @endphp
 
-
-                    @foreach ($parcelMerchantDeliveryPayment->parcel_merchant_delivery_payment_details as $parcel_merchant_delivery_payment_detail)
-                        @php
-                            $parcelStatus = returnParcelStatusNameForMerchant(
-                                $parcel_merchant_delivery_payment_detail?->parcel?->status,
-                                $parcel_merchant_delivery_payment_detail?->parcel?->delivery_type,
-                                $parcel_merchant_delivery_payment_detail?->parcel?->payment_type,
-                                $parcel_merchant_delivery_payment_detail?->parcel?->parcel_invoice,
-                            );
-
-                        @endphp
-                        <tr>
-                            <td class="text-center"> {{ $loop->iteration }} </td>
-                            <td class="text-center">
-                                {{ $parcel_merchant_delivery_payment_detail?->parcel?->parcel_invoice }} </td>
-                            <td class="text-center">
-                                {{ $parcel_merchant_delivery_payment_detail?->parcel?->merchant_order_id }} </td>
-                            <td class="text-center"> {{ $parcelStatus['status_name'] }} </td>
-                            <td class="text-center">
-                                {{ $parcel_merchant_delivery_payment_detail?->parcel?->customer_name }} </td>
-                            <td class="text-center">
-                                {{ $parcel_merchant_delivery_payment_detail?->parcel?->customer_contact_number }} </td>
-
-                            <td class="text-center">
-                                {{ number_format($parcel_merchant_delivery_payment_detail?->parcel?->total_collect_amount, 2) }}
-                            </td>
-                            <td class="text-center">
-                                {{ number_format($parcel_merchant_delivery_payment_detail?->parcel?->cancel_amount_collection + $parcel_merchant_delivery_payment_detail?->parcel?->customer_collect_amount, 2) }}
-                            </td>
-
-                            {{-- <td class="text-center"> {{ number_format($parcel_merchant_delivery_payment_detail?->parcel?->cancel_amount_collection != 0 ? $parcel_merchant_delivery_payment_detail?->parcel?->cancel_amount_collection : $parcel_merchant_delivery_payment_detail?->collected_amount, 2) }} </td> --}}
-                            <td class="text-center">
-                                {{ number_format($parcel_merchant_delivery_payment_detail->weight_package_charge, 2) }}
-                            </td>
-                            <td class="text-center">
-                                {{ number_format($parcel_merchant_delivery_payment_detail->cod_charge, 2) }} </td>
-                            <td class="text-center">
-                                {{ number_format($parcel_merchant_delivery_payment_detail->delivery_charge, 2) }} </td>
-                            <td class="text-center">
-                                {{ number_format($parcel_merchant_delivery_payment_detail->return_charge, 2) }} </td>
-                            <td class="text-center">
-                                {{ number_format(
-                                    $parcel_merchant_delivery_payment_detail?->parcel?->total_charge +
-                                        $parcel_merchant_delivery_payment_detail->return_charge,
-                                    2,
-                                ) }}
-                            </td>
-                            <td class="text-center">
-                                {{ number_format($parcel_merchant_delivery_payment_detail->paid_amount, 2) }} </td>
-                        </tr>
-                        @php
-
-                            $totalCollectionAmount += $parcel_merchant_delivery_payment_detail?->parcel?->cancel_amount_collection + $parcel_merchant_delivery_payment_detail?->parcel?->customer_collect_amount;
-
-                            $total_weight_package_charge +=
-                                $parcel_merchant_delivery_payment_detail->weight_package_charge;
-                            $total_cod_charge += $parcel_merchant_delivery_payment_detail->cod_charge;
-                            $total_delivery_charge += $parcel_merchant_delivery_payment_detail->delivery_charge;
-                            $total_return_charge += $parcel_merchant_delivery_payment_detail->return_charge;
-                            $total_paid_amount += $parcel_merchant_delivery_payment_detail->paid_amount;
-                            $total_charge +=
-                                $parcel_merchant_delivery_payment_detail?->parcel?->total_charge +
-                                $parcel_merchant_delivery_payment_detail->return_charge;
-                            $total_collect_amount +=
-                                $parcel_merchant_delivery_payment_detail?->parcel?->total_collect_amount;
-                        @endphp
-                    @endforeach
                     <tr>
-                        <th colspan="6" style="text-align: right">Totals:</th>
-
-                        <th class="text-center">{{ number_format($total_collect_amount) }}</th>
-                        <th class="text-center">{{ number_format($totalCollectionAmount) }}</th>
-                        <th class="text-center">{{ number_format($total_weight_package_charge) }}</th>
-                        <th class="text-center">{{ number_format($total_cod_charge) }}</th>
-                        <th class="text-center">{{ number_format($total_delivery_charge) }}</th>
-                        <th class="text-center">{{ number_format($total_return_charge) }}</th>
-                        <th class="text-center">{{ number_format($total_charge) }}</th>
-                        <th class="text-center">{{ number_format($total_paid_amount) }}</th>
+                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $item->parcel?->parcel_invoice }}</td>
+                        <td>{{ $item->parcel?->merchant_order_id }}</td>
+                        <td>{{ $item->parcel?->customer_name }}</td>
+                        <td>{{ $item->parcel?->customer_contact_number }}</td>
+                        <td>{{ $item->parcel?->district?->service_area?->name }}</td>
+                        <td>{{ returnParcelStatusNameForBranch(
+                            $item->parcel?->status,
+                            $item->parcel?->delivery_type,
+                            $item->parcel?->payment_type,
+                            $item->parcel,
+                        )['status_name'] }}
+                        </td>
+                        <td>{{ $item->parcel?->total_collect_amount }}</td>
+                        <td>{{ $collected_amount }}</td>
+                        <td>{{ $item->parcel?->delivery_charge }}</td>
+                        <td>{{ $item->parcel?->cod_charge }}</td>
+                        <td>{{ $item->parcel?->weight_package_charge }}</td>
+                        <td>{{ $item->parcel?->return_charge }}</td>
+                        <td>{{ $total_charge }}</td>
+                        <td>{{ $collected_amount - $total_charge }}</td>
                     </tr>
-                </tbody>
-            </table>
+                @endforeach
 
-            <table class="table" width="100%">
-                <tbody>
-                    <tr>
-                        <th width="33%" class="text-center">
-                            <br><br><br>
-                            <span style="border-top:2px solid black; font-weight:bold ">
-                                &nbsp;&nbsp;&nbsp; Merchant Signature &nbsp;&nbsp;&nbsp;
-                            </span>
-                        </th>
-                        <th width="33%" class="text-center"></th>
-                        <th width="33%" class="text-center">
-                            <br><br><br>
-                            <span style="border-top:2px solid black; font-weight:bold ">
-                                &nbsp;&nbsp;&nbsp; Authority &nbsp;&nbsp;&nbsp;
-                            </span>
-                        </th>
-                    </tr>
-                </tbody>
-            </table>
-        @endif
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <th colspan="7">Total</th>
+                    <th>{{ $total_product_price }}</th>
+                    <th>{{ $total_collected }}</th>
+                    <th>{{ $total_delivery_charge }}</th>
+                    <th>{{ $total_cod_charge }}</th>
+                    <th>{{ $total_wight_charge }}</th>
+                    <th>{{ $total_return_charge }}</th>
+                    <th>{{ $total_service_charge }}</th>
+                    <th>{{ $total_paid_amount }}</th>
+                </tr>
+            </tfoot>
+
+        </table>
+
+        <div class="mt-4">
+            <p class="text-center">Any dispute must be notified in written within 5 days from the date of this
+                invoice.This is an electronic statement, does not require any signature</p>
+        </div>
+
+        <footer></footer>
+
     </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        JsBarcode("#barcode", "Hi!", {
+            // format: "pharmacode",
+            // lineColor: "#0aa",
+            // width: 4,
+            height: 30,
+            fontSize: 15
+            // displayValue: false
+        });
+    </script>
+
+    <!-- Your script that uses QRCode -->
+    <script>
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: "https://example.com",
+            width: 80,
+            height: 80
+        });
+    </script>
 </body>
 
 </html>

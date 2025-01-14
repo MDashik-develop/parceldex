@@ -17,7 +17,7 @@ use App\Models\ParcelLog;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class HomeController extends Controller
+class HomeController_old extends Controller
 {
 
     public function home()

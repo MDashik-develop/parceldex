@@ -183,16 +183,6 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('merchant.orderTracking') }}"
-                        class="nav-link {{ $child_menu == 'orderTracking' ? 'active' : '' }}">
-                        <i class="fas fa-search-location fa-lg text-success"></i>
-                        <p>
-                            Order Tracking
-                        </p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
                     <a href="{{ route('merchant.coverageArea') }}"
                         class="nav-link {{ $child_menu == 'coverageArea' ? 'active' : '' }}">
                         <i class="fas fa-map-marked-alt fa-lg text-success"></i>

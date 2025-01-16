@@ -436,6 +436,22 @@
                     <a href="#" class="nav-link {{ $main_menu == 'report' ? 'active' : '' }}">
                         <i class="fas fa-book fa-lg text-success"></i>
                         <p>
+                            New Reports
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+
+
+                    </ul>
+                </li>
+
+                <li class="nav-item has-treeview {{ $main_menu == 'report' ? 'menu-open' : '' }} ">
+                    <a href="#" class="nav-link {{ $main_menu == 'report' ? 'active' : '' }}">
+                        <i class="fas fa-book fa-lg text-success"></i>
+                        <p>
                             Report
                             <i class="right fas fa-angle-left"></i>
                         </p>

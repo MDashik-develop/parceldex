@@ -434,19 +434,19 @@ class ParcelController extends Controller
             })
 
             ->rawColumns([
-                    'parcel_invoice',
-                    'parcel_status',
-                    'payment_status',
-                    'return_status',
-                    'action',
-                    'image',
-                    'parcel_info',
-                    'company_info',
-                    'customer_info',
-                    'amount',
-                    'remarks',
-                    'print',
-                ])
+                'parcel_invoice',
+                'parcel_status',
+                'payment_status',
+                'return_status',
+                'action',
+                'image',
+                'parcel_info',
+                'company_info',
+                'customer_info',
+                'amount',
+                'remarks',
+                'print',
+            ])
             ->make(true);
     }
 
@@ -804,7 +804,6 @@ class ParcelController extends Controller
 
     public function orderTracking($parcel_invoice = '')
     {
-
         $data = [];
         $data['main_menu'] = 'parcel';
         $data['child_menu'] = 'orderTracking';
@@ -855,5 +854,22 @@ class ParcelController extends Controller
                 return view('admin.parcel.orderTrackingResult', compact('parcel', 'parcelLogs'));
             }
         }
+    }
+
+    public function search(Request $request)
+    {
+
+        $keyword = $request->get('search');
+        $parcels = Parcel::where('parcel_invoice', 'like', '%' . $keyword . '%')
+            ->orWhere('customer_name', 'like', '%' . $keyword . '%')
+            ->orWhere('customer_contact_number', 'like', '%' . $keyword . '%')
+            ->orWhere('customer_contact_number2', 'like', '%' . $keyword . '%')
+            ->orWhere('merchant_order_id', 'like', '%' . $keyword . '%')
+            ->orWhere('merchant_order_id', 'like', '%' . $keyword . '%')
+            ->limit(10)
+            ->get();
+
+        return $parcels;
+
     }
 }

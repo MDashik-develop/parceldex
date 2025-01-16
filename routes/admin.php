@@ -271,6 +271,7 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin/'], function () {
     Route::get('parcel/excelAllParcelList', [App\Http\Controllers\Admin\ParcelController::class, 'excelAllParcelList'])->name('parcel.excelAllParcelList');
     Route::get('parcel/orderTracking', [App\Http\Controllers\Admin\ParcelController::class, 'orderTracking'])->name('parcel.orderTracking');
 
+    Route::get('parcel/search', [App\Http\Controllers\Admin\ParcelController::class, 'search'])->name('parcel.search');
     Route::get('parcel/orderTracking/{parcel_invoice?}', [App\Http\Controllers\Admin\ParcelController::class, 'orderTracking'])->name('parcel.orderTracking');
     Route::post('parcel/returnOrderTrackingResult', [App\Http\Controllers\Admin\ParcelController::class, 'returnOrderTrackingResult'])->name('parcel.returnOrderTrackingResult');
 

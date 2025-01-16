@@ -68,25 +68,9 @@
 
     <script src="{{ asset('js/admin_js/main.js') }}"></script>
 
-    <script>
-        $(document).ready(function() {
-            //        $('.dropdown-expanded').dropdown();
-        });
-
-        $(document).ready(function() {
-            // Show hide popover
-            $(document).on('click', '.dropdown', function() {
-                $(this).find(".dropdown-menu").slideToggle("fast");
-            });
-        });
-        $(document).on("click", function(event) {
-            var $trigger = $(".dropdown");
-            if ($trigger !== event.target && !$trigger.has(event.target).length) {
-                $(".dropdown-menu").slideUp("fast");
-            }
-        });
-    </script>
     @stack('script_js')
+    @stack('navbar-script')
+    
 </body>
 
 </html>

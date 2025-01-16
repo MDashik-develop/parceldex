@@ -31,8 +31,9 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
 
+
         <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#">
+            <a class="nav-link click-nav-link" data-toggle="dropdown" data-bs-toggle="dropdown" href="#">
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20"
                     viewBox="0 0 50 50">
                     <path
@@ -49,7 +50,7 @@
         </li>
 
         <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#">
+            <a class="nav-link click-nav-link" data-toggle="dropdown" data-bs-toggle="dropdown" href="#">
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20"
                     viewBox="0 0 50 50">
                     <path
@@ -83,79 +84,82 @@
         </li>
     </ul>
 
-
 </nav>
 
 
-<script>
-    $(document).ready(function() {
+@push('navbar-script')
+    <script>
+        $(document).ready(function() {
 
-        let searchTimeout;
+            let searchTimeout;
 
-        $('#searchParcel').on('input', function() {
-            const search = $(this).val().trim();
+            $('#searchParcel').on('input', function() {
+                const search = $(this).val().trim();
 
-            // check if the search input is empty
-            if (search === '' || search === null || search.length <= 2) {
-                $('#searchResult').html('Type something to search');
-                return;
-            }
+                // check if the search input is empty
+                if (search === '' || search === null || search.length <= 2) {
+                    $('#searchResult').html('Type something to search');
+                    return;
+                }
 
-            $('#searchResult').html('Searching...');
+                $('#searchResult').html('Searching...');
 
-            // Clear the previous timeout (if any)
-            clearTimeout(searchTimeout);
+                // Clear the previous timeout (if any)
+                clearTimeout(searchTimeout);
 
-            // Set a new timeout to delay the AJAX request
-            searchTimeout = setTimeout(function() {
-                if (search.length > 0) {
-                    $.ajax({
-                        type: 'GET',
-                        url: '{{ route('merchant.parcel.search') }}',
-                        data: {
-                            search
-                        },
-                        success: function(data) {
-                            let html = '';
+                // Set a new timeout to delay the AJAX request
+                searchTimeout = setTimeout(function() {
+                    if (search.length > 0) {
+                        $.ajax({
+                            type: 'GET',
+                            url: '{{ route('admin.parcel.search') }}',
+                            data: {
+                                search
+                            },
+                            success: function(data) {
+                                let html = '';
 
-                            if (data.length) {
-                                data.forEach(d => {
-                                    html += `
+                                if (data.length) {
+                                    data.forEach(d => {
+                                        html += `
                               <div class="link-container">
                                   <a href="/admin/parcel/orderTracking/${d.parcel_invoice}" class="w-full d-block link">
                                       ID: ${d.parcel_invoice} Name: ${d.customer_name}
                                   </a>
                               </div>`;
-                                });
-                            } else {
-                                html += `
+                                    });
+                                } else {
+                                    html += `
                           <div class="link-container">
                               Found nothing
                           </div>`;
+                                }
+
+                                // Assuming you have a container to display the results
+                                $('#searchResult').html(html);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error during search:', error);
                             }
+                        });
+                    } else {
+                        // Clear results if search input is empty
+                        $('#searchResult').html('Type something to search');
+                    }
+                }, 300); // Delay of 300ms (adjust as needed)
+            });
 
-                            // Assuming you have a container to display the results
-                            $('#searchResult').html(html);
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error during search:', error);
-                        }
-                    });
-                } else {
-                    // Clear results if search input is empty
-                    $('#searchResult').html('Type something to search');
-                }
-            }, 300); // Delay of 300ms (adjust as needed)
-        });
+            // Search parcel on focus and blur
+            $('#searchParcel').on('focus blur', function(event) {
 
-        // Search parcel on focus and blur
-        $('#searchParcel').on('focus blur', function(event) {
+                setTimeout(function() {
+                    $('#searchResult').toggle();
+                }, 1000)
 
-            setTimeout(function() {
-                $('#searchResult').toggle();
-            }, 1000)
+            });
 
         });
+    </script>
 
-    });
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@endpush

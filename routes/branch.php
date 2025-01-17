@@ -299,7 +299,8 @@ Route::group(['middleware' => 'branch', 'prefix' => 'branch/'], function () {
   //================ Received Return Branch Transfer ================================
   //================ Return  Parcel  Route  ================================
 
-  Route::get('orderTracking', [App\Http\Controllers\Branch\HomeController::class, 'orderTracking'])->name('orderTracking');
+  Route::get('search', [App\Http\Controllers\Branch\HomeController::class, 'search'])->name('search');
+  Route::get('orderTracking/{parcel_invoice?}', [App\Http\Controllers\Branch\HomeController::class, 'orderTracking'])->name('orderTracking');
   Route::post('returnOrderTrackingResult', [App\Http\Controllers\Branch\HomeController::class, 'returnOrderTrackingResult'])->name('returnOrderTrackingResult');
   Route::get('coverageArea', [App\Http\Controllers\Branch\HomeController::class, 'coverageArea'])->name('coverageArea');
   Route::get('getCoverageAreas', [App\Http\Controllers\Branch\HomeController::class, 'getCoverageAreas'])->name('getCoverageAreas');

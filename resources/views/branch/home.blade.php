@@ -35,19 +35,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div id="newsbar">
-                <marquee onMouseOver="stop()" onMouseOut="start()">
-                    @if($news)
-                        <h3 class="news-item"><a href="#" class="view-news-modal" data-toggle="modal" data-target="#viewNewsModal" details="{{ $news->short_details }}">{{ $news->title }}</a></h3>
-                    @else
-                        <h3 class="news-item">Don't have any news</h3>
-                    @endif
-                </marquee>
-            </div>
-        </div>
-    </div>
+ 
     <branch-dashboard-counter :userid="{{ auth()->guard('branch')->user()->branch_id }}" :counters="{{ $counter_data }}"></branch-dashboard-counter>
 
     <div class="modal fade" id="viewNewsModal">

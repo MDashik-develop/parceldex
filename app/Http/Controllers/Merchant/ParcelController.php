@@ -1787,6 +1787,9 @@ class ParcelController extends Controller
     public function search(Request $request)
     {
 
+        $merchant_id = auth()->guard('merchant')->user()->id;
+        $branch_id = auth()->guard('merchant')->user()->branch->id;
+
         $keyword = $request->get('search');
         $parcels = Parcel::where('parcel_invoice', 'like', '%' . $keyword . '%')
             ->orWhere('customer_name', 'like', '%' . $keyword . '%')
@@ -1794,6 +1797,7 @@ class ParcelController extends Controller
             ->orWhere('customer_contact_number2', 'like', '%' . $keyword . '%')
             ->orWhere('merchant_order_id', 'like', '%' . $keyword . '%')
             ->orWhere('merchant_order_id', 'like', '%' . $keyword . '%')
+            ->where('merchant_id', $merchant_id)
             ->limit(10)
             ->get();
 

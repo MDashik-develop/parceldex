@@ -25,6 +25,16 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin/'], function () {
 
     Route::match(['get', 'post'], '/report', [App\Http\Controllers\Admin\ReportController::class, 'index'])->name('report');
 
+    Route::name('admin.new-reports.')
+        ->prefix('new-reports')
+        ->group(function () {
+
+            Route::view('delivery-report', 'admin.new-reports.delivery-report')->name('delivery-report');
+            Route::view('monthly-revenue', 'admin.new-reports.monthly-revenue')->name('monthly-revenue');
+            Route::view('pickup-parcel-report', 'admin.new-reports.pickup-parcel-report')->name('pickup-parcel-report');
+
+        });
+
 
     Route::get('admin/getAdmins', [App\Http\Controllers\Admin\AdminController::class, 'getAdmins'])->name('admin.getAdmins');
     Route::post('admin/updateStatus', [App\Http\Controllers\Admin\AdminController::class, 'updateStatus'])->name('admin.updateStatus');

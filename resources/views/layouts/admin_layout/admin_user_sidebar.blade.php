@@ -443,7 +443,26 @@
 
                     <ul class="nav nav-treeview">
 
+                        <li class="nav-item">
+                            <a href="/admin/new-reports/delivery-report" class="nav-link">
+                                <i class="fas fa-tags"></i>
+                                <p>Delivery Report</p>
+                            </a>
+                        </li>
 
+                        <li class="nav-item">
+                            <a href="/admin/new-reports/monthly-revenue" class="nav-link">
+                                <i class="fas fa-tags"></i>
+                                <p>Monthly Revenue</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="/admin/new-reports/pickup-parcel-report" class="nav-link">
+                                <i class="fas fa-tags"></i>
+                                <p>Pickup Parcel Report</p>
+                            </a>
+                        </li>
 
                     </ul>
                 </li>

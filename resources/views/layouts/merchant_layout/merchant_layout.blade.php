@@ -32,7 +32,7 @@
 </head>
 {{-- <body class="hold-transition sidebar-mini {{ isset($collapse) ? $collapse : ''}}"> --}}
 
-<body class="hold-transition sidebar-mini ">
+<body class="hold-transition sidebar-mini">
     <div class="wrapper" id="app">
         @include('layouts.merchant_layout.merchant_header')
 

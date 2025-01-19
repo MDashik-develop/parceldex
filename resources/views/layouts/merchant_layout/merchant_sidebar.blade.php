@@ -47,16 +47,15 @@
                     </a>
                 </li>
 
-
-
-
-
-                <!--<li class="nav-item">-->
-                <!--    <a href="{{ route('merchant.shop.index') }}" class="nav-link {{ $child_menu == 'shop-list' ? 'active' : '' }}">-->
-                <!--        <i class="fas fa-store fa-lg text-success"></i>-->
-                <!--        <p>Shop List </p>-->
-                <!--    </a>-->
-                <!--</li>-->
+                @if (!auth()->guard('merchant')->user()->parent_merchant_id)
+                    <li class="nav-item">
+                        <a href="{{ route('merchant.shop.index') }}"
+                            class="nav-link {{ $child_menu == 'shop-list' ? 'active' : '' }}">
+                            <i class="fas fa-store fa-lg text-success"></i>
+                            <p>Child Merchants</p>
+                        </a>
+                    </li>
+                @endif
 
                 @if (auth()->guard('merchant')->user()->branch_id)
                     <li class="nav-item">
@@ -67,9 +66,6 @@
                         </a>
                     </li>
 
-
-
-
                     <li class="nav-item">
                         <a href="{{ route('merchant.parcel.merchantBulkParcelImport') }}"
                             class="nav-link {{ $child_menu == 'bulkaddParcel' ? 'active' : '' }}">
@@ -77,9 +73,6 @@
                             <p>Bulk Entry </p>
                         </a>
                     </li>
-
-
-
 
                     <li class="nav-item">
                         <a href="{{ route('merchant.parcel.list') }}"

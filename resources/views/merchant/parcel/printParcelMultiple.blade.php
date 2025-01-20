@@ -22,7 +22,7 @@
         }
 
         .label {
-            width: 400px;
+            width: 600px;
             height: 600px;
             padding: 20px;
             background: #fff;
@@ -81,7 +81,7 @@
 
     <style>
         @page {
-            size: 400px 600px;
+            size: 600px 600px;
             /* margin: 30mm 45mm 30mm 45mm; */
             margin: 0;
             /* change the margins as you want them to be. */
@@ -103,7 +103,7 @@
             }
 
             .label {
-                width: 400px;
+                width: 600px;
                 height: 600px;
                 padding: 20px;
                 background: #fff;
@@ -129,12 +129,13 @@
                 <strong style="font-size: 11px;font-weight: bolder;font-style: italic;">COURIER</strong>
             </div>
             <hr class="my-2 mb-1" style="opacity: 1;border: 1px solid black;">
-            <div class="d-flex justify-content-center">
-                <img alt="Barcode" id="barcode-{{ $parcel->id }}">
+            <div class="d-flex justify-content-center flex-wrap">
+                <img alt="Barcode" id="barcode-{{ $parcel->id }}" style="width: 100%;height: 35px;">
+                <div style="text-align: center"> {{ $parcel->parcel_invoice }}</div>
             </div>
-            <div class="section">
+            <div class="section mb-0">
                 <strong>Marchant: {{ $parcel->merchant->company_name }} ({{ $parcel->merchant->m_id }})</strong> <br>
-                <strong>Mobile: {{ $parcel->merchant->business_address }}</strong> <br>
+                <strong>Mobile: {{ $parcel->merchant->contact_number }}</strong> <br>
                 <strong>Order ID: {{ $parcel->merchant_order_id }}</strong>
             </div>
             <hr class="my-0 mb-2" style="opacity: 1;border: 1px solid black;">
@@ -143,7 +144,8 @@
                 <div>
                     {{ $parcel->customer_address }}
                 </div>
-                <strong>Mobile: {{ $parcel->customer_contact_number }}{{ $parcel->customer_contact_number2 ? ', ' . $parcel->customer_contact_number2 : '' }}</strong>
+                <strong>Mobile:
+                    {{ $parcel->customer_contact_number }}{{ $parcel->customer_contact_number2 ? ', ' . $parcel->customer_contact_number2 : '' }}</strong>
             </div>
             <table class="table table-bordered text-center" style="border-color: black;">
                 <tr>
@@ -153,22 +155,23 @@
             <div class="d-flex gap-2">
                 <div id="qrcode-{{ $parcel->id }}"></div>
                 <div class="info">
-                    <table class="table table-bordered text-center" style="border-color: black;">
-                        <tr>
-                            <th>{{ $parcel->total_collect_amount ? 'COD: ' . $parcel->total_collect_amount . ' TK' : 'PAID' }}
-                            </th>
-                            <th>{{ $parcel->weight_package->name }}</th>
-                        </tr>
-                        <tr>
-                            <th colspan="2">{{ $parcel?->district?->service_area?->name }}
-                            </th>
-                        </tr>
+                    <table class="table table-bordered text-center mb-0" style="border-color: black;">
+                        <tbody style="font-size: 34px;">
+                            <tr>
+                                <th>{{ $parcel->total_collect_amount ? 'COD: ' . number_format($parcel->total_collect_amount) . ' BDT' : 'PAID' }}
+                                </th>
+                            </tr>
+                            <tr>
+                                <th colspan="2">{{ $parcel?->district?->service_area?->name }}
+                                </th>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
             <div class="d-flex justify-content-between">
                 <div>www.parceldex.com</div>
-                <div><strong>Call:</strong> 01866370585</div>
+                <div><strong>Call:</strong> 09642735735</div>
             </div>
             <hr class="my-0" style="opacity: 1;border: 1px solid black;">
             <div class="d-flex justify-content-between wrap">
@@ -179,18 +182,17 @@
 
         <script>
             JsBarcode("#barcode-{{ $parcel->id }}", "{{ $parcel->parcel_invoice }}", {
-                // format: "pharmacode",
-                // lineColor: "#0aa",
-                // width: 5,
+                width: 10,
                 height: 30,
-                fontSize: 15
-                // displayValue: false
+                fontSize: 15,
+                displayValue: false,
+                margin: 0,
             });
 
             new QRCode(document.getElementById("qrcode-{{ $parcel->id }}"), {
                 text: "{{ $parcel->parcel_invoice }}",
-                width: 80,
-                height: 80
+                width: 140,
+                height: 140
             });
         </script>
     @endforeach
@@ -220,6 +222,8 @@
         img.onload = function() {
             window.print();
         };
+
+        // window.print();
     </script>
 
 </body>

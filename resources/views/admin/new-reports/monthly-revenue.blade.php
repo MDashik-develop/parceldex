@@ -251,7 +251,7 @@
                             @if ($ad > 0)
                                 {{ number_format($ar / $ad, 2) }}
                             @else
-                                {{ number_format(0, 2) }} // or any other default value
+                                0
                             @endif
                         </td>
                         <td class="text-end">

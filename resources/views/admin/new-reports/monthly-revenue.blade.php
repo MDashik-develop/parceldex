@@ -95,8 +95,15 @@
 </head>
 
 @php
-    $start_date = \Illuminate\Support\Carbon::now()->startOfMonth();
-    $end_date = \Illuminate\Support\Carbon::now()->endOfDay();
+
+
+    $start_date = request()->start_date
+        ? \Illuminate\Support\Carbon::parse(request()->start_date)->startOfDay()
+        : \Illuminate\Support\Carbon::now()->startOfMonth();
+
+    $end_date = request()->end_date
+        ? \Illuminate\Support\Carbon::parse(request()->end_date)->endOfDay()
+        : \Illuminate\Support\Carbon::now()->endOfDay();
 
     $start_date_filter = $start_date;
     $end_date_filter = $end_date;
@@ -138,7 +145,7 @@
                 <label for="" style="white-space: nowrap;">End Date</label>
                 <input type="date" name="end_date" id="" class="form-control"
                     value="{{ $end_date->format('Y-m-d') }}">
-                <button type="button" class="btn btn-primary">Filter</button>
+                <button type="submit" class="btn btn-primary">Filter</button>
             </form>
         </div>
     </section>

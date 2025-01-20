@@ -248,7 +248,11 @@
                             $ad = $c_parcels->count() + $s_parcels->count();
                         @endphp
                         <td class="text-end">
-                            {{ number_format($ar / ($ad ?? 1), 2) }}
+                            @if ($ad > 0)
+                                {{ number_format($ar / $ad, 2) }}
+                            @else
+                                {{ number_format(0, 2) }} // or any other default value
+                            @endif
                         </td>
                         <td class="text-end">
                             {{ number_format(($c_parcels->sum('weight_package_charge') + $c_parcels->sum('cod_charge') + $c_parcels->sum('delivery_charge') + $c_parcels->sum('return_charge')) / ($c_parcels->count() ?: 1), 2) }}

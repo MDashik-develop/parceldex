@@ -235,8 +235,20 @@
                 <tfoot>
                     <tr>
                         <td><strong>Average Revenue Per Order</strong></td>
+                        @php
+                            $ar =
+                                $c_parcels->sum('weight_package_charge') +
+                                $s_parcels->sum('weight_package_charge') +
+                                $c_parcels->sum('cod_charge') +
+                                $s_parcels->sum('cod_charge') +
+                                $c_parcels->sum('delivery_charge') +
+                                $s_parcels->sum('delivery_charge') +
+                                $c_parcels->sum('return_charge') +
+                                $s_parcels->sum('return_charge');
+                            $ad = $c_parcels->count() + $s_parcels->count();
+                        @endphp
                         <td class="text-end">
-                            {{ number_format(($c_parcels->sum('weight_package_charge') + $s_parcels->sum('weight_package_charge') + $c_parcels->sum('cod_charge') + $s_parcels->sum('cod_charge') + $c_parcels->sum('delivery_charge') + $s_parcels->sum('delivery_charge') + $c_parcels->sum('return_charge') + $s_parcels->sum('return_charge')) / (($c_parcels->count() + $s_parcels->count()) ?? 1) ?? 1, 2) }}
+                            {{ number_format($ar / ($ad ?? 1), 2) }}
                         </td>
                         <td class="text-end">
                             {{ number_format(($c_parcels->sum('weight_package_charge') + $c_parcels->sum('cod_charge') + $c_parcels->sum('delivery_charge') + $c_parcels->sum('return_charge')) / ($c_parcels->count() ?: 1), 2) }}

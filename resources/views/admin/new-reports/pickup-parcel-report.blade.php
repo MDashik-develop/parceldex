@@ -7,6 +7,7 @@
     <title>Pickup Parcel Report</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css">
     <style>
         :root {
             --width: 297mm;
@@ -53,6 +54,11 @@
 
         @media print {
 
+            .dt-container>.dt-layout-row:first-child {
+                display: none;
+                /* Hides the first child of .dt-layout-row */
+            }
+
             .label {
                 width: 100%;
                 height: auto;
@@ -74,6 +80,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
     <!-- Include the QRCode library -->
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="//cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
 </head>
 
 <body>
@@ -104,9 +111,15 @@
                         ->where('parcel_logs.status', 11)
                         ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
                 },
-            ])
-            // ->limit(2)
-            ->get();
+            ]);
+
+        if (request()->branch_id) {
+            $merchants = $merchants
+                ->join('branches', 'merchants.branch_id', '=', 'branches.id')
+                ->where('branches.id', request()->branch_id);
+        }
+
+        $merchants = $merchants->get();
 
         $branches = App\Models\Branch::get();
 
@@ -206,6 +219,17 @@
             height: 80
         });
     </script>
+
+    {{-- datatable --}}
+    <script>
+        new DataTable('table', {
+            paging: false, // Disables pagination
+            ordering: false, // Disables ordering
+            info: false,
+            // dom: 't'
+        });
+    </script>
+
 </body>
 
 </html>

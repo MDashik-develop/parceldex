@@ -9,8 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
-            --width: 297mm;
-            --height: 210mm;
+            --width: auto;
+            --height: auto;
             --margin: 10mm;
         }
 
@@ -77,35 +77,69 @@
 
 <body>
 
+    @php
+
+        $start_date = request()->start_date
+            ? \Illuminate\Support\Carbon::parse(request()->start_date)->startOfDay()
+            : \Illuminate\Support\Carbon::now()->startOfMonth();
+
+        $end_date = request()->end_date
+            ? \Illuminate\Support\Carbon::parse(request()->end_date)->endOfDay()
+            : \Illuminate\Support\Carbon::now()->endOfDay();
+
+        $qbrach = \App\Models\Branch::with(['riders.deliveryParcels'])
+            ->withCount([
+                'riders as total_parcel' => function ($query) use ($start_date, $end_date) {
+                    $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
+                        $subQuery
+                            ->whereIn('parcels.status', [19])
+                            ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
+                            ->where('parcel_logs.status', 19)
+                            ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
+                    });
+                },
+            ])
+            ->withCount([
+                'riders as total_deliveried' => function ($query) use ($start_date, $end_date) {
+                    $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
+                        $subQuery
+                            ->whereIn('parcels.status', [25])
+                            ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
+                            ->where('parcel_logs.status', 25)
+                            ->where('parcels.delivery_type', 1)
+                            ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
+                    });
+                },
+            ]);
+
+        if (request()->branch_id) {
+            $qbrach = $qbrach->where('id', request()->branch_id);
+        }
+
+        $qbrach = $qbrach->get();
+
+        $branches = App\Models\Branch::get();
+
+    @endphp
+
     <section style="background: #f8f9fa;" class="print-hidden">
-        <div class="container py-5" style="max-width: 600px; min-width:300px">
-            <div class="d-flex gap-3 wrap">
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Location Select</option>
-                    <option value="1">Dhaka South</option>
+        <div class="container py-5 mx-auto" style="max-width: 900px;">
+            <form class="d-flex gap-5 flex-wrap justify-content-center flex-lg-nowrap align-content-center">
+                <select name="branch_id" id="" class="form-control">
+                    <option value="">All</option>
+                    @foreach ($branches as $item)
+                        <option value="{{ $item->id }}" {{ $item->id == request()->branch_id ? 'selected' : '' }}>
+                            {{ $item->name }}</option>
+                    @endforeach
                 </select>
-
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Select Mounth</option>
-
-                    <?php
-                    $currentMonth = date('m');
-                    $currentYear = date('Y');
-                    $months = 50;
-                    for ($i = 0; $i < $months; $i++) {
-                        $month = $currentMonth - $i;
-                        $year = $currentYear;
-                        if ($month < 1) {
-                            $month += 12;
-                            $year--;
-                        }
-                        echo '<option value="' . $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '">' . $year . ' - ' . date('F', mktime(0, 0, 0, $month, 1)) . '</option>';
-                    }
-                    ?>
-
-                </select>
-                <button type="button" class="btn btn-primary">Filter</button>
-            </div>
+                <label for="" style="white-space: nowrap;">Start Date</label>
+                <input type="date" name="start_date" id="" class="form-control"
+                    value="{{ $start_date->format('Y-m-d') }}">
+                <label for="" style="white-space: nowrap;">End Date</label>
+                <input type="date" name="end_date" id="" class="form-control"
+                    value="{{ $end_date->format('Y-m-d') }}">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
         </div>
     </section>
 
@@ -119,226 +153,63 @@
                         <th>Rider Name</th>
                         <th>Total Order</th>
                         <th>Delivered</th>
+                        <th>Partial Delivered</th>
                         <th>Pending</th>
                         <th>Cancel</th>
                         <th>Success Ratio</th>
                         <th>Pending Ratio</th>
                         <th>Return Ratio</th>
+                        <th>Collected Amount</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Dhanmondi Hub -->
-                    <tr>
-                        <td rowspan="4">Dhanmondi Hub</td>
-                        <td>MD. Masum billah</td>
-                        <td>8</td>
-                        <td>5</td>
-                        <td>2</td>
-                        <td>1</td>
-                        <td>63%</td>
-                        <td>25%</td>
-                        <td>13%</td>
-                    </tr>
-                    <tr>
-                        <td>Nirmol Saha</td>
-                        <td>20</td>
-                        <td>16</td>
-                        <td>2</td>
-                        <td>2</td>
-                        <td>80%</td>
-                        <td>10%</td>
-                        <td>10%</td>
-                    </tr>
-                    <tr>
-                        <td>Mir Nurunnobi Chand</td>
-                        <td>30</td>
-                        <td>27</td>
-                        <td>2</td>
-                        <td>1</td>
-                        <td>90%</td>
-                        <td>7%</td>
-                        <td>3%</td>
-                    </tr>
-                    <tr>
-                        <td>Md. Rasel</td>
-                        <td>12</td>
-                        <td>7</td>
-                        <td>4</td>
-                        <td>1</td>
-                        <td>58%</td>
-                        <td>33%</td>
-                        <td>8%</td>
-                    </tr>
-                    <tr class="fw-bold text-center">
-                        <td colspan="2">Dhanmondi Hub Total</td>
-                        <td>70</td>
-                        <td>55</td>
-                        <td>10</td>
-                        <td>5</td>
-                        <td>79%</td>
-                        <td>14%</td>
-                        <td>7%</td>
-                    </tr>
+                    @foreach ($qbrach as $b)
+                        <!-- Hub -->
+                        @foreach ($b->riders as $kr => $r)
+                            <tr>
+                                @if (!$kr)
+                                    <td rowspan="{{ $b->riders->count() }}">{{ $b->name }}</td>
+                                @endif
+                                <td>{{ $r->name }}</td>
+                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
+                                <td style="text-align: right">{{ $r->total_deliveried ?? 0 }}</td>
+                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
+                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
+                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
+                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
+                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
+                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
+                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
+                            </tr>
+                        @endforeach
 
-                    <!-- Jatrabari Hub -->
-                    <tr>
-                        <td rowspan="5">Jatrabari Hub</td>
-                        <td>Md Sohel Rana</td>
-                        <td>19</td>
-                        <td>14</td>
-                        <td>4</td>
-                        <td>1</td>
-                        <td>74%</td>
-                        <td>21%</td>
-                        <td>5%</td>
-                    </tr>
-                    <tr>
-                        <td>MD alamin</td>
-                        <td>15</td>
-                        <td>11</td>
-                        <td>3</td>
-                        <td>1</td>
-                        <td>73%</td>
-                        <td>20%</td>
-                        <td>7%</td>
-                    </tr>
-                    <tr>
-                        <td>Md. Nahid islam</td>
-                        <td>16</td>
-                        <td>10</td>
-                        <td>6</td>
-                        <td>0</td>
-                        <td>63%</td>
-                        <td>38%</td>
-                        <td>0%</td>
-                    </tr>
-                    <tr>
-                        <td>Md. Jihad gazi</td>
-                        <td>8</td>
-                        <td>7</td>
-                        <td>0</td>
-                        <td>1</td>
-                        <td>88%</td>
-                        <td>0%</td>
-                        <td>13%</td>
-                    </tr>
-                    <tr>
-                        <td>Md Hriday</td>
-                        <td>16</td>
-                        <td>7</td>
-                        <td>8</td>
-                        <td>1</td>
-                        <td>44%</td>
-                        <td>50%</td>
-                        <td>6%</td>
-                    </tr>
-                    <tr class="fw-bold text-center">
-                        <td colspan="2">Jatrabari Hub Total</td>
-                        <td>74</td>
-                        <td>49</td>
-                        <td>21</td>
-                        <td>4</td>
-                        <td>66%</td>
-                        <td>28%</td>
-                        <td>5%</td>
-                    </tr>
 
-                    <!-- Malibag Hub -->
-                    <tr>
-                        <td rowspan="4">Malibag HUB</td>
-                        <td>Muhammad Hriday</td>
-                        <td>15</td>
-                        <td>10</td>
-                        <td>4</td>
-                        <td>1</td>
-                        <td>67%</td>
-                        <td>27%</td>
-                        <td>7%</td>
-                    </tr>
-                    <tr>
-                        <td>MD Rakib Hasan</td>
-                        <td>24</td>
-                        <td>18</td>
-                        <td>5</td>
-                        <td>1</td>
-                        <td>75%</td>
-                        <td>21%</td>
-                        <td>4%</td>
-                    </tr>
-                    <tr>
-                        <td>Emarot Hossain</td>
-                        <td>12</td>
-                        <td>12</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>100%</td>
-                        <td>0%</td>
-                        <td>0%</td>
-                    </tr>
-                    <tr>
-                        <td>Sazzad Hossain Anik</td>
-                        <td>22</td>
-                        <td>18</td>
-                        <td>2</td>
-                        <td>2</td>
-                        <td>82%</td>
-                        <td>9%</td>
-                        <td>9%</td>
-                    </tr>
-                    <tr class="fw-bold text-center">
-                        <td colspan="2">Malibag HUB Total</td>
-                        <td>73</td>
-                        <td>58</td>
-                        <td>11</td>
-                        <td>4</td>
-                        <td>79%</td>
-                        <td>15%</td>
-                        <td>5%</td>
-                    </tr>
-
-                    <!-- Old Town HUB -->
-                    <tr>
-                        <td rowspan="2">Old Town HUB</td>
-                        <td>Md. Suman Ahmed</td>
-                        <td>16</td>
-                        <td>11</td>
-                        <td>4</td>
-                        <td>1</td>
-                        <td>69%</td>
-                        <td>25%</td>
-                        <td>6%</td>
-                    </tr>
-                    <tr>
-                        <td>Md. Minhaj</td>
-                        <td>27</td>
-                        <td>24</td>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>89%</td>
-                        <td>4%</td>
-                        <td>7%</td>
-                    </tr>
-                    <tr class="fw-bold text-center">
-                        <td colspan="2">Old Town HUB Total</td>
-                        <td>43</td>
-                        <td>35</td>
-                        <td>5</td>
-                        <td>3</td>
-                        <td>81%</td>
-                        <td>12%</td>
-                        <td>7%</td>
-                    </tr>
+                        <tr class="fw-bold">
+                            <td colspan="2" class="text-center">{{ $b->name }} Total</td>
+                            <td style="text-align: right">70</td>
+                            <td style="text-align: right">70</td>
+                            <td style="text-align: right">70</td>
+                            <td style="text-align: right">70</td>
+                            <td style="text-align: right">70</td>
+                            <td style="text-align: right">70</td>
+                            <td style="text-align: right">70</td>
+                            <td style="text-align: right">70</td>
+                            <td style="text-align: right">70</td>
+                        </tr>
+                    @endforeach
 
                     <!-- Grand Total -->
-                    <tr class="table-dark fw-bold text-center">
-                        <td colspan="2">Grand Total</td>
-                        <td>260</td>
-                        <td>197</td>
-                        <td>47</td>
-                        <td>16</td>
-                        <td>76%</td>
-                        <td>18%</td>
-                        <td>6%</td>
+                    <tr class="table-dark fw-bold">
+                        <td colspan="2" class="text-center">Grand Total</td>
+                        <td style="text-align: right">!</td>
+                        <td style="text-align: right">!</td>
+                        <td style="text-align: right">!</td>
+                        <td style="text-align: right">!</td>
+                        <td style="text-align: right">!</td>
+                        <td style="text-align: right">!</td>
+                        <td style="text-align: right">!</td>
+                        <td style="text-align: right">!</td>
+                        <td style="text-align: right">!</td>
                     </tr>
                 </tbody>
             </table>

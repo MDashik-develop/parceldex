@@ -87,7 +87,9 @@
             ? \Illuminate\Support\Carbon::parse(request()->end_date)->endOfDay()
             : \Illuminate\Support\Carbon::now()->endOfDay();
 
-        $qbrach = \App\Models\Branch::with(['riders.deliveryParcels'])
+        $qbrach = \App\Models\Branch::with(['riders.deliveryParcels' => function($q) use ($start_date, $end_date) {
+            $q->whereBetween('delivery_date', [$start_date, $end_date]);
+        }])
             ->withCount([
                 'riders as total_parcel' => function ($query) use ($start_date, $end_date) {
                     $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
@@ -107,6 +109,66 @@
                             ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
                             ->where('parcel_logs.status', 25)
                             ->where('parcels.delivery_type', 1)
+                            ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
+                    });
+                },
+            ])
+            ->withCount([
+                'riders as total_partial_deliveried' => function ($query) use ($start_date, $end_date) {
+                    $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
+                        $subQuery
+                            ->whereIn('parcels.status', [25])
+                            ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
+                            ->where('parcel_logs.status', 25)
+                            ->where('parcels.delivery_type', 2)
+                            ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
+                    });
+                },
+            ])
+            ->withCount([
+                'riders as total_hold' => function ($query) use ($start_date, $end_date) {
+                    $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
+                        $subQuery
+                            ->whereIn('parcels.status', [25])
+                            ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
+                            ->where('parcel_logs.status', 25)
+                            ->where('parcels.delivery_type', 3)
+                            ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
+                    });
+                },
+            ])
+            ->withCount([
+                'riders as total_cancel' => function ($query) use ($start_date, $end_date) {
+                    $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
+                        $subQuery
+                            ->whereIn('parcels.status', [25])
+                            ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
+                            ->where('parcel_logs.status', 25)
+                            ->where('parcels.delivery_type', 4)
+                            ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
+                    });
+                },
+            ])
+            ->withCount([
+                'riders as total_cancel' => function ($query) use ($start_date, $end_date) {
+                    $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
+                        $subQuery
+                            ->whereIn('parcels.status', [25])
+                            ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
+                            ->where('parcel_logs.status', 25)
+                            ->where('parcels.delivery_type', 4)
+                            ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
+                    });
+                },
+            ])
+            ->withCount([
+                'riders as total_unassigned' => function ($query) use ($start_date, $end_date) {
+                    $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
+                        $subQuery
+                            ->whereIn('parcels.status', [16, 17, 18, 20])
+                            ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
+                            ->where('parcel_logs.status', 16)
+                            // ->where('parcels.delivery_type', 2)
                             ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
                     });
                 },
@@ -151,10 +213,11 @@
                     <tr>
                         <th>Hub Name</th>
                         <th>Rider Name</th>
-                        <th>Total Order</th>
+                        <th>Total Assigned</th>
+                        <th>Unassigned</th>
                         <th>Delivered</th>
                         <th>Partial Delivered</th>
-                        <th>Pending</th>
+                        <th>Hold</th>
                         <th>Cancel</th>
                         <th>Success Ratio</th>
                         <th>Pending Ratio</th>
@@ -172,20 +235,41 @@
                                 @endif
                                 <td>{{ $r->name }}</td>
                                 <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
+                                <td style="text-align: right">{{ $r->total_unassigned ?? 0 }}</td>
                                 <td style="text-align: right">{{ $r->total_deliveried ?? 0 }}</td>
-                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
-                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
-                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
-                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
-                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
-                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
-                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
+                                <td style="text-align: right">{{ $r->total_partial_deliveried ?? 0 }}</td>
+                                <td style="text-align: right">{{ $r->total_hold ?? 0 }}</td>
+                                <td style="text-align: right">{{ $r->total_cancel ?? 0 }}</td>
+                                <td style="text-align: right">
+                                    @if ($r->total_parcel > 0)
+                                        {{ (($r->total_deliveried + $r->total_partial_deliveried) / $r->total_parcel) * 100 }}%
+                                    @else
+                                        0%
+                                    @endif
+                                </td>
+                                <td style="text-align: right">
+                                    @if ($r->total_hold > 0)
+                                        {{ ($r->total_hold / ($r->total_parcel ?? 1)) * 100 }}%
+                                    @else
+                                        0%
+                                    @endif
+                                </td>
+                                <td style="text-align: right">
+                                    @if ($r->total_cancel > 0)
+                                        {{ ($r->total_cancel / ($r->total_parcel ?? 1)) * 100 }}%
+                                    @else
+                                        0%
+                                    @endif
+                                </td>
+                                <td style="text-align: right">
+                                    {{ $r->deliveryParcels->sum('customer_collect_amount') + $r->deliveryParcels->sum('cancel_amount_collection') }}
+                                </td>
                             </tr>
                         @endforeach
 
-
                         <tr class="fw-bold">
                             <td colspan="2" class="text-center">{{ $b->name }} Total</td>
+                            <td style="text-align: right">70</td>
                             <td style="text-align: right">70</td>
                             <td style="text-align: right">70</td>
                             <td style="text-align: right">70</td>
@@ -201,6 +285,7 @@
                     <!-- Grand Total -->
                     <tr class="table-dark fw-bold">
                         <td colspan="2" class="text-center">Grand Total</td>
+                        <td style="text-align: right">!</td>
                         <td style="text-align: right">!</td>
                         <td style="text-align: right">!</td>
                         <td style="text-align: right">!</td>

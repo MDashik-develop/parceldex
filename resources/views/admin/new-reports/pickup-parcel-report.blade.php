@@ -157,13 +157,15 @@
                         <tbody>
 
                             @foreach ($merchants as $m)
-                                <tr>
-                                    <td>1</td>
-                                    <td>{{ $m->company_name }} - {{ $m->m_id }}</td>
-                                    <td>{{ $m->branch->name }}</td>
-                                    <td>{{ $m->parcel_count }}</td>
-                                    <td>{{ $m->picked_up }}</td>
-                                </tr>
+                                @if ($m->parcel_count || $m->picked_up)
+                                    <tr>
+                                        <td>1</td>
+                                        <td>{{ $m->company_name }} - {{ $m->m_id }}</td>
+                                        <td>{{ $m->branch->name }}</td>
+                                        <td>{{ $m->parcel_count }}</td>
+                                        <td>{{ $m->picked_up }}</td>
+                                    </tr>
+                                @endif
                             @endforeach
 
                         </tbody>

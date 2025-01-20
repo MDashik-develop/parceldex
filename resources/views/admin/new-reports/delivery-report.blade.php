@@ -94,7 +94,6 @@
                 'riders as total_parcel' => function ($query) use ($start_date, $end_date) {
                     $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
                         $subQuery
-                            ->whereIn('parcels.status', [19])
                             ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
                             ->where('parcel_logs.status', 19)
                             ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
@@ -105,7 +104,6 @@
                 'riders as total_deliveried' => function ($query) use ($start_date, $end_date) {
                     $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
                         $subQuery
-                            ->whereIn('parcels.status', [25])
                             ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
                             ->where('parcel_logs.status', 25)
                             ->where('parcels.delivery_type', 1)
@@ -117,7 +115,6 @@
                 'riders as total_partial_deliveried' => function ($query) use ($start_date, $end_date) {
                     $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
                         $subQuery
-                            ->whereIn('parcels.status', [25])
                             ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
                             ->where('parcel_logs.status', 25)
                             ->where('parcels.delivery_type', 2)
@@ -129,7 +126,6 @@
                 'riders as total_hold' => function ($query) use ($start_date, $end_date) {
                     $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
                         $subQuery
-                            ->whereIn('parcels.status', [25])
                             ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
                             ->where('parcel_logs.status', 25)
                             ->where('parcels.delivery_type', 3)
@@ -141,7 +137,6 @@
                 'riders as total_cancel' => function ($query) use ($start_date, $end_date) {
                     $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
                         $subQuery
-                            ->whereIn('parcels.status', [25])
                             ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
                             ->where('parcel_logs.status', 25)
                             ->where('parcels.delivery_type', 4)
@@ -153,7 +148,6 @@
                 'riders as total_cancel' => function ($query) use ($start_date, $end_date) {
                     $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
                         $subQuery
-                            ->whereIn('parcels.status', [25])
                             ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
                             ->where('parcel_logs.status', 25)
                             ->where('parcels.delivery_type', 4)

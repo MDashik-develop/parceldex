@@ -98,4 +98,8 @@ class Branch extends Authenticatable implements JWTSubject{
     public function updated_admin() {
         return $this->belongsTo(Admin::class, 'updated_admin_id')->withDefault(['name' => 'Admin User']);
     }
+
+    public function pickupParcels() {
+        return $this->hasMany(Parcel::class, 'pickup_branch_id', 'id');
+        }
 }

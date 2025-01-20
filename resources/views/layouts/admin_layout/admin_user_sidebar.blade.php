@@ -464,6 +464,13 @@
                             </a>
                         </li>
 
+                        <li class="nav-item">
+                            <a href="/admin/new-reports/transit-report" target="_blank" class="nav-link">
+                                <i class="fas fa-tags"></i>
+                                <p>Transit Report</p>
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
 

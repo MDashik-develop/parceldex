@@ -32,6 +32,7 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin/'], function () {
             Route::view('delivery-report', 'admin.new-reports.delivery-report')->name('delivery-report');
             Route::view('monthly-revenue', 'admin.new-reports.monthly-revenue')->name('monthly-revenue');
             Route::view('pickup-parcel-report', 'admin.new-reports.pickup-parcel-report')->name('pickup-parcel-report');
+            Route::view('transit-report', 'admin.new-reports.transit-report')->name('transit-report');
 
         });
 

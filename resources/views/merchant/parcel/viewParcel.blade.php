@@ -103,7 +103,7 @@
                         <p>: {{ number_format($parcel->total_collect_amount, 2) }}
                                 Tk</p>
                         <p>: {{ number_format($parcel->cancel_amount_collection > 0 ? $parcel->cancel_amount_collection : $parcel->customer_collect_amount, 2) }}
-                                Tk<</p>
+                                Tk</p>
                     </section>
             </div>
         </div>

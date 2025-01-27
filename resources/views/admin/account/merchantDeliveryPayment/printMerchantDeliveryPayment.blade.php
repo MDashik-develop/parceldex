@@ -146,7 +146,7 @@
                     <td>{{ \Carbon\Carbon::parse($parcelMerchantDeliveryPayment->date_time)->format('d/m/Y') }}</td>
                 </tr>
                 <tr>
-                    <th>Invoice #</th>
+                    <th>Invoice ID</th>
                     <td>{{ $parcelMerchantDeliveryPayment->merchant_payment_invoice }}</td>
                 </tr>
                 <tr>
@@ -164,14 +164,14 @@
             <thead>
                 <tr class="table-active text-center">
                     <th>SL</th>
-                    <th>Con. ID</th>
+                    <th>Cons ID</th>
                     <th>Order ID</th>
                     <th>Customer Name</th>
                     <th>Phone Number</th>
                     <th>Delivery Area</th>
-                    <th>Status</th>
+                    <th>Parcel Status</th>
                     <th>Product Price</th>
-                    <th>Collected</th>
+                    <th>Collected Amount</th>
                     <th>Delivery Charge</th>
                     <th>COD Charge</th>
                     <th>Weight Charge</th>

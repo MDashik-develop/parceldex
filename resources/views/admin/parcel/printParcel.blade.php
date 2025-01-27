@@ -170,7 +170,7 @@
         </div>
         <div class="d-flex justify-content-between">
             <div>www.parceldex.com</div>
-            <div><strong>Call:</strong> 09642735735</div>
+            <div><strong>Hotline:</strong> 09642735735</div>
         </div>
         <hr class="my-0" style="opacity: 1;border: 1px solid black;">
         <div class="d-flex justify-content-between wrap">

@@ -866,6 +866,7 @@ class ParcelController extends Controller
             ->orWhere('customer_contact_number2', 'like', '%' . $keyword . '%')
             ->orWhere('merchant_order_id', 'like', '%' . $keyword . '%')
             ->orWhere('merchant_order_id', 'like', '%' . $keyword . '%')
+            ->latest('created_at')
             ->limit(10)
             ->get();
 

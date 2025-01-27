@@ -213,6 +213,7 @@ class HomeController extends Controller
             ->orWhere('merchant_order_id', 'like', '%' . $keyword . '%')
             ->orWhere('merchant_order_id', 'like', '%' . $keyword . '%')
             ->limit(10)
+            ->latest('created_at')
             ->get();
 
         return $parcels;

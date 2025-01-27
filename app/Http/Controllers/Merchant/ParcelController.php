@@ -1799,6 +1799,7 @@ class ParcelController extends Controller
             ->orWhere('merchant_order_id', 'like', '%' . $keyword . '%')
             ->where('merchant_id', $merchant_id)
             ->limit(10)
+            ->latest('created_at')
             ->get();
 
         return $parcels;

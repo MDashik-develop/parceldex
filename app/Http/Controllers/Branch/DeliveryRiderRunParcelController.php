@@ -1113,6 +1113,7 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel = $parcel->replicate();
                                     $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
                                     $new_parcel->suborder = $parcel->parcel_invoice;
+                                    $new_parcel->return_charge = $merchant_service_area_return_charge; // return charge
                                     $new_parcel->delivery_type = 4;
                                     $new_parcel->status = 25;
                                     $new_parcel->total_collect_amount = 0;
@@ -1121,7 +1122,7 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->cod_percent = 0;
                                     $new_parcel->cod_charge = 0;
                                     $new_parcel->weight_package_charge = 0;
-                                    $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                    // $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
                                     $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
                                     $new_parcel->customer_collect_amount = 0;
                                     $new_parcel->cancel_amount_collection = 0;
@@ -1191,6 +1192,7 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel = $parcel->replicate();
                                     $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
                                     $new_parcel->suborder = $parcel->parcel_invoice;
+                                    $new_parcel->return_charge = $merchant_service_area_return_charge; // return charge
                                     $new_parcel->delivery_type = 4;
                                     $new_parcel->status = 25;
                                     $new_parcel->total_collect_amount = $confirm_amount_to_be_collect - $confirm_customer_collect_amount;

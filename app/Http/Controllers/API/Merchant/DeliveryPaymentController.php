@@ -169,7 +169,7 @@ class DeliveryPaymentController extends Controller {
                     'delivery_charge'       => number_format($delivery_payment_detail->delivery_charge, 2),
                     'weight_package_charge' => number_format($delivery_payment_detail->weight_package_charge, 2),
                     'return_charge'         => number_format($delivery_payment_detail->return_charge, 2),
-                    'total_charge'          => (number_format($delivery_payment_detail->delivery_charge, 2)+number_format($delivery_payment_detail->weight_package_charge, 2)+number_format($delivery_payment_detail->return_charge, 2)+number_format($delivery_payment_detail->cod_charge, 2)),
+                    'total_charge'          => ceil(number_format($delivery_payment_detail->delivery_charge, 2)+number_format($delivery_payment_detail->weight_package_charge, 2)+number_format($delivery_payment_detail->return_charge, 2)+number_format($delivery_payment_detail->cod_charge, 2)),
                     'paid_amount'           => number_format($delivery_payment_detail->paid_amount, 2),
                     'note'                  => $delivery_payment_detail->note,
                     'date_time'             => $delivery_payment_detail->date_time,

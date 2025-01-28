@@ -223,7 +223,7 @@ class MerchantParcelExport implements
                     'delivery_charge' => $parcel->delivery_charge != 0 ? $parcel->delivery_charge : '0',
                     'return_charge' => $merchant_service_area_return_charge,
                     //'return_charge' => $parcel->merchant_service_area_return_charge != 0 ? $parcel->merchant_service_area_return_charge : '0',
-                    'total_charge' => $totalCharge != 0 ? $totalCharge : '0',
+                    'total_charge' => $totalCharge != 0 ? ceil($totalCharge) : '0',
                     'parcel_note' => $parcel->parcel_note,
                     'logs_note' => $logs_note,
                     'payment_status_name' => $payment_status_name,

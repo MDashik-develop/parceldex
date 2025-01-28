@@ -199,7 +199,7 @@ class AdminParcelExport implements
                     'cod_charge' => $parcel->cod_charge != 0 ? $parcel->cod_charge : '0',
                     'delivery_charge' => $parcel->delivery_charge != 0 ? $parcel->delivery_charge : '0',
                     'return_charge' => $merchant_service_area_return_charge,
-                    'total_charge' => $totalCharge != 0 ? $totalCharge : '0',
+                    'total_charge' => $totalCharge != 0 ? ceil($totalCharge) : '0',
                     'parcel_note' => $parcel->parcel_note,
                     'logs_note' => $logs_note,
                     'payment_status_name' => $payment_status_name,

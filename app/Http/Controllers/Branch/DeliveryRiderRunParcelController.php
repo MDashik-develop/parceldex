@@ -1080,7 +1080,7 @@ class DeliveryRiderRunParcelController extends Controller
                                 $collection_amount = $confirm_customer_collect_amount ?? 0;
                                 if ($collection_amount != 0 && $cod_percent != 0) {
                                     $cod_charge = ($collection_amount / 100) * $cod_percent;
-                                    $parcel_update_data['total_charge'] = $charge_without_cod + $cod_charge;
+                                    $parcel_update_data['total_charge'] = ceil($charge_without_cod + $cod_charge);
                                     $parcel_update_data['cod_charge'] = ceil($cod_charge);
                                 }
                                 //update cod charge end
@@ -1123,7 +1123,7 @@ class DeliveryRiderRunParcelController extends Controller
                                     $new_parcel->cod_charge = 0;
                                     $new_parcel->weight_package_charge = 0;
                                     // $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
-                                    $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                    $new_parcel->total_charge = $parcel->return_charge > 0 ? ceil($parcel->return_charge) : 0;
                                     $new_parcel->customer_collect_amount = 0;
                                     $new_parcel->cancel_amount_collection = 0;
                                     $new_parcel->merchant_service_area_return_charge = 0;
@@ -1159,7 +1159,7 @@ class DeliveryRiderRunParcelController extends Controller
                                 $collection_amount = $confirm_customer_collect_amount ?? 0;
                                 if ($collection_amount != 0 && $cod_percent != 0) {
                                     $cod_charge = ($collection_amount / 100) * $cod_percent;
-                                    $parcel_update_data['total_charge'] = $charge_without_cod + $cod_charge;
+                                    $parcel_update_data['total_charge'] = ceil($charge_without_cod + $cod_charge);
                                     $parcel_update_data['cod_charge'] = ceil($cod_charge);
                                 }
                                 //update cod charge end

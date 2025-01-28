@@ -468,7 +468,7 @@ class PickupRiderRunParcelController extends Controller
                                 'total_collect_amount' => $collection_amount ?? 0,
                                 'cod_percent' => $cod_percent,
                                 'cod_charge' => $cod_charge,
-                                'total_charge' => $total_charge,
+                                'total_charge' => ceil($total_charge),
                                 'parcel_note' => $remark,
                                 'delivery_option_id' => 1,
                                 'pickup_branch_id' => $branch_id,

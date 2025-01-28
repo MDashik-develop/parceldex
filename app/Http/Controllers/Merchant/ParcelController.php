@@ -222,7 +222,7 @@ class ParcelController extends Controller
                         'merchant_service_area_return_charge' => $merchant_service_area_return_charge,
                         'cod_percent' => $cod_percent,
                         'cod_charge' => ceil($cod_charge),
-                        'total_charge' => $total_charge,
+                        'total_charge' => ceil($total_charge),
                         'status' => 1,
                     ];
 

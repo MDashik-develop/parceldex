@@ -48,7 +48,8 @@ class AdminMerchantPaymentExport implements
                 $from_date = $request->input('from_date');
                 $to_date = $request->input('to_date');
 
-                if (($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0)
+                if (
+                    ($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0)
                     || ($request->has('status') && !is_null($status) && $status != '' && $status != 0)
                     || ($request->has('from_date') && !is_null($from_date) && $from_date != '')
                     || ($request->has('to_date') && !is_null($to_date) && $to_date != '')
@@ -116,7 +117,7 @@ class AdminMerchantPaymentExport implements
 
                 $total = $total_delivery_charge + $total_weight_charge + $total_cod_charge + $total_return_charge;
 
-                $data_parcel_array[] = (object)[
+                $data_parcel_array[] = (object) [
                     'serial' => $key + 1,
                     'payment_date' => date('d-m-Y', strtotime($payment->date_time)),
                     'merchant_name' => $payment->merchant->company_name,
@@ -127,7 +128,7 @@ class AdminMerchantPaymentExport implements
                     'weight_charge' => number_format($total_weight_charge, 2),
                     'cod_charge' => number_format($total_cod_charge, 2),
                     'return_charge' => number_format($total_return_charge, 2),
-                    'total_charge' => number_format($total, 2),
+                    'total_charge' => ceil($total),
                     'payment_method' => $payment->merchant->payment_recived_by ?? 'N/A',
                     'payment_type' => $parcel->merchant->payment_type ?? 'N/A',
                     'payment_invoice_id' => $payment->merchant_payment_invoice,
@@ -238,7 +239,7 @@ class AdminMerchantPaymentExport implements
                 //                        'bold'  => true,
                 //                    ]
                 //                ]);
-
+    
                 if ('pdf' == "pdf") {
 
                     foreach (range('B', 'Z') as $columnID) {
@@ -260,7 +261,7 @@ class AdminMerchantPaymentExport implements
                 //                        ]
                 //                    ]
                 //                );
-
+    
             },
         ];
     }

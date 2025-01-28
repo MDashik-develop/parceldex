@@ -5,8 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('test', function () {
     $merchant_id = 119;
-     $x = Parcel::where('merchant_id', $merchant_id)
-        
+    $x = Parcel::where('merchant_id', $merchant_id)
+
         ->where('status', '>=', 25)
         ->whereIn('parcel_invoice', [4856, 4859, 4860, 4862])
         ->whereIn('delivery_type', [1, 2, 4])
@@ -15,29 +15,29 @@ Route::get('test', function () {
 
 
 
-         $y = Parcel::where('merchant_id', $merchant_id)
+    $y = Parcel::where('merchant_id', $merchant_id)
         ->where('status', '>=', 25)
         ->whereIn('parcel_invoice', [4856, 4859, 4860, 4862])
         ->whereIn('delivery_type', [1, 2, 4])
         ->whereIn('payment_type', [2, 4, 6])
         ->sum('cancel_amount_collection');
 
-      $total_customer_collect_amount      = $x + $y;
+    $total_customer_collect_amount = $x + $y;
 
-     $total_charge_amount_query = Parcel::where('merchant_id', $merchant_id)
-     ->where('status', '>=', 25)
-     ->whereIn('parcel_invoice', [4856, 4859, 4860, 4862])
-     ->whereIn('delivery_type', [1, 2, 4])
-     ->whereIn('payment_type', [2, 4, 6]);
+    $total_charge_amount_query = Parcel::where('merchant_id', $merchant_id)
+        ->where('status', '>=', 25)
+        ->whereIn('parcel_invoice', [4856, 4859, 4860, 4862])
+        ->whereIn('delivery_type', [1, 2, 4])
+        ->whereIn('payment_type', [2, 4, 6]);
 
-         $cod_charge = $total_charge_amount_query->sum('cod_charge');
-          $delivery_charge = $total_charge_amount_query->sum('delivery_charge');
-            $weight_package_charge = $total_charge_amount_query->sum('weight_package_charge');
-            return $return_charge = $total_charge_amount_query->sum('merchant_service_area_return_charge');
+    $cod_charge = $total_charge_amount_query->sum('cod_charge');
+    $delivery_charge = $total_charge_amount_query->sum('delivery_charge');
+    $weight_package_charge = $total_charge_amount_query->sum('weight_package_charge');
+    return $return_charge = $total_charge_amount_query->sum('merchant_service_area_return_charge');
 
     $total_charge_amount = $cod_charge + $delivery_charge + $weight_package_charge + $return_charge;
 
-    return  number_format($total_customer_collect_amount - $total_charge_amount, 2, '.', '');
+    return number_format($total_customer_collect_amount - $total_charge_amount, 2, '.', '');
 });
 
 Route::get('/merchant', [App\Http\Controllers\Merchant\AuthController::class, 'login'])->name('login');
@@ -50,7 +50,7 @@ Route::get('/merchant/resetPassword/{token}', [App\Http\Controllers\Merchant\Aut
 Route::post('/merchant/resetPassword', [App\Http\Controllers\Merchant\AuthController::class, 'confirmResetPassword'])->name('resetPassword');
 
 
-Route::group(['middleware' => 'merchant', 'prefix' => 'merchant/'], function () {
+Route::group(['middleware' => 'merchant', 'domain' => 'merchant.' . env('SESSION_DOMAIN')], function () {
     Route::match(['get', 'post'], '/logout', [App\Http\Controllers\Merchant\AuthController::class, 'logout'])->name('logout');
 
     Route::match(['get', 'post'], '/home', [App\Http\Controllers\Merchant\HomeController::class, 'home'])->name('home');
@@ -86,7 +86,7 @@ Route::group(['middleware' => 'merchant', 'prefix' => 'merchant/'], function () 
     Route::get('parcel/printParcelList', [App\Http\Controllers\Merchant\ParcelController::class, 'printParcelList'])->name('parcel.printParcelList');
     Route::post('parcel/printParcelMultiple', [App\Http\Controllers\Merchant\ParcelController::class, 'printParcelMultiple'])->name('parcel.printParcelMultiple');
     Route::get('parcel/search', [App\Http\Controllers\Merchant\ParcelController::class, 'search'])->name('parcel.search');
-    
+
     Route::post('parcel/excelAllParcelList', [App\Http\Controllers\Merchant\ParcelController::class, 'excelAllParcelList'])->name('parcel.excelAllParcelList');
 
 

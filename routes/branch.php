@@ -16,7 +16,7 @@ Route::post('/branch/forgotPassword', [App\Http\Controllers\Branch\AuthControlle
 Route::get('/branch/resetPassword/{token}', [App\Http\Controllers\Branch\AuthController::class, 'resetPassword'])->name('resetPassword');
 Route::post('/branch/resetPassword', [App\Http\Controllers\Branch\AuthController::class, 'confirmResetPassword'])->name('resetPassword');
 
-Route::group(['middleware' => 'branch', 'prefix' => 'branch/'], function () {
+Route::group(['middleware' => 'branch', 'domain' => 'branch.' . env('SESSION_DOMAIN')], function () {
 
   /** Parcel Filter Route */
   Route::post('parcel/parcel-filter-list', [App\Http\Controllers\Branch\ParcelFilterController::class, 'filterParcelList'])->name('parcel.filterList');

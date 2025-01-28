@@ -4,6 +4,7 @@
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
+
 <div class="modal-body">
     <form role="form" action="{{ route('branch.parcel.confirmPickupRiderRunReconciliation', $riderRun->id) }}"
         id="confirmAssignDeliveryBranch" method="POST" enctype="multipart/form-data"
@@ -224,6 +225,7 @@
     </form>
 
 </div>
+
 <div class="modal-footer">
     <button type="button" id="viewModalCloseBtn" class="btn btn-danger float-right"
         data-dismiss="modal">Close</button>
@@ -300,7 +302,9 @@
                     setTimeout(function() {
                         $('#viewModal').modal('hide');
                         $('#viewModalCloseBtn').click();
+                        location.reload();
                     }, 1000);
+
                 } else {
                     var getError = response.error;
                     var message = "";
@@ -317,6 +321,8 @@
                     }
                     toastr.error(message);
                 }
+
+
             }
         })
 

@@ -1356,25 +1356,27 @@ class PickupRiderRunParcelController extends Controller
                             ]);
 
                             $parcel = Parcel::with("merchant:id,name,company_name,contact_number")->where('id', $parcel_id[$i])->first();
-                            $message = "Dear " . $parcel->merchant->name . ". ";
-                            $message .= "Your  Parcel ID No {$parcel->parcel_invoice} is successfully Picked up.";
+                            if ($rider_run_status[$i] == 7) {
+                                $message = "Dear " . $parcel->merchant->name . ". ";
+                                $message .= "Your  Parcel ID No {$parcel->parcel_invoice} is successfully Picked up.";
 
-                            // $this->send_sms($parcel->merchant->contact_number, $message);
-                            // if ($rider_run_status[$i] == 7) {
-                            //     $c_message = "Dear " . $parcel->customer_name . ", we received a parcel from " . $parcel->merchant->company_name . " and will deliver soon. Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->tracking_id. "   \n- Foring";
-                            //     // $this->send_sms($parcel->customer_contact_number, $c_message);
-                            // }
+                                // $this->send_sms($parcel->merchant->contact_number, $message);
+                                // if ($rider_run_status[$i] == 7) {
+                                //     $c_message = "Dear " . $parcel->customer_name . ", we received a parcel from " . $parcel->merchant->company_name . " and will deliver soon. Track here: " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->tracking_id. "   \n- Foring";
+                                //     // $this->send_sms($parcel->customer_contact_number, $c_message);
+                                // }
 
-                            $message = "Dear " . ucwords($parcel->customer_name) . ", Track your parcel from " . ucwords($parcel->merchant->company_name) . ". " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->tracking_id . "   \n- Parceldex Ltd";
+                                $message = "Dear " . ucwords($parcel->customer_name) . ", Track your parcel from " . ucwords($parcel->merchant->company_name) . ". " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->tracking_id . "   \n- Parceldex Ltd";
 
-                            //                             Parcel from SAREEZ BY SAKYLA  (Company_Name) has picked up.
-                            // COD: 1,00,000 Tk. (total_collect_amount)
-                            // Track: https://parceldex.com/orderTracking?trackingBox=231220YD80083
-                            // Parceldex Courier
+                                //                             Parcel from SAREEZ BY SAKYLA  (Company_Name) has picked up.
+                                // COD: 1,00,000 Tk. (total_collect_amount)
+                                // Track: https://parceldex.com/orderTracking?trackingBox=231220YD80083
+                                // Parceldex Courier
 
-                            $message = "Parcel from " . ucwords($parcel->merchant->company_name) . " has picked up. \nCOD- " . number_format($parcel->total_collect_amount) . " Tk.\nTrack- " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->tracking_id . "\nParceldex Courier";
+                                $message = "Parcel from " . ucwords($parcel->merchant->company_name) . " has picked up. \nCOD- " . number_format($parcel->total_collect_amount) . " Tk.\nTrack- " . route('frontend.orderTracking') . "?trackingBox=" . $parcel->tracking_id . "\nParceldex Courier";
 
-                            $this->send_sms($parcel->customer_contact_number, $message);
+                                $this->send_sms($parcel->customer_contact_number, $message);
+                            }
 
                             // $parcel = Parcel::where('id', $parcel_id)->first();
 

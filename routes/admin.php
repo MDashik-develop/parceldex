@@ -17,7 +17,7 @@ Route::get('/admin/resetPassword/{token}', [App\Http\Controllers\Admin\AuthContr
 Route::post('/admin/resetPassword', [App\Http\Controllers\Admin\AuthController::class, 'confirmResetPassword'])->name('resetPassword');
 
 
-Route::group(['middleware' => 'admin', 'domain' => 'admin.' . env('SESSION_DOMAIN')], function () {
+Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
     Route::match(['get', 'post'], '/logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout');
 
     Route::match(['get', 'post'], '/home', [App\Http\Controllers\Admin\HomeController::class, 'home'])->name('home');

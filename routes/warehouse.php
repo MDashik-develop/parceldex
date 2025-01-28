@@ -12,7 +12,7 @@ Route::post('/warehouse/resetPassword', [App\Http\Controllers\Warehouse\AuthCont
 
 
 
-Route::group(['middleware' => 'warehouse', 'domain' => 'warehouse.' . env('SESSION_DOMAIN')], function () {
+Route::group(['middleware' => 'warehouse', 'prefix' => 'warehouse'], function () {
 
     Route::match(['get', 'post'], '/logout', [App\Http\Controllers\Warehouse\AuthController::class, 'logout'])->name('logout');
     Route::match(['get', 'post'], '/home', [App\Http\Controllers\Warehouse\HomeController::class, 'home'])->name('home');

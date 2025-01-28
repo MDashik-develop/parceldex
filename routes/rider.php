@@ -13,7 +13,7 @@ Route::post('/rider/resetPassword', [App\Http\Controllers\Rider\HomeController::
 
 
 
-Route::group(['middleware' => 'rider', 'domain' => 'rider.' . env('SESSION_DOMAIN')], function () {
+Route::group(['middleware' => 'rider', 'prefix' => 'rider'], function () {
     Route::match(['get', 'post'], '/home', [App\Http\Controllers\Rider\HomeController::class, 'home'])->name('home');
     Route::match(['get', 'post'], '/logout', [App\Http\Controllers\Rider\HomeController::class, 'logout'])->name('logout');
 

@@ -50,7 +50,7 @@ Route::get('/merchant/resetPassword/{token}', [App\Http\Controllers\Merchant\Aut
 Route::post('/merchant/resetPassword', [App\Http\Controllers\Merchant\AuthController::class, 'confirmResetPassword'])->name('resetPassword');
 
 
-Route::group(['middleware' => 'merchant', 'domain' => 'merchant.' . env('SESSION_DOMAIN')], function () {
+Route::group(['middleware' => 'merchant', 'prefix' => 'merchant'], function () {
     Route::match(['get', 'post'], '/logout', [App\Http\Controllers\Merchant\AuthController::class, 'logout'])->name('logout');
 
     Route::match(['get', 'post'], '/home', [App\Http\Controllers\Merchant\HomeController::class, 'home'])->name('home');

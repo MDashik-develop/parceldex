@@ -8,6 +8,7 @@
     <!-- set your title -->
     <title>{{ $application->name }} </title>
 
+
     @if (!empty($application->logo))
         <link rel="icon" type="image/png" href="{{ asset('assets/favicon.ico') }}"
             alt="{{ $application->name ?? config('app.name', 'Express') }}">
@@ -20,14 +21,14 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Parceldex Courier" />
-    <meta property="og:description" content="Always On Time" />
-    <meta property="og:image" content="assets/images/Parceldex-fb-ogg.jpg" />
-    <meta property="og:image:width" content="600" />
-    <meta property="og:image:height" content="315" />
-    <meta name="google-site-verification" content="3rMKM2JKjbtv89s2M-xg_jMz-cXUVR9bepDj8Ip9Xuw" />
+    <meta name="description" content="{{ $application->meta_description }}" />
+    <meta name="keywords" content="{{ $application->meta_description }}">
+    <meta name="author" content="{{ $application->meta_description }}" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta property="article:modified_time" content="2024-12-18T07:31:37+00:00" />
+    <meta property="og:image" content="https://parceldex.com.bd/public/assets/logofull.jpg" />
+    <meta property="og:image:width" content="1534" />
+    <meta property="og:image:height" content="747" />
 
     <!-- replace favicon path or source here -->
     <!-- <link rel="icon" href="images/logo/favicon.ico"> -->

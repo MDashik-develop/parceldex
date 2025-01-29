@@ -8,7 +8,14 @@
     <!-- set your title -->
     <title>Parceldex Courier | Fastest Courier in Bangladesh</title>
 
-    <link rel="icon" href="/frontend/images/favicon_io/favicon-16x16.png" type="image/png">
+    @if (!empty($application->logo))
+        <link rel="icon" type="image/png" href="{{ asset('assets/favicon.ico') }}"
+            alt="{{ $application->name ?? config('app.name', 'Express') }}">
+        <!--<link rel="shortcut icon" type="image/png" href="{{ asset('uploads/application/') . '/' . $application->logo }}" alt="{{ $application->name ?? config('app.name', 'Express') }}" >-->
+        <link rel="shortcut icon" href="{{ asset('assets/favicon.ico') }}" type="image/x-icon">
+    @else
+        <link rel="shortcut icon" href="{{ asset('assets/favicon.ico') }}" type="image/x-icon">
+    @endif
 
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">

@@ -18,31 +18,34 @@ use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ReturnParcelController extends Controller {
+class ReturnParcelController extends Controller
+{
 
-    public function returnParcelList() {
-        $data               = [];
-        $data['main_menu']  = 'returnParcel';
+    public function returnParcelList()
+    {
+        $data = [];
+        $data['main_menu'] = 'returnParcel';
         $data['child_menu'] = 'returnParcelList';
         $data['page_title'] = 'Return Parcel List';
-        $data['collapse']   = 'sidebar-collapse';
+        $data['collapse'] = 'sidebar-collapse';
         return view('branch.parcel.returnParcel.returnParcelList', $data);
     }
 
-    public function getReturnParcelList(Request $request) {
+    public function getReturnParcelList(Request $request)
+    {
         $branch_id = auth()->guard('branch')->user()->branch->id;
 
         $model = Parcel::with(['district', 'upazila', 'area', 'merchant'])
-//        ->whereRaw('return_branch_id = ? and status in (28,31,32,33,34,35,36)', [$branch_id])
-        ->whereRaw('return_branch_id = ? and status >= 25 and delivery_type = 4', [$branch_id])
+            //        ->whereRaw('return_branch_id = ? and status in (28,31,32,33,34,35,36)', [$branch_id])
+            ->whereRaw('return_branch_id = ? and status >= 25 and delivery_type = 4', [$branch_id])
             ->select();
         return DataTables::of($model)
             ->addIndexColumn()
             ->editColumn('status', function ($data) {
 
-                $parcelStatus   = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
-                $status_name    = $parcelStatus['status_name'];
-                $class          = $parcelStatus['class'];
+                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
+                $status_name = $parcelStatus['status_name'];
+                $class = $parcelStatus['class'];
 
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
 
@@ -64,12 +67,13 @@ class ReturnParcelController extends Controller {
             ->make(true);
     }
 
-    public function printReturnParcelList(Request $request) {
+    public function printReturnParcelList(Request $request)
+    {
         $branch_id = auth()->guard('branch')->user()->branch->id;
 
         $model = Parcel::with(['district', 'upazila', 'area', 'merchant'])
-//        ->whereRaw('return_branch_id = ? and status in (28,31,32,33,34,35,36)', [$branch_id])
-        ->whereRaw('return_branch_id = ? and status >= 25 and delivery_type = 4', [$branch_id])
+            //        ->whereRaw('return_branch_id = ? and status in (28,31,32,33,34,35,36)', [$branch_id])
+            ->whereRaw('return_branch_id = ? and status >= 25 and delivery_type = 4', [$branch_id])
             ->select();
         $parcels = $model->get();
         return view('branch.parcel.returnParcel.printReturnParcelList', compact('parcels'));
@@ -77,9 +81,9 @@ class ReturnParcelController extends Controller {
             ->addIndexColumn()
             ->editColumn('status', function ($data) {
 
-                $parcelStatus   = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
-                $status_name    = $parcelStatus['status_name'];
-                $class          = $parcelStatus['class'];
+                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
+                $status_name = $parcelStatus['status_name'];
+                $class = $parcelStatus['class'];
 
                 return '<span class=" text-bold text-' . $class . '" style="font-size:16px;"> ' . $status_name . '</span>';
 
@@ -99,28 +103,30 @@ class ReturnParcelController extends Controller {
             ->make(true);
     }
 
-    public function completeReturnParcelList() {
-        $data               = [];
-        $data['main_menu']  = 'returnParcel';
+    public function completeReturnParcelList()
+    {
+        $data = [];
+        $data['main_menu'] = 'returnParcel';
         $data['child_menu'] = 'completeReturnParcelList';
         $data['page_title'] = 'Complete Return Parcel List';
-        $data['collapse']   = 'sidebar-collapse';
+        $data['collapse'] = 'sidebar-collapse';
         return view('branch.parcel.returnParcel.completeReturnParcelList', $data);
     }
 
-    public function getCompleteReturnParcelList(Request $request) {
+    public function getCompleteReturnParcelList(Request $request)
+    {
         $branch_id = auth()->guard('branch')->user()->branch->id;
 
         $model = Parcel::with(['district', 'upazila', 'area', 'merchant'])
-        ->whereRaw('return_branch_id = ? and status in (36) and delivery_type = ?', [$branch_id, 4])
+            ->whereRaw('return_branch_id = ? and status in (36) and delivery_type = ?', [$branch_id, 4])
             ->select();
         return DataTables::of($model)
             ->addIndexColumn()
             ->editColumn('status', function ($data) {
 
-                $parcelStatus   = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
-                $status_name    = $parcelStatus['status_name'];
-                $class          = $parcelStatus['class'];
+                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
+                $status_name = $parcelStatus['status_name'];
+                $class = $parcelStatus['class'];
                 return '<a class=" text-bold text-' . $class . '" href="javascript:void(0)" style="font-size:16px;"> ' . $status_name . '</a>';
             })
             ->addColumn('action', function ($data) {
@@ -139,11 +145,12 @@ class ReturnParcelController extends Controller {
     }
 
 
-    public function printCompleteReturnParcelList(Request $request) {
+    public function printCompleteReturnParcelList(Request $request)
+    {
         $branch_id = auth()->guard('branch')->user()->branch->id;
 
         $model = Parcel::with(['district', 'upazila', 'area', 'merchant'])
-        ->whereRaw('return_branch_id = ? and status in (36) and delivery_type = ?', [$branch_id, 4])
+            ->whereRaw('return_branch_id = ? and status in (36) and delivery_type = ?', [$branch_id, 4])
             ->select();
         $parcels = $model->get();
         return view('branch.parcel.returnParcel.printCompleteReturnParcelList', compact('parcels'));
@@ -151,9 +158,9 @@ class ReturnParcelController extends Controller {
             ->addIndexColumn()
             ->editColumn('status', function ($data) {
 
-                $parcelStatus   = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
-                $status_name    = $parcelStatus['status_name'];
-                $class          = $parcelStatus['class'];
+                $parcelStatus = returnParcelStatusNameForBranch($data->status, $data->delivery_type, $data->payment_type, $data);
+                $status_name = $parcelStatus['status_name'];
+                $class = $parcelStatus['class'];
                 return '<a class=" text-bold text-' . $class . '" href="javascript:void(0)" style="font-size:16px;"> ' . $status_name . '</a>';
             })
             ->addColumn('action', function ($data) {
@@ -172,16 +179,17 @@ class ReturnParcelController extends Controller {
     }
 
 
-    public function editReturnParcel(Request $request, Parcel $parcel) {
+    public function editReturnParcel(Request $request, Parcel $parcel)
+    {
         $parcel->load('district', 'upazila', 'area', 'merchant', 'weight_package', 'pickup_branch', 'pickup_rider', 'delivery_branch', 'delivery_rider');
 
-        $data               = [];
-        $data['main_menu']  = 'returnParcel';
+        $data = [];
+        $data['main_menu'] = 'returnParcel';
         $data['child_menu'] = 'returnParcelList';
         $data['page_title'] = 'Update Parcel';
-        $data['collapse']   = 'sidebar-collapse';
-        $data['parcel']     = $parcel;
-        $data['branches']   = Branch::where([
+        $data['collapse'] = 'sidebar-collapse';
+        $data['parcel'] = $parcel;
+        $data['branches'] = Branch::where([
             ['status', '=', 1],
         ])->get();
 
@@ -224,26 +232,27 @@ class ReturnParcelController extends Controller {
         return view('branch.parcel.returnParcel.editReturnParcel', $data);
     }
 
-    public function confirmEditReturnParcel(Request $request, Parcel $parcel) {
+    public function confirmEditReturnParcel(Request $request, Parcel $parcel)
+    {
         $validator = Validator::make($request->all(), [
-            'cod_percent'                  => 'required',
-            'cod_charge'                   => 'required',
-            'delivery_charge'              => 'required',
-            'weight_package_charge'        => 'required',
+            'cod_percent' => 'required',
+            'cod_charge' => 'required',
+            'delivery_charge' => 'required',
+            'weight_package_charge' => 'required',
             'merchant_service_area_charge' => 'required',
             'merchant_service_area_return_charge' => 'required',
-            'total_charge'                 => 'required',
-            'weight_package_id'            => 'required',
-            'delivery_option_id'           => 'required',
-            'product_details'              => 'required',
-            'total_collect_amount'         => 'sometimes',
-            'customer_name'                => 'required',
-            'customer_contact_number'      => 'required',
-            'customer_address'             => 'required',
-            'district_id'                  => 'required',
-            'upazila_id'                   => 'required',
-            'area_id'                      => 'required',
-            'parcel_note'                  => 'sometimes',
+            'total_charge' => 'required',
+            'weight_package_id' => 'required',
+            'delivery_option_id' => 'required',
+            'product_details' => 'required',
+            'total_collect_amount' => 'sometimes',
+            'customer_name' => 'required',
+            'customer_contact_number' => 'required',
+            'customer_address' => 'required',
+            'district_id' => 'required',
+            'upazila_id' => 'required',
+            'area_id' => 'required',
+            'parcel_note' => 'sometimes',
         ]);
 
         if ($validator->fails()) {
@@ -254,38 +263,38 @@ class ReturnParcelController extends Controller {
         try {
 
             $data = [
-//                'date'                         => date('Y-m-d'),
-                'merchant_order_id'            => $request->input('merchant_order_id'),
-                'customer_name'                => $request->input('customer_name'),
-                'customer_address'             => $request->input('customer_address'),
-                'customer_contact_number'      => $request->input('customer_contact_number'),
-                'product_details'              => $request->input('product_details'),
-                'district_id'                  => $request->input('district_id'),
-                'upazila_id'                   => $request->input('upazila_id'),
-                'area_id'                      => $request->input('area_id'),
-                'weight_package_id'            => $request->input('weight_package_id'),
-                'delivery_charge'              => $request->input('delivery_charge'),
-                'weight_package_charge'        => $request->input('weight_package_charge'),
+                //                'date'                         => date('Y-m-d'),
+                'merchant_order_id' => $request->input('merchant_order_id'),
+                'customer_name' => $request->input('customer_name'),
+                'customer_address' => $request->input('customer_address'),
+                'customer_contact_number' => $request->input('customer_contact_number'),
+                'product_details' => $request->input('product_details'),
+                'district_id' => $request->input('district_id'),
+                'upazila_id' => $request->input('upazila_id'),
+                'area_id' => $request->input('area_id'),
+                'weight_package_id' => $request->input('weight_package_id'),
+                'delivery_charge' => $request->input('delivery_charge'),
+                'weight_package_charge' => $request->input('weight_package_charge'),
                 'merchant_service_area_charge' => $request->input('merchant_service_area_charge'),
                 'merchant_service_area_return_charge' => $request->input('merchant_service_area_return_charge'),
-                'total_collect_amount'         => $request->input('total_collect_amount') ?? 0,
-                'cod_percent'                  => $request->input('cod_percent'),
-                'cod_charge'                   => $request->input('cod_charge'),
-                'total_charge'                 => $request->input('total_charge'),
-                'delivery_option_id'           => $request->input('delivery_option_id'),
-                'parcel_note'                  => $request->input('parcel_note'),
-//                'parcel_date'                  => date('Y-m-d'),
+                'total_collect_amount' => $request->input('total_collect_amount') ?? 0,
+                'cod_percent' => $request->input('cod_percent'),
+                'cod_charge' => $request->input('cod_charge'),
+                'total_charge' => ceil($request->input('total_charge')),
+                'delivery_option_id' => $request->input('delivery_option_id'),
+                'parcel_note' => $request->input('parcel_note'),
+                //                'parcel_date'                  => date('Y-m-d'),
             ];
 
             $check = Parcel::where('id', $parcel->id)->update($data) ? true : false;
 
             if ($check) {
                 $data = [
-                    'parcel_id'             => $parcel->id,
-                    'date'                  => date('Y-m-d'),
-                    'time'                  => date('H:i:s'),
-                    'status'                => $parcel->status,
-                    'delivery_branch_id'      => auth()->guard('branch')->user()->branch->id,
+                    'parcel_id' => $parcel->id,
+                    'date' => date('Y-m-d'),
+                    'time' => date('H:i:s'),
+                    'status' => $parcel->status,
+                    'delivery_branch_id' => auth()->guard('branch')->user()->branch->id,
                     'delivery_branch_user_id' => auth()->guard('branch')->user()->id,
                     'delivery_type' => $parcel->delivery_type,
                 ];
@@ -300,7 +309,7 @@ class ReturnParcelController extends Controller {
                 return redirect()->back()->withInput();
             }
 
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             \DB::rollback();
             $this->setMessage('Database Error Found', 'danger');
             return redirect()->back()->withInput();
@@ -309,16 +318,17 @@ class ReturnParcelController extends Controller {
     }
 
 
-    public function editReturnCompleteParcel(Request $request, Parcel $parcel) {
+    public function editReturnCompleteParcel(Request $request, Parcel $parcel)
+    {
         $parcel->load('district', 'upazila', 'area', 'merchant', 'weight_package', 'pickup_branch', 'pickup_rider', 'delivery_branch', 'delivery_rider');
 
-        $data               = [];
-        $data['main_menu']  = 'returnParcel';
+        $data = [];
+        $data['main_menu'] = 'returnParcel';
         $data['child_menu'] = 'completeReturnParcelList';
         $data['page_title'] = 'Update Parcel';
-        $data['collapse']   = 'sidebar-collapse';
-        $data['parcel']     = $parcel;
-        $data['branches']   = Branch::where([
+        $data['collapse'] = 'sidebar-collapse';
+        $data['parcel'] = $parcel;
+        $data['branches'] = Branch::where([
             ['status', '=', 1],
         ])->get();
 
@@ -361,26 +371,27 @@ class ReturnParcelController extends Controller {
         return view('branch.parcel.returnParcel.editReturnCompleteParcel', $data);
     }
 
-    public function confirmEditReturnCompleteParcel(Request $request, Parcel $parcel) {
+    public function confirmEditReturnCompleteParcel(Request $request, Parcel $parcel)
+    {
         $validator = Validator::make($request->all(), [
-            'cod_percent'                  => 'required',
-            'cod_charge'                   => 'required',
-            'delivery_charge'              => 'required',
-            'weight_package_charge'        => 'required',
+            'cod_percent' => 'required',
+            'cod_charge' => 'required',
+            'delivery_charge' => 'required',
+            'weight_package_charge' => 'required',
             'merchant_service_area_charge' => 'required',
             'merchant_service_area_return_charge' => 'required',
-            'total_charge'                 => 'required',
-            'weight_package_id'            => 'required',
-            'delivery_option_id'           => 'required',
-            'product_details'              => 'required',
-            'total_collect_amount'         => 'sometimes',
-            'customer_name'                => 'required',
-            'customer_contact_number'      => 'required',
-            'customer_address'             => 'required',
-            'district_id'                  => 'required',
-            'upazila_id'                   => 'required',
-            'area_id'                      => 'required',
-            'parcel_note'                  => 'sometimes',
+            'total_charge' => 'required',
+            'weight_package_id' => 'required',
+            'delivery_option_id' => 'required',
+            'product_details' => 'required',
+            'total_collect_amount' => 'sometimes',
+            'customer_name' => 'required',
+            'customer_contact_number' => 'required',
+            'customer_address' => 'required',
+            'district_id' => 'required',
+            'upazila_id' => 'required',
+            'area_id' => 'required',
+            'parcel_note' => 'sometimes',
         ]);
 
         if ($validator->fails()) {
@@ -391,38 +402,38 @@ class ReturnParcelController extends Controller {
         try {
 
             $data = [
-//                'date'                         => date('Y-m-d'),
-                'merchant_order_id'            => $request->input('merchant_order_id'),
-                'customer_name'                => $request->input('customer_name'),
-                'customer_address'             => $request->input('customer_address'),
-                'customer_contact_number'      => $request->input('customer_contact_number'),
-                'product_details'              => $request->input('product_details'),
-                'district_id'                  => $request->input('district_id'),
-                'upazila_id'                   => $request->input('upazila_id'),
-                'area_id'                      => $request->input('area_id'),
-                'weight_package_id'            => $request->input('weight_package_id'),
-                'delivery_charge'              => $request->input('delivery_charge'),
-                'weight_package_charge'        => $request->input('weight_package_charge'),
+                //                'date'                         => date('Y-m-d'),
+                'merchant_order_id' => $request->input('merchant_order_id'),
+                'customer_name' => $request->input('customer_name'),
+                'customer_address' => $request->input('customer_address'),
+                'customer_contact_number' => $request->input('customer_contact_number'),
+                'product_details' => $request->input('product_details'),
+                'district_id' => $request->input('district_id'),
+                'upazila_id' => $request->input('upazila_id'),
+                'area_id' => $request->input('area_id'),
+                'weight_package_id' => $request->input('weight_package_id'),
+                'delivery_charge' => $request->input('delivery_charge'),
+                'weight_package_charge' => $request->input('weight_package_charge'),
                 'merchant_service_area_charge' => $request->input('merchant_service_area_charge'),
                 'merchant_service_area_return_charge' => $request->input('merchant_service_area_return_charge'),
-                'total_collect_amount'         => $request->input('total_collect_amount') ?? 0,
-                'cod_percent'                  => $request->input('cod_percent'),
-                'cod_charge'                   => $request->input('cod_charge'),
-                'total_charge'                 => $request->input('total_charge'),
-                'delivery_option_id'           => $request->input('delivery_option_id'),
-                'parcel_note'                  => $request->input('parcel_note'),
-//                'parcel_date'                  => date('Y-m-d'),
+                'total_collect_amount' => $request->input('total_collect_amount') ?? 0,
+                'cod_percent' => $request->input('cod_percent'),
+                'cod_charge' => $request->input('cod_charge'),
+                'total_charge' => ceil($request->input('total_charge')),
+                'delivery_option_id' => $request->input('delivery_option_id'),
+                'parcel_note' => $request->input('parcel_note'),
+                //                'parcel_date'                  => date('Y-m-d'),
             ];
 
             $check = Parcel::where('id', $parcel->id)->update($data) ? true : false;
 
             if ($check) {
                 $data = [
-                    'parcel_id'             => $parcel->id,
-                    'date'                  => date('Y-m-d'),
-                    'time'                  => date('H:i:s'),
-                    'status'                => $parcel->status,
-                    'delivery_branch_id'      => auth()->guard('branch')->user()->branch->id,
+                    'parcel_id' => $parcel->id,
+                    'date' => date('Y-m-d'),
+                    'time' => date('H:i:s'),
+                    'status' => $parcel->status,
+                    'delivery_branch_id' => auth()->guard('branch')->user()->branch->id,
                     'delivery_branch_user_id' => auth()->guard('branch')->user()->id,
                     'delivery_type' => $parcel->delivery_type,
 
@@ -438,7 +449,7 @@ class ReturnParcelController extends Controller {
                 return redirect()->back()->withInput();
             }
 
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             \DB::rollback();
             $this->setMessage('Database Error Found', 'danger');
             return redirect()->back()->withInput();
@@ -447,7 +458,8 @@ class ReturnParcelController extends Controller {
     }
 
 
-    public function deliveryParcelReceived(Request $request) {
+    public function deliveryParcelReceived(Request $request)
+    {
         $response = ['error' => 'Error Found'];
         if ($request->ajax()) {
             $validator = Validator::make($request->all(), [
@@ -458,19 +470,19 @@ class ReturnParcelController extends Controller {
                 $response = ['error' => 'Error Found'];
             } else {
                 $data = [
-                    'status'               => 11,
-                    'parcel_date'          => date('Y-m-d'),
+                    'status' => 11,
+                    'parcel_date' => date('Y-m-d'),
                     'delivery_branch_date' => date('Y-m-d'),
                 ];
                 $parcel = Parcel::where('id', $request->parcel_id)->update($data);
-                $parcel=Parcel::where('id', $request->parcel_id)->first();
+                $parcel = Parcel::where('id', $request->parcel_id)->first();
                 if ($parcel) {
                     $data = [
-                        'parcel_id'          => $request->parcel_id,
+                        'parcel_id' => $request->parcel_id,
                         'delivery_branch_id' => auth()->guard('branch')->user()->id,
-                        'date'               => date('Y-m-d'),
-                        'time'               => date('H:i:s'),
-                        'status'             => 11,
+                        'date' => date('Y-m-d'),
+                        'time' => date('H:i:s'),
+                        'status' => 11,
                         'delivery_type' => $parcel->delivery_type,
                     ];
                     // Invalid Log 
@@ -486,7 +498,8 @@ class ReturnParcelController extends Controller {
         return response()->json($response);
     }
 
-    public function deliveryParcelReject(Request $request) {
+    public function deliveryParcelReject(Request $request)
+    {
         $response = ['error' => 'Error Found'];
         if ($request->ajax()) {
             $validator = Validator::make($request->all(), [
@@ -497,19 +510,19 @@ class ReturnParcelController extends Controller {
                 $response = ['error' => 'Error Found'];
             } else {
                 $data = [
-                    'status'               => 12,
-                    'parcel_date'          => date('Y-m-d'),
+                    'status' => 12,
+                    'parcel_date' => date('Y-m-d'),
                     'delivery_branch_date' => date('Y-m-d'),
                 ];
                 $parcel = Parcel::where('id', $request->parcel_id)->update($data);
-                $parcel=Parcel::where('id', $request->parcel_id)->first();
+                $parcel = Parcel::where('id', $request->parcel_id)->first();
                 if ($parcel) {
                     $data = [
-                        'parcel_id'          => $request->parcel_id,
+                        'parcel_id' => $request->parcel_id,
                         'delivery_branch_id' => auth()->guard('branch')->user()->id,
-                        'date'               => date('Y-m-d'),
-                        'time'               => date('H:i:s'),
-                        'status'             => 12,
+                        'date' => date('Y-m-d'),
+                        'time' => date('H:i:s'),
+                        'status' => 12,
                         'delivery_type' => $parcel->delivery_type,
                     ];
                     // Invalid Log 
@@ -529,22 +542,25 @@ class ReturnParcelController extends Controller {
         return response()->json($response);
     }
 
-    public function deliveryRiderRunList() {
-        $data               = [];
-        $data['main_menu']  = 'parcel';
+    public function deliveryRiderRunList()
+    {
+        $data = [];
+        $data['main_menu'] = 'parcel';
         $data['child_menu'] = 'deliveryRiderRunList';
         $data['page_title'] = 'Delivery Rider List';
-        $data['collapse']   = 'sidebar-collapse';
+        $data['collapse'] = 'sidebar-collapse';
         return view('branch.parcel.deliveryRiderRunList', $data);
     }
 
-    public function getDeliveryRiderRunList(Request $request) {
+    public function getDeliveryRiderRunList(Request $request)
+    {
         $branch_id = auth()->guard('branch')->user()->id;
 
-        $model = RiderRun::with(['rider' => function ($query) {
+        $model = RiderRun::with([
+            'rider' => function ($query) {
                 $query->select('id', 'name', 'contact_number', 'address');
             },
-            ])
+        ])
             ->whereRaw('branch_id = ? and run_type = 2', [$branch_id])
             ->orderBy('id', 'desc')
             ->select();
@@ -584,73 +600,76 @@ class ReturnParcelController extends Controller {
             ->make(true);
     }
 
-    public function deliveryRiderRunGenerate() {
+    public function deliveryRiderRunGenerate()
+    {
         $branch_id = auth()->guard('branch')->user()->id;
         \Cart::session($branch_id)->clear();
 
-        $data               = [];
-        $data['main_menu']  = 'parcel';
+        $data = [];
+        $data['main_menu'] = 'parcel';
         $data['child_menu'] = 'deliveryRiderRunGenerate';
         $data['page_title'] = 'Delivery Rider Run Generate';
-        $data['collapse']   = 'sidebar-collapse';
-        $data['riders']     = Rider::where([
-            'status'    => 1,
+        $data['collapse'] = 'sidebar-collapse';
+        $data['riders'] = Rider::where([
+            'status' => 1,
             'branch_id' => $branch_id,
         ])
-        ->select('id', 'name', 'contact_number', 'address')
-        ->get();
+            ->select('id', 'name', 'contact_number', 'address')
+            ->get();
 
-        $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number');
-        },
+        $data['parcels'] = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number');
+            },
         ])
-        ->where([
-            'pickup_branch_id' => $branch_id,
-        ])
-        ->whereIn('status', [11,15,17])
-        ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id')
-        ->get();
+            ->where([
+                'pickup_branch_id' => $branch_id,
+            ])
+            ->whereIn('status', [11, 15, 17])
+            ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id')
+            ->get();
 
         return view('branch.parcel.deliveryRiderRunGenerate', $data);
     }
 
-    public function returnDeliveryRiderRunParcel(Request $request) {
+    public function returnDeliveryRiderRunParcel(Request $request)
+    {
 
         $branch_id = auth()->guard('branch')->user()->id;
         $parcel_invoice_barcode = $request->input('parcel_invoice_barcode');
-        $parcel_invoice         = $request->input('parcel_invoice');
-        $merchant_order_id      = $request->input('merchant_order_id');
+        $parcel_invoice = $request->input('parcel_invoice');
+        $merchant_order_id = $request->input('merchant_order_id');
 
         if (!empty($parcel_invoice_barcode) || !empty($parcel_invoice) || !empty($merchant_order_id)) {
 
-            $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-                $query->select('id', 'name', 'contact_number');
-            },
+            $data['parcels'] = Parcel::with([
+                'merchant' => function ($query) {
+                    $query->select('id', 'name', 'contact_number');
+                },
             ])
-            ->where(function ($query) use ($branch_id, $parcel_invoice_barcode, $parcel_invoice, $merchant_order_id) {
-                $query->whereIn('status', [11,15,17]);
-                $query->where([
-                    'delivery_branch_id' => $branch_id,
-                ]);
+                ->where(function ($query) use ($branch_id, $parcel_invoice_barcode, $parcel_invoice, $merchant_order_id) {
+                    $query->whereIn('status', [11, 15, 17]);
+                    $query->where([
+                        'delivery_branch_id' => $branch_id,
+                    ]);
 
-                if (!empty($parcel_invoice_barcode)) {
-                    $query->where([
-                        'parcel_invoice' => $parcel_invoice_barcode,
-                    ]);
-                } elseif (!empty($parcel_invoice)) {
-                    $query->where([
-                        'parcel_invoice' => $parcel_invoice,
-                    ]);
-                } elseif (!empty($merchant_order_id)) {
-                    $query->where([
-                        'merchant_order_id' => $merchant_order_id,
-                    ]);
-                }
-            })
-            ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id')
-            ->get();
-        }
-        else{
+                    if (!empty($parcel_invoice_barcode)) {
+                        $query->where([
+                            'parcel_invoice' => $parcel_invoice_barcode,
+                        ]);
+                    } elseif (!empty($parcel_invoice)) {
+                        $query->where([
+                            'parcel_invoice' => $parcel_invoice,
+                        ]);
+                    } elseif (!empty($merchant_order_id)) {
+                        $query->where([
+                            'merchant_order_id' => $merchant_order_id,
+                        ]);
+                    }
+                })
+                ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'merchant_id')
+                ->get();
+        } else {
             $data['parcels'] = [];
         }
         $parcels = $data['parcels'];
@@ -658,19 +677,21 @@ class ReturnParcelController extends Controller {
     }
 
 
-    public function deliveryRiderRunParcelAddCart(Request $request) {
+    public function deliveryRiderRunParcelAddCart(Request $request)
+    {
         $branch_id = auth()->guard('branch')->user()->id;
         $parcel_invoice = $request->input('parcel_invoice');
-        $parcels = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number', 'address');
-        },
+        $parcels = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number', 'address');
+            },
         ])
-        ->whereIn('id', $request->parcel_invoices)
-        ->where([
-            'pickup_branch_id' => $branch_id,
-        ])
-        ->whereIn('status', [11,15,17])
-        ->get();
+            ->whereIn('id', $request->parcel_invoices)
+            ->where([
+                'pickup_branch_id' => $branch_id,
+            ])
+            ->whereIn('status', [11, 15, 17])
+            ->get();
 
         if ($parcels->count() > 0) {
             $cart = \Cart::session($branch_id)->getContent();
@@ -678,7 +699,7 @@ class ReturnParcelController extends Controller {
 
             foreach ($parcels as $parcel) {
                 $cart_id = $parcel->id;
-                $flag    = 0;
+                $flag = 0;
 
                 if (count($cart) > 0) {
                     foreach ($cart as $item) {
@@ -689,19 +710,19 @@ class ReturnParcelController extends Controller {
                 }
                 if ($flag == 0) {
                     \Cart::session($branch_id)->add([
-                        'id'              => $cart_id,
-                        'name'            => $parcel->merchant->name,
-                        'price'           => 1,
-                        'quantity'        => 1,
-                        'target'          => 'subtotal',
-                        'attributes'      => [
-                            'parcel_invoice'          => $parcel->parcel_invoice,
-                            'customer_name'           => $parcel->customer_name,
-                            'customer_address'        => $parcel->customer_address,
+                        'id' => $cart_id,
+                        'name' => $parcel->merchant->name,
+                        'price' => 1,
+                        'quantity' => 1,
+                        'target' => 'subtotal',
+                        'attributes' => [
+                            'parcel_invoice' => $parcel->parcel_invoice,
+                            'customer_name' => $parcel->customer_name,
+                            'customer_address' => $parcel->customer_address,
                             'customer_contact_number' => $parcel->customer_contact_number,
-                            'merchant_name'           => $parcel->merchant->name,
+                            'merchant_name' => $parcel->merchant->name,
                             'merchant_contact_number' => $parcel->merchant->contact_number,
-                            'option'                  => [],
+                            'option' => [],
                         ],
                         'associatedModel' => $parcel,
                     ]);
@@ -710,10 +731,10 @@ class ReturnParcelController extends Controller {
 
             $error = "";
 
-            $cart      = \Cart::session($branch_id)->getContent();
-            $cart      = $cart->sortBy('id');
+            $cart = \Cart::session($branch_id)->getContent();
+            $cart = $cart->sortBy('id');
             $totalItem = \Cart::session($branch_id)->getTotalQuantity();
-            $getTotal  = \Cart::session($branch_id)->getTotal();
+            $getTotal = \Cart::session($branch_id)->getTotal();
         } else {
             $error = "Parcel Invoice Not Found";
 
@@ -721,18 +742,19 @@ class ReturnParcelController extends Controller {
             $cart = $cart->sortBy('id');
 
             $totalItem = \Cart::session($branch_id)->getTotalQuantity();
-            $getTotal  = \Cart::session($branch_id)->getTotal();
+            $getTotal = \Cart::session($branch_id)->getTotal();
         }
         $data = [
-            'cart'      => $cart,
+            'cart' => $cart,
             'totalItem' => $totalItem,
-            'getTotal'  => $getTotal,
-            'error'     => $error,
+            'getTotal' => $getTotal,
+            'error' => $error,
         ];
         return view('branch.parcel.deliveryRiderRunParcelCart', $data);
     }
 
-    public function deliveryRiderRunParcelDeleteCart(Request $request) {
+    public function deliveryRiderRunParcelDeleteCart(Request $request)
+    {
 
         $branch_id = auth()->guard('branch')->user()->id;
         \Cart::session($branch_id)->remove($request->input('itemId'));
@@ -741,20 +763,21 @@ class ReturnParcelController extends Controller {
         $cart = $cart->sortBy('id');
 
         $data = [
-            'cart'      => $cart,
+            'cart' => $cart,
             'totalItem' => \Cart::session($branch_id)->getTotalQuantity(),
-            'getTotal'  => \Cart::session($branch_id)->getTotal(),
-            'error'     => "",
+            'getTotal' => \Cart::session($branch_id)->getTotal(),
+            'error' => "",
         ];
         return view('branch.parcel.deliveryRiderRunParcelCart', $data);
     }
 
-    public function confirmDeliveryRiderRunGenerate(Request $request) {
+    public function confirmDeliveryRiderRunGenerate(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             'total_run_parcel' => 'required',
-            'rider_id'         => 'required',
-            'date'             => 'required',
+            'rider_id' => 'required',
+            'date' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -764,13 +787,13 @@ class ReturnParcelController extends Controller {
         $branch_id = auth()->guard('branch')->user()->id;
 
         $data = [
-            'run_invoice'      => $this->returnUniqueRiderRunInvoice(),
-            'rider_id'         => $request->input('rider_id'),
-            'branch_id'        => $branch_id,
+            'run_invoice' => $this->returnUniqueRiderRunInvoice(),
+            'rider_id' => $request->input('rider_id'),
+            'branch_id' => $branch_id,
             'create_date_time' => $request->input('date') . ' ' . date('H:i:s'),
             'total_run_parcel' => $request->input('total_run_parcel'),
-            'note'             => $request->input('note'),
-            'run_type'         => 2,
+            'note' => $request->input('note'),
+            'run_type' => 2,
         ];
         $riderRun = RiderRun::create($data);
 
@@ -783,22 +806,22 @@ class ReturnParcelController extends Controller {
 
                 RiderRunDetail::create([
                     'rider_run_id' => $riderRun->id,
-                    'parcel_id'    => $parcel_id,
+                    'parcel_id' => $parcel_id,
                 ]);
 
                 Parcel::where('id', $parcel_id)->update([
-                    'status'          => 13,
-                    'parcel_date'     => $request->input('date'),
+                    'status' => 13,
+                    'parcel_date' => $request->input('date'),
                     'delivery_rider_id' => $request->input('rider_id'),
                 ]);
-                $parcel=Parcel::where('id', $parcel_id)->first();
+                $parcel = Parcel::where('id', $parcel_id)->first();
                 ParcelLog::create([
-                    'parcel_id'        => $parcel_id,
-                    'delivery_rider_id'  => $request->input('rider_id'),
+                    'parcel_id' => $parcel_id,
+                    'delivery_rider_id' => $request->input('rider_id'),
                     'delivery_branch_id' => $branch_id,
-                    'date'             => date('Y-m-d'),
-                    'time'             => date('H:i:s'),
-                    'status'           => 13,
+                    'date' => date('Y-m-d'),
+                    'time' => date('H:i:s'),
+                    'status' => 13,
                     'delivery_type' => $parcel->delivery_type,
                 ]);
             }
@@ -808,14 +831,14 @@ class ReturnParcelController extends Controller {
 
             $this->setMessage('Delivery Rider Run Insert Successfully', 'success');
             return redirect()->back();
-        }
-        else{
+        } else {
             $this->setMessage('Delivery Rider Run Insert Failed', 'danger');
             return redirect()->back()->withInput();
         }
     }
 
-    public function startDeliveryRiderRun(Request $request) {
+    public function startDeliveryRiderRun(Request $request)
+    {
         $response = ['error' => 'Error Found'];
 
         if ($request->ajax()) {
@@ -828,7 +851,7 @@ class ReturnParcelController extends Controller {
             } else {
                 $check = RiderRun::where('id', $request->rider_run_id)->update([
                     'start_date_time' => date('Y-m-d H:i:s'),
-                    'status'          => 2,
+                    'status' => 2,
                 ]);
 
                 if ($check) {
@@ -836,17 +859,17 @@ class ReturnParcelController extends Controller {
 
                     foreach ($riderRunDetails as $riderRunDetail) {
                         Parcel::where('id', $riderRunDetail->parcel_id)->update([
-                            'status'      => 14,
+                            'status' => 14,
                             'parcel_date' => date('Y-m-d'),
                         ]);
-                        $parcel=Parcel::where('id', $riderRunDetail->parcel_id)->first();
+                        $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->first();
                         // Invalid Log 
                         ParcelLog::create([
-                            'parcel_id'        => $riderRunDetail->parcel_id,
+                            'parcel_id' => $riderRunDetail->parcel_id,
                             'pickup_branch_id' => auth()->guard('branch')->user()->id,
-                            'date'             => date('Y-m-d'),
-                            'time'             => date('H:i:s'),
-                            'status'           => 14,
+                            'date' => date('Y-m-d'),
+                            'time' => date('H:i:s'),
+                            'status' => 14,
                             'delivery_type' => $parcel->delivery_type,
                         ]);
 
@@ -867,7 +890,8 @@ class ReturnParcelController extends Controller {
         return response()->json($response);
     }
 
-    public function cancelDeliveryRiderRun(Request $request) {
+    public function cancelDeliveryRiderRun(Request $request)
+    {
         $response = ['error' => 'Error Found'];
 
         if ($request->ajax()) {
@@ -880,7 +904,7 @@ class ReturnParcelController extends Controller {
             } else {
                 $check = RiderRun::where('id', $request->rider_run_id)->update([
                     'cancel_date_time' => date('Y-m-d H:i:s'),
-                    'status'           => 3,
+                    'status' => 3,
                 ]);
 
                 if ($check) {
@@ -888,17 +912,17 @@ class ReturnParcelController extends Controller {
 
                     foreach ($riderRunDetails as $riderRunDetail) {
                         Parcel::where('id', $riderRunDetail->parcel_id)->update([
-                            'status'      => 15,
+                            'status' => 15,
                             'parcel_date' => date('Y-m-d'),
                         ]);
-                        $parcel=Parcel::where('id',  $riderRunDetail->parcel_id)->first();
+                        $parcel = Parcel::where('id', $riderRunDetail->parcel_id)->first();
                         // Invalid Log 
                         ParcelLog::create([
-                            'parcel_id'        => $riderRunDetail->parcel_id,
+                            'parcel_id' => $riderRunDetail->parcel_id,
                             'pickup_branch_id' => auth()->guard('branch')->user()->id,
-                            'date'             => date('Y-m-d'),
-                            'time'             => date('H:i:s'),
-                            'status'           => 15,
+                            'date' => date('Y-m-d'),
+                            'time' => date('H:i:s'),
+                            'status' => 15,
                             'delivery_type' => $parcel->delivery_type,
                         ]);
                         RiderRunDetail::where('id', $riderRunDetail->id)->update([
@@ -921,7 +945,8 @@ class ReturnParcelController extends Controller {
         return response()->json($response);
     }
 
-    public function viewDeliveryRiderRun(Request $request, RiderRun $riderRun) {
+    public function viewDeliveryRiderRun(Request $request, RiderRun $riderRun)
+    {
         $riderRun->load('branch', 'rider', 'rider_run_details');
         return view('branch.parcel.viewDeliveryRiderRun', compact('riderRun'));
     }
@@ -930,21 +955,23 @@ class ReturnParcelController extends Controller {
 
 
 
-    public function viewParcel(Request $request, Parcel $parcel) {
+    public function viewParcel(Request $request, Parcel $parcel)
+    {
         $parcel->load('district', 'upazila', 'area', 'merchant', 'weight_package', 'pickup_branch', 'pickup_rider', 'delivery_branch', 'delivery_rider');
         return view('branch.parcel.viewParcel', compact('parcel'));
     }
 
-    public function editParcel(Request $request, Parcel $parcel) {
+    public function editParcel(Request $request, Parcel $parcel)
+    {
         $parcel->load('district', 'upazila', 'area', 'merchant', 'weight_package', 'pickup_branch', 'pickup_rider', 'delivery_branch', 'delivery_rider');
 
-        $data               = [];
-        $data['main_menu']  = 'parcel';
+        $data = [];
+        $data['main_menu'] = 'parcel';
         $data['child_menu'] = ($parcel->status < 7) ? 'pickupParcelList' : 'deliveryParcelList';
         $data['page_title'] = 'Update Parcel';
-        $data['collapse']   = 'sidebar-collapse';
-        $data['parcel']     = $parcel;
-        $data['branches']   = Branch::where([
+        $data['collapse'] = 'sidebar-collapse';
+        $data['parcel'] = $parcel;
+        $data['branches'] = Branch::where([
             ['status', '=', 1],
         ])->get();
 
@@ -987,23 +1014,24 @@ class ReturnParcelController extends Controller {
         return view('branch.parcel.editParcel', $data);
     }
 
-    public function confirmEditParcel(Request $request, Parcel $parcel) {
+    public function confirmEditParcel(Request $request, Parcel $parcel)
+    {
 
         $validator = Validator::make($request->all(), [
-            'cod_percent'             => 'required',
-            'cod_charge'              => 'required',
-            'delivery_charge'         => 'required',
-            'total_charge'            => 'required',
-            'weight_package_id'       => 'required',
-            'delivery_option_id'      => 'required',
-            'product_details'         => 'required',
-            'total_collect_amount'    => 'sometimes',
-            'customer_name'           => 'required',
+            'cod_percent' => 'required',
+            'cod_charge' => 'required',
+            'delivery_charge' => 'required',
+            'total_charge' => 'required',
+            'weight_package_id' => 'required',
+            'delivery_option_id' => 'required',
+            'product_details' => 'required',
+            'total_collect_amount' => 'sometimes',
+            'customer_name' => 'required',
             'customer_contact_number' => 'required',
-            'customer_address'        => 'required',
-            'district_id'             => 'required',
-            'upazila_id'              => 'required',
-            'area_id'                 => 'required',
+            'customer_address' => 'required',
+            'district_id' => 'required',
+            'upazila_id' => 'required',
+            'area_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -1011,22 +1039,22 @@ class ReturnParcelController extends Controller {
         }
 
         $status = $request->input('status');
-        $data   = [
-            'customer_name'           => $request->input('customer_name'),
-            'customer_address'        => $request->input('customer_address'),
+        $data = [
+            'customer_name' => $request->input('customer_name'),
+            'customer_address' => $request->input('customer_address'),
             'customer_contact_number' => $request->input('customer_contact_number'),
-            'product_details'         => $request->input('product_details'),
-            'district_id'             => $request->input('district_id'),
-            'upazila_id'              => $request->input('upazila_id'),
-            'area_id'                 => $request->input('area_id'),
-            'weight_package_id'       => $request->input('weight_package_id'),
-            'delivery_charge'         => $request->input('delivery_charge'),
-            'total_collect_amount'    => $request->input('total_collect_amount') ?? 0,
-            'cod_percent'             => $request->input('cod_percent'),
-            'cod_charge'              => $request->input('cod_charge'),
-            'total_charge'            => $request->input('total_charge'),
-            'delivery_option_id'      => $request->input('delivery_option_id'),
-            'parcel_date'             => date('Y-m-d'),
+            'product_details' => $request->input('product_details'),
+            'district_id' => $request->input('district_id'),
+            'upazila_id' => $request->input('upazila_id'),
+            'area_id' => $request->input('area_id'),
+            'weight_package_id' => $request->input('weight_package_id'),
+            'delivery_charge' => $request->input('delivery_charge'),
+            'total_collect_amount' => $request->input('total_collect_amount') ?? 0,
+            'cod_percent' => $request->input('cod_percent'),
+            'cod_charge' => $request->input('cod_charge'),
+            'total_charge' => ceil($request->input('total_charge')),
+            'delivery_option_id' => $request->input('delivery_option_id'),
+            'parcel_date' => date('Y-m-d'),
         ];
 
         $check = Parcel::where('id', $parcel->id)->update($data) ? true : false;
@@ -1034,9 +1062,9 @@ class ReturnParcelController extends Controller {
         if ($check) {
             $data = [
                 'parcel_id' => $parcel->id,
-                'date'      => date('Y-m-d'),
-                'time'      => date('H:i:s'),
-                'status'    => $parcel->status,
+                'date' => date('Y-m-d'),
+                'time' => date('H:i:s'),
+                'status' => $parcel->status,
                 'delivery_type' => $parcel->delivery_type,
             ];
 
@@ -1061,7 +1089,8 @@ class ReturnParcelController extends Controller {
 
 
 
-    public function assignPickupRider(Request $request, Parcel $parcel) {
+    public function assignPickupRider(Request $request, Parcel $parcel)
+    {
         $parcel->load('district', 'upazila', 'area', 'merchant', 'weight_package');
         $riders = Rider::where([
             ['status', '=', 1],
@@ -1071,13 +1100,14 @@ class ReturnParcelController extends Controller {
         return view('branch.parcel.assignPickupRider', compact('parcel', 'riders'));
     }
 
-    public function confirmAssignPickupRider(Request $request) {
+    public function confirmAssignPickupRider(Request $request)
+    {
 
         $response = ['error' => 'Error Found'];
 
         if ($request->ajax()) {
             $validator = Validator::make($request->all(), [
-                'rider_id'  => 'required',
+                'rider_id' => 'required',
                 'parcel_id' => 'required',
             ]);
 
@@ -1086,19 +1116,19 @@ class ReturnParcelController extends Controller {
             } else {
                 $data = [
                     'pickup_rider_id' => $request->rider_id,
-                    'status'          => 3,
-                    'parcel_date'     => date('Y-m-d'),
+                    'status' => 3,
+                    'parcel_date' => date('Y-m-d'),
                 ];
                 $parcel = Parcel::where('id', $request->parcel_id)->update($data);
-                $parcel=Parcel::where('id', $request->parcel_id)->first();
+                $parcel = Parcel::where('id', $request->parcel_id)->first();
                 if ($parcel) {
                     $data = [
-                        'parcel_id'        => $request->parcel_id,
-                        'pickup_rider_id'  => $request->rider_id,
+                        'parcel_id' => $request->parcel_id,
+                        'pickup_rider_id' => $request->rider_id,
                         'pickup_branch_id' => auth()->guard('branch')->user()->id,
-                        'date'             => date('Y-m-d'),
-                        'time'             => date('H:i:s'),
-                        'status'           => 3,
+                        'date' => date('Y-m-d'),
+                        'time' => date('H:i:s'),
+                        'status' => 3,
                         'delivery_type' => $parcel->delivery_type,
                     ];
                     ParcelLog::create($data);
@@ -1119,7 +1149,8 @@ class ReturnParcelController extends Controller {
         return redirect()->back();
     }
 
-    public function pickupParcelReceived(Request $request) {
+    public function pickupParcelReceived(Request $request)
+    {
         $response = ['error' => 'Error Found'];
 
         if ($request->ajax()) {
@@ -1131,21 +1162,21 @@ class ReturnParcelController extends Controller {
                 $response = ['error' => 'Error Found'];
             } else {
                 $data = [
-                    'status'             => 6,
-                    'parcel_date'        => date('Y-m-d'),
+                    'status' => 6,
+                    'parcel_date' => date('Y-m-d'),
                     'pickup_branch_date' => date('Y-m-d'),
                 ];
                 $parcel = Parcel::where('id', $request->parcel_id)->update($data);
-                $parcel=Parcel::where('id', $request->parcel_id)->first();
+                $parcel = Parcel::where('id', $request->parcel_id)->first();
                 if ($parcel) {
 
                     // Invalid Log 
                     $data = [
-                        'parcel_id'        => $request->parcel_id,
+                        'parcel_id' => $request->parcel_id,
                         'pickup_branch_id' => auth()->guard('branch')->user()->id,
-                        'date'             => date('Y-m-d'),
-                        'time'             => date('H:i:s'),
-                        'status'           => 6,
+                        'date' => date('Y-m-d'),
+                        'time' => date('H:i:s'),
+                        'status' => 6,
                         'delivery_type' => $parcel->delivery_type,
                     ];
                     ParcelLog::create($data);
@@ -1166,7 +1197,8 @@ class ReturnParcelController extends Controller {
         return response()->json($response);
     }
 
-    public function assignDeliveryRider(Request $request, Parcel $parcel) {
+    public function assignDeliveryRider(Request $request, Parcel $parcel)
+    {
         $parcel->load('district', 'upazila', 'area', 'merchant', 'weight_package');
         $riders = Rider::where([
             ['status', '=', 1],
@@ -1176,13 +1208,14 @@ class ReturnParcelController extends Controller {
         return view('branch.parcel.assignDeliveryRider', compact('parcel', 'riders'));
     }
 
-    public function confirmAssignDeliveryRider(Request $request) {
+    public function confirmAssignDeliveryRider(Request $request)
+    {
 
         $response = ['error' => 'Error Found'];
 
         if ($request->ajax()) {
             $validator = Validator::make($request->all(), [
-                'rider_id'  => 'required',
+                'rider_id' => 'required',
                 'parcel_id' => 'required',
             ]);
 
@@ -1190,21 +1223,21 @@ class ReturnParcelController extends Controller {
                 return response()->json(['error' => $validator->errors()]);
             } else {
                 $data = [
-                    'parcel_code'       => mt_rand(100000, 999999),
+                    'parcel_code' => mt_rand(100000, 999999),
                     'delivery_rider_id' => $request->rider_id,
-                    'status'            => 10,
-                    'parcel_date'       => date('Y-m-d'),
+                    'status' => 10,
+                    'parcel_date' => date('Y-m-d'),
                 ];
                 $parcel = Parcel::where('id', $request->parcel_id)->update($data);
-                $parcel=Parcel::where('id', $request->parcel_id)->first();
+                $parcel = Parcel::where('id', $request->parcel_id)->first();
                 if ($parcel) {
                     $data = [
-                        'parcel_id'          => $request->parcel_id,
-                        'delivery_rider_id'  => $request->rider_id,
+                        'parcel_id' => $request->parcel_id,
+                        'delivery_rider_id' => $request->rider_id,
                         'delivery_branch_id' => auth()->guard('branch')->user()->id,
-                        'date'               => date('Y-m-d'),
-                        'time'               => date('H:i:s'),
-                        'status'             => 10,
+                        'date' => date('Y-m-d'),
+                        'time' => date('H:i:s'),
+                        'status' => 10,
                         'delivery_type' => $parcel->delivery_type,
                     ];
                     ParcelLog::create($data);
@@ -1226,33 +1259,35 @@ class ReturnParcelController extends Controller {
         return redirect()->back();
     }
 
-    public function add() {
-        $data               = [];
-        $data['main_menu']  = 'parcel';
+    public function add()
+    {
+        $data = [];
+        $data['main_menu'] = 'parcel';
         $data['child_menu'] = 'addParcel';
         $data['page_title'] = 'Add Parcel';
-        $data['districts']  = District::where('status', 1)->get();
-        $data['merchant']   = Merchant::with('branch')->where('id', auth()->guard('merchant')->user()->id)->first();
+        $data['districts'] = District::where('status', 1)->get();
+        $data['merchant'] = Merchant::with('branch')->where('id', auth()->guard('merchant')->user()->id)->first();
         return view('branch.parcel.addParcel', $data);
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
-            'cod_percent'             => 'required',
-            'cod_charge'              => 'required',
-            'delivery_charge'         => 'required',
-            'total_charge'            => 'required',
-            'weight_package_id'       => 'required',
-            'delivery_option_id'      => 'required',
-            'product_details'         => 'required',
-            'total_collect_amount'    => 'sometimes',
-            'customer_name'           => 'required',
+            'cod_percent' => 'required',
+            'cod_charge' => 'required',
+            'delivery_charge' => 'required',
+            'total_charge' => 'required',
+            'weight_package_id' => 'required',
+            'delivery_option_id' => 'required',
+            'product_details' => 'required',
+            'total_collect_amount' => 'sometimes',
+            'customer_name' => 'required',
             'customer_contact_number' => 'required',
-            'customer_address'        => 'required',
-            'district_id'             => 'required',
-            'upazila_id'              => 'required',
-            'area_id'                 => 'required',
+            'customer_address' => 'required',
+            'district_id' => 'required',
+            'upazila_id' => 'required',
+            'area_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -1262,26 +1297,26 @@ class ReturnParcelController extends Controller {
         $merchant = auth()->guard('merchant')->user();
 
         $data = [
-            'parcel_invoice'          => $this->returnUniqueParcelInvoice(),
-            'merchant_id'             => $merchant->id,
-            'date'                    => date('Y-m-d'),
-            'customer_name'           => $request->input('customer_name'),
-            'customer_address'        => $request->input('customer_address'),
+            'parcel_invoice' => $this->returnUniqueParcelInvoice(),
+            'merchant_id' => $merchant->id,
+            'date' => date('Y-m-d'),
+            'customer_name' => $request->input('customer_name'),
+            'customer_address' => $request->input('customer_address'),
             'customer_contact_number' => $request->input('customer_contact_number'),
-            'product_details'         => $request->input('product_details'),
-            'district_id'             => $request->input('district_id'),
-            'upazila_id'              => $request->input('upazila_id'),
-            'area_id'                 => $request->input('area_id'),
-            'weight_package_id'       => $request->input('weight_package_id'),
-            'delivery_charge'         => $request->input('delivery_charge'),
-            'total_collect_amount'    => $request->input('total_collect_amount') ?? 0,
-            'cod_percent'             => $request->input('cod_percent'),
-            'cod_charge'              => $request->input('cod_charge'),
-            'total_charge'            => $request->input('total_charge'),
-            'delivery_option_id'      => $request->input('delivery_option_id'),
-            'pick_branch_id'          => $merchant->branch_id,
-            'parcel_date'             => date('Y-m-d'),
-            'status'                  => 1,
+            'product_details' => $request->input('product_details'),
+            'district_id' => $request->input('district_id'),
+            'upazila_id' => $request->input('upazila_id'),
+            'area_id' => $request->input('area_id'),
+            'weight_package_id' => $request->input('weight_package_id'),
+            'delivery_charge' => $request->input('delivery_charge'),
+            'total_collect_amount' => $request->input('total_collect_amount') ?? 0,
+            'cod_percent' => $request->input('cod_percent'),
+            'cod_charge' => $request->input('cod_charge'),
+            'total_charge' => ceil($request->input('total_charge')),
+            'delivery_option_id' => $request->input('delivery_option_id'),
+            'pick_branch_id' => $merchant->branch_id,
+            'parcel_date' => date('Y-m-d'),
+            'status' => 1,
         ];
 
         $check = Parcel::create($data) ? true : false;
@@ -1296,16 +1331,18 @@ class ReturnParcelController extends Controller {
 
     }
 
-    public function list() {
-        $data               = [];
-        $data['main_menu']  = 'parcel';
+    public function list()
+    {
+        $data = [];
+        $data['main_menu'] = 'parcel';
         $data['child_menu'] = 'parcelList';
         $data['page_title'] = 'Parcel List';
-        $data['collapse']   = 'sidebar-collapse';
+        $data['collapse'] = 'sidebar-collapse';
         return view('branch.parcel.parcelList', $data);
     }
 
-    public function getParcelList(Request $request) {
+    public function getParcelList(Request $request)
+    {
         $branch_id = auth()->guard('branch')->user()->id;
 
         $model = Parcel::with(['district', 'upazila', 'area'])
@@ -1316,20 +1353,62 @@ class ReturnParcelController extends Controller {
             ->editColumn('status', function ($data) {
 
                 switch ($data->status) {
-                case 1:$status_name  = "Pickup Request"; $class  = "success";break;
-                case 2:$status_name  = "Pickup Branch Request Accept"; $class  = "success";break;
-                case 3:$status_name  = "Pickup Rider Assign"; $class  = "success";break;
-                case 4:$status_name  = "Pickup Rider Request Accept"; $class  = "success";break;
-                case 5:$status_name  = "Pickup Rider Pick Parcel"; $class  = "success";break;
-                case 6:$status_name  = "Pickup Branch Received Parcel"; $class  = "success";break;
-                case 7:$status_name  = "Pickup Branch Assign Delivery Branch"; $class  = "success";break;
-                case 8:$status_name  = "Delivery Branch Received"; $class  = "success";break;
-                case 9:$status_name  = "Delivery Branch Reject"; $class  = "success";break;
-                case 10:$status_name = "Delivery Branch Assign Rider"; $class = "success";break;
-                case 11:$status_name = "Delivery  Rider Accept"; $class = "success";break;
-                case 12:$status_name = "Delivery Rider Complete"; $class = "success";break;
-                case 12:$status_name = "Delivery Rider Reschedule"; $class = "success";break;
-                default:$status_name = "None"; $class = "success";break;
+                    case 1:
+                        $status_name = "Pickup Request";
+                        $class = "success";
+                        break;
+                    case 2:
+                        $status_name = "Pickup Branch Request Accept";
+                        $class = "success";
+                        break;
+                    case 3:
+                        $status_name = "Pickup Rider Assign";
+                        $class = "success";
+                        break;
+                    case 4:
+                        $status_name = "Pickup Rider Request Accept";
+                        $class = "success";
+                        break;
+                    case 5:
+                        $status_name = "Pickup Rider Pick Parcel";
+                        $class = "success";
+                        break;
+                    case 6:
+                        $status_name = "Pickup Branch Received Parcel";
+                        $class = "success";
+                        break;
+                    case 7:
+                        $status_name = "Pickup Branch Assign Delivery Branch";
+                        $class = "success";
+                        break;
+                    case 8:
+                        $status_name = "Delivery Branch Received";
+                        $class = "success";
+                        break;
+                    case 9:
+                        $status_name = "Delivery Branch Reject";
+                        $class = "success";
+                        break;
+                    case 10:
+                        $status_name = "Delivery Branch Assign Rider";
+                        $class = "success";
+                        break;
+                    case 11:
+                        $status_name = "Delivery  Rider Accept";
+                        $class = "success";
+                        break;
+                    case 12:
+                        $status_name = "Delivery Rider Complete";
+                        $class = "success";
+                        break;
+                    case 12:
+                        $status_name = "Delivery Rider Reschedule";
+                        $class = "success";
+                        break;
+                    default:
+                        $status_name = "None";
+                        $class = "success";
+                        break;
                 }
 
                 return '<a class=" text-bold text-' . $class . '" href="javascript:void(0)" style="font-size:16px;"> ' . $status_name . '</a>';
@@ -1337,34 +1416,34 @@ class ReturnParcelController extends Controller {
             ->addColumn('action', function ($data) {
 
                 switch ($data->status) {
-                case 1:
-                    $button = '&nbsp;&nbsp;&nbsp; <button class="btn btn-success request-accept-btn" parcel_id="' . $data->id . '">
+                    case 1:
+                        $button = '&nbsp;&nbsp;&nbsp; <button class="btn btn-success request-accept-btn" parcel_id="' . $data->id . '">
                         Pickup Request Accept <i class="fa fa-check"></i> </button>';
-                    break;
-                case 2:
-                    $button = '<button class="btn btn-secondary assignPickupRider" data-toggle="modal" data-target="#modal" parcel_id="' . $data->id . '}" >
+                        break;
+                    case 2:
+                        $button = '<button class="btn btn-secondary assignPickupRider" data-toggle="modal" data-target="#modal" parcel_id="' . $data->id . '}" >
                                 Assign Pickup Rider <i class="fas fa-share-square"></i> </button>';
-                    break;
-                case 5:
-                    $button = '&nbsp;&nbsp;&nbsp; <button class="btn btn-success pickup-parcel-received-btn" parcel_id="' . $data->id . '">
+                        break;
+                    case 5:
+                        $button = '&nbsp;&nbsp;&nbsp; <button class="btn btn-success pickup-parcel-received-btn" parcel_id="' . $data->id . '">
                             Pickup Parcel Received <i class="fa fa-check"></i> </button>';
-                    break;
-                case 6:
-                    $button = '<button class="btn btn-secondary assignDeliveryBranch" data-toggle="modal" data-target="#modal" parcel_id="' . $data->id . '}" >
+                        break;
+                    case 6:
+                        $button = '<button class="btn btn-secondary assignDeliveryBranch" data-toggle="modal" data-target="#modal" parcel_id="' . $data->id . '}" >
                             Delivery Branch  <i class="fas fa-share-square"></i> </button>';
-                    break;
-                case 7:
-                    $button = '&nbsp;&nbsp;&nbsp; <button class="btn btn-success delivery-parcel-received-btn" parcel_id="' . $data->id . '">
+                        break;
+                    case 7:
+                        $button = '&nbsp;&nbsp;&nbsp; <button class="btn btn-success delivery-parcel-received-btn" parcel_id="' . $data->id . '">
                         Delivery Parcel Received <i class="fa fa-check"></i> </button>';
-                    break;
-                case 8:
-                    $button = '<button class="btn btn-secondary assignDeliveryRider" data-toggle="modal" data-target="#modal" parcel_id="' . $data->id . '}" >
+                        break;
+                    case 8:
+                        $button = '<button class="btn btn-secondary assignDeliveryRider" data-toggle="modal" data-target="#modal" parcel_id="' . $data->id . '}" >
                                 Assign Delivery Rider <i class="fas fa-share-square"></i> </button>';
-                    break;
+                        break;
 
-                default:
-                    $button = "";
-                    break;
+                    default:
+                        $button = "";
+                        break;
                 }
 
                 return $button;

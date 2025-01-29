@@ -116,7 +116,7 @@ class HomeController extends Controller
 
         $total_charge_amount = $delivery_charge + $cod_charge + $weight_package_charge + $return_charge1;
 
-        $data['total_pending_payment'] =  number_format($total_customer_collect_amount - $total_charge_amount, 2, '.', '');
+        $data['total_pending_payment'] = number_format($total_customer_collect_amount - $total_charge_amount, 2, '.', '');
 
 
         // $data['total_pending_payment'] = $query->where('merchant_id', $merchant_id)
@@ -260,12 +260,12 @@ class HomeController extends Controller
             ->whereRaw('status >= ? and delivery_type in (?,?) ', [25, 1, 2])
             ->sum('customer_collect_amount');
 
-        $data['total_customer_collected_amount']  = Parcel::where('merchant_id', $merchant_id)
+        $data['total_customer_collected_amount'] = Parcel::where('merchant_id', $merchant_id)
             ->where('status', '>=', 25)
             ->whereRaw('delivery_type in (?,?)', [1, 2])
             ->sum('customer_collect_amount');
 
-        $data['total_charge']      = Parcel::where('merchant_id', $merchant_id)
+        $data['total_charge'] = Parcel::where('merchant_id', $merchant_id)
             ->where('status', '>=', 25)
             ->whereRaw('delivery_type in (?,?,?)', [1, 2, 4])
             ->sum('total_charge');

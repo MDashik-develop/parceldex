@@ -191,7 +191,7 @@
                                                         <td style="width: 10%"> : </td>
                                                         <td style="width: 50%">
                                                             <span id="view_total_charge">{{ number_format($parcel->total_charge,2) }}</span>
-                                                            <input type="hidden" id="confirm_total_charge" name="total_charge" value="{{ $parcel->total_charge }}">
+                                                            <input type="hidden" id="confirm_total_charge" name="total_charge" value="{{ ceil($parcel->total_charge) }}">
                                                         </td>
                                                     </tr>
                                                 </table>

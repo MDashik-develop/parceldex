@@ -32,7 +32,7 @@
                 {{ $parcel->total_collect_amount }}
             </td>
             <td class="text-center" >
-                {{ $parcel->total_charge }}
+                {{ ceil($parcel->total_charge) }}
             </td>
         </tr>
     @endforeach

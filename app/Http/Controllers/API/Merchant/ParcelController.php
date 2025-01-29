@@ -283,7 +283,7 @@ class ParcelController extends Controller
                 'total_collect_amount' => $collection_amount,
                 'cod_percent' => $cod_percent,
                 'cod_charge' => ceil($cod_charge),
-                'total_charge' => $total_charge,
+                'total_charge' => ceil($total_charge),
                 //            'delivery_option_id'           => $request->input('delivery_option_id'),
                 'delivery_option_id' => 1,
                 'parcel_note' => $request->input('parcel_note'),
@@ -528,7 +528,7 @@ class ParcelController extends Controller
                     'total_collect_amount' => $collection_amount,
                     'cod_percent' => $cod_percent,
                     'cod_charge' => ceil($cod_charge),
-                    'total_charge' => $total_charge,
+                    'total_charge' => ceil($total_charge),
                     'delivery_option_id' => 1,
                     'parcel_note' => $request->input('parcel_note'),
                     'pickup_branch_id' => $merchant->branch_id,
@@ -771,7 +771,7 @@ class ParcelController extends Controller
                 'collected_amount' => $customer_collect_amount,
                 'cod_charge' => ceil($parcel->cod_charge) ?? 0,
                 'delivery_charge' => $parcel->delivery_charge,
-                'total_charge' => $parcel->total_charge,
+                'total_charge' => ceil($parcel->total_charge),
                 'parcel_status' => $status_name,
                 'parcel_payment_status' => $payment_status_name,
                 'status' => $parcel->status,
@@ -920,7 +920,7 @@ class ParcelController extends Controller
                 'collected_amount' => $collected_amount,
                 'cod_charge' => ceil($parcel->cod_charge) ?? 0,
                 'delivery_charge' => $parcel->delivery_charge,
-                'total_charge' => $parcel->total_charge,
+                'total_charge' => ceil($parcel->total_charge),
                 'parcel_payment_status' => $payment_status_name,
                 'parcel_status' => $status_name,
             ];
@@ -2041,7 +2041,7 @@ class ParcelController extends Controller
             'delivery_charge' => isset($parcel->delivery_charge) ? (float)$parcel->delivery_charge : 0.0,
 
             // 'delivery_charge' => $parcel->delivery_charge,
-            'total_charge' => $parcel->total_charge,
+            'total_charge' => ceil($parcel->total_charge),
             'parcel_note' => $parcel->parcel_note,
             'parcel_status' => $parcel_status,
             'exchange' => $parcel->exchange,
@@ -2520,7 +2520,7 @@ class ParcelController extends Controller
 
 
             // 'delivery_charge' => $parcel->delivery_charge,
-            'total_charge' => $parcel->total_charge,
+            'total_charge' => ceil($parcel->total_charge),
             'parcel_note' => $parcel->parcel_note,
             'parcel_status' => $parcel_status,
         ];
@@ -3192,7 +3192,7 @@ class ParcelController extends Controller
                 'total_collect_amount' => $collection_amount,
                 'cod_percent' => $cod_percent,
                 'cod_charge' => ceil($cod_charge),
-                'total_charge' => $total_charge,
+                'total_charge' => ceil($total_charge),
                 'parcel_note' => $request->input('parcel_note'),
                 'service_type_id' => $request->input('service_type_id') == 0 ? null : $request->input('service_type_id'),
                 'item_type_id' => $request->input('item_type_id') == 0 ? null : $request->input('item_type_id'),

@@ -167,7 +167,7 @@ class MerchantDeliveryPaymentController extends Controller
                     $total_charge += $v_data?->parcel?->total_charge;
                     $total_return_charge += $v_data?->parcel?->return_charge;
                 }
-                return number_format($total_charge + $total_return_charge, 2);
+                return ceil($total_charge + $total_return_charge);
                 // return $total_charge;
             })
             ->addColumn('return_charge', function ($data) {

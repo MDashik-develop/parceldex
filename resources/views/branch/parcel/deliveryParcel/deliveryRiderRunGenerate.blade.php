@@ -252,7 +252,7 @@
                                                 </td>
                                                 <td class="text-center">{{ $parcel->total_collect_amount }}</td>
                                                 {{--                                        <td class="text-center" >{{$parcel->cod_charge}}</td> --}}
-                                                <td class="text-center">{{ $parcel->total_charge }}</td>
+                                                <td class="text-center">{{ ceil($parcel->total_charge) }}</td>
                                             </tr>
                                         @endforeach
                                     @endif

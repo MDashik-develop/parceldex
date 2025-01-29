@@ -249,7 +249,7 @@ class PickupParcelController extends Controller
                 'total_collect_amount' => $request->input('total_collect_amount') ?? 0,
                 'cod_percent' => $request->input('cod_percent'),
                 'cod_charge' => $request->input('cod_charge'),
-                'total_charge' => $request->input('total_charge'),
+                'total_charge' => ceil($request->input('total_charge')),
                 'delivery_option_id' => $request->input('delivery_option_id'),
                 'parcel_note' => $request->input('parcel_note'),
 //                'parcel_date'                  => date('Y-m-d'),

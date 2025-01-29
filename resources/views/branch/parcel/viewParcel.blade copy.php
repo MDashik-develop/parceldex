@@ -102,7 +102,7 @@
                                     <tr>
                                         <th style="width: 40%">Total Charge</th>
                                         <td style="width: 10%"> :</td>
-                                        <td style="width: 50%"> {{ $parcel->total_charge }} </td>
+                                        <td style="width: 50%"> {{ ceil($parcel->total_charge) }} </td>
                                     </tr>
                                     <tr>
                                         <th style="width: 40%">Collection Amount</th>

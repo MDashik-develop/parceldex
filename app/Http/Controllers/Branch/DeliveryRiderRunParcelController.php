@@ -1076,7 +1076,7 @@ class DeliveryRiderRunParcelController extends Controller
 
                                 //update cod charge start
                                 $cod_percent = $parcel->cod_percent;
-                                $charge_without_cod = $parcel->total_charge - $parcel->cod_charge;
+                                $charge_without_cod = ceil($parcel->total_charge) - $parcel->cod_charge;
                                 $collection_amount = $confirm_customer_collect_amount ?? 0;
                                 if ($collection_amount != 0 && $cod_percent != 0) {
                                     $cod_charge = ($collection_amount / 100) * $cod_percent;
@@ -1155,7 +1155,7 @@ class DeliveryRiderRunParcelController extends Controller
 
                                 //update cod charge start
                                 $cod_percent = $parcel->cod_percent;
-                                $charge_without_cod = $parcel->total_charge - $parcel->cod_charge;
+                                $charge_without_cod = ceil($parcel->total_charge) - $parcel->cod_charge;
                                 $collection_amount = $confirm_customer_collect_amount ?? 0;
                                 if ($collection_amount != 0 && $cod_percent != 0) {
                                     $cod_charge = ($collection_amount / 100) * $cod_percent;
@@ -1285,7 +1285,7 @@ class DeliveryRiderRunParcelController extends Controller
                                 $parcel_update_data['status'] = 25;
                                 $parcel_update_data['delivery_type'] = 4;
                                 if ($parcel->cod_charge != 0) {
-                                    $parcel_update_data['total_charge'] = ($parcel->total_charge - $parcel->cod_charge);
+                                    $parcel_update_data['total_charge'] = (ceil($parcel->total_charge) - $parcel->cod_charge);
                                 }
 
                                 $parcel_update_data['customer_collect_amount'] = 0;
@@ -1297,7 +1297,7 @@ class DeliveryRiderRunParcelController extends Controller
                                 $sms_delivery_type = "Canceled";
 
                                 $cod_percent = $parcel->cod_percent;
-                                $charge_without_cod = $parcel->total_charge - $parcel->cod_charge;
+                                $charge_without_cod = ceil($parcel->total_charge) - $parcel->cod_charge;
                                 $collection_amount = $confirm_customer_collect_amount ?? 0;
 
                                 if ($collection_amount != 0 && $cod_percent != 0) {

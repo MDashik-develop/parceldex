@@ -225,7 +225,7 @@
                     <td>{{ $parcel->total_collect_amount }}</td>
                     <td>{{ $parcel->customer_collect_amount }}</td>
                     <td>{{ $parcel->cod_charge }}</td>
-                    <td>{{ $parcel->total_charge }}</td>
+                    <td>{{ ceil($parcel->total_charge) }}</td>
                     <td>{{ $parcel->parcel_note }}</td>
                     <td>{{ $logs_note }}</td>
                     <td>{{ $payment_status_name }}</td>

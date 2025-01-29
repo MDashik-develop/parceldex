@@ -212,7 +212,6 @@
                         $total_return_charge += $item->parcel->return_charge;
                         $total_service_charge += $total_charge;
                         $total_paid_amount += $collected_amount - $total_charge;
-
                     @endphp
 
                     <tr>

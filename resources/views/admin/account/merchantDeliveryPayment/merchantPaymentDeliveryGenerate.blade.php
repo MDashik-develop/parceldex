@@ -270,7 +270,7 @@
                                                     </td>
 
                                                     <td class="text-right">
-                                                        @if (in_array($parcel->status, [24,25,26,27,28,29,30,31,32,33,34,35,36]) && $parcel->delivery_type == 4)
+                                                        @if (in_array($parcel->status, [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]) && $parcel->delivery_type == 4)
                                                             @php
                                                                 $t_collected_amount +=
                                                                     $parcel->cancel_amount_collection;
@@ -369,15 +369,21 @@
                                             @endforeach
                                             <tr>
                                                 <td colspan="6"></td>
-                                                <td id="total_collected" style="text-align: right">{{ $t_collected_amount }}</td>
-                                                <td id="total_weight_charge" style="text-align: right">{{ $t_weight_package_charge }}</td>
-                                                <td id="total_delivery_charge" style="text-align: right">{{ $t_delivery_charge }}</td>
-                                                <td id="total_cod_charge" style="text-align: right">{{ $t_cod_charge }}</td>
-                                                <td id="total_return_charge" style="text-align: right">{{ $t_returnCharge }}</td>
+                                                <td id="total_collected" style="text-align: right">
+                                                    {{ $t_collected_amount }}</td>
+                                                <td id="total_weight_charge" style="text-align: right">
+                                                    {{ $t_weight_package_charge }}</td>
+                                                <td id="total_delivery_charge" style="text-align: right">
+                                                    {{ $t_delivery_charge }}</td>
+                                                <td id="total_cod_charge" style="text-align: right">{{ $t_cod_charge }}
+                                                </td>
+                                                <td id="total_return_charge" style="text-align: right">
+                                                    {{ $t_returnCharge }}</td>
                                                 <td id="total_charge" style="text-align: right">
                                                     {{ $t_charge }}
                                                 </td>
-                                                <td id="total_payable_amount" style="text-align: right">{{ $t_payable_amount }}</td>
+                                                <td id="total_payable_amount" style="text-align: right">
+                                                    {{ $t_payable_amount }}</td>
                                             </tr>
                                         @endif
                                     </tbody>

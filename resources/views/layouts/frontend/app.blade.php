@@ -1,215 +1,155 @@
-@php
-    $socialLinks    = App\Models\SocialLink::where('status', 1)->get();
-    $services       = App\Models\Service::where('status', 1)->get();
-    $blogs          = App\Models\Blog::where('status', 1)->orderBy('id', 'desc')->take(2)->get();
-@endphp
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $application->name }} </title>
-    <meta name="description" content="{{ $application->meta_description }}" />
-    <meta name="keywords" content="{{ $application->meta_description }}">
-    <meta name="author" content="{{ $application->meta_description }}" />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta property="article:modified_time" content="2023-12-18T07:31:37+00:00" />
-	<meta property="og:image" content="https://parceldex.com.bd/public/assets/logofull.jpg" />
-	<meta property="og:image:width" content="1534" />
-	<meta property="og:image:height" content="747" />
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- set your title -->
+    <title>Parceldex Courier | Fastest Courier in Bangladesh</title>
+
+    <link rel="icon" href="/frontend/images/favicon_io/favicon-16x16.png" type="image/png">
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Parceldex Courier" />
+    <meta property="og:description" content="Always On Time" />
+    <meta property="og:image" content="assets/images/Parceldex-fb-ogg.jpg" />
+    <meta property="og:image:width" content="600" />
+    <meta property="og:image:height" content="315" />
+    <meta name="google-site-verification" content="3rMKM2JKjbtv89s2M-xg_jMz-cXUVR9bepDj8Ip9Xuw" />
+
+    <!-- replace favicon path or source here -->
+    <!-- <link rel="icon" href="images/logo/favicon.ico"> -->
+
+    <link rel="preload" as="style" href="/frontend/css/app-041e359a.css" />
+    <link rel="preload" as="style" href="/frontend/css/app-05cbb568.css" />
+    <link rel="modulepreload" href="/frontend/js/app-b0be635f.js" />
+    <link rel="stylesheet" href="/frontend/css/app-041e359a.css" />
+    <link rel="stylesheet" href="/frontend/css/app-05cbb568.css" />
+    <script type="module" src="/frontend/js/app-b0be635f.js"></script>
+
+    <!-- bootstrap and font-awesome cdn link -->
+    <link rel="stylesheet" href="/frontend/css/cdn.jsdelivr.net/npm/bootstrap%405.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/frontend/css/cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+    <link rel="stylesheet" href="/frontend/css/cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css" />
+    <!-- end bootstrap and font-awesome cdn link -->
+
+    <link rel="stylesheet" href="/frontend/css/master.css">
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="/frontend/css/override.css">
 
 
-	@if(!empty($application->logo))
-        <link rel="icon" type="image/png" href="{{ asset('assets/favicon.ico') }}" alt="{{ $application->name ?? config('app.name', 'Express') }}" >
-        <!--<link rel="shortcut icon" type="image/png" href="{{ asset('uploads/application/') . '/' . $application->logo }}" alt="{{ $application->name ?? config('app.name', 'Express') }}" >-->
-         <link rel="shortcut icon" href="{{ asset('assets/favicon.ico') }}" type="image/x-icon">
-    @else
-        <link rel="shortcut icon" href="{{ asset('assets/favicon.ico') }}" type="image/x-icon">
-    @endif
-	<link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-	<link rel="stylesheet" href="{{ asset('assets/css/aos.css') }}">
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'assets/css/www.google-analytics.com/analytics.js', 'ga');
 
-    <!-- Slider -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/frontend_css/owl.carousel.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/frontend_css/line-awesome.min.css') }}" />
+        ga('create', 'UA-98358584-1', 'auto');
+        ga('send', 'pageview');
+    </script>
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap">
+    <!-- Facebook Pixel Code -->
+    <script>
+        ! function(f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function() {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'assets/css/connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '243380070815993');
+        fbq('track', 'PageView');
+    </script>
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/frontend_css/style.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/frontend_css/toast.css') }}">
-    <style>
-        [data-aos][data-aos][data-aos-duration="400"], body[data-aos-duration="400"] [data-aos] {
-            transition-duration: 3s;
-        }
-    </style>
-    
-    
-    <style>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=243380070815993&amp;ev=PageView&amp;noscript=1" />
+    </noscript>
+    <!-- End Facebook Pixel Code -->
 
-
-    body {
-      font-size: 14px;
-    }
-
-  
-
-
-    
-  </style>
-    @stack('style_css')
 </head>
-<body data-spy="scroll" data-target="#navigate" data-offset="50">
 
-	<nav class="navigate fixed-top navbar active navbar-expand-xl navbar-dark bg-dark">
-		<div class="container px-2 justify-content-between">
-			<div class="navbar-brand">
-				<a class="brand-anchor" href="{{ route('frontend.home') }}">
-                    @if(!empty($application->photo))
-                        <img src="{{ asset('uploads/application/'.$application->photo) }}" height="50" alt="BRAND">
-                    @else
-                        <img src="{{ asset('assets/img/logo.png') }}" height="50" alt="BRAND">
-                    @endif
-                </a>
-			</div>
+<body class="body-class">
+    <div class="app" id="app">
 
-			<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navigate">
-				<span class="navbar-toggler-icon"></span>
-			</button>
+        @include('layouts.frontend.header')
 
-			<div id="navigate" class="navbar-ul collapse navbar-collapse justify-content-end mt-4 mt-xl-0">
-				<ul class="navbar-nav text-center text-xl-left nav-items">
-					<li class="nav-item">
-						<a href="{{ route('frontend.home') }}" class="nav-link text-white active">Home</a>
-					</li>
-					<li class="nav-item">
-						<a href="{{ route('frontend.home') }}#tracking" class="nav-link text-white">Tracking</a>
-					</li>
-					<li class="nav-item">
-						<a href="{{ route('frontend.home') }}/services" class="nav-link text-white">Services</a>
-					</li>
-					<li class="nav-item">
-						<a href="{{ route('frontend.home') }}/faq" class="nav-link text-white">FAQ</a>
-					</li>
-					<li class="nav-item">
-						<a href="{{ route('frontend.home') }}/about" class="nav-link text-white">About Us</a>
-					</li>
+        @yield('content')
 
-				</ul>
-				<ul class="navbar-nav ml-xl-4 mt-4 mt-xl-2 text-center text-xl-left">
-					<li class="nav-item mb-3 mb-xl-0 ml-n4 ml-xl-0">
-						<a href="#" class="nav-link text-info">
-							<span class="fas fa-phone header-phone text-white"></span>
-							<span class="text-white">{{ $application->contact_number }}</span>
-						</a>
-					</li>
-					<li class="nav-item ml-xl-3 mb-2 mb-xl-2">
-						<a href="{{ route('frontend.merchantRegistration') }}" class="nav-link btn btn-danger px-3 btn-header1">Registration</a>
-					</li>
-					<li class="nav-item ml-xl-3 mb-2 mb-xl-2">
-						<a href="{{ route('frontend.login') }}" class="nav-link btn btn-danger px-3 btn-header1">Login</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</nav>
-	<!-- End Navbar -->
+        @include('layouts.frontend.footer')
+
+    </div>
+
+    <!-- bootstrap and jquery cdn link -->
+    <script data-cfasync="false" src="cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="/frontend/css/cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" defer></script>
+    <script src="/frontend/css/cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.js" defer></script>
+    <script src="/frontend/css/cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.js" defer></script>
+    <!-- end bootstrap and jquery cdn link -->
 
 
-	@yield('content')
-
-    
-    @include("layouts.frontend.footer")
-    <!-- End Footer-->
+    <!-- custom javascript -->
+    <script src="/frontend/js/custom.js" defer></script>
 
 
-	<!-- Link of javascript -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-	<!-- <script src="./assets/js/jquery.min.js"></script> -->
-	<script src="{{ asset('assets/js/popper.min.js') }}"></script>
-	<script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
-
-    {{--<script src="{{ asset('js/frontend_js/bootstrap.bundle.js') }}"></script>--}}
-    <!-- Slider -->
-    <script src="{{ asset('js/frontend_js/owl.carousel.min.js') }}"></script>
-
-    <script src="{{ asset('assets/js/typed.js') }}"></script>
-
-    <script src="{{ asset('assets/js/waypoints.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery.counterup.min.js') }}"></script>
-	<script src="{{ asset('assets/js/jquery.carouselTicker.min.js') }}"></script>
-    <script src="{{ asset('assets/js/aos.js') }}"></script>
-    <script src="{{ asset('js/frontend_js/theme.js') }}"></script>
-    <script src="{{ asset('assets/js/main.js') }}"></script>
-    <script src="{{ asset('js/frontend_js/toast.js') }}"></script>
-
-
-	<script>
-    $(function(){
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    <!-- custom javascript -->
+    <script>
+        (function() {
+            function c() {
+                var b = a.contentDocument || a.contentWindow.document;
+                if (b) {
+                    var d = b.createElement('script');
+                    d.innerHTML =
+                        "window.__CF$cv$params={r:'900d79dded0e3366',t:'MTczNjY4ODM2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='cdn-cgi/challenge-platform/h/b/scripts/jsd/e0c90b6a3ed1/maind41d.js';document.getElementsByTagName('head')[0].appendChild(a);";
+                    b.getElementsByTagName('head')[0].appendChild(d)
+                }
             }
-        });
-
-        $('#newsLetter').on('submit',function(e){
-            e.preventDefault();
-            $.ajax({
-                cache       : false,
-                type        : "POST",
-                dataType    : "JSON",
-                data        : $('#newsLetter').serialize(),
-                // data        : {
-                //     email     : $("#newsLetterEmail").val(),
-                // },
-                error     : function(xhr){
-                    console.log(xhr);
-                },
-                url       : this.action,
-                success   : function(response){
-                    console.log(response);
-                    if(response.success){
-                        $("#newsLetterEmail").val(' ');
-                        toastMessage(response.success, 'Success', 'success');
-                    }
-                    else{
-                        var getError = response.error;
-                        var message = "";
-                        if(getError.email){
-                            message = getError.email[0];
-                            toastMessage(message, 'Error', 'error');
-                        }
+            if (document.body) {
+                var a = document.createElement('iframe');
+                a.height = 1;
+                a.width = 1;
+                a.style.position = 'absolute';
+                a.style.top = 0;
+                a.style.left = 0;
+                a.style.border = 'none';
+                a.style.visibility = 'hidden';
+                document.body.appendChild(a);
+                if ('loading' !== document.readyState) c();
+                else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c);
+                else {
+                    var e = document.onreadystatechange || function() {};
+                    document.onreadystatechange = function(b) {
+                        e(b);
+                        'loading' !== document.readyState && (document.onreadystatechange = e, c())
                     }
                 }
-            });
-        });
-
-        // AOS
-	    AOS.init()
-
-    });
-
-    function toastMessage(message, type, heading=''){
-        if(heading == ''){
-            if(type == 'success'){
-                heading = "Success";
             }
-            else{
-                heading = "error";
-            }
-        }
-        $.toast({
-            text : message,
-            heading : type,
-            icon : heading,
-            hideAfter : 5000,
-            textAlign : 'left',
-            position : 'bottom-right',
-        });
-    }
-</script>
-@stack('script_js')
+        })();
+    </script>
 </body>
+
 </html>

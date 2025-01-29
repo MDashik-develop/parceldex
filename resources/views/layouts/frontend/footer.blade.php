@@ -1,90 +1,64 @@
-<style>
-
-.app-btn.blu {
-    background-color: #101010;
-    transition: background-color 0.25s linear;
-}
-.app-btn {
-    width: 45%;
-    max-width: 160px;
-    color: #fff;
-    margin: 10px 10px;
-    padding: 10px 0;
-    text-align: left;
-    border-radius: 5px;
-    text-decoration: none;
-    font-family: "Lucida Grande", sans-serif;
-    font-size: 10px;
-    text-transform: uppercase;
-}
-.flex {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-</style>
-<footer class="main-footer">
-    {{-- <div class="footer-road">
-        <div class="container position-relative" data-aos="fade-right">
-
-            @if(!empty($application->logo))
-                <img class="position-absolute footer-logo" height="90" src="{{ asset('uploads/application/'.$application->logo) }}" alt="Road">
-            @else
-                <img class="position-absolute footer-logo" height="90" src="{{ asset('uploads/application/'.$application->photo) }}" alt="Road">
-            @endif
-
-            <img class="position-absolute footer-logo" height="90" src="{{ asset('assets/img/flyerlogo.jpg') }}" alt="Road">
-        </div>
-    </div> --}}
-    <div class="footer-container text-light"  style="background: #053574;" >
-        <div class="container text-center text-sm-left">
-
-
-            <div class="row mt-3">
-                <div class="col-lg-4 col-md-9">
-                    </br></br>
-                    <p class="font-weight-thin">
-                        {{ $application->address }}<br>
-                        E-mail: {{ $application->email }} <br>
-                        Hotline: {{ $application->contact_number }}
-                    </p>
-                </div>        
-               
-
-                <div class="col-lg-4 col-md-3 text-md-right mb-4 mb-md-0" style="padding-top: 70px">
-
-                    @foreach ($socialLinks  as  $socialLink)
-
-
-                    
-                    <a href="{{$socialLink->url }}" class="text-decoration-none mr-1" style="font-size: 40px">
-                     <i class="{{$socialLink->icon }}"></i>
-                    </a>
-                    
-                    @endforeach
-
-                    
+<div class="footer-wrapper">
+    <div class="container-fluid">
+        <div class="footer">
+            <div class="top d-flex justify-content-between">
+                <div class="short-info d-flex gap-2 flex-column">
+                    <a href="index-2.html"><img src="/frontend/images/logo/logo.png" alt=""
+                            class=" footer-logo"></a>
+                    <p> House# 44, Rd No. 2/A, Dhanmondi, <br> Dhaka 1209</p>
+                    <p>E-mail: info@moved.com</p>
+                    <p>Hotline: 09678-045045</p>
                 </div>
-                
-                <div class="col-lg-4 col-md-3 text-md-right mb-4 mb-md-0" style="padding-top: 40px">
-                    <div class="flex social-btns" style="margin-top:17px;">
-                        <a class="app-btn blu flex vert" href="{{ $application->app_link }}">
-                        <i class="fab fa-google-play" style="font-size: 25px;"></i>
-                        <p>Get it on <br/> <span class="big-txt">Google Play</span></p>
-                      </a>
-                        
+                <div class="impt-link">
+                    <h6>Company</h6>
+                    <ul class="links-list d-flex flex-column">
+                        <li>
+                            <a href="contact.html">Contact Us</a>
+                        </li>
+                        <li>
+                            <a href="#">Return Policy</a>
+                        </li>
+                        <li>
+                            <a href="#">Terms and Conditions</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sister-concern">
+                    <h6>Sister Concern</h6>
+                    <ul class="links-list d-flex flex-column">
+                        <li>
+                            <a href="https://www.facebook.com/pixelax">Pixelax </a>
+                        </li>
+                        <li>
+                            <a href="https://www.facebook.com/profile.php?id=100088744987116">Biggapon</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="social-media">
+                    <h6>Follow Us</h6>
+                    <div class="d-flex gap-2">
+                        <a href="https://www.facebook.com/Parceldexcourier"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://bd.linkedin.com/company/Parceldex-courier"><i
+                                class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/Parceldexcourier/"><i class="fab fa-instagram"></i></a>
+                    </div>
+                    <div class="app-store d-flex gap-3 mt-5">
+                        <a href="https://apps.apple.com/us/app/Parceldex-courier/id1644192533">
+                            <img src="/frontend/images/app_store.png" alt="" class="w-auto h-auto">
 
+                        </a>
+                        <a
+                            href="https://play.google.com/store/apps/details?id=com.Parceldex.Parceldex&amp;pcampaignid=web_share"><img
+                                src="/frontend/images/google_play.png" alt="" class="w-auto h-auto"></a>
                     </div>
                 </div>
             </div>
+            <div class="bottom d-flex justify-content-center align-items-center">
+                <p class="d-flex align-items-center gap-2"> &copy 2016 - 2025
+                    Parceldex
+                    Courier Ltd. All rights reserved.</p>
+            </div>
+
         </div>
-        
-
-
-      <p class="footer-copytight text-center mt-4 mb-0">
-        <a href="{{ route('frontend.getPrivacyPolicy') }}" class="nav-link text-white">Privacy Policy</a> Copyright &copy; {{ now()->year }} | {{ $application->name }}  |  |  Develop & Support by <a href="https://www.stitbd.com" style"color: #000000;">Parceldex Ltd</a>
-
-                </p>
     </div>
-
-</footer>
+</div>

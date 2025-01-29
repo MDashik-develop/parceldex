@@ -6,7 +6,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
     <!-- set your title -->
-    <title>Parceldex Courier | Fastest Courier in Bangladesh</title>
+    <title>{{ $application->name }} </title>
 
     @if (!empty($application->logo))
         <link rel="icon" type="image/png" href="{{ asset('assets/favicon.ico') }}"

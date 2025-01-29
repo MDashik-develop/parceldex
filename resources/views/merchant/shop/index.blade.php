@@ -24,6 +24,10 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Merchants List </h3>
+                            <div class="card-tools">
+                                <a href="{{ route('merchant.shop.create') }}" class="btn btn-primary btn-sm"><i
+                                        class="fas fa-plus"></i> Add Merchant</a>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -91,10 +95,10 @@
         }
 
         /*
-            div.container {
-                width: 80%;
-            }
-            */
+                div.container {
+                    width: 80%;
+                }
+                */
     </style>
 @endpush
 @push('script_js')

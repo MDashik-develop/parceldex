@@ -62,7 +62,8 @@ class MerchantDeliveryPaymentController extends Controller
                 $from_date = $request->input('from_date');
                 $to_date = $request->input('to_date');
 
-                if (($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0)
+                if (
+                    ($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0)
                     || ($request->has('status') && !is_null($status) && $status != '' && $status != 0)
                     || ($request->has('from_date') && !is_null($from_date) && $from_date != '')
                     || ($request->has('to_date') && !is_null($to_date) && $to_date != '')
@@ -230,7 +231,7 @@ class MerchantDeliveryPaymentController extends Controller
                         'action_date_time' => date('Y-m-d H:i:s'),
                     ];
                     $check = ParcelMerchantDeliveryPayment::where('id', $parcelMerchantDeliveryPayment->id)->update($data);
-                    $payment_request    = ParcelPaymentRequest::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)->first();
+                    $payment_request = ParcelPaymentRequest::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)->first();
                     if ($check) {
 
                         $ParcelMerchantDeliveryPaymentDetails = ParcelMerchantDeliveryPaymentDetail::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)->get();
@@ -250,8 +251,8 @@ class MerchantDeliveryPaymentController extends Controller
                         }
                         if ($payment_request) {
                             $payment_request->update([
-                                'status'    => 5,
-                                'action_admin_id'   => auth('admin')->user()->id
+                                'status' => 5,
+                                'action_admin_id' => auth('admin')->user()->id
                             ]);
                         }
                         ParcelMerchantDeliveryPaymentDetail::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)
@@ -260,7 +261,7 @@ class MerchantDeliveryPaymentController extends Controller
                                 'date_time' => date('Y-m-d H:i:s'),
                             ]);
 
-                        
+
 
                         // $this->adminDashboardCounterEvent();
 
@@ -375,14 +376,8 @@ class MerchantDeliveryPaymentController extends Controller
         $data['child_menu'] = 'merchantPaymentDeliveryGenerate';
         $data['page_title'] = 'Merchant Payment Delivery';
         $data['collapse'] = 'sidebar-collapse';
-        $data['merchants'] = Merchant::whereHas('parcel', function ($query) {
-            $query->whereRaw("
-            ((parcels.delivery_type in (1) AND parcels.payment_type in (2,6))
-            OR (parcels.delivery_type in (2) AND parcels.payment_type in (2,6))
-            OR (parcels.delivery_type in (4)  AND (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
-            ");
-        })
-            ->get();
+
+
 
         //session()->forget($admin_id);
 
@@ -400,6 +395,22 @@ class MerchantDeliveryPaymentController extends Controller
                 OR (parcels.delivery_type in (4) AND (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
             ")
             ->get();
+
+        $data['merchants'] = Merchant::whereHas('parcel', function ($query) {
+            $query->whereRaw("
+                ((parcels.delivery_type in (1) AND parcels.payment_type in (2,6))
+                OR (parcels.delivery_type in (2) AND parcels.payment_type in (2,6))
+                OR (parcels.delivery_type in (4)  AND (parcels.payment_type is NULL || parcels.payment_type in (2,6))))
+                ");
+        })->get();
+
+        // add parent_merchan for merchant
+        foreach ($data['merchants'] as $key => $merchant) {
+            if ($merchant->parent_merchant_id && $data['merchants']->where('id', $merchant->parent_merchant_id)->count() == 0) {
+                $parent_merchant = Merchant::where('id', $merchant->parent_merchant_id)->first();
+                $data['merchants'][] = $parent_merchant;
+            }
+        }
 
         return view('admin.account.merchantDeliveryPayment.merchantPaymentDeliveryGenerate', $data);
     }
@@ -754,11 +765,14 @@ class MerchantDeliveryPaymentController extends Controller
             })
             ->get();
 
-        $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'contact_number');
-        }, 'weight_package' => function ($query) {
-            $query->select('id', 'name');
-        }])
+        $data['parcels'] = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'contact_number');
+            },
+            'weight_package' => function ($query) {
+                $query->select('id', 'name');
+            }
+        ])
             ->whereRaw('delivery_type in (1,2) and payment_type = 2')
             ->select(
                 'id',
@@ -931,7 +945,7 @@ class MerchantDeliveryPaymentController extends Controller
         $data['collapse'] = 'sidebar-collapse';
         $data['merchants'] = Merchant::where('status', 1)->orderBy('company_name', 'ASC')->get();
 
-        $from_date =  Carbon::now()->subDays(1)->format("Y-m-d");
+        $from_date = Carbon::now()->subDays(1)->format("Y-m-d");
         $to_date = Carbon::now()->addDays(1)->format("Y-m-d");
 
         $model = ParcelMerchantDeliveryPaymentDetail::whereBetween('created_at', [$from_date, $to_date])->get();

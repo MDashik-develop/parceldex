@@ -404,13 +404,13 @@ class MerchantDeliveryPaymentController extends Controller
                 ");
         })->get();
 
-        // add parent_merchan for merchant
-        foreach ($data['merchants'] as $key => $merchant) {
-            if ($merchant->parent_merchant_id && $data['merchants']->where('id', $merchant->parent_merchant_id)->count() == 0) {
-                $parent_merchant = Merchant::where('id', $merchant->parent_merchant_id)->first();
-                $data['merchants'][] = $parent_merchant;
-            }
-        }
+        // // add parent_merchan for merchant
+        // foreach ($data['merchants'] as $key => $merchant) {
+        //     if ($merchant->parent_merchant_id && $data['merchants']->where('id', $merchant->parent_merchant_id)->count() == 0) {
+        //         $parent_merchant = Merchant::where('id', $merchant->parent_merchant_id)->first();
+        //         $data['merchants'][] = $parent_merchant;
+        //     }
+        // }
 
         return view('admin.account.merchantDeliveryPayment.merchantPaymentDeliveryGenerate', $data);
     }

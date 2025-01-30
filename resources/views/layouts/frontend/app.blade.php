@@ -20,6 +20,7 @@
 
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow" />
 
     <meta name="description" content="{{ $application->meta_description }}" />
     <meta name="keywords" content="{{ $application->meta_description }}">

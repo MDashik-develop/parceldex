@@ -1953,7 +1953,14 @@ body.auth {
     height: 44px;
     padding: 0;
   }
-
+  .body-class .about-ceo .col-5 {
+    padding-right: 0px;
+    padding: 10px;
+  }
+  .body-class .about-ceo .col-7 {
+    padding-left: 0px;
+    padding: 10px;
+  }
   .service-list .col-md-3 {
     width: 50% !important;
   }
@@ -2527,36 +2534,43 @@ body.auth {
 
 
 .brand_logos {
-  overflow: hidden; /* Hide the overflowed content */
+  overflow: hidden;
   padding: 30px 0px;
   position: relative;
 }
 
 .brand_logo_items {
-  display: flex; /* Use flexbox to align logos in a row */
-  animation: runslides 35s linear infinite; /* Infinite scrolling animation */
+  display: flex;
+  animation: runslides 35s linear infinite;
+}
+
+.brand_logos:before, .brand_logos:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 100px; /* Adjust shadow width */
+  height: 100%;
+  z-index: 2;
 }
 
 .brand_logos:before {
-  content: '';
   left: 0;
-  background: linear-gradient(to left, rgba(255,255,255,0), rgb(255, 255, 255));
+  background: linear-gradient(to left, rgba(255,255,255,0), #f8fafc);
 }
 
 .brand_logos:after {
-  content: '';
   right: 0;
-  background: linear-gradient(to right, rgba(255,255,255,0), rgb(255, 255, 255));
+  background: linear-gradient(to right, rgba(255,255,255,0), #f8fafc);
 }
 .brand_logo_items img {
-  height: 100px; /* Set the height for the logos */
-  margin-right: 20px; /* Add space between logos */
+  height: 100px;
+  margin-right: 20px;
 }
 
 /* Keyframes for smooth infinite scroll */
 @keyframes runslides {
   0% {
-    transform: translateX(0); /* Start at the initial position */
+    transform: translateX(0); 
   }
   100% {
     transform: translateX(-100%); /* Move the logos to the left completely */
@@ -2565,16 +2579,22 @@ body.auth {
 
 /* Second set of logos */
 .brand_logo_items2 {
-  display: flex; /* Use flexbox to align logos in a row */
-  animation: runslides2 35s linear infinite; /* Infinite scrolling animation */
+  display: flex; 
+  animation: runslides2 35s linear infinite;
 }
 
 /* Keyframes for the second set of logos */
 @keyframes runslides2 {
   0% {
-    transform: translateX(-100%); /* Start at the initial position */
+    transform: translateX(-100%);
   }
   100% {
-    transform: translateX(0%); /* Move the logos to the left completely */
+    transform: translateX(0%);
   }
+}
+
+/* Pause animation when hovering */
+.brand_logos:hover .brand_logo_items,
+.brand_logos:hover .brand_logo_items2 {
+  animation-play-state: paused;
 }

@@ -73,8 +73,6 @@
                     <img src="/frontend/images/partner_img/sailor.png" alt="">
                     <img src="/frontend/images/partner_img/fashion.png" alt="">
                     <img src="/frontend/images/partner_img/htbazar.png" alt="">
-
-
             </div>
         </div>
     </div>

@@ -36,7 +36,10 @@
                     <a href="register.html">
                         <button class="btn btn-md">Sign Up</button>
                     </a>
-                    <a href="{{ route('frontend.login') }}" class="btn border px-4 py-2 rounded">Login</a>
+                    <a href="{{ route('frontend.login') }}">
+                        
+                        <button class="btn btn-md">Sign Up</button>
+                    </a>
                 </div>
                 <!-- <button class="btn-outline btn-md d-none d-sm-inline-block">EN</button> -->
 

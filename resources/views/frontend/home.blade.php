@@ -31,7 +31,7 @@
 
     <div class="patner-wrapper animate__animated animate__fadeInUp">
         <div class="container-fluid brand_logos">
-            <div class="patner d-flex justify-content-between align-items-center brand_logo_items">
+            <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items">
                     <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
                     <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
                     <img src="/frontend/images/partner_img/rokomari.png" alt="">
@@ -57,7 +57,7 @@
     <div class="patner-wrapper animate__animated animate__fadeInUp">
 
         <div class="container-fluid brand_logos">
-            <div class="patner d-flex justify-content-between align-items-center brand_logo_items brand_logo_items2">
+            <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items brand_logo_items2">
                     <img src="/frontend/images/partner_img/othoba.png" alt="">
                     <img src="/frontend/images/partner_img/lotto.png" alt="">
                     <img src="/frontend/images/partner_img/sailor.png" alt="">

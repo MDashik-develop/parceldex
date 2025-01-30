@@ -377,6 +377,22 @@ a.btn.border.px-4.py-2.rounded {
   color: var(--txt-neutral-900);
   margin-top: 4px;
 }
+.header-button{
+  padding: 5px 10px;
+  background: #07539E; /* Blue background */
+  color: white; /* White text */
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.header-button:hover {
+  background-color: #F27B21; /* Change to orange on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+}
 /*-----Service Section-----*/
 /*-----Popular Store Section-----*/
 
@@ -2068,6 +2084,10 @@ body.auth {
 }
 
 @media (max-width: 540px) {
+  .header-button{
+    font-size: 13px !important;
+    padding: 4px 8px;
+  }
   .container-fluid {
     padding: 0 16px !important;
   }

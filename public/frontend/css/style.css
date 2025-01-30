@@ -2085,8 +2085,8 @@ body.auth {
 
 @media (max-width: 540px) {
   .header-button{
-    font-size: 13px !important;
-    padding: 4px 8px;
+    font-size: 12px !important;
+    padding: 3px 6px;
   }
   .container-fluid {
     padding: 0 16px !important;

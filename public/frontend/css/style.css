@@ -1914,9 +1914,9 @@ body.auth {
   .intro-wrapper {
     background-image: url("../images/bg_tab.jpg");
   }
-  .intro-wrapper {
-    /* height: 560px; */
-  }
+   /* .intro-wrapper {
+   height: 560px; 
+  }*/
   .patner-wrapper {
     margin-top: 60px;
   }
@@ -2503,11 +2503,13 @@ body.auth {
 }
 
 .brand_logos:before {
+  content: '';
   left: 0;
   background: linear-gradient(to left, rgba(255,255,255,0), rgb(255, 255, 255));
 }
 
 .brand_logos:after {
+  content: '';
   right: 0;
   background: linear-gradient(to right, rgba(255,255,255,0), rgb(255, 255, 255));
 }

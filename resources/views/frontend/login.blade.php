@@ -1,7 +1,7 @@
 @extends('layouts.frontend.app')
 
 @section('content')
-    <div class="container-fluid" style="margin-top: 100px">
+    <div class="container-fluid" style="margin-top: 10px">
         <div class="row">
             <div class="col-lg-7 col-md-7 col-sm-12">
                 <img class="auth-image" src="{{ asset('image/login.png') }}" style="max-width: 100%;">
@@ -10,7 +10,7 @@
             <div class="col-md-5 col-md-5 col-sm-12">
                 <div class="hold-transition login-page">
                     <div class="login-box">
-                        <div class="login-logo" style="margin-bottom: 30px;">
+                        <div class="login-logo" style="margin-bottom: 10px;">
                         </div>
                         <div class="text-center">
                             <div class="login-card-body">
@@ -141,7 +141,7 @@
         /* Centers horizontally */
         align-items: center;
         /* Centers vertically */
-        height: 100vh;
+        /* height: 100vh; */
         /* Makes the container take the full height of the viewport */
     }
 

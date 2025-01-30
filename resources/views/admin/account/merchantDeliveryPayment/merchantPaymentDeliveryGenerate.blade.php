@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Merchant Delivery Payment </h1>
+                    <h1 class="m-0 text-dark">Merchant Delivery Payment</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -38,7 +38,7 @@
                                                     <td colspan="2">
                                                         <select name="merchant_id" id="merchant_id"
                                                             class="form-control select2" style="width: 100%">
-                                                            <option value="0">Select Merchant Company </option>
+                                                            <option value="0">Select Merchant Company</option>
                                                             @foreach ($merchants as $merchant)
                                                                 <option value="{{ $merchant->id }}"
                                                                     merchantName="{{ $merchant->name }}"
@@ -52,8 +52,7 @@
                                                 <tr>
                                                     <th>Date</th>
                                                     <td colspan="2">
-                                                        <input type="date" name="date" id="date"
-                                                            value="{{ date('Y-m-d') }}" class="form-control " required>
+                                                        <input type="date" name="date" id="date" value="{{ date('Y-m-d') }}" class="form-control " required>
                                                     </td>
                                                 </tr>
 
@@ -80,7 +79,7 @@
                                                 </tr>
 
                                                 <tr>
-                                                    <th style="width: 40%"> Total Payment Parcel</th>
+                                                    <th style="width: 40%">Payment Parcel</th>
                                                     <td style="width: 5%"> : </td>
                                                     <td style="width: 55%">
                                                         <span id="view_total_payment_parcel"> 0 </span>
@@ -94,6 +93,14 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
+                                                    <th>Adjustment Amount</th>
+                                                    <td colspan="2">
+                                                        <input type="number" name="adjustment"
+                                                            id="adjustment" class="form-control"
+                                                            placeholder="Adjustment Amount">
+                                                    </td>
+                                                </tr>
+                                                <tr>
                                                     <th> Transfer Reference</th>
                                                     <td colspan="2">
                                                         <input type="text" name="transfer_reference"
@@ -104,6 +111,11 @@
                                                 <tr>
                                                     <td colspan="3">
                                                         <textarea name="note" id="note" class="form-control" placeholder="Delivery Payment Note "></textarea>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">
+                                                        <textarea name="adjustment_note" id="adjustment_note" class="form-control" placeholder="Adjustment Note"></textarea>
                                                     </td>
                                                 </tr>
                                             </table>

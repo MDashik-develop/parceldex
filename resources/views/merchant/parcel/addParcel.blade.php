@@ -405,8 +405,7 @@
                                                                 <input type="number" name="product_value"
                                                                     id="product_value" value="{{ old('product_value') }}"
                                                                     class="form-control"
-                                                                    placeholder="পন‍্যের বিক্রীত মূল্য লিখুন"
-                                                                    min="1" required>
+                                                                    placeholder="পন‍্যের বিক্রীত মূল্য লিখুন">
                                                             </div>
                                                         </div>
 

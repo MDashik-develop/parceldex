@@ -633,6 +633,8 @@ class MerchantDeliveryPaymentController extends Controller
             'transfer_reference' => $request->input('transfer_reference'),
             'note' => $request->input('note'),
             'status' => 1,
+            'adjustment' => $request->input('adjustment'),
+            'adjustment_note' => $request->input('adjustment_note'),
         ];
 
         $parcelMerchantDeliveryPayment = ParcelMerchantDeliveryPayment::create($data);

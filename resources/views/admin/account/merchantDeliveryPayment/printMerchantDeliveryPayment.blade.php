@@ -116,6 +116,10 @@
                 border-radius: 0px;
                 box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
             }
+
+            .print-none {
+                display: none;
+            }
         }
     </style>
 
@@ -123,11 +127,21 @@
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
     <!-- Include the QRCode library -->
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+    <script>
+        function printPage() {
+            window.print();
+        }
+    </script>
+
 </head>
 
 <body>
 
-    <div class="label font-14">
+
+    <div class="label font-14" style="position: relative;">
+        <button style=" position: absolute; top: 0; right: -70px;" class="btn btn-success print-none"
+            onclick="printPage()">Print</button>
         <h5><strong>Parceldex Payment Summary</strong></h5>
         <hr class="my-2" style="opacity: 1;border: 1px solid black;">
 
@@ -138,9 +152,10 @@
                 <span>{{ $parcelMerchantDeliveryPayment->merchant->address }}</span><br>
                 <span>Email: {{ $parcelMerchantDeliveryPayment->merchant->email }}</span><br>
                 <span>Mobile: {{ $parcelMerchantDeliveryPayment->merchant->contact_number }}</span><br>
+                <span><strong>Adjustment Note:</strong> {{ $parcelMerchantDeliveryPayment->adjustment_note }}</span>
             </div>
 
-            <table class="table w-auto table-striped table-bordered font-14">
+            <table class="table w-auto table-striped table-bordered font-14" style="min-width: 300px;">
                 <tr>
                     <th>Invoice Date</th>
                     <td>{{ \Carbon\Carbon::parse($parcelMerchantDeliveryPayment->date_time)->format('d/m/Y') }}</td>
@@ -150,12 +165,22 @@
                     <td>{{ $parcelMerchantDeliveryPayment->merchant_payment_invoice }}</td>
                 </tr>
                 <tr>
-                    <th>Total Paid Amount</th>
+                    <th>Commission</th>
+                    <td> {{ $parcelMerchantDeliveryPayment->parcel_merchant_delivery_payment_details->sum('parent_commission_amount') ?? 0 }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Paid Amount</th>
                     <td>{{ number_format($parcelMerchantDeliveryPayment->total_payment_amount, 0) }}</td>
                 </tr>
                 <tr>
                     <th>Adjustment</th>
-                    <td>534</td>
+                    <td> {{ $parcelMerchantDeliveryPayment->adjustment ?? 0 }} </td>
+                </tr>
+                <tr>
+                    <th>Total Paid Amount</th>
+                    <td>{{ number_format($parcelMerchantDeliveryPayment->total_payment_amount + ($parcelMerchantDeliveryPayment->adjustment ?? 0), 0) }}
+                    </td>
                 </tr>
             </table>
         </div>
@@ -204,7 +229,7 @@
                             ? $item->parcel->customer_collect_amount
                             : $item->parcel->cancel_amount_collection;
 
-                        $total_product_price += $item->parcel->product_price;
+                        $total_product_price += $item->parcel->product_value;
                         $total_collected += $collected_amount;
                         $total_delivery_charge += $item->parcel->delivery_charge;
                         $total_cod_charge += $item->parcel->cod_charge;
@@ -228,7 +253,7 @@
                             $item->parcel,
                         )['status_name'] }}
                         </td>
-                        <td>{{ $item->parcel?->total_collect_amount }}</td>
+                        <td>{{ $item->parcel?->product_value }}</td>
                         <td>{{ $collected_amount }}</td>
                         <td>{{ $item->parcel?->delivery_charge }}</td>
                         <td>{{ $item->parcel?->cod_charge }}</td>

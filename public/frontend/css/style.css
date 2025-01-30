@@ -208,15 +208,19 @@ a.btn.border.px-4.py-2.rounded {
 
 /*-----Patner Section-----*/
 .patner-wrapper {
-  margin-bottom: 110px;
+  margin-bottom: 60px;
 }
 .patner {
   height: 44px;
   padding: 0 64px;
 }
 .patner img {
-  width: auto;
-  height: auto;
+  /* width: auto;
+  height: auto; */
+  width: 15%;
+  aspect-ratio: 7/1;
+  object-fit: contain;
+  mix-blend-mode: color-burn;
 }
 
 /*-----Patner Section-----*/
@@ -1195,6 +1199,16 @@ body.auth {
   border: 1px solid var(--border-neutral-200);
   border-radius: 20px;
 }
+.key-feature:hover {
+  background-color: #fff;
+  scale: 1.05;
+  transition: .5s ease-in;
+}
+.key-feature h3 {
+  font-size: 24px;
+  line-height: 32px;
+  color: var(--txt-neutral-900);
+}
 .why-wrapper {
   position: relative;
 }
@@ -1900,9 +1914,9 @@ body.auth {
   .intro-wrapper {
     background-image: url("../images/bg_tab.jpg");
   }
-  .intro-wrapper {
-    /* height: 560px; */
-  }
+   /* .intro-wrapper {
+   height: 560px; 
+  }*/
   .patner-wrapper {
     margin-top: 60px;
   }
@@ -2476,3 +2490,56 @@ body.auth {
 
 /*----- Responsive Area-----*/
 /*----- Responsive Area-----*/
+
+.brand_logos {
+  overflow: hidden; /* Hide the overflowed content */
+  padding: 30px 0px;
+  position: relative;
+}
+
+.brand_logo_items {
+  display: flex; /* Use flexbox to align logos in a row */
+  animation: runslides 35s linear infinite; /* Infinite scrolling animation */
+}
+
+.brand_logos:before {
+  content: '';
+  left: 0;
+  background: linear-gradient(to left, rgba(255,255,255,0), rgb(255, 255, 255));
+}
+
+.brand_logos:after {
+  content: '';
+  right: 0;
+  background: linear-gradient(to right, rgba(255,255,255,0), rgb(255, 255, 255));
+}
+.brand_logo_items img {
+  height: 100px; /* Set the height for the logos */
+  margin-right: 20px; /* Add space between logos */
+}
+
+/* Keyframes for smooth infinite scroll */
+@keyframes runslides {
+  0% {
+    transform: translateX(0); /* Start at the initial position */
+  }
+  100% {
+    transform: translateX(-100%); /* Move the logos to the left completely */
+  }
+}
+
+/* Second set of logos */
+.brand_logo_items2 {
+  display: flex; /* Use flexbox to align logos in a row */
+  animation: runslides2 35s linear infinite; /* Infinite scrolling animation */
+}
+
+/* Keyframes for the second set of logos */
+@keyframes runslides2 {
+  0% {
+    transform: translateX(-100%); /* Start at the initial position */
+  }
+  100% {
+    transform: translateX(0%); /* Move the logos to the left completely */
+  }
+}

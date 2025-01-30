@@ -154,7 +154,11 @@ class MakeMerchantDeliveryPayment extends Command
                 $returnCharge = $parcel->merchant_service_area_return_charge;
             }
 
-            $sum_charge = $parcel->weight_package_charge + $parcel->delivery_charge + ceil($cod_charge) + $returnCharge;
+            if ($merchant->parent_merchant_commission) {
+                $commission = ($parcel->customer_collect_amount * $merchant->parent_merchant_commission) / 100;
+            }
+
+            $sum_charge = $parcel->weight_package_charge + $parcel->delivery_charge + ceil($cod_charge) + $returnCharge + $commission;
 
             ParcelMerchantDeliveryPaymentDetail::create([
                 'parcel_merchant_delivery_payment_id' => $parcelMerchantDeliveryPayment->id,
@@ -165,6 +169,7 @@ class MakeMerchantDeliveryPayment extends Command
                 'weight_package_charge' => $parcel->weight_package_charge,
                 'return_charge' => $returnCharge,
                 'paid_amount' => $sum_charge,
+                'parent_commission_amount' => $commission,
             ]);
 
             Parcel::where('id', $parcel->id)->update([
@@ -172,8 +177,13 @@ class MakeMerchantDeliveryPayment extends Command
                 'return_charge' => $returnCharge,
                 'cod_charge' => ceil($cod_charge),
                 'merchant_paid_amount' => $sum_charge,
+                'parent_commission_amount' => $commission,
             ]);
         }
+
+        $parcelMerchantDeliveryPayment = ParcelMerchantDeliveryPayment::create($data);
+
+
     }
 
     private function returnUniqueMerchantDeliveryPaymentInvoice()

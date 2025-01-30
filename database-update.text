@@ -1,1 +1,3 @@
-`parent_merchant_id` & `parent_merchant_commission` column add `merchants` table
+`parent_merchant_id`, `parent_merchant_commission`, column add `merchants` table
+`parent_commission_amount`, column add `parcels` table
+`parent_commission_amount`, column add `parcel_merchant_delivery_payment_details` table

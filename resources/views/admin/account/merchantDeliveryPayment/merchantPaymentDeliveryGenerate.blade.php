@@ -181,8 +181,9 @@
                                             <th width="10%" class="text-center">Collected</th>
                                             <th width="10%" class="text-center">Weight Charge </th>
                                             <th width="10%" class="text-center">Delivery </th>
-                                            <th width="10%" class="text-center">COD Charge</th>
+                                            <th width="5%" class="text-center">COD Charge</th>
                                             <th width="5%" class="text-center">Return Charge</th>
+                                            <th width="5%" class="text-center">Commission</th>
                                             <th width="5%" class="text-center">Total Charge</th>
                                             <th width="5%" class="text-center">Payable</th>
                                         </tr>
@@ -198,6 +199,7 @@
                                                 $t_returnCharge = 0;
                                                 $t_payable_amount = 0;
                                                 $t_charge = 0;
+                                                $t_commissionCharge = 0;
                                             @endphp
                                             @foreach ($parcels as $parcel)
                                                 @php
@@ -341,10 +343,27 @@
                                                         @php
                                                             $t_returnCharge += $returnCharge;
                                                         @endphp
+                                                    </td>
+                                                    <td class="text-right">
+
+                                                        @php
+
+                                                            $commission = $parcel->merchant->parent_merchant_commission
+                                                                ? ($parcel->merchant->parent_merchant_commission *
+                                                                        $parcel->customer_collect_amount) /
+                                                                    100
+                                                                : 0;
+
+                                                            $t_commissionCharge += $commission;
+                                                        @endphp
+
+                                                        <input type="number" id="commission_charge{{ $parcel->id }}"
+                                                            value="{{ $commission }}" parcel_id="{{ $parcel->id }}"
+                                                            class="form-control text-center commission_charge"
+                                                            step="any" />
 
                                                     </td>
                                                     <td class="text-right " id="view_payable_amount{{ $parcel->id }}">
-
 
                                                         {{ number_format($s_charge, 2) }}
 
@@ -379,6 +398,8 @@
                                                 </td>
                                                 <td id="total_return_charge" style="text-align: right">
                                                     {{ $t_returnCharge }}</td>
+                                                <td id="total_commission_charge" style="text-align: right">
+                                                    {{ $t_commissionCharge }}</td>
                                                 <td id="total_charge" style="text-align: right">
                                                     {{ $t_charge }}
                                                 </td>
@@ -525,6 +546,7 @@
             let total_collected = 0;
             let total_cod_charge = 0;
             let total_return_charge = 0;
+            let total_commission_charge = 0;
             let total_delivery_charge = 0;
             let total_weight_charge = 0;
             let grand_total_charge = 0;
@@ -545,6 +567,11 @@
                 total_return_charge += value;
             });
 
+            $('.commission_charge').each(function() {
+                let value = parseFloat($(this).val()) || 0;
+                total_commission_charge += value;
+            });
+
             $('.delivery_charge').each(function() {
                 let value = parseFloat($(this).val()) || 0;
                 total_delivery_charge += value;
@@ -555,7 +582,8 @@
                 total_weight_charge += value;
             });
 
-            grand_total_charge = total_cod_charge + total_return_charge + total_delivery_charge + total_weight_charge;
+            grand_total_charge = total_cod_charge + total_return_charge + total_delivery_charge + total_weight_charge +
+                total_commission_charge;
             grand_payable_amount = total_collected - grand_total_charge;
 
             $('#total_cod_charge').text(total_cod_charge.toFixed(2));

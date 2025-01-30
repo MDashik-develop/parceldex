@@ -568,6 +568,7 @@ class MerchantController extends Controller
                 'date' => date('Y-m-d'),
                 //                'status' => 1,
                 'updated_admin_id' => auth()->guard('admin')->user()->id,
+                'parent_merchant_commission' => $request->input('commission'),
             ];
 
             $password = $request->input('password');
@@ -629,7 +630,7 @@ class MerchantController extends Controller
             }
         } catch (\Exception $e) {
             \DB::rollback();
-            $this->setMessage('Database Error Found', 'danger');
+            $this->setMessage('Database Error Found ' . $e->getMessage(), 'danger');
             return redirect()->back()->withInput();
         }
     }

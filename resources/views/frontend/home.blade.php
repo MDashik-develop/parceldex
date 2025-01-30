@@ -21,7 +21,7 @@
                     </p>
                     <a href="register.html"><button class="btn btn-lg">Become a Merchant</button></a>
                 </div>
-                <div class="intro-img">
+                <div class="intro-img center text-center">
                     <img class=" animate__animated animate__fadeIn" src="/frontend/images/rider.png" alt="">
                 </div>
 
@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <div class="patner-wrapper animate__animated animate__fadeInUp">
+    <div class="patner-wrapper patner-wrapper1 animate__animated animate__fadeInUp overflow-hidden">
         <div class="container-fluid brand_logos">
             <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items">
                     <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
@@ -54,7 +54,7 @@
 
     </div>
 
-    <div class="patner-wrapper animate__animated animate__fadeInUp">
+    <div class="patner-wrapper patner-wrapper2 animate__animated animate__fadeInUp overflow-hidden">
 
         <div class="container-fluid brand_logos">
             <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items brand_logo_items2">

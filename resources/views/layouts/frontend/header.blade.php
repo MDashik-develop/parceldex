@@ -31,14 +31,14 @@
                 <a href="tracking.html" class=" d-none d-sm-inline-block txt-primary me-4"> <img
                         src="/frontend/images/parcel_tarck_icon.svg" alt="" class="parcel_tarck_icon">
                     Track Parcel </a>
-                <div class="d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center gap-1 gap-sm-3">
 
                     <a href="register.html">
-                        <button class="btn btn-md">Sign Up</button>
+                        <button class="btn btn-md p-1">Sign Up</button>
                     </a>
                     <a href="{{ route('frontend.login') }}">
                         
-                        <button class="btn btn-md">Sign Up</button>
+                        <button class="btn btn-md">Login</button>
                     </a>
                 </div>
                 <!-- <button class="btn-outline btn-md d-none d-sm-inline-block">EN</button> -->

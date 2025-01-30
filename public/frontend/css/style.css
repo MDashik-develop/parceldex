@@ -1345,7 +1345,8 @@ body.auth {
     background-position: center;
   }
   .patner-wrapper {
-    margin-top: -74px;
+    /* margin-top: -74px; */
+    margin-top: 0;
   }
   .banner {
     width: 1366px;
@@ -1840,7 +1841,7 @@ body.auth {
   }
   .intro-img {
     width: 49%;
-    margin-right: 128px;
+    /* margin-right: 128px; */
   }
 
   .search-area {
@@ -1909,6 +1910,10 @@ body.auth {
     flex: 0 0 auto;
     width: 50% !important;
   }
+  
+  .patner-wrapper2{
+    margin-top: 80px !important;
+  }
 }
 @media (max-width: 768px) {
   .intro-wrapper {
@@ -1918,10 +1923,11 @@ body.auth {
    height: 560px; 
   }*/
   .patner-wrapper {
-    margin-top: 60px;
+    margin-top: 40px;
+    margin-bottom: 40px;
   }
   .intro-img {
-    width: 100%;
+    width: 100% !important;
     margin-right: 0;
   }
   .intro-content {
@@ -2316,7 +2322,8 @@ body.auth {
     width: 80%;
   }
   .patner-wrapper {
-    margin-top: -48px;
+    /* margin-top: -48px; */
+    margin-top: 0 !important;
   }
 
   h4 {
@@ -2357,7 +2364,7 @@ body.auth {
     align-items: flex-start !important;
   }
   .patner-wrapper {
-    margin-bottom: 70px;
+    /* margin-bottom: 70px; */
   }
   .service-wrapper {
     margin-bottom: 70px;
@@ -2425,7 +2432,7 @@ body.auth {
     width: 90%;
   }
   .patner-wrapper {
-    margin-top: -70px;
+    margin-top: -70px !important;
   }
   .patner div:nth-last-child(-n + 2) {
     width: 140px;
@@ -2490,6 +2497,14 @@ body.auth {
 
 /*----- Responsive Area-----*/
 /*----- Responsive Area-----*/
+
+@media (min-width: 535px) and (max-width: 768px) {
+  
+  .patner-wrapper1{
+    margin-top: 300px !important;
+  }
+}
+
 
 .brand_logos {
   overflow: hidden; /* Hide the overflowed content */

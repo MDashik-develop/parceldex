@@ -10,12 +10,12 @@
 
 
     @if (!empty($application->logo))
-        <link rel="icon" type="image/png" href="{{ asset('assets/favicon.ico') }}"
-            alt="{{ $application->name ?? config('app.name', 'Express') }}">
-        <!--<link rel="shortcut icon" type="image/png" href="{{ asset('uploads/application/') . '/' . $application->logo }}" alt="{{ $application->name ?? config('app.name', 'Express') }}" >-->
-        <link rel="shortcut icon" href="{{ asset('assets/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" type="image/png" href="{{ asset('assets/favicon.ico') }}"
+        alt="{{ $application->name ?? config('app.name', 'Express') }}">
+    <!--<link rel="shortcut icon" type="image/png" href="{{ asset('uploads/application/') . '/' . $application->logo }}" alt="{{ $application->name ?? config('app.name', 'Express') }}" >-->
+    <link rel="shortcut icon" href="{{ asset('assets/favicon.ico') }}" type="image/x-icon">
     @else
-        <link rel="shortcut icon" href="{{ asset('assets/favicon.ico') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('assets/favicon.ico') }}" type="image/x-icon">
     @endif
 
     <meta name="description" content="">
@@ -51,6 +51,8 @@
     <link rel="stylesheet" href="/frontend/css/style.css">
     <link rel="stylesheet" href="/frontend/css/override.css">
 
+    <!-- animation cdn -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <script>
         (function(i, s, o, g, r, a, m) {

@@ -11,7 +11,7 @@
     <div class="intro-wrapper">
         <div class="container-fluid">
             <div class="intro d-flex justify-content-between">
-                <div class="intro-content d-flex flex-column">
+                <div class="intro-content d-flex flex-column animate__animated animate__fadeInLeftBig">
                     <h2>We <mark>Deliver</mark> <br> Parcel on Time with
                         no Hassle</h2>
                     <p>Different times of the year can determine the cost of moving your belongings. For example,
@@ -22,34 +22,31 @@
                     <a href="register.html"><button class="btn btn-lg">Become a Merchant</button></a>
                 </div>
                 <div class="intro-img">
-                    <img src="/frontend/images/rider.png" alt="">
+                    <img class=" animate__animated animate__fadeIn" src="/frontend/images/rider.png" alt="">
                 </div>
 
             </div>
         </div>
     </div>
 
-    <div class="patner-wrapper">
-        <div class="container-fluid">
-            <div class="patner d-flex justify-content-between align-items-center">
-                <div>
+    <div class="patner-wrapper animate__animated animate__fadeInUp">
+        <div class="container-fluid brand_logos">
+            <div class="patner d-flex justify-content-between align-items-center brand_logo_items">
                     <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
-                </div>
-                <div>
                     <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
-                </div>
-
-                <div>
-                    <img src="/frontend/images/partner_img/rokomari.png" style="max-width: 120px" alt="">
-                </div>
-
-                <div>
-                    <img src="/frontend/images/partner_img/naturo-01.png" style="max-width: 150px" alt="">
-                </div>
-
-                <div>
+                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
                     <img src="/frontend/images/partner_img/sm_online.png" alt="">
-                </div>
+                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
 
             </div>
         </div>
@@ -57,35 +54,32 @@
 
     </div>
 
-    <div class="patner-wrapper">
+    <div class="patner-wrapper animate__animated animate__fadeInUp">
 
-        <div class="container-fluid">
-            <div class="patner d-flex justify-content-between align-items-center">
-                <div>
-                    <img src="/frontend/images/partner_img/othoba.png" style="max-width: 150px" alt="">
-                </div>
-                <div>
-                    <img src="/frontend/images/partner_img/lotto.png" style="max-width: 150px" alt="">
-                </div>
-
-                <div>
-                    <img src="/frontend/images/partner_img/sailor.png" style="max-width: 120px" alt="">
-                </div>
-
-                <div>
+        <div class="container-fluid brand_logos">
+            <div class="patner d-flex justify-content-between align-items-center brand_logo_items brand_logo_items2">
+                    <img src="/frontend/images/partner_img/othoba.png" alt="">
+                    <img src="/frontend/images/partner_img/lotto.png" alt="">
+                    <img src="/frontend/images/partner_img/sailor.png" alt="">
                     <img src="/frontend/images/partner_img/fashion.png" alt="">
-                </div>
-
-                <div>
-                    <img src="/frontend/images/partner_img/htbazar.png" style="max-width: 150px" alt="">
-                </div>
+                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
+                    <img src="/frontend/images/partner_img/othoba.png" alt="">
+                    <img src="/frontend/images/partner_img/lotto.png" alt="">
+                    <img src="/frontend/images/partner_img/sailor.png" alt="">
+                    <img src="/frontend/images/partner_img/fashion.png" alt="">
+                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
+                    <img src="/frontend/images/partner_img/othoba.png" alt="">
+                    <img src="/frontend/images/partner_img/lotto.png" alt="">
+                    <img src="/frontend/images/partner_img/sailor.png" alt="">
+                    <img src="/frontend/images/partner_img/fashion.png" alt="">
+                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
 
 
             </div>
         </div>
     </div>
 
-    <div class="chairman-wrapper">
+    <div class="chairman-wrapper animate__animated animate__fadeInUp">
         <div class="container-fluid">
             <div class="about-ceo ">
                 <div class="row">
@@ -161,7 +155,7 @@
         </div>
     </div>
 
-    <div class="service-wrapper">
+    <div class="service-wrapper animate__animated animate__fadeInUp">
         <div class="container-fluid">
             <div class="service">
                 <div class="section_header d-flex flex-column justify-content-center align-items-center">
@@ -196,7 +190,7 @@
         </div>
     </div>
 
-    <div class="why-wrapper">
+    <div class="why-wrapper animate__animated animate__fadeInUp">
         <div class="container-fluid">
             <div class="why-choose">
                 <div class="section_header d-flex flex-column justify-content-center align-items-center">
@@ -265,7 +259,7 @@
         <div class="ellipseFade2"></div>
     </div>
 
-    <div class="banner-wrapper">
+    <div class="banner-wrapper animate__animated animate__fadeInUp">
         <div class="banner d-flex flex-column justify-content-center align-items-center gap-2">
             <h4>Grow Your Business with Parceldex</h4>
             <p>Start Your first step with Parceldex</p>
@@ -274,6 +268,14 @@
 
         <div class="ellipseFade2"></div>
     </div>
+    <script>
+        const events = document.querySelectorAll('.animate__animated');
+
+            events.forEach((event, index) => {
+            event.style.animationDelay = `${index * 1}s`;
+        });
+
+    </script>
 @endsection
 
 @push('script_js')

@@ -60,7 +60,7 @@
                                         <input type="password" name="password" class="form-control"
                                             placeholder="Enter your Password" required>
                                         <div class="input-group-append" id="togglePassword">
-                                            <div class="input-group-text">
+                                            <div class="input-group-text h-100" style="border-bottom-left-radius: 0 !important; border-top-left-radius: 0 !important;">
                                                 <span style="color: #00509D" id="icon" class="fas fa-eye"></span>
                                             </div>
                                         </div>

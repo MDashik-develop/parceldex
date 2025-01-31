@@ -2,124 +2,160 @@
 
 @section('content')
 
-    <!-- Breadcroumb Area -->
-	<div class="breadcroumb-area bread-bg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="breadcroumb-title text-center">
-						<h1>Blogs</h1>
-						<h6><a href="{{ route('frontend.home') }}">Home</a> / Blogs</h6>
-					</div>
-				</div>
-			</div>
-		</div>
-    </div>
-
-    @if ($blogs->count() > 0)
-	<!-- blog start -->
-	<div id="blog" class="blog-main-block">
-		<div class="container">
-			<div class="row">
-                @foreach ($blogs as $blog)
-                <div class="col-lg-12 col-xl-6 col-md-6">
-                    <div class="blog-block">
-                        <div class="row">
-                            <div class="col-xl-5 col-lg-3">
-                                <div class="blog-img">
-                                    <a href="{{ route('frontend.blogDetails', $blog->slug) }}" title="{{ $blog->title }}">
-                                        <img src="{{ asset('uploads/blog/'.$blog->image) }}" alt="{{ $blog->title }}" style="height: 200px; width:200px;">
-                                    </a>
-                                    <div class="meta-dtl">
-                                        <a href="#" title="date">
-                                            <div class="date"> {{ \Carbon\Carbon::parse($blog->date)->format('d')}} </div>
-                                            <div class="month">{{ \Carbon\Carbon::parse($blog->date)->format('M')}}</div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-7 col-lg-9">
-                                <div class="blog-dtl">
-                                    <h6 class="blog-heading"><a href="#" title="{{ $blog->title }}">{{ $blog->title }}</a></h6>
-                                    <p>
-                                        {{ substr($blog->short_details,0,100) }}
-                                    </p>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-lg-6 col-sm-6 col-6">
-                                            <a href="{{ route('frontend.blogDetails', $blog->slug) }}" class="btn btn-link">Read More<i class="las la-arrow-right"></i></a>
-                                        </div> 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row">
+        <div class="md:w-2/3 md:pr-8">
+            <!-- First Blog Post with Big Image -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                <img alt="A detailed description of the first blog post image" class="w-full h-auto rounded-lg mb-4" src="https://placehold.co/800x400" />
+                <h2 class="text-2xl font-bold mb-2">
+                    First Blog Post
+                </h2>
+                <p class="text-gray-600 mb-4">
+                    January 1, 2023 by
+                    <a class="text-blue-500" href="#">
+                        Author
+                    </a>
+                </p>
+                <p class="text-gray-700 mb-4">
+                    This is the content of the first blog post. It contains some interesting information about a particular topic.
+                </p>
+                <a class="text-blue-500 hover:underline" href="#">
+                    Read more
+                </a>
+            </div>
+            <!-- Smaller Blog Posts -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6 flex">
+                <img alt="" style="height: 200px !important;" class=" rounded-lg mr-4" src="https://placehold.co/100x100" />
+                <div>
+                    <h2 class="text-xl font-bold mb-2">
+                        Second Blog Post
+                    </h2>
+                    <p class="text-gray-600 mb-2">
+                        February 1, 2023 by
+                        <a class="text-blue-500" href="#">
+                            Author
+                        </a>
+                    </p>
+                    <p class="text-gray-700 line-clamp-2">
+                        This is the content of the second blog post. It contains some more interesting information about another topic.
+                    </p>
+                    <a class="text-blue-500 hover:underline" href="#">
+                        Read more
+                    </a>
                 </div>
-                @endforeach
-              
             </div>
-            <div class="row">
-                <div class="col-lg-12 col-xl-6 col-md-6"> 
-                    {{ $blogs->links('vendor.pagination.custom') }}
-                </div> 
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6 flex">
+                <img alt="" style="height: 200px !important;" class="w-1/3 h-auto rounded-lg mr-4" src="https://placehold.co/200x200" />
+                <div>
+                    <h2 class="text-xl font-bold mb-2">
+                        Third Blog Post
+                    </h2>
+                    <p class="text-gray-600 mb-2">
+                        March 1, 2023 by
+                        <a class="text-blue-500" href="#">
+                            Author
+                        </a>
+                    </p>
+                    <p class="text-gray-700 line-clamp-2">
+                        This is the content of the third blog post. It contains even more interesting information about yet another topic.
+                    </p>
+                    <a class="text-blue-500 hover:underline" href="#">
+                        Read more
+                    </a>
+                </div>
             </div>
-		</div>
-	</div>
-    <!-- blog end-->
-    @endif
+        </div>
+        <!-- <div class="md:w-1/3">
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                <h4 class="text-xl font-bold mb-4">
+                    About
+                </h4>
+                <p class="text-gray-700">
+                    This is a blog about various interesting topics. Stay tuned for more updates!
+                </p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                <h4 class="text-xl font-bold mb-4">
+                    Archives
+                </h4>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li>
+                        <a class="text-blue-500" href="#">
+                            January 2023
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-blue-500" href="#">
+                            February 2023
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-blue-500" href="#">
+                            March 2023
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                <h4 class="text-xl font-bold mb-4">
+                    Elsewhere
+                </h4>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li>
+                        <a class="text-blue-500" href="#">
+                            GitHub
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-blue-500" href="#">
+                            Twitter
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-blue-500" href="#">
+                            Facebook
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div> -->
+    </div>
+</div>
 
-
-
-   <!-- clients start-->
-   @if ($partners->count() > 0)
-   <div id="clients" class="clients-main-block">
-       <div class="container">
-           <h1 class="">OUR TRUSTED PARTNER</h1>
-           <div class="row">
-               <div id="clients-slider" class="clients-slider owl-carousel">
-                   @foreach ($partners  as $partner)
-                   <div class="item-clients-img">
-                       <img src="{{ asset('uploads/partner/'.$partner->image) }}" class="img-fluid" alt="clients-1">
-                   </div>
-                   @endforeach
-               </div>
-           </div>
-       </div>
-   </div>
-   @endif
-   <!-- clients end-->
 
 @endsection
 
 @push('style_css')
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-    <style type="text/css">
-        .my-actives span{
-            background-color: #dc3545 !important;
-            color: white !important;
-            border-color: #dc3545 !important;
-        }
-        .pager li{
-            font-size: 18px !important;
-        }
-        .btn-primary {
-            background-color: #ff0000;
-            font-family: 'Poppins', sans-serif;
-            font-size: 14px;
-            font-weight: 600px;
-            padding: 14px 28px;
-            border: 1px solid#ff0000;
-            text-transform: uppercase;
-            -webkit-transition: none;
-            -moz-transition: none;
-            transition: none;
-            -webkit-transition: all 0.5s ease;
-            -ms-transition: all 0.5s ease;
-            -o-transition: all 0.5s ease;
-            -moz-transition: all 0.5s ease;
-            transition: all 0.5s ease;
-        }
-    </style>
+<style type="text/css">
+    .my-actives span {
+        background-color: #dc3545 !important;
+        color: white !important;
+        border-color: #dc3545 !important;
+    }
+
+    .pager li {
+        font-size: 18px !important;
+    }
+
+    .btn-primary {
+        background-color: #ff0000;
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        font-weight: 600px;
+        padding: 14px 28px;
+        border: 1px solid#ff0000;
+        text-transform: uppercase;
+        -webkit-transition: none;
+        -moz-transition: none;
+        transition: none;
+        -webkit-transition: all 0.5s ease;
+        -ms-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+</style>
 @endpush
- 

@@ -2598,3 +2598,10 @@ body.auth {
 .brand_logos:hover .brand_logo_items2 {
   animation-play-state: paused;
 }
+.custom-ellipsis{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

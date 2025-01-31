@@ -1,7 +1,7 @@
 @php
 
-    $socialLinks = App\Models\SocialLink::where('status', 1)->get();
-    $partners = App\Models\Partner::where('status', 1)->get();
+$socialLinks = App\Models\SocialLink::where('status', 1)->get();
+$partners = App\Models\Partner::where('status', 1)->get();
 
 @endphp
 
@@ -266,6 +266,55 @@
 
         <div class="ellipseFade2"></div>
     </div>
+
+    <div class="blog-section px-2 px-md-5">
+        <h4 class="mb-4 text-center text-md-start" style="color: #07539e;">Latest News</h4>
+        <div class="d-flex gap-5 flex-column flex-md-row justify-content-between align-items-center">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap">
+                <div class="card-body p-2">
+                    <span class="card-title fw-bold fs-6">Card title</span>
+                    <p class="card-text custom-ellipsis">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap">
+                <div class="card-body p-2">
+                    <span class="card-title fw-bold fs-6">Card title</span>
+                    <p class="card-text custom-ellipsis">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap">
+                <div class="card-body p-2">
+                    <span class="card-title fw-bold fs-6">Card title</span>
+                    <p class="card-text custom-ellipsis">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap">
+                <div class="card-body p-2">
+                    <span class="card-title fw-bold fs-6">Card title</span>
+                    <p class="card-text custom-ellipsis">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap">
+                <div class="card-body p-2">
+                    <span class="card-title fw-bold fs-6">Card title</span>
+                    <p class="card-text custom-ellipsis">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap">
+                <div class="card-body p-2">
+                    <span class="card-title fw-bold fs-6">Card title</span>
+                    <p class="card-text custom-ellipsis">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const events = document.querySelectorAll('.animate__animated');
 

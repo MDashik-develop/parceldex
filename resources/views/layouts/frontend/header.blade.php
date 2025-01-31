@@ -8,7 +8,7 @@
                 </div>
                 <div class="brand-logo">
                     <!-- <a href="index.html"><img src="/frontend/images/logo/logo.png" alt="" class="web_logo"></a> -->
-                    <a href="index.html"><img src="/frontend/images/logo/logo.png" alt="" class="web_logo"></a>
+                    <a href="https://parceldex.com.bd/"><img src="/frontend/images/logo/logo.png" alt="" class="web_logo"></a>
                 </div>
             </div>
             <div class="navbar-menu">

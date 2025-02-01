@@ -168,13 +168,13 @@
                                                                             <span class="font-weight-bold text-success"
                                                                                 id="complete2">
                                                                             </span>
-                                                                            <span class="font-weight-bold text-success"id="p_complete2"></span>
+                                                                            <span
+                                                                                class="font-weight-bold text-success"id="p_complete2"></span>
                                                                         </div>
                                                                         <div>
                                                                             <span class="font-weight-bold text-warning"
                                                                                 id="pending2"></span>
-                                                                                <span
-                                                                                class="font-weight-bold text-warning"
+                                                                            <span class="font-weight-bold text-warning"
                                                                                 id="p_pending2"></span>
                                                                         </div>
                                                                         <div>
@@ -736,8 +736,18 @@
                                     </div>
                                 </form>
 
+                                @php
+                                    $total_parcel = 0;
+                                    $total_parcel = \App\Models\Parcel::where(
+                                        'merchant_id',
+                                        auth()->guard('merchant')->user()->id,
+                                    )
+                                        ->whereDate('created_at', \Carbon\Carbon::today())
+                                        ->count();
+                                @endphp
+
                                 <div class="text-center text-md text-bold">Today Total Entries <span
-                                        class="text-primary border p-2">10</span></div>
+                                        class="text-primary border p-2">{{ $total_parcel }}</span></div>
                                 <div class="text-center text-md text-bold">* PickUp Time <span
                                         class="text-primary">4pm-10pm</span> Approx</div>
                             </div>

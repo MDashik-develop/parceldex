@@ -52,7 +52,8 @@
                                                 <tr>
                                                     <th>Date</th>
                                                     <td colspan="2">
-                                                        <input type="date" name="date" id="date" value="{{ date('Y-m-d') }}" class="form-control " required>
+                                                        <input type="date" name="date" id="date"
+                                                            value="{{ date('Y-m-d') }}" class="form-control " required>
                                                     </td>
                                                 </tr>
 
@@ -95,9 +96,8 @@
                                                 <tr>
                                                     <th>Adjustment Amount</th>
                                                     <td colspan="2">
-                                                        <input type="number" name="adjustment"
-                                                            id="adjustment" class="form-control"
-                                                            placeholder="Adjustment Amount">
+                                                        <input type="number" name="adjustment" id="adjustment"
+                                                            class="form-control" placeholder="Adjustment Amount">
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -141,8 +141,8 @@
                             <div class="col-md-12 row" style="margin-top: 20px;">
                                 <div class="col-md-5">
                                     <div class="form-group">
-                                        <input type="text" name="parcel_invoice" id="parcel_invoice" class="form-control"
-                                            placeholder="Enter Parcel Invoice Barcode"
+                                        <input type="text" name="parcel_invoice" id="parcel_invoice"
+                                            class="form-control" placeholder="Enter Parcel Invoice Barcode"
                                             onkeypress="return add_parcel(event)"
                                             style="font-size: 20px; box-shadow: 0 0 5px rgb(62, 196, 118);
                                     padding: 3px 0px 3px 3px;
@@ -219,7 +219,7 @@
                                                     $s_charge = 0;
                                                     $s_collected = 0;
                                                     $returnCharge = 0;
-                                                    if ($parcel->delivery_type == 4 || $parcel->delivery_type == 2) {
+                                                    if ($parcel->delivery_type == 4) {
                                                         $returnCharge = $parcel->merchant_service_area_return_charge;
                                                     } elseif (
                                                         $parcel->suborder &&
@@ -259,6 +259,10 @@
                                                             value="{{ $parcel->id }}">
                                                     </td>
                                                     <td class="text-center">
+                                                        {{-- {{ $returnCharge }},
+                                                        {{ $parcel->suborder }},
+                                                        {{ $parcel->delivery_type }},
+                                                        {{ $parcel->parent_delivery_type }}, --}}
                                                         {{ $parcel->parcel_invoice }}
                                                     </td>
                                                     <td class="text-center">

@@ -28,7 +28,7 @@
 
         .label {
             width: 297mm;
-            height: 210mm;
+            min-height: 210mm;
             padding: 20px;
             background: #fff;
             border: 1px solid #dee2e6;
@@ -87,8 +87,8 @@
     <style>
         @page {
             size: 297mm 210mm;
-            /* margin: 30mm 45mm 30mm 45mm; */
-            margin: 0;
+            margin: 5mm 5mm 5mm 5mm;
+            /* margin: 0; */
             /* change the margins as you want them to be. */
         }
 
@@ -96,7 +96,7 @@
 
             body {
                 font-family: Arial, sans-serif;
-                background-color: #f8f9fa;
+                background-color: #fff;
                 margin: 0;
                 padding: 0;
                 display: flex;
@@ -109,12 +109,12 @@
 
             .label {
                 width: 297mm;
-                height: 210mm;
-                padding: 20px;
-                background: #fff;
-                border: 1px solid #dee2e6;
+                min-height: 210mm;
+                padding: 0px;
+                background: none;
+                border: none;
                 border-radius: 0px;
-                box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
+                box-shadow: none;
             }
 
             .print-none {
@@ -269,14 +269,14 @@
             <tfoot>
                 <tr>
                     <th colspan="7">Total</th>
-                    <th>{{ $total_product_price }}</th>
-                    <th>{{ $total_collected }}</th>
-                    <th>{{ $total_delivery_charge }}</th>
-                    <th>{{ $total_cod_charge }}</th>
-                    <th>{{ $total_wight_charge }}</th>
-                    <th>{{ $total_return_charge }}</th>
-                    <th>{{ $total_service_charge }}</th>
-                    <th>{{ $total_paid_amount }}</th>
+                    <th>{{ number_format($total_product_price) }}</th>
+                    <th>{{ number_format($total_collected) }}</th>
+                    <th>{{ number_format($total_delivery_charge) }}</th>
+                    <th>{{ number_format($total_cod_charge) }}</th>
+                    <th>{{ number_format($total_wight_charge) }}</th>
+                    <th>{{ number_format($total_return_charge) }}</th>
+                    <th>{{ number_format($total_service_charge) }}</th>
+                    <th>{{ number_format($total_paid_amount) }}</th>
                 </tr>
             </tfoot>
 

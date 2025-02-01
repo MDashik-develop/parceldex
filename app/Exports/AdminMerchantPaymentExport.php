@@ -134,7 +134,7 @@ class AdminMerchantPaymentExport implements
                     'payment_invoice_id' => $payment->merchant_payment_invoice,
                     'routing_number' => $parcel->merchant->routing_number ?? 'N/A',
                     'account_number' => $payment->merchant->bank_account_no,
-                    'payable_amount' => number_format($payment->total_payment_amount, 2),
+                    'payable_amount' => number_format($payment->total_payment_amount + $payment->adjustment, 2),
                     'account_name' => $payment->merchant->bank_account_name,
                     'mobile_number' => $payment->merchant->contact_number,
                     'email' => $payment->merchant->email,
@@ -151,6 +151,20 @@ class AdminMerchantPaymentExport implements
 
     public function map($row): array
     {
+        if ($row->payment_method == 1) {
+            $payment_method = "Cash";
+        } elseif ($row->payment_method == 5) {
+            $payment_method = "Bank";
+        } elseif ($row->payment_method == 2) {
+            $payment_method = "Bkash";
+        } elseif ($row->payment_method == 3) {
+            $payment_method = "Nagad";
+        } elseif ($row->payment_method == 4) {
+            $payment_method = "Rocket";
+        } else {
+            $payment_method = "N/A";
+        }
+
         return [
             $row->serial,
             $row->payment_date,
@@ -163,7 +177,7 @@ class AdminMerchantPaymentExport implements
             $row->cod_charge,
             $row->return_charge,
             $row->total_charge,
-            $row->payment_method,
+            $payment_method,
             $row->payment_type,
             $row->payment_invoice_id,
             $row->routing_number,

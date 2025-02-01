@@ -30,13 +30,13 @@
                     <h6>For Customers</h6>
                     <ul class="links-list d-flex flex-column">
                         <li>
-                            <a href="#">Open Account </a>
+                            <a href="#">Become a Merchant </a>
                         </li>
                         <li>
                             <a href="#">Track Parel</a>
                         </li>
                         <li>
-                            <a href="#">Partner Login</a>
+                            <a href="#">Merchant Login</a>
                         </li>
                         <li>
                             <a href="#">Tearms & Conditions</a>
@@ -47,7 +47,7 @@
                     <h6>Connect with Parceldex</h6>
                     <ul class="links-list d-flex flex-column">
                         <li>
-                            <a href="#">News & Updates </a>
+                            <a href="#">News Room </a>
                         </li>
                         <li>
                             <a href="#">FAQs</a>

@@ -2623,4 +2623,66 @@ body.auth {
 	background-color: #07539E;
 	clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7vw), 0% 100%);
 }
+.about-2nd-section{
+  min-width: 100% !important;
+}
+.about-2nd-section div{
+  height: 320px;
+  background-color: #f7f7f7 !important;
+  transition: 0.5s;
+  border-radius: 10px;
+  padding-top: 50px !important;
+  padding-bottom: 10px !important;
+}
+.about-2nd-section div i{
+  font-size: 30px;
+}
+.about-2nd-section div:hover{
+  background-color: #07539e9a !important;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  cursor: pointer;
+}
+.about-2nd-section div:hover i{
+  background-color: white !important;
+}
+.about-2nd-section div:hover strong{
+  color: white !important;
+}
+.about-2nd-section div:hover p{
+  color: rgba(255, 255, 255, 0.719) !important;
+}
+.about-2nd-section div i{
+    width: 60px;
+    height: 60px;
+    background-color: rgb(7 83 158 / 12%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50pc;
+}
+
+.about-3nd-section>div{
+  padding: 10px 160px !important
+}
+.about-3nd-section>div div div{
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  transition: 0.5s;
+}
+.about-3nd-section div i{
+  font-size: 80px;
+}
+.about-3nd-section div strong{
+  font-size: 19px;
+}
+.about-3nd-section>div div div:hover{
+  background-color: #07539e9a !important;
+  i, strong{
+    color: white !important;
+  }
+  p{
+    color: rgba(255, 255, 255, 0.719) !important;
+  }
+}
 /*----- about page-----*/

@@ -310,7 +310,7 @@ $partners = App\Models\Partner::where('status', 1)->get();
         <div class="ellipseFade2"></div>
     </div>
 
-    <div class=" container blog-section">
+    <div class=" container px-2 px-md-0 blog-section">
         <h4 class="mb-4 text-center text-md-start" style="color: #07539e;">Latest News</h4>
         <div class="d-flex gap-5 gap-md-2 flex-column flex-md-row justify-content-between align-items-center">
             <div class="card" style="width: 18rem;">

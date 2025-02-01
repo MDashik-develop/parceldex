@@ -310,9 +310,9 @@ $partners = App\Models\Partner::where('status', 1)->get();
         <div class="ellipseFade2"></div>
     </div>
 
-    <div class="blog-section px-2 px-md-5">
+    <div class=" container blog-section">
         <h4 class="mb-4 text-center text-md-start" style="color: #07539e;">Latest News</h4>
-        <div class="d-flex gap-5 flex-column flex-md-row justify-content-between align-items-center">
+        <div class="d-flex gap-5 gap-md-2 flex-column flex-md-row justify-content-between align-items-center">
             <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap">
                 <div class="card-body p-2">
@@ -358,7 +358,7 @@ $partners = App\Models\Partner::where('status', 1)->get();
         </div>
     </div>
 
-    <div class="text-box-seo pt-5 pb-2 px-3 px-md-5">
+    <div class="container text-box-seo pt-5 pb-2">
         <p class="fs-5" style=" line-height: 27px; color: #000000c2; word-spacing: 2px; letter-spacing: -1px; font-weight: 500;">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde ipsum praesentium omnis at veniam? Excepturi rerum saepe quas, provident ipsum sequi cum reiciendis eligendi quam optio quos tempora facilis? Assumenda temporibus perferendis laboriosam ut nobis itaque ex earum, fuga a nisi unde placeat repellat autem rerum rem? Unde, repellat rerum. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugiat porro dignissimos ducimus necessitatibus vero dolorum quas saepe tenetur. Ea totam delectus quo quia voluptatibus aperiam autem quaerat! Sint assumenda ab dolorum, placeat dolor voluptates perspiciatis quaerat illo ipsum eveniet laborum consequatur explicabo, dignissimos, minus minima magni pariatur! Fuga, esse ea?
         </p>

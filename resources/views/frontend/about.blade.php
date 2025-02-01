@@ -86,6 +86,190 @@
 			</div>
 		</div>
 	</div>
+
+	
+	<div class="container py-5">
+		<div class="row align-items-center">
+			<div class="col-md-6 mb-4 mb-md-0">
+				<span class="badge badge-success">
+					Testimonials
+				</span>
+				<h2 class="display-4 font-weight-bold text-dark mt-3">
+					Let's hear it from our customers!
+				</h2>
+				<p class="text-muted mt-2">
+					Here's what our customers are saying about us.
+				</p>
+			</div>
+			<div class="col-md-6">
+				<div class="carousel slide" data-ride="carousel" id="testimonialCarousel">
+					<div class="carousel-inner">
+						<div class="carousel-item active">
+							<div class="d-flex">
+								<div class="position-relative mr-3">
+									<img alt="Customer testimonial video thumbnail" class="img-fluid rounded shadow"
+										height="144"
+										src="https://storage.googleapis.com/a1aa/image/ZPcPKHTModNmsWV0bYGcrlUZfCHaA96b5poQqUD9wRU.jpg"
+										width="256" />
+									<div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center"
+										style="top: 0; left: 0;">
+										<button class="btn btn-light rounded-circle p-3 shadow"
+											onclick="openModal('video1')">
+											<i class="fas fa-play text-success">
+											</i>
+										</button>
+									</div>
+								</div>
+								<div class="position-relative">
+									<img alt="Customer testimonial video thumbnail" class="img-fluid rounded shadow"
+										height="144"
+										src="https://storage.googleapis.com/a1aa/image/ZPcPKHTModNmsWV0bYGcrlUZfCHaA96b5poQqUD9wRU.jpg"
+										width="256" />
+									<div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center"
+										style="top: 0; left: 0;">
+										<button class="btn btn-light rounded-circle p-3 shadow"
+											onclick="openModal('video2')">
+											<i class="fas fa-play text-success">
+											</i>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="carousel-item">
+							<div class="d-flex">
+								<div class="position-relative mr-3">
+									<img alt="Customer testimonial video thumbnail" class="img-fluid rounded shadow"
+										height="144"
+										src="https://storage.googleapis.com/a1aa/image/ZPcPKHTModNmsWV0bYGcrlUZfCHaA96b5poQqUD9wRU.jpg"
+										width="256" />
+									<div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center"
+										style="top: 0; left: 0;">
+										<button class="btn btn-light rounded-circle p-3 shadow"
+											onclick="openModal('video3')">
+											<i class="fas fa-play text-success">
+											</i>
+										</button>
+									</div>
+								</div>
+								<div class="position-relative">
+									<img alt="Customer testimonial video thumbnail" class="img-fluid rounded shadow"
+										height="144"
+										src="https://storage.googleapis.com/a1aa/image/ZPcPKHTModNmsWV0bYGcrlUZfCHaA96b5poQqUD9wRU.jpg"
+										width="256" />
+									<div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center"
+										style="top: 0; left: 0;">
+										<button class="btn btn-light rounded-circle p-3 shadow"
+											onclick="openModal('video4')">
+											<i class="fas fa-play text-success">
+											</i>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<a class="carousel-control-prev" data-slide="prev" href="#testimonialCarousel" role="button">
+						<span aria-hidden="true" class="carousel-control-prev-icon">
+						</span>
+						<span class="sr-only">
+							Previous
+						</span>
+					</a>
+					<a class="carousel-control-next" data-slide="next" href="#testimonialCarousel" role="button">
+						<span aria-hidden="true" class="carousel-control-next-icon">
+						</span>
+						<span class="sr-only">
+							Next
+						</span>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="d-flex justify-content-center mt-4">
+			<div class="d-flex">
+				<span class="badge badge-secondary rounded-circle mr-1" style="width: 10px; height: 10px;">
+				</span>
+				<span class="badge badge-secondary rounded-circle mr-1" style="width: 10px; height: 10px;">
+				</span>
+				<span class="badge badge-secondary rounded-circle mr-1" style="width: 10px; height: 10px;">
+				</span>
+				<span class="badge badge-secondary rounded-circle mr-1" style="width: 10px; height: 10px;">
+				</span>
+				<span class="badge badge-secondary rounded-circle mr-1" style="width: 10px; height: 10px;">
+				</span>
+				<span class="badge badge-secondary rounded-circle mr-1" style="width: 10px; height: 10px;">
+				</span>
+				<span class="badge badge-secondary rounded-circle mr-1" style="width: 10px; height: 10px;">
+				</span>
+				<span class="badge badge-secondary rounded-circle mr-1" style="width: 10px; height: 10px;">
+				</span>
+				<span class="badge badge-secondary rounded-circle mr-1" style="width: 10px; height: 10px;">
+				</span>
+				<span class="badge badge-secondary rounded-circle mr-1" style="width: 10px; height: 10px;">
+				</span>
+			</div>
+		</div>
+	</div>
+	<!-- Modal for Video 1 -->
+	<div class="modal" id="video1">
+		<div class="modal-content">
+			<span class="close" onclick="closeModal('video1')">
+				×
+			</span>
+			<iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+				allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" width="560">
+			</iframe>
+		</div>
+	</div>
+	<!-- Modal for Video 2 -->
+	<div class="modal" id="video2">
+		<div class="modal-content">
+			<span class="close" onclick="closeModal('video2')">
+				×
+			</span>
+			<iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+				allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" width="560">
+			</iframe>
+		</div>
+	</div>
+	<!-- Modal for Video 3 -->
+	<div class="modal" id="video3">
+		<div class="modal-content">
+			<span class="close" onclick="closeModal('video3')">
+				×
+			</span>
+			<iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+				allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" width="560">
+			</iframe>
+		</div>
+	</div>
+	<!-- Modal for Video 4 -->
+	<div class="modal" id="video4">
+		<div class="modal-content">
+			<span class="close" onclick="closeModal('video4')">
+				×
+			</span>
+			<iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+				allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" width="560">
+			</iframe>
+		</div>
+	</div>
+	   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js">
+	   </script>
+	   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js">
+	   </script>
+	   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
+	   </script>
+	   <script>
+		function openModal(videoId) {
+				 document.getElementById(videoId).style.display = "block";
+			 }
+	 
+			 function closeModal(videoId) {
+				 document.getElementById(videoId).style.display = "none";
+			 }
+	   </script>
 </div>
 
 @endsection

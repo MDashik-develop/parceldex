@@ -13,7 +13,7 @@
                     <h6>Company</h6>
                     <ul class="links-list d-flex flex-column">
                         <li>
-                            <a href="contact.html">About Us</a>
+                            <a href="/about">About Us</a>
                         </li>
                         <li>
                             <a href="#">Our Partner</a>
@@ -50,7 +50,7 @@
                             <a href="#">News Room </a>
                         </li>
                         <li>
-                            <a href="#">FAQs</a>
+                            <a href="/faq">FAQs</a>
                         </li>
                         <li>
                             <a href="#">Find Parceldex</a>

@@ -205,6 +205,7 @@
     <script src="/frontend/css/cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" defer></script>
     <script src="/frontend/css/cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.js" defer></script>
     <script src="/frontend/css/cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.js" defer></script>
+
     <!-- end bootstrap and jquery cdn link -->
 
 

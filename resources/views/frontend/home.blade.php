@@ -29,8 +29,10 @@ $partners = App\Models\Partner::where('status', 1)->get();
         </div>
     </div>
 
-    <div class="patner-wrapper patner-wrapper1 animate__animated animate__fadeInUp overflow-hidden">
-        <div class="container-fluid brand_logos">
+
+    <div class="patner-wrapper patner-wrapper1 d-flex justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp">
+        <p class="brands-logos-p p-1 rounded">Fashion</p>
+        <div class="container-fluid mx-0 brand_logos">
             <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items">
                     <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
                     <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
@@ -47,16 +49,57 @@ $partners = App\Models\Partner::where('status', 1)->get();
                     <img src="/frontend/images/partner_img/rokomari.png" alt="">
                     <img src="/frontend/images/partner_img/naturo-01.png" alt="">
                     <img src="/frontend/images/partner_img/sm_online.png" alt="">
-
             </div>
         </div>
-
-
+    </div>
+    <div class="patner-wrapper patner-wrapper2 d-flex justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp ">
+        <p class="brands-logos-p p-1 rounded">Corporate</p>
+        <div class="container-fluid mx-0 brand_logos">
+            <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items brand_logo_items2">
+                    <img src="/frontend/images/partner_img/othoba.png" alt="">
+                    <img src="/frontend/images/partner_img/lotto.png" alt="">
+                    <img src="/frontend/images/partner_img/sailor.png" alt="">
+                    <img src="/frontend/images/partner_img/fashion.png" alt="">
+                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
+                    <img src="/frontend/images/partner_img/othoba.png" alt="">
+                    <img src="/frontend/images/partner_img/lotto.png" alt="">
+                    <img src="/frontend/images/partner_img/sailor.png" alt="">
+                    <img src="/frontend/images/partner_img/fashion.png" alt="">
+                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
+                    <img src="/frontend/images/partner_img/othoba.png" alt="">
+                    <img src="/frontend/images/partner_img/lotto.png" alt="">
+                    <img src="/frontend/images/partner_img/sailor.png" alt="">
+                    <img src="/frontend/images/partner_img/fashion.png" alt="">
+                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
+            </div>
+        </div>
     </div>
 
-    <div class="patner-wrapper patner-wrapper2 animate__animated animate__fadeInUp overflow-hidden">
-
-        <div class="container-fluid brand_logos">
+    <div class="patner-wrapper patner-wrapper1 d-flex justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp">
+        <p class="brands-logos-p py-1 px-3 rounded">Marketplace</p>
+        <div class="container-fluid mx-0 brand_logos">
+            <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items">
+                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
+            </div>
+        </div>
+    </div>
+    <div class="patner-wrapper patner-wrapper2 d-flex justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp ">
+        <p class="brands-logos-p p-1 rounded">Banking</p>
+        <div class="container-fluid mx-0 brand_logos">
             <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items brand_logo_items2">
                     <img src="/frontend/images/partner_img/othoba.png" alt="">
                     <img src="/frontend/images/partner_img/lotto.png" alt="">

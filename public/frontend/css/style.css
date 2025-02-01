@@ -2533,10 +2533,20 @@ body.auth {
 }
 
 
+.brands-logos-p{
+  min-width: 100px !important;
+  text-align: center;
+  font-weight: 500;
+  font-size: 15px;
+  background-color:
+  #07539e;
+  color: #fff;
+}
 .brand_logos {
   overflow: hidden;
   padding: 30px 0px;
   position: relative;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .brand_logo_items {

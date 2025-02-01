@@ -2391,7 +2391,7 @@ body.auth {
     align-items: flex-start !important;
   }
   .patner-wrapper {
-    /* margin-bottom: 70px; */
+    margin-bottom: 70px;
   }
   .service-wrapper {
     margin-bottom: 70px;
@@ -2459,7 +2459,7 @@ body.auth {
     width: 90%;
   }
   .patner-wrapper {
-    margin-top: -70px !important;
+    /* margin-top: -70px !important; */
   }
   .patner div:nth-last-child(-n + 2) {
     width: 140px;
@@ -2614,3 +2614,13 @@ body.auth {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/*----- about page-----*/
+.hero-section2{
+  height: 100%;
+  width: 100%;
+  padding-bottom: 100px;
+	background-color: #07539E;
+	clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7vw), 0% 100%);
+}
+/*----- about page-----*/

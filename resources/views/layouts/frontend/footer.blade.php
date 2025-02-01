@@ -13,24 +13,50 @@
                     <h6>Company</h6>
                     <ul class="links-list d-flex flex-column">
                         <li>
-                            <a href="contact.html">Contact Us</a>
+                            <a href="contact.html">About Us</a>
                         </li>
                         <li>
-                            <a href="#">Return Policy</a>
+                            <a href="#">Our Partner</a>
                         </li>
                         <li>
-                            <a href="#">Terms and Conditions</a>
+                            <a href="#">Services</a>
+                        </li>
+                        <li>
+                            <a href="#">Join our Team</a>
                         </li>
                     </ul>
                 </div>
                 <div class="sister-concern">
-                    <h6>Sister Concern</h6>
+                    <h6>For Customers</h6>
                     <ul class="links-list d-flex flex-column">
                         <li>
-                            <a href="https://www.facebook.com/pixelax">Pixelax </a>
+                            <a href="#">Open Account </a>
                         </li>
                         <li>
-                            <a href="https://www.facebook.com/profile.php?id=100088744987116">Biggapon</a>
+                            <a href="#">Track Parel</a>
+                        </li>
+                        <li>
+                            <a href="#">Partner Login</a>
+                        </li>
+                        <li>
+                            <a href="#">Tearms & Conditions</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sister-concern">
+                    <h6>Connect with Parceldex</h6>
+                    <ul class="links-list d-flex flex-column">
+                        <li>
+                            <a href="#">News & Updates </a>
+                        </li>
+                        <li>
+                            <a href="#">FAQs</a>
+                        </li>
+                        <li>
+                            <a href="#">Find Parceldex</a>
+                        </li>
+                        <li>
+                            <a href="#">Get in Touch</a>
                         </li>
                     </ul>
                 </div>

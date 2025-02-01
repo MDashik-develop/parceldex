@@ -465,6 +465,7 @@
                     setTimeout(function() {
                         $('#viewModal').modal('hide');
                         $('#viewModalCloseBtn').click();
+                        location.reload();
                     }, 1000);
                 } else {
                     var getError = response.error;

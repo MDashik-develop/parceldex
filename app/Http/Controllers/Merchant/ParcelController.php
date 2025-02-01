@@ -1416,7 +1416,7 @@ class ParcelController extends Controller
                 if ($hasUpdated) {
                     $x .= ' & amount to be collect ' . $oldTotal_collect_amount . ' to ' . $newTotal_collect_amount;
                 } else {
-                    $x .= 'Total collect amount has been changed to ' . $oldTotal_collect_amount . ' to ' . $newTotal_collect_amount;
+                    $x .= 'Amount to be collect has been changed to ' . $oldTotal_collect_amount . ' to ' . $newTotal_collect_amount;
                 }
                 $hasUpdated = true;
             }
@@ -1803,6 +1803,64 @@ class ParcelController extends Controller
             ->get();
 
         return $parcels;
+
+    }
+
+    public function shortEntry(Request $request)
+    {
+        $merchant = auth()->guard('merchant')->user();
+
+        $data = [
+            'parcel_invoice' => $this->returnUniqueParcelInvoice(),
+            'merchant_id' => $merchant->id,
+            'date' => date('Y-m-d'),
+            'exchange' => $request->input('exchange') ?? 'no',
+            'merchant_order_id' => $request->input('merchant_order_id'),
+            'customer_name' => $request->input('customer_name'),
+            'customer_address' => $request->input('customer_address'),
+            'customer_contact_number' => $request->input('customer_contact_number'),
+            'customer_collect_amount' => $request->input('customer_collect_amount') ?? 0,
+            'customer_contact_number2' => $request->input('customer_contact_number2'),
+            'product_details' => $request->input('product_details'),
+            'product_value' => $request->input('product_value') ?? 0,
+            'district_id' => $request->input('district_id') ?? 0,
+            'upazila_id' => 0,
+            'area_id' => $request->input('area_id') ?? 0,
+            'total_collect_amount' => $request->input('total_collect_amount'),
+            'delivery_option_id' => 1,
+            'parcel_note' => $request->input('parcel_note'),
+            'pickup_branch_id' => $merchant->branch_id,
+            'parcel_date' => date('Y-m-d'),
+            'status' => 0,
+            'is_push' => 1,
+        ];
+
+        $parcel = Parcel::create($data);
+
+        if ($parcel) {
+
+            $data = [
+                'parcel_id' => $parcel->id,
+                'merchant_id' => $merchant->id,
+                'pickup_branch_id' => $merchant->branch_id,
+                'date' => date('Y-m-d'),
+                'time' => date('H:i:s'),
+                'status' => 0,
+            ];
+
+            ParcelLog::create($data);
+
+            $data = [
+                'parcel_id' => $parcel->parcel_invoice,
+                'customer_name' => $parcel->customer_name,
+                'customer_address' => $parcel->customer_address,
+                'customer_contact_number' => $parcel->customer_contact_number,
+                'customer_collect_amount' => $parcel->customer_collect_amount,
+            ];
+
+            $this->setMessage('Parcel Create Successfully', 'success');
+            return redirect()->back()->with('success', 'Parcel Entry Successfully');
+        }
 
     }
 }

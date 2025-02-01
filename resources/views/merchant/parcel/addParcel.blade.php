@@ -476,16 +476,15 @@
                                     </div>
                                 </form>
 
-                                <form role="form" id="short-form" style="display: none"
-                                    action="{{ route('merchant.parcel.store') }}" method="POST"
-                                    enctype="multipart/form-data" onsubmit="return createForm()">
+                                <form id="short-form" style="display: none"
+                                    action="{{ route('merchant.parcel.shortStore') }}" method="POST"
+                                    enctype="multipart/form-data">
                                     @csrf
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="col-md-12">
                                                     <fieldset>
-                                                        {{-- <legend>Customer Information</legend> --}}
 
                                                         <div class="row">
                                                             <div class="col-md-6">

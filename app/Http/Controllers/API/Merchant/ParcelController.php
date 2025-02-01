@@ -600,6 +600,7 @@ class ParcelController extends Controller
                 'status' => 0,
                 'is_push' => 1,
             ];
+            
             $parcel = Parcel::create($data);
 
             if ($parcel) {

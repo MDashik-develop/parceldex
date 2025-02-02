@@ -454,4 +454,10 @@ class HomeController extends Controller
 
         return response()->json($response);
     }
+
+    //our-partners
+    public function ourPartners()
+    {
+        return view('frontend.ourPartnersPage');
+    }
 }

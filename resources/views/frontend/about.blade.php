@@ -59,7 +59,7 @@
 			</div>
 			<div class="col-3 cards p-2">
 				<div class=" d-flex flex-column p-3 gap-3">
-					<i class="fa-solid fa-puzzle-piece"></i>
+					<i class="fa-regular fa-puzzle-piece"></i>
 					<strong>Intergrity</strong>
 					<p>
 						Openness of culture, with the spirit of sharing knowledge & learning.

@@ -19,7 +19,7 @@
                             <a href="#">Our Partner</a>
                         </li>
                         <li>
-                            <a href="#">Services</a>
+                            <a href="/services">Services</a>
                         </li>
                         <li>
                             <a href="#">Join our Team</a>

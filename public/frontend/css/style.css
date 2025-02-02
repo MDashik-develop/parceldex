@@ -2678,7 +2678,17 @@ body.auth {
 }
 .about-3nd-section>div div div:hover{
   background-color: #07539e9a !important;
-  i, strong{
+  svg{
+    fill: white !important;
+    stroke: white !important;;
+    g {
+      fill: white !important;
+    }
+    path {
+      fill: white !important;
+    }
+  }
+  strong{
     color: white !important;
   }
   p{

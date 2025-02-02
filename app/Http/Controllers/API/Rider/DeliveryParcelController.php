@@ -704,7 +704,7 @@ class DeliveryParcelController extends Controller
 
                 // $message = "PARTIAL DELIVERY:  \nParcel ID: " . $parcel->parcel_invoice . " \nActual COD: " . number_format($parcel->total_collect_amount) . " Tk. \nPartial COD: " . number_format($parcel->customer_collect_amount) . " Tk. \nApproval OTP: " . $parcel->parcel_otp . " \n Valid for 30 Min \n Parceldex Courier";
 
-                $message = "PARTIAL DELIVERY \nParcel ID-" . $parcel->parcel_invoice . " \nActual COD- " . number_format($parcel->total_collect_amount) . " Tk. \nPartial COD- " . number_format($parcel->customer_collect_amount) . " Tk. \nApproval OTP- " . $parcel->parcel_otp . "\n Valid for 30 Min \n Parceldex Courier";
+                $message = "PARTIAL DELIVERY \nParcel ID-" . $parcel->parcel_invoice . " \nActual COD- " . number_format($parcel->total_collect_amount) . " Tk. \nPartial COD- " . number_format($parcel->customer_collect_amount) . " Tk. \nApproval OTP- " . $parcel->parcel_otp . "\n Valid for 30 Min \n -Parceldex Courier";
 
 
 

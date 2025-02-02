@@ -49,7 +49,9 @@ class MerchantController extends Controller
 
     public function getMerchants(Request $request)
     {
-        $model = Merchant::with(['district', 'upazila', 'area', 'branch'])->select();
+        $model = Merchant::with(['district', 'upazila', 'area', 'branch'])
+            ->with('parentMerchant')->select();
+
         return DataTables::of($model)
             ->addIndexColumn()
             ->addColumn('image', function ($data) {

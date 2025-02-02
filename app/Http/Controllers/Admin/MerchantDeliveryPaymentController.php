@@ -99,7 +99,10 @@ class MerchantDeliveryPaymentController extends Controller
                 return date('d-m-Y', strtotime($data->date_time));
             })
             ->editColumn('total_payment_amount', function ($data) {
-                return number_format($data->total_payment_amount, 2);
+                return number_format($data->total_payment_amount + $data->adjustment, 2);
+            })
+            ->editColumn('commission', function ($data) {
+                return number_format($data->parcel_merchant_delivery_payment_details->sum('parent_commission_amount'), 2);
             })
             ->editColumn('total_payment_received_amount', function ($data) {
                 return number_format($data->total_payment_received_amount, 2);
@@ -336,7 +339,7 @@ class MerchantDeliveryPaymentController extends Controller
 
                         // $message = "PAYMENT ON THE WAY: \nInvoice ID: " . $merchant_payment_invoice . " \nAmount: " . number_format($parcelMerchantDeliveryPayment->total_payment_amount) . " \n-Stay tuned to get 5 days payment service from Your trusted partner in deliveries !!";
 
-                        $message = "Payment On the Way \nInvoice ID: " . $merchant_payment_invoice . " \nAmount- " . number_format($parcelMerchantDeliveryPayment->total_payment_amount) . " \n-Stay tuned to get 5 days payment service from Your trusted partner in deliveries.";
+                        $message = "Payment On the Way \nInvoice ID: " . $merchant_payment_invoice . " \nAmount- " . number_format($parcelMerchantDeliveryPayment->total_payment_amount + $parcelMerchantDeliveryPayment->adjustment) . " \n-Stay tuned to get 5 days payment service from Your trusted partner in deliveries.";
 
                         $this->send_reg_sms($merchant_user->contact_number, $message);
 

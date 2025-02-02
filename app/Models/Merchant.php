@@ -151,5 +151,13 @@ class Merchant extends Authenticatable implements JWTSubject {
         return $this->hasMany(\App\Models\MerchantShop::class, 'merchant_id', 'id');
     }
 
+    public function childMerchatns()
+    {
+        return $this->hasMany(Merchant::class, 'parent_merchant_id', 'id');
+    }
 
+    public function parentMerchant()
+    {
+        return $this->belongsTo(Merchant::class, 'parent_merchant_id', 'id');
+    }
 }

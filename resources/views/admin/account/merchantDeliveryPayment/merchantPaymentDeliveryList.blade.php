@@ -89,9 +89,11 @@
                                             <th width="10%" class="text-center"> Total Parcel </th>
                                             <th width="10%" class="text-center"> Amount to be Collect </th>
                                             <th width="10%" class="text-center"> Collected </th>
-                                            <th width="10%" class="text-center"> Total Charge </th>
+                                            <th width="5%" class="text-center"> Total Charge </th>
                                             <!--<th width="10%" class="text-center"> Received Payment Parcel</th>-->
-                                            <th width="10%" class="text-center"> Paid Amount </th>
+                                            <th width="5%" class="text-center">Adjustment</th>
+                                            <th width="5%" class="text-center">Commission</th>
+                                            <th width="5%" class="text-center">Payable</th>
                                             <!--<th width="10%" class="text-center"> Received Payment Amount</th>-->
                                             <th width="10%" class="text-center"> Payment Status </th>
                                             <th width="15%" class="text-center"> Action </th>
@@ -207,9 +209,19 @@
                         },
                         // { data: 'total_payment_received_parcel', name: 'total_payment_received_parcel', class : "text-center" },
                         {
+                            data: 'adjustment',
+                            name: 'adjustment',
+                            class: "text-center"
+                        },
+                        {
+                            data: 'commission',
+                            name: 'commission',
+                            class: "text-center"
+                        },
+                        {
                             data: 'total_payment_amount',
                             name: 'total_payment_amount',
-                            class: "text-center"
+                            class: "text-center",
                         },
                         // { data: 'total_payment_received_amount', name: 'total_payment_received_amount', class : "text-center" },
                         {

@@ -79,13 +79,11 @@ class ShopController extends Controller
             ->addColumn('action', function ($data) {
                 $button = '<button class="btn btn-secondary btn-sm view-modal" data-toggle="modal" data-target="#viewModal" merchant_id="' . $data->id . '" >
                                 <i class="fa fa-eye"></i> </button> &nbsp;&nbsp;';
+                $button .= '<a href="' . route('merchant.shop.edit', $data->id) . '" class="btn btn-success btn-sm"> <i class="fa fa-edit"></i> </a>';
                 return $button;
             })
 
             ->editColumn('created_at', function ($data) {
-
-
-
                 return $data->created_at->format("d-M-Y");
             })
 
@@ -133,7 +131,7 @@ class ShopController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:merchants',
             'image' => 'sometimes|image|max:3000',
-            'branch_id' => 'required',
+            // 'branch_id' => 'required',
             // 'cod_charge'        => 'sometimes',
             'password' => 'sometimes',
             'address' => 'sometimes',
@@ -220,6 +218,8 @@ class ShopController extends Controller
                 'status' => 0,
                 'created_admin_id' => 0,
                 'parent_merchant_id' => auth('merchant')->user()->id,
+                'parent_merchant_commission' => $request->input('parent_merchant_commission'),
+                'payment_recived_by' => $request->input('payment_recived_by'),
             ];
 
             $merchant = Merchant::create($data);
@@ -302,13 +302,16 @@ class ShopController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(MerchantShop $shop)
+    public function edit(Merchant $shop)
     {
         $data = [];
         $data['main_menu'] = 'shop';
         $data['child_menu'] = 'shop-list';
         $data['page_title'] = 'Edit Shop';
         $data['shop'] = $shop;
+        $data['districts'] = District::where('status', 1)->get();
+        $data['serviceAreas'] = ServiceArea::where(['status' => 1, 'weight_type' => 1])->get();
+        $data['branches'] = Branch::where('status', 1)->get();
         return view('merchant.shop.edit', $data);
     }
 
@@ -319,34 +322,229 @@ class ShopController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, MerchantShop $shop)
+    public function update(Request $request, Merchant $shop)
     {
-        $merchant_id = auth('merchant')->user()->id;
+        $merchant = $shop;
 
+        // $validator = Validator::make($request->all(), [
+        //     'shop_name' => 'required|unique:merchant_shops,shop_name,' . $shop->id . ',id,merchant_id,' . $merchant_id,
+        //     'shop_address' => 'required',
+        // ], [
+        //     'shop_name.unique' => 'This shop already exists',
+        //     'shop_address.required' => 'Shop Address Required',
+        // ]);
+
+        // if ($validator->fails()) {
+        //     return redirect()->back()->withInput()->withErrors($validator);
+        // }
+
+        // $data = [
+        //     'shop_name' => $request->input('shop_name'),
+        //     'shop_address' => $request->input('shop_address'),
+        //     'status' => $request->input('status'),
+        // ];
+        // $check = MerchantShop::where('id', $shop->id)->update($data) ? true : false;
+
+        // if ($check) {
+        //     $this->setMessage('Shop Update Successfully', 'success');
+        //     return redirect()->route('merchant.shop.index');
+        // } else {
+        //     $this->setMessage('Shop Update Failed', 'danger');
+        //     return redirect()->back()->withInput();
+        // }
+
+
+        // return $request->all();
         $validator = Validator::make($request->all(), [
-            'shop_name' => 'required|unique:merchant_shops,shop_name,' . $shop->id . ',id,merchant_id,' . $merchant_id,
-            'shop_address' => 'required',
+            'company_name' => 'required',
+            'name' => 'required',
+            'email' => 'required|email|unique:merchants,email,' . $merchant->id,
+            'image' => 'sometimes|image|max:3000',
+            // 'branch_id' => 'required',
+            // 'cod_charge'        => 'sometimes',
+            'password' => 'sometimes',
+            'confirm_password' => 'sometimes',
+            'address' => 'sometimes',
+            'contact_number' => 'required',
+            'district_id' => 'required',
+            // 'upazila_id'        => 'required',
+            'area_id' => 'sometimes',
+            'business_address' => 'sometimes',
+            'fb_url' => 'sometimes',
+            'web_url' => 'sometimes',
+            'bank_account_name' => 'sometimes',
+            'bank_account_no' => 'sometimes',
+            'bank_route_no' => 'sometimes',
+            'bank_branch_name' => 'sometimes',
+            'bank_name' => 'sometimes',
+            'bkash_number' => 'sometimes',
+            'nagad_number' => 'sometimes',
+            'rocket_name' => 'sometimes',
+            'nid_no' => 'sometimes',
+            'nid_card' => 'sometimes|image|max:3000',
+            'trade_license' => 'sometimes|image|max:3000',
+            'tin_certificate' => 'sometimes|image|max:3000',
         ], [
-            'shop_name.unique' => 'This shop already exists',
-            'shop_address.required' => 'Shop Address Required',
+            'name.unique' => 'This Email Already Exist',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator);
         }
 
-        $data = [
-            'shop_name' => $request->input('shop_name'),
-            'shop_address' => $request->input('shop_address'),
-            'status' => $request->input('status'),
-        ];
-        $check = MerchantShop::where('id', $shop->id)->update($data) ? true : false;
+        \DB::beginTransaction();
+        try {
+            $image_name = $merchant->image;
+            $trade_license = $merchant->trade_license;
+            $nid_card = $merchant->nid_card;
+            $tin_certificate = $merchant->tin_certificate;
 
-        if ($check) {
-            $this->setMessage('Shop Update Successfully', 'success');
-            return redirect()->route('merchant.shop.index');
-        } else {
-            $this->setMessage('Shop Update Failed', 'danger');
+            if ($request->hasFile('image')) {
+                $image_name = $this->uploadFile($request->file('image'), '/merchant/');
+
+                if (!empty($merchant->image)) {
+                    $old_image_path = str_replace('\\', '/', public_path()) . '/uploads/merchant/' . $merchant->image;
+
+                    if (file_exists($old_image_path)) {
+                        unlink($old_image_path);
+                    }
+                }
+            }
+
+            if ($request->hasFile('trade_license')) {
+                $trade_license = $this->uploadFile($request->file('trade_license'), '/merchant/');
+
+                if (!empty($merchant->trade_license)) {
+                    $old_image_path = str_replace('\\', '/', public_path()) . '/uploads/merchant/' . $merchant->trade_license;
+
+                    if (file_exists($old_image_path)) {
+                        unlink($old_image_path);
+                    }
+                }
+            }
+
+            if ($request->hasFile('nid_card')) {
+                $nid_card = $this->uploadFile($request->file('nid_card'), '/merchant/');
+
+                if (!empty($merchant->nid_card)) {
+                    $old_image_path = str_replace('\\', '/', public_path()) . '/uploads/merchant/' . $merchant->nid_card;
+
+                    if (file_exists($old_image_path)) {
+                        unlink($old_image_path);
+                    }
+                }
+            }
+
+            if ($request->hasFile('tin_certificate')) {
+                $tin_certificate = $this->uploadFile($request->file('tin_certificate'), '/merchant/');
+
+                if (!empty($merchant->tin_certificate)) {
+                    $old_image_path = str_replace('\\', '/', public_path()) . '/uploads/merchant/' . $merchant->tin_certificate;
+
+                    if (file_exists($old_image_path)) {
+                        unlink($old_image_path);
+                    }
+                }
+            }
+
+            $data = [
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'company_name' => $request->input('company_name'),
+                'address' => $request->input('address'),
+                'contact_number' => $request->input('contact_number'),
+                // 'branch_id' => $request->input('branch_id'),
+                // 'cod_charge'        => $request->input('cod_charge'),
+                'district_id' => $request->input('district_id'),
+                // 'upazila_id'        => $request->input('upazila_id'),
+                'upazila_id' => 0,
+                'area_id' => $request->input('area_id') ?? 0,
+                'business_address' => $request->input('business_address'),
+                'fb_url' => $request->input('fb_url'),
+                'web_url' => $request->input('web_url'),
+                'bank_account_name' => $request->input('bank_account_name'),
+                'bank_account_no' => $request->input('bank_account_no'),
+                'bank_route_no' => $request->input('bank_route_no'),
+                'bank_branch_name' => $request->input('bank_branch_name'),
+                'bank_name' => $request->input('bank_name'),
+                'bkash_number' => $request->input('bkash_number'),
+                'nagad_number' => $request->input('nagad_number'),
+                'rocket_name' => $request->input('rocket_name'),
+                'nid_no' => $request->input('nid_no'),
+                'otp_token_status' => $request->input('otp_token_status'),
+                'email_verified_at' => $request->input('email_verified_at'),
+                // 'status' => $request->input('status'),
+                'payment_recived_by' => $request->input('payment_recived_by'),
+                'image' => $image_name,
+                'trade_license' => $trade_license,
+                'nid_card' => $nid_card,
+                'tin_certificate' => $tin_certificate,
+                'date' => date('Y-m-d'),
+                //                'status' => 1,
+                'updated_admin_id' => auth()->guard('admin')->user()->id,
+                'parent_merchant_commission' => $request->input('commission'),
+            ];
+
+            $password = $request->input('password');
+
+            if ($password) {
+                $data['password'] = bcrypt($password);
+                $data['store_password'] = $password;
+            }
+
+            $check = Merchant::where('id', $shop->id)->update($data) ? true : false;
+
+            if ($check) {
+                $charge = $request->input('charge');
+                $return_charge = $request->input('return_charge');
+                $cod_charge = $request->input('cod_charge');
+                $service_area_id = $request->input('service_area_id');
+                $count = count($service_area_id);
+
+                $sync_charge_data = [];
+                $sync_return_charge_data = [];
+                $sync_cod_charge_data = [];
+
+                for ($i = 0; $i < $count; $i++) {
+
+
+                    if (!is_null($cod_charge[$i])) {
+                        $sync_cod_charge_data[$service_area_id[$i]] = [
+                            'merchant_id' => $merchant->id,
+                            'cod_charge' => $cod_charge[$i],
+                        ];
+                    }
+
+                    if (!is_null($charge[$i])) {
+                        $sync_charge_data[$service_area_id[$i]] = [
+                            'merchant_id' => $merchant->id,
+                            'charge' => $charge[$i],
+                        ];
+                    }
+
+                    if (!is_null($return_charge[$i])) {
+                        $sync_return_charge_data[$service_area_id[$i]] = [
+                            'merchant_id' => $merchant->id,
+                            'return_charge' => $return_charge[$i],
+                        ];
+                    }
+                }
+
+
+                $merchant->service_area_charges()->sync($sync_charge_data);
+                $merchant->service_area_return_charges()->sync($sync_return_charge_data);
+                $merchant->service_area_cod_charges()->sync($sync_cod_charge_data);
+
+                \DB::commit();
+                $this->setMessage('Merchant Update Successfully', 'success');
+                return redirect()->route('merchant.shop.index');
+            } else {
+                $this->setMessage('Merchant Update Failed', 'danger');
+                return redirect()->back()->withInput();
+            }
+        } catch (\Exception $e) {
+            \DB::rollback();
+            $this->setMessage('Database Error Found ' . $e->getMessage(), 'danger');
             return redirect()->back()->withInput();
         }
     }

@@ -94,7 +94,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
+                                                {{-- <div class="col-md-6">
                                                     <label for="branch_id"> Branch <span
                                                             style="font-weight: bold; color: red;">*</span> </label>
                                                     <select name="branch_id" id="branch_id" class="form-control select2"
@@ -105,7 +105,7 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                </div>
+                                                </div> --}}
                                                 <div class="col-md-6">
                                                     <label for="contact_number"> Contact Number <span
                                                             style="font-weight: bold; color: red;">*</span> </label>
@@ -276,7 +276,7 @@
                                                 </div>
 
                                                 <div class="col-md-4">
-                                                    <label for="trade_license">Trade License </label>
+                                                    <label for="trade_license">Trade License</label>
                                                     <input type="file" name="trade_license" id="trade_license"
                                                         class="form-control" accept="image/*"
                                                         onchange="return filePreview(this, 'preview_file_trade_license')">
@@ -284,7 +284,7 @@
                                                 </div>
 
                                                 <div class="col-md-4">
-                                                    <label for="tin_certificate">TIN Certificate </label>
+                                                    <label for="tin_certificate">TIN Certificate</label>
                                                     <input type="file" name="tin_certificate" id="tin_certificate"
                                                         class="form-control" accept="image/*"
                                                         onchange="return filePreview(this, 'preview_file_tin_certificate')">
@@ -292,21 +292,78 @@
                                                     </div>
                                                 </div>
 
+                                                <div class="col-md-4">
+                                                    <label for="parent_merchant_commission">Commission</label>
+                                                    <input type="input" name="parent_merchant_commission"
+                                                        placeholder="commission percentage %"
+                                                        id="parent_merchant_commission" class="form-control"
+                                                        value="{{ old('parent_merchant_commission') }}">
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <label for="payment_recived_by">Payment Recived By</label>
+                                                    <select name="payment_recived_by" id="payment_recived_by"
+                                                        class="form-control select2" style="width: 100%">
+                                                        <option value="0">Not
+                                                            selected</option>
+                                                        <option value="1">Cash
+                                                        </option>
+                                                        <option value="2"
+                                                            {{ old('payment_recived_by') == 2 ? 'selected' : '' }}>
+                                                            Bkash
+                                                        </option>
+                                                        <option value="3"
+                                                            {{ old('payment_recived_by') == 3 ? 'selected' : '' }}>
+                                                            Nagad
+                                                        </option>
+                                                        <option value="4"
+                                                            {{ old('payment_recived_by') == 4 ? 'selected' : '' }}>
+                                                            Rocket
+                                                        </option>
+                                                        <option value="5"
+                                                            {{ old('payment_recived_by') == 5 ? 'selected' : '' }}>Bank
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="bkash_info col-md-6" style="display: none;">
+                                                    <label for="bkash_number">BKash Number</label>
+                                                    <input type="text" name="bkash_number" id="bkash_number"
+                                                        value="{{ $merchant->bkash_number ?? old('bkash_number') }}"
+                                                        class="form-control" placeholder="BKash Number">
+                                                </div>
+                                                <div class="nagad_info col-md-6" style="display: none;">
+                                                    <label for="nagad_number">Nagad Number</label>
+                                                    <input type="text" name="nagad_number" id="nagad_number"
+                                                        value="{{ $merchant->nagad_number ?? old('nagad_number') }}"
+                                                        class="form-control" placeholder="Nagad Number">
+                                                </div>
+                                                <div class="rocket_info col-md-6" style="display: none;">
+                                                    <label for="rocket_name">Rocket Number</label>
+                                                    <input type="text" name="rocket_name" id="rocket_name"
+                                                        value="{{ $merchant->rocket_name ?? old('rocket_name') }}"
+                                                        class="form-control" placeholder="Rocket Number">
+                                                </div>
+
+
 
                                             </div>
-                                            <div class="col-md-12 text-center">
-                                                <button type="submit" class="btn btn-success">Submit</button>
-                                                <button type="reset" class="btn btn-primary">Reset</button>
-                                            </div>
+
+
                                         </div>
-                                    </form>
+                                        <div class="col-md-12 text-center">
+                                            <button type="submit" class="btn btn-success">Submit</button>
+                                            <button type="reset" class="btn btn-primary">Reset</button>
+                                        </div>
                                 </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 @endsection
 
@@ -383,11 +440,11 @@
                 return false;
             }
 
-            let branch_id = $('#branch_id').val();
-            if (branch_id == '0') {
-                toastr.error("Please Select Branch..");
-                return false;
-            }
+            // let branch_id = $('#branch_id').val();
+            // if (branch_id == '0') {
+            //     toastr.error("Please Select Branch..");
+            //     return false;
+            // }
         }
 
         function filePreview(input, div) {
@@ -395,7 +452,7 @@
             if (input.files && input.files[0]) {
                 $('#' + div).html(
                     '<img src="{{ asset('image/image_loading.gif') }}" style="height:80px; width: 120px" class="profile-user-img img-responsive img-rounded  "/>'
-                    );
+                );
                 var reader = new FileReader();
 
                 if (input.files[0].size > 3000000) {
@@ -405,11 +462,44 @@
                     reader.onload = function(e) {
                         $('#' + div).html('<img src="' + e.target.result +
                             '" style="height:80px; width: 120px" class="profile-user-img img-responsive img-rounded  "/>'
-                            );
+                        );
                     }
                     reader.readAsDataURL(input.files[0]);
                 }
             }
         }
+
+        $("#payment_recived_by").on("change", function() {
+
+            var payment_recived_by = $(this).val();
+            console.log(payment_recived_by);
+            if (payment_recived_by == 2) {
+                $(".bank_info").css("display", "none");
+                $(".bkash_info").css("display", "");
+                $(".rocket_info").css("display", "none");
+                $(".nagad_info").css("display", "none");
+            } else if (payment_recived_by == 3) {
+                $(".bank_info").css("display", "none");
+                $(".bkash_info").css("display", "none");
+                $(".rocket_info").css("display", "none");
+                $(".nagad_info").css("display", "");
+            } else if (payment_recived_by == 4) {
+                $(".bank_info").css("display", "none");
+                $(".bkash_info").css("display", "none");
+                $(".rocket_info").css("display", "");
+                $(".nagad_info").css("display", "none");
+            } else if (payment_recived_by == 5) {
+                $(".bank_info").css("display", "");
+                $(".bkash_info").css("display", "none");
+                $(".rocket_info").css("display", "none");
+                $(".nagad_info").css("display", "none");
+            } else {
+                $(".bank_info").css("display", "none");
+                $(".bkash_info").css("display", "none");
+                $(".rocket_info").css("display", "none");
+                $(".nagad_info").css("display", "none");
+            }
+
+        });
     </script>
 @endpush

@@ -109,9 +109,6 @@ class MerchantController extends Controller
             })
 
             ->editColumn('created_at', function ($data) {
-
-
-
                 return $data->created_at->format("d-M-Y");
             })
 
@@ -481,7 +478,6 @@ class MerchantController extends Controller
 
         \DB::beginTransaction();
         try {
-
             $image_name = $merchant->image;
             $trade_license = $merchant->trade_license;
             $nid_card = $merchant->nid_card;

@@ -55,6 +55,7 @@ class Merchant extends Authenticatable implements JWTSubject {
         'email_verified_at',
         'parent_merchant_id',
         'parent_merchant_commission',
+        'payment_recived_by'
     ];
 
     /**

@@ -42,8 +42,7 @@
                                         <div class="card-body">
                                             <div class="form-group row">
                                                 <div class="col-md-6">
-                                                    <label for="company_name">Company Name <span
-                                                            style="font-weight: bold; color: red;">*</span></label>
+                                                    <label for="company_name">Company Name <span style="font-weight: bold; color: red;">*</span></label>
                                                     <input type="text" name="company_name" id="company_name"
                                                         value="{{ $merchant->company_name ?? old('company_name') }}"
                                                         class="form-control" placeholder="Company Name" required>
@@ -437,7 +436,8 @@
                                                         <label for="commission">Commission</label>
                                                         <input type="number" name="commission" id="commission"
                                                             class="form-control"
-                                                            placeholder="parent merchant commission %" value="{{ $merchant->parent_merchant_commission }}">
+                                                            placeholder="parent merchant commission %"
+                                                            value="{{ $merchant->parent_merchant_commission }}">
                                                     </div>
                                                 @endif
 

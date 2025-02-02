@@ -3,18 +3,18 @@
 @section('content')
     <div class="content-header">
         <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Merchant Shop</h1>
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Merchant Shop</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ route('merchant.home') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('merchant.shop.index') }}">Merchant Shops</a></li>
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
             </div>
-            <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{{ route('merchant.home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('merchant.shop.index') }}">Merchant Shops</a></li>
-                <li class="breadcrumb-item active">Edit</li>
-            </ol>
-            </div>
-        </div>
         </div>
     </div>
 
@@ -35,37 +35,300 @@
                         <div class="card-body">
                             <div class="offset-md-1 col-md-10 ">
                                 <div class="card card-primary">
-                                    <form role="form" action="{{ route('merchant.shop.update', $shop->id) }}" method="POST"
-                                        enctype="multipart/form-data" onsubmit="return editForm()">
-                                        @csrf
+                                    <form role="form" action="{{ route('merchant.shop.update', $shop->id) }}"
+                                        method="POST" enctype="multipart/form-data" onsubmit="return editForm()">
                                         @method('patch')
+                                        @csrf
                                         <div class="card-body">
                                             <div class="form-group row">
-                                                <div class="col-md-12">
-                                                    <label for="shop_name">Shop Name <span style="font-weight: bold; color: red;">*</span></label>
-                                                    <input type="text" name="shop_name" id="shop_name" value="{{ $shop->shop_name ?? old('shop_name') }}" class="form-control" placeholder="Shop Name" required>
+                                                <div class="col-md-6">
+                                                    <label for="company_name">Company Name <span
+                                                            style="font-weight: bold; color: red;">*</span></label>
+                                                    <input type="text" name="company_name" id="company_name"
+                                                        value="{{ old('company_name') ?? $shop->company_name }}" class="form-control"
+                                                        placeholder="Company Name" required>
                                                 </div>
-                                                <div class="col-md-12">
-                                                    <label for="shop_address">Shop Address <span style="font-weight: bold; color: red;">*</span></label>
-                                                    <textarea name="shop_address" id="shop_address" class="form-control" placeholder="Shop Address" required>{{  $shop->shop_address ??  old('shop_address') }}</textarea>
+                                                <div class="col-md-6">
+                                                    <label for="name">Name <span
+                                                            style="font-weight: bold; color: red;">*</span></label>
+                                                    <input type="text" name="name" id="name"
+                                                        value="{{ old('name') ?? $shop->name }}" class="form-control"
+                                                        placeholder="Merchant Name" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="address">Full Address <span
+                                                            style="font-weight: bold; color: red;">*</span></label>
+                                                    <textarea name="address" id="address" class="form-control" placeholder="Merchant Address" required>{{ old('address') ?? $shop->address }}</textarea>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="business_address">Business Address</label>
+                                                    <textarea name="business_address" id="business_address" class="form-control" placeholder="Business Address">{{ old('business_address') ?? $shop->business_address }}</textarea>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="district_id"> Districts <span
+                                                                style="font-weight: bold; color: red;">*</span></label>
+                                                        <select name="district_id" id="district_id"
+                                                            class="form-control select2" style="width: 100%">
+                                                            <option value="0">Select District</option>
+                                                            @foreach ($districts as $district)
+                                                                <option value="{{ $district->id }}" >{{ $district->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                {{-- <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="upazila_id"> Thana/Upazila <span style="font-weight: bold; color: red;">*</span> </label>
+                                                    <select name="upazila_id" id="upazila_id" class="form-control select2" style="width: 100%" >
+                                                        <option value="0">Select Thana/Upazila</option>
+                                                    </select>
+                                                </div>
+                                            </div> --}}
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="area_id"> Area <span
+                                                                style="font-weight: bold; color: red;">*</span> </label>
+                                                        <select name="area_id" id="area_id" class="form-control select2"
+                                                            style="width: 100%">
+                                                            <option value="0">Select Area</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                {{-- <div class="col-md-6">
+                                                    <label for="branch_id"> Branch <span
+                                                            style="font-weight: bold; color: red;">*</span> </label>
+                                                    <select name="branch_id" id="branch_id" class="form-control select2"
+                                                        style="width: 100%">
+                                                        <option value="0">Select Branch</option>
+                                                        @foreach ($branches as $branch)
+                                                            <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div> --}}
+                                                <div class="col-md-6">
+                                                    <label for="contact_number"> Contact Number <span
+                                                            style="font-weight: bold; color: red;">*</span> </label>
+                                                    <div class="input-group mb-2">
+                                                        <div class="input-group-prepend">
+                                                            <div class="input-group-text">+88</div>
+                                                        </div>
+                                                        <input type="text" name="contact_number" id="contact_number"
+                                                            value="{{ old('contact_number') ?? $shop->contact_number }}" class="form-control"
+                                                            placeholder="Merchant Contact Number" required="">
+                                                    </div>
                                                 </div>
 
+                                                <div class="col-md-6">
+                                                    <label for="email">Facebook</label>
+                                                    <div class="input-group mb-2">
+                                                        <div class="input-group-prepend">
+                                                            <div class="input-group-text">http://</div>
+                                                        </div>
+                                                        <input type="text" class="form-control" id="fb_url"
+                                                            name="fb_url" value="{{ old('fb_url') ?? $shop->fb_url }}"
+                                                            placeholder="Merchant Facebook Url">
+                                                    </div>
+                                                </div>
 
-                                                <div class="col-md-12">
-                                                    <label for="status"> Status </label>
-                                                    <select name="status" id="status" class="form-control select2" style="width: 100%" >
-                                                        <option value="1" <?php if($shop->status == 1)  echo 'selected'; ?>>Active</option>
-                                                        <option value="0" <?php if($shop->status == 0)  echo 'selected'; ?>>Inactive</option>
+                                                <div class="col-md-6">
+                                                    <label for="email">Website</label>
+                                                    <div class="input-group mb-2">
+                                                        <div class="input-group-prepend">
+                                                            <div class="input-group-text">http://</div>
+                                                        </div>
+                                                        <input type="text" class="form-control" id="web_url"
+                                                            name="web_url" value="{{ old('web_url') ?? $shop->web_url }}"
+                                                            placeholder="Merchant Website Url">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label for="image">Image </label>
+                                                    <input type="file" name="image" id="image"
+                                                        class="form-control" accept="image/*"
+                                                        onchange="return filePreview(this, 'preview_file_image')">
+                                                    <div id="preview_file_image" style="margin-top: 10px;"></div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label for="email">Email <span
+                                                            style="font-weight: bold; color: red;">*</span> </label>
+                                                    <input type="email" name="email" id="email"
+                                                        value="{{ old('email') ?? $shop->email }}" class="form-control"
+                                                        placeholder="Email" required>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label for="password">Password</label>
+                                                    <input type="text" name="password" id="password"
+                                                        value="{{ old('password') }}" class="form-control"
+                                                        placeholder="Password">
+                                                </div>
+                                                {{-- <div class="col-md-6">
+                                                <label for="cod_charge">COD %</label>
+                                                <input type="number" name="cod_charge" id="cod_charge" value="{{ old('cod_charge') }}" class="form-control" placeholder="COD %" >
+                                            </div> --}}
+
+
+                                                @if ($serviceAreas->count() > 0)
+                                                    <div class="col-md-12 row" style="margin-top: 20px;">
+                                                        <div class="col-md-12" style="border-bottom: 2px #000 dotted ">
+                                                            <label for="cod_charge"> Service Area COD</label>
+                                                        </div>
+                                                        @foreach ($serviceAreas as $serviceArea)
+                                                            <div class="col-md-4 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label
+                                                                        for="cod_charge{{ $serviceArea->id }}">{{ $serviceArea->name }}
+                                                                        COD </label>
+                                                                    <input type="number" name="cod_charge[]"
+                                                                        id="cod_charge{{ $serviceArea->id }}"
+                                                                        value="0"
+                                                                        placeholder="{{ $serviceArea->name }} COD "
+                                                                        class="form-control" step="any" required>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+
+                                                @if ($serviceAreas->count() > 0)
+                                                    <div class="col-md-12 row" style="margin-top: 20px;">
+                                                        <div class="col-md-12" style="border-bottom: 2px #000 dotted ">
+                                                            <label for="charge"> Service Area Delivery Charge</label>
+                                                        </div>
+                                                        @foreach ($serviceAreas as $serviceArea)
+                                                            <div class="col-md-4 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label
+                                                                        for="charge{{ $serviceArea->id }}">{{ $serviceArea->name }}
+                                                                        Delivery Charge </label>
+                                                                    <input type="number" name="charge[]"
+                                                                        id="charge{{ $serviceArea->id }}"
+                                                                        value="{{ floatval($serviceArea->default_charge) }}"
+                                                                        placeholder="{{ $serviceArea->name }} Charge "
+                                                                        step="any" class="form-control">
+                                                                    <input type="hidden" name="service_area_id[]"
+                                                                        id="service_area_id{{ $serviceArea->id }}"
+                                                                        value="{{ $serviceArea->id }}">
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+
+                                                @if ($serviceAreas->count() > 0)
+                                                    <div class="col-md-12 row" style="margin-top: 20px;">
+                                                        <div class="col-md-12" style="border-bottom: 2px #000 dotted ">
+                                                            <label for="charge"> Service Area Return Charge</label>
+                                                        </div>
+                                                        @foreach ($serviceAreas as $serviceArea)
+                                                            <div class="col-md-4 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label
+                                                                        for="return_charge{{ $serviceArea->id }}">{{ $serviceArea->name }}
+                                                                        Return Charge </label>
+                                                                    <input type="number" name="return_charge[]"
+                                                                        id="return_charge{{ $serviceArea->id }}"
+                                                                        placeholder="{{ $serviceArea->name }} Return Charge "
+                                                                        step="any" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+
+                                                <div class="col-md-4">
+                                                    <label for="nid_card"> NID Card </label>
+                                                    <input type="file" name="nid_card" id="nid_card"
+                                                        class="form-control" accept="image/*"
+                                                        onchange="return filePreview(this, 'preview_file_nid_card')">
+                                                    <div id="preview_file_nid_card" style="margin-top: 10px;"></div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <label for="trade_license">Trade License</label>
+                                                    <input type="file" name="trade_license" id="trade_license"
+                                                        class="form-control" accept="image/*"
+                                                        onchange="return filePreview(this, 'preview_file_trade_license')">
+                                                    <div id="preview_file_trade_license" style="margin-top: 10px;"></div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <label for="tin_certificate">TIN Certificate</label>
+                                                    <input type="file" name="tin_certificate" id="tin_certificate"
+                                                        class="form-control" accept="image/*"
+                                                        onchange="return filePreview(this, 'preview_file_tin_certificate')">
+                                                    <div id="preview_file_tin_certificate" style="margin-top: 10px;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <label for="parent_merchant_commission">Commission</label>
+                                                    <input type="input" name="parent_merchant_commission"
+                                                        placeholder="commission percentage %"
+                                                        id="parent_merchant_commission" class="form-control"
+                                                        value="{{ old('parent_merchant_commission') }}">
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <label for="payment_recived_by">Payment Recived By</label>
+                                                    <select name="payment_recived_by" id="payment_recived_by"
+                                                        class="form-control select2" style="width: 100%">
+                                                        <option value="0">Not
+                                                            selected</option>
+                                                        <option value="1">Cash
+                                                        </option>
+                                                        <option value="2"
+                                                            {{ old('payment_recived_by') == 2 ? 'selected' : '' }}>
+                                                            Bkash
+                                                        </option>
+                                                        <option value="3"
+                                                            {{ old('payment_recived_by') == 3 ? 'selected' : '' }}>
+                                                            Nagad
+                                                        </option>
+                                                        <option value="4"
+                                                            {{ old('payment_recived_by') == 4 ? 'selected' : '' }}>
+                                                            Rocket
+                                                        </option>
+                                                        <option value="5"
+                                                            {{ old('payment_recived_by') == 5 ? 'selected' : '' }}>Bank
+                                                        </option>
                                                     </select>
                                                 </div>
 
+                                                <div class="bkash_info col-md-6" style="display: none;">
+                                                    <label for="bkash_number">BKash Number</label>
+                                                    <input type="text" name="bkash_number" id="bkash_number"
+                                                        value="{{ $merchant->bkash_number ?? old('bkash_number') }}"
+                                                        class="form-control" placeholder="BKash Number">
+                                                </div>
+                                                <div class="nagad_info col-md-6" style="display: none;">
+                                                    <label for="nagad_number">Nagad Number</label>
+                                                    <input type="text" name="nagad_number" id="nagad_number"
+                                                        value="{{ $merchant->nagad_number ?? old('nagad_number') }}"
+                                                        class="form-control" placeholder="Nagad Number">
+                                                </div>
+                                                <div class="rocket_info col-md-6" style="display: none;">
+                                                    <label for="rocket_name">Rocket Number</label>
+                                                    <input type="text" name="rocket_name" id="rocket_name"
+                                                        value="{{ $merchant->rocket_name ?? old('rocket_name') }}"
+                                                        class="form-control" placeholder="Rocket Number">
+                                                </div>
+
+
+
                                             </div>
 
-                                            <div class="col-md-12 text-center">
-                                                <button type="submit" class="btn btn-success">Update</button>
-                                                <button type="reset" class="btn btn-primary">Reset</button>
-                                            </div>
                                         </div>
+                                        <div class="col-md-12 text-center">
+                                            <button type="submit" class="btn btn-success">Update</button>
+                                            <button type="reset" class="btn btn-primary">Reset</button>
+                                        </div>
+
                                     </form>
                                 </div>
                             </div>
@@ -79,38 +342,70 @@
 
 
 @push('style_css')
-<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endpush
 
 @push('script_js')
-<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
-<script>
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+    <script>
+        function editForm() {
 
+        }
 
-    function editForm() {
+        function filePreview(input, div) {
+            $('#' + div).html('');
+            if (input.files && input.files[0]) {
+                $('#' + div).html(
+                    '<img src="{{ asset('image/image_loading.gif') }}" style="height:80px; width: 120px" class="profile-user-img img-responsive img-rounded  "/>'
+                );
+                var reader = new FileReader();
 
-    }
-
-    function filePreview(input, div) {
-        $('#'+div).html('');
-        if (input.files && input.files[0]) {
-            $('#'+div).html('<img src="{{ asset('image/image_loading.gif') }}" style="height:80px; width: 120px" class="profile-user-img img-responsive img-rounded  "/>');
-            var reader = new FileReader();
-
-            if(input.files[0].size > 3000000){
-                input.value='';
-                $('#'+div).html('');
-            }
-            else{
-                reader.onload = function (e) {
-                $('#'+div).html('<img src="'+e.target.result+'" style="height:80px; width: 120px" class="profile-user-img img-responsive img-rounded  "/>');
-            }
-            reader.readAsDataURL(input.files[0]);
+                if (input.files[0].size > 3000000) {
+                    input.value = '';
+                    $('#' + div).html('');
+                } else {
+                    reader.onload = function(e) {
+                        $('#' + div).html('<img src="' + e.target.result +
+                            '" style="height:80px; width: 120px" class="profile-user-img img-responsive img-rounded  "/>'
+                        );
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
             }
         }
-    }
 
-</script>
+        $("#payment_recived_by").on("change", function() {
 
+            var payment_recived_by = $(this).val();
+            console.log(payment_recived_by);
+            if (payment_recived_by == 2) {
+                $(".bank_info").css("display", "none");
+                $(".bkash_info").css("display", "");
+                $(".rocket_info").css("display", "none");
+                $(".nagad_info").css("display", "none");
+            } else if (payment_recived_by == 3) {
+                $(".bank_info").css("display", "none");
+                $(".bkash_info").css("display", "none");
+                $(".rocket_info").css("display", "none");
+                $(".nagad_info").css("display", "");
+            } else if (payment_recived_by == 4) {
+                $(".bank_info").css("display", "none");
+                $(".bkash_info").css("display", "none");
+                $(".rocket_info").css("display", "");
+                $(".nagad_info").css("display", "none");
+            } else if (payment_recived_by == 5) {
+                $(".bank_info").css("display", "");
+                $(".bkash_info").css("display", "none");
+                $(".rocket_info").css("display", "none");
+                $(".nagad_info").css("display", "none");
+            } else {
+                $(".bank_info").css("display", "none");
+                $(".bkash_info").css("display", "none");
+                $(".rocket_info").css("display", "none");
+                $(".nagad_info").css("display", "none");
+            }
+
+        });
+    </script>
 @endpush

@@ -1,6 +1,27 @@
 @extends('layouts.merchant_layout.merchant_layout')
 
 @section('content')
+    @php
+
+        $merchant = auth()->guard('merchant')->user();
+        $merchant_id = $merchant->id;
+
+        $parcels = App\Models\Parcel::where('merchant_id', $merchant_id)
+            ->whereIn('status', [21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37])
+            ->whereIn('delivery_type', [1, 2, 4])
+            ->whereIn('payment_type', [1, 2, 3, 6]);
+
+        $total_customer_collect_amount =
+            $parcels->sum('customer_collect_amount') + $parcels->sum('cancel_amount_collection');
+
+    @endphp
+
+    <style>
+        .table thead th {
+            vertical-align: middle;
+        }
+    </style>
+
     <div class="container">
 
         <br>
@@ -20,27 +41,27 @@
 
                 <div style="display: flex; justify-content: space-between;">
                     <div>Colleced Amount</div>
-                    <div>0</div>
+                    <div>{{ $total_customer_collect_amount }}</div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between;">
                     <div>Delivery Charge</div>
-                    <div>0</div>
+                    <div>-0</div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between;">
                     <div>COD Charge</div>
-                    <div>0</div>
+                    <div>-0</div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between;">
                     <div>Weight Charge</div>
-                    <div>0</div>
+                    <div>-0</div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between;">
                     <div>Return Charge</div>
-                    <div>0</div>
+                    <div>-0</div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between; border-top: 1px solid #3d3d3d;">
@@ -58,7 +79,7 @@
                         <h3 class="card-title"> Balance Details </h3>
                     </div>
                     <div class="card-body">
-                        <table class="table table-striped" style="width: 100%">
+                        <table class="table table-striped table-bordered" style="width: 100%; text-align: center;">
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -75,16 +96,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($balance_details ?? [] as $balance_detail)
+                                @foreach ($parcels ?? [] as $parcel)
                                     <tr>
-                                        <td> {{ $balance_detail->date }} </td>
-                                        <td> {{ $balance_detail->order_id }} </td>
-                                        <td> {{ $balance_detail->order_amount }} </td>
-                                        <td> {{ $balance_detail->delivery_charge }} </td>
-                                        <td> {{ $balance_detail->cod_charge }} </td>
-                                        <td> {{ $balance_detail->total_amount }} </td>
-                                        <td> {{ $balance_detail->paid_amount }} </td>
-                                        <td> {{ $balance_detail->due_amount }} </td>
+                                        <td>{{ $parcel->created_at }}</td>
+                                        <td>{{ $parcel->consignment_id }}</td>
+                                        <td>{{ $parcel->merchant_order_id }}</td>
+                                        <td>{{ $parcel->status }}</td>
+                                        <td>{{ $parcel->customer_collect_amount }}</td>
+                                        <td>{{ $parcel->collected_amount }}</td>
+                                        <td>{{ $parcel->delivery_charge }}</td>
+                                        <td>{{ $parcel->cod_charge }}</td>
+                                        <td>{{ $parcel->weight_charge }}</td>
+                                        <td>{{ $parcel->return_charge }}</td>
+                                        <td>{{ $parcel->payable_amount }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

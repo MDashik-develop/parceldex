@@ -100,7 +100,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($parcels->get() ?? [] as $parcel)
+                                @forelse ($parcels->get() ?? [] as $parcel)
                                     <tr>
                                         <td>{{ $parcel->created_at }}</td>
                                         <td>{{ $parcel->parcel_invoice }}</td>
@@ -114,56 +114,56 @@
                                         <td>{{ $parcel->return_charge }}</td>
                                         <td>{{ $parcel->payable_amount }}</td>
                                     </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="11">No data found</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
+                                @empty
+                                    <tr>
+                                        <td colspan="11">No data found</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-    @endsection
+    </div>
+@endsection
 
-    @push('script_js')
-        <script>
-            window.onload = function() {
-                var table = $('#yajraDatatable').DataTable({
-                    language: {
-                        processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span> '
+@push('script_js')
+    <script>
+        window.onload = function() {
+            var table = $('#yajraDatatable').DataTable({
+                language: {
+                    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span> '
+                },
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('merchant.coverageArea') }}",
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
                     },
-                    processing: true,
-                    serverSide: true,
-                    ajax: "{{ route('merchant.coverageArea') }}",
-                    columns: [{
-                            data: 'DT_RowIndex',
-                            name: 'DT_RowIndex'
-                        },
-                        {
-                            data: 'area',
-                            name: 'area'
-                        },
-                        {
-                            data: 'post_code',
-                            name: 'post_code'
-                        },
-                        {
-                            data: 'district',
-                            name: 'district'
-                        },
-                        {
-                            data: 'service_area',
-                            name: 'service_area'
-                        },
-                        {
-                            data: 'cod_charge',
-                            name: 'cod_charge'
-                        },
-                    ]
-                });
-            }
-        </script>
-    @endpush
+                    {
+                        data: 'area',
+                        name: 'area'
+                    },
+                    {
+                        data: 'post_code',
+                        name: 'post_code'
+                    },
+                    {
+                        data: 'district',
+                        name: 'district'
+                    },
+                    {
+                        data: 'service_area',
+                        name: 'service_area'
+                    },
+                    {
+                        data: 'cod_charge',
+                        name: 'cod_charge'
+                    },
+                ]
+            });
+        }
+    </script>
+@endpush

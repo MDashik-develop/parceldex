@@ -28,80 +28,77 @@
                         <div class="card-body">
                             <fieldset>
                                 <legend>Return Run Parcel</legend>
-                                <table class="table-responsive table table-style table-striped">
+                                <table class=" table table-style table-striped">
                                     <thead>
                                         <tr>
-                                            <th width="5%" class="text-center"> SL </th>
-                                            <th width="10%" class="text-center">Order ID </th>
-                                            <th width="10%" class="text-center">Status</th>
-                                            <th width="10%" class="text-center">Complete Time </th>
-                                            <th width="10%" class="text-center">Merchant Name</th>
-                                            <th width="15%" class="text-center">Merchant Number</th>
-                                            <th width="15%" class="text-center">Customer Name</th>
-                                            <th width="15%" class="text-center">Note </th>
+                                            <th>SL</th>
+                                            <th>Cons ID</th>
+                                            <th>Parcel Create Date</th>
+                                            <th>Merchant Order ID</th>
+                                            <th>Status</th>
+                                            <th>Return Date</th>
+                                            <th>Return Reason</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($riderRun as $item)
-                                        @foreach ($item->rider_run_details as $rider_run_detail)
-                                                
-                                         
-                                            @if ($rider_run_detail->parcel->merchant->id != auth()->guard('merchant')->user()->id)
-                                                @continue;
-                                            @endif
-                                            <tr>
-                                                <td class="text-center"> {{ $loop->iteration }} </td>
-                                                <td class="text-center"> {{ $rider_run_detail->parcel->parcel_invoice }}
-                                                </td>
-                                                <td class="text-center">
-                                                    @switch($rider_run_detail->status)
-                                                        @case(1)
-                                                            Run Create
-                                                        @break
+                                            @foreach ($item->rider_run_details as $rider_run_detail)
+                                                @if ($rider_run_detail->parcel->merchant->id != auth()->guard('merchant')->user()->id)
+                                                    @continue;
+                                                @endif
+                                                <tr>
+                                                    <td class="text-center"> {{ $loop->iteration }} </td>
+                                                    <td class="text-center"> {{ $rider_run_detail->parcel->parcel_invoice }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @switch($rider_run_detail->status)
+                                                            @case(1)
+                                                                Run Create
+                                                            @break
 
-                                                        @case(2)
-                                                            Run Start
-                                                        @break
+                                                            @case(2)
+                                                                Run Start
+                                                            @break
 
-                                                        @case(3)
-                                                            Run Cancel
-                                                        @break
+                                                            @case(3)
+                                                                Run Cancel
+                                                            @break
 
-                                                        @case(4)
-                                                            Rider Accept
-                                                        @break
+                                                            @case(4)
+                                                                Rider Accept
+                                                            @break
 
-                                                        @case(5)
-                                                            Rider Reject
-                                                        @break
+                                                            @case(5)
+                                                                Rider Reject
+                                                            @break
 
-                                                        @case(6)
-                                                            Rider Reschedule
-                                                        @break
+                                                            @case(6)
+                                                                Rider Reschedule
+                                                            @break
 
-                                                        @case(7)
-                                                            Rider Complete
-                                                        @break
+                                                            @case(7)
+                                                                Rider Complete
+                                                            @break
 
-                                                        @default
-                                                        @break
-                                                    @endswitch
-                                                </td>
-                                                <td class="text-center">
-                                                    @if ($rider_run_detail->status == 7)
-                                                        {{ \Carbon\Carbon::parse($rider_run_detail->complete_date_time)->format('d/m/Y H:i:s') }}
-                                                        <br>
-                                                    @endif
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ $rider_run_detail->parcel->merchant->company_name }} </td>
-                                                <td class="text-center">
-                                                    {{ $rider_run_detail->parcel->merchant->contact_number }} </td>
-                                                <td class="text-center"> {{ $rider_run_detail->parcel->customer_name }}
-                                                </td>
-                                                <td class="text-center"> {{ $rider_run_detail->complete_note }} </td>
-                                            </tr>
-                                        @endforeach
+                                                            @default
+                                                            @break
+                                                        @endswitch
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @if ($rider_run_detail->status == 7)
+                                                            {{ \Carbon\Carbon::parse($rider_run_detail->complete_date_time)->format('d/m/Y H:i:s') }}
+                                                            <br>
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $rider_run_detail->parcel->merchant->company_name }} </td>
+                                                    <td class="text-center">
+                                                        {{ $rider_run_detail->parcel->merchant->contact_number }} </td>
+                                                    <td class="text-center"> {{ $rider_run_detail->parcel->customer_name }}
+                                                    </td>
+                                                    <td class="text-center"> {{ $rider_run_detail->complete_note }} </td>
+                                                </tr>
+                                            @endforeach
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -126,10 +123,10 @@
         }
 
         /*
-            div.container {
-                width: 80%;
-            }
-            */
+                div.container {
+                    width: 80%;
+                }
+                */
     </style>
 
     <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">

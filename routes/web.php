@@ -168,6 +168,8 @@ Route::get('/blog/{slug}', [App\Http\Controllers\Frontend\HomeController::class,
 Route::get('/contact', [App\Http\Controllers\Frontend\HomeController::class, 'contact'])->name('frontend.contact');
 Route::post('/visitorMessages', [App\Http\Controllers\Frontend\HomeController::class, 'visitorMessages'])->name('frontend.visitorMessages');
 Route::post('/newsLetter', [App\Http\Controllers\Frontend\HomeController::class, 'newsLetter'])->name('frontend.newsLetter');
+Route::get('/our-partners', [App\Http\Controllers\Frontend\HomeController::class, 'ourPartners'])->name('frontend.ourPartners');
+
 
 Route::post('/orderTracking', [App\Http\Controllers\Frontend\HomeController::class, 'orderTracking'])->name('frontend.orderTracking');
 Route::get('/orderTracking', [App\Http\Controllers\Frontend\HomeController::class, 'orderTracking']);

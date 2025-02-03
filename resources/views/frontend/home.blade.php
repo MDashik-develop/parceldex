@@ -1,7 +1,7 @@
 @php
 
-    $socialLinks = App\Models\SocialLink::where('status', 1)->get();
-    $partners = App\Models\Partner::where('status', 1)->get();
+$socialLinks = App\Models\SocialLink::where('status', 1)->get();
+$partners = App\Models\Partner::where('status', 1)->get();
 
 @endphp
 
@@ -21,7 +21,7 @@
                     </p>
                     <a href="register.html"><button class="btn btn-lg">Become a Merchant</button></a>
                 </div>
-                <div class="intro-img">
+                <div class="intro-img center text-center">
                     <img class=" animate__animated animate__fadeIn" src="/frontend/images/rider.png" alt="">
                 </div>
 
@@ -29,35 +29,78 @@
         </div>
     </div>
 
-    <div class="patner-wrapper animate__animated animate__fadeInUp">
-        <div class="container-fluid brand_logos">
-            <div class="patner d-flex justify-content-between align-items-center brand_logo_items">
-                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
-                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
-                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
-                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
-                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
-                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
-                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
 
+    <div class="patner-wrapper patner-wrapper1 d-flex flex-column flex-md-row justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp">
+        <p class="brands-logos-p p-1 rounded">Fashion</p>
+        <div class="container-fluid mx-0 brand_logos">
+            <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items">
+                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
             </div>
         </div>
-
-
+    </div>
+    <div class="patner-wrapper patner-wrapper2 d-flex flex-column flex-md-row justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp ">
+        <p class="brands-logos-p p-1 rounded">Corporate</p>
+        <div class="container-fluid mx-0 brand_logos">
+            <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items brand_logo_items2">
+                    <img src="/frontend/images/partner_img/othoba.png" alt="">
+                    <img src="/frontend/images/partner_img/lotto.png" alt="">
+                    <img src="/frontend/images/partner_img/sailor.png" alt="">
+                    <img src="/frontend/images/partner_img/fashion.png" alt="">
+                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
+                    <img src="/frontend/images/partner_img/othoba.png" alt="">
+                    <img src="/frontend/images/partner_img/lotto.png" alt="">
+                    <img src="/frontend/images/partner_img/sailor.png" alt="">
+                    <img src="/frontend/images/partner_img/fashion.png" alt="">
+                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
+                    <img src="/frontend/images/partner_img/othoba.png" alt="">
+                    <img src="/frontend/images/partner_img/lotto.png" alt="">
+                    <img src="/frontend/images/partner_img/sailor.png" alt="">
+                    <img src="/frontend/images/partner_img/fashion.png" alt="">
+                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
+            </div>
+        </div>
     </div>
 
-    <div class="patner-wrapper animate__animated animate__fadeInUp">
-
-        <div class="container-fluid brand_logos">
-            <div class="patner d-flex justify-content-between align-items-center brand_logo_items brand_logo_items2">
+    <div class="patner-wrapper patner-wrapper1 d-flex flex-column flex-md-row justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp">
+        <p class="brands-logos-p py-1 px-3 rounded">Marketplace</p>
+        <div class="container-fluid mx-0 brand_logos">
+            <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items">
+                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
+            </div>
+        </div>
+    </div>
+    <div class="patner-wrapper patner-wrapper2 d-flex flex-column flex-md-row justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp ">
+        <p class="brands-logos-p p-1 rounded">Banking</p>
+        <div class="container-fluid mx-0 brand_logos">
+            <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items brand_logo_items2">
                     <img src="/frontend/images/partner_img/othoba.png" alt="">
                     <img src="/frontend/images/partner_img/lotto.png" alt="">
                     <img src="/frontend/images/partner_img/sailor.png" alt="">
@@ -73,8 +116,6 @@
                     <img src="/frontend/images/partner_img/sailor.png" alt="">
                     <img src="/frontend/images/partner_img/fashion.png" alt="">
                     <img src="/frontend/images/partner_img/htbazar.png" alt="">
-
-
             </div>
         </div>
     </div>
@@ -267,6 +308,60 @@
         </div>
 
         <div class="ellipseFade2"></div>
+    </div>
+
+    <div class=" container px-2 px-md-0 blog-section">
+        <h4 class="mb-4 text-center text-md-start" style="color: #07539e;">Latest News</h4>
+        <div class="d-flex gap-5 gap-md-2 flex-column flex-md-row justify-content-between align-items-center">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap">
+                <div class="card-body p-2">
+                    <span class="card-title fw-bold fs-6">Card title</span>
+                    <p class="card-text custom-ellipsis">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap">
+                <div class="card-body p-2">
+                    <span class="card-title fw-bold fs-6">Card title</span>
+                    <p class="card-text custom-ellipsis">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap">
+                <div class="card-body p-2">
+                    <span class="card-title fw-bold fs-6">Card title</span>
+                    <p class="card-text custom-ellipsis">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap">
+                <div class="card-body p-2">
+                    <span class="card-title fw-bold fs-6">Card title</span>
+                    <p class="card-text custom-ellipsis">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap">
+                <div class="card-body p-2">
+                    <span class="card-title fw-bold fs-6">Card title</span>
+                    <p class="card-text custom-ellipsis">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap">
+                <div class="card-body p-2">
+                    <span class="card-title fw-bold fs-6">Card title</span>
+                    <p class="card-text custom-ellipsis">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container text-box-seo pt-5 pb-2">
+        <p class="fs-5" style=" line-height: 27px; color: #000000c2; word-spacing: 2px; letter-spacing: -1px; font-weight: 500;">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde ipsum praesentium omnis at veniam? Excepturi rerum saepe quas, provident ipsum sequi cum reiciendis eligendi quam optio quos tempora facilis? Assumenda temporibus perferendis laboriosam ut nobis itaque ex earum, fuga a nisi unde placeat repellat autem rerum rem? Unde, repellat rerum. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugiat porro dignissimos ducimus necessitatibus vero dolorum quas saepe tenetur. Ea totam delectus quo quia voluptatibus aperiam autem quaerat! Sint assumenda ab dolorum, placeat dolor voluptates perspiciatis quaerat illo ipsum eveniet laborum consequatur explicabo, dignissimos, minus minima magni pariatur! Fuga, esse ea?
+        </p>
     </div>
     <script>
         const events = document.querySelectorAll('.animate__animated');

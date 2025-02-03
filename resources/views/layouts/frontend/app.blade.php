@@ -6,7 +6,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
     <!-- set your title -->
-    <title>{{ $application->name }} </title>
+    {{-- <title>{{ $application->name }} </title> --}}
 
 
     @if (!empty($application->logo))
@@ -18,16 +18,16 @@
     <link rel="shortcut icon" href="{{ asset('assets/favicon.ico') }}" type="image/x-icon">
     @endif
 
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex, nofollow" />
+    {{-- <meta name="description" content=""> --}}
+    {{-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
+    {{-- <meta name="robots" content="noindex, nofollow" /> --}}
 
-    <meta name="description" content="{{ $application->meta_description }}" />
+    {{-- <meta name="description" content="{{ $application->meta_description }}" />
     <meta name="keywords" content="{{ $application->meta_description }}">
-    <meta name="author" content="{{ $application->meta_description }}" />
+    <meta name="author" content="{{ $application->meta_description }}" /> --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property="article:modified_time" content="2024-12-18T07:31:37+00:00" />
-    <meta property="og:image" content="https://parceldex.com.bd/public/assets/logofull.jpg" />
+    {{-- <meta property="og:image" content="https://parceldex.com.bd/public/assets/logofull.jpg" /> --}}
     <meta property="og:image:width" content="1534" />
     <meta property="og:image:height" content="747" />
 
@@ -43,7 +43,9 @@
 
     <!-- bootstrap and font-awesome cdn link -->
     <link rel="stylesheet" href="/frontend/css/cdn.jsdelivr.net/npm/bootstrap%405.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/frontend/css/cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    {{-- <link rel="stylesheet" href="/frontend/css/cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" /> --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
 
     <link rel="stylesheet" href="/frontend/css/cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css" />
     <!-- end bootstrap and font-awesome cdn link -->
@@ -102,6 +104,91 @@
     </noscript>
     <!-- End Facebook Pixel Code -->
 
+
+        <!-- Basic SEO Meta Tags -->
+        <title>Our Courier Services | Fast Delivery Across Bangladesh</title>
+        <meta name="description" content="Explore our fast & reliable courier services, including express delivery, cash on delivery, eCommerce logistics, and nationwide shipping across Bangladesh.">
+        <meta name="keywords" content="courier services Bangladesh, express delivery, cash on delivery, eCommerce logistics, nationwide shipping, Parceldex, parcel tracking">
+        <meta name="author" content="Parceldex Courier">
+        <meta name="robots" content="index, follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+        <!-- Canonical Tag (Prevents Duplicate Content Issues) -->
+        <link rel="canonical" href="https://parceldex.com/services">
+    
+        <!-- Open Graph (OG) Meta Tags for Facebook & LinkedIn -->
+        <meta property="og:title" content="Our Courier Services | Fast Delivery Across Bangladesh">
+        <meta property="og:description" content="Parceldex offers express delivery, COD, and eCommerce logistics across Bangladesh. Get secure & fast courier solutions for businesses and individuals.">
+        <meta property="og:image" content="https://parceldex.com/path-to-image.jpg">
+        <meta property="og:url" content="https://parceldex.com/services">
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="Parceldex Courier">
+        <meta property="og:locale" content="en_BD">
+    
+        <!-- Twitter Card for Better Previews -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Our Courier Services | Fast Delivery Across Bangladesh">
+        <meta name="twitter:description" content="Parceldex provides express courier, cash on delivery, and nationwide shipping solutions in Bangladesh. Reliable & fast delivery for businesses and individuals.">
+        <meta name="twitter:image" content="https://parceldex.com/path-to-image.jpg">
+        <meta name="twitter:site" content="@ParceldexCourier">
+        <meta name="twitter:creator" content="@ParceldexCourier">
+    
+        <!-- Geo Meta Tags (For Local SEO) -->
+        <meta name="geo.region" content="BD" />
+        <meta name="geo.placename" content="Bangladesh" />
+        <meta name="geo.position" content="23.6850;90.3563" />
+        <meta name="ICBM" content="23.6850, 90.3563" />
+    
+        <!-- Security & Privacy Tags -->
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+        <meta name="referrer" content="no-referrer-when-downgrade">
+    
+        <!-- Favicons for Different Devices -->
+        <link rel="icon" href="https://parceldex.com/favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon" sizes="180x180" href="https://parceldex.com/apple-touch-icon.png">
+    
+        <!-- HTTP Preconnect for Faster Loading -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    
+        <!-- JSON-LD Schema Markup for Services Page -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Courier Services",
+          "url": "https://parceldex.com/services",
+          "provider": {
+            "@type": "CourierService",
+            "name": "Parceldex Courier",
+            "url": "https://parceldex.com"
+          },
+          "serviceType": "Express Delivery, Same-Day Delivery, Next-Day Delivery, Cash on Delivery, eCommerce Logistics",
+          "areaServed": {
+            "@type": "Country",
+            "name": "Bangladesh"
+          },
+          "availableChannel": {
+            "@type": "ServiceChannel",
+            "serviceUrl": "https://parceldex.com/services",
+            "availableLanguage": ["English", "Bengali"]
+          },
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "BDT",
+            "price": "Varies",
+            "url": "https://parceldex.com/services"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+8809642727727",
+            "contactType": "customer service"
+          }
+        }
+        </script>
+    
+
 </head>
 
 <body class="body-class">
@@ -120,6 +207,7 @@
     <script src="/frontend/css/cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" defer></script>
     <script src="/frontend/css/cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.js" defer></script>
     <script src="/frontend/css/cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.js" defer></script>
+
     <!-- end bootstrap and jquery cdn link -->
 
 

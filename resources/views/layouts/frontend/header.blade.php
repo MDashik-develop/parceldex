@@ -8,7 +8,7 @@
                 </div>
                 <div class="brand-logo">
                     <!-- <a href="index.html"><img src="/frontend/images/logo/logo.png" alt="" class="web_logo"></a> -->
-                    <a href="index.html"><img src="/frontend/images/logo/logo.png" alt="" class="web_logo"></a>
+                    <a href="https://parceldex.com.bd/"><img src="/frontend/images/logo/logo.png" alt="" class="web_logo"></a>
                 </div>
             </div>
             <div class="navbar-menu">
@@ -20,7 +20,7 @@
                         <a class="nav-link " aria-current="page" href="coverage.html">Coverage</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="about.html">About Us</a>
+                        <a class="nav-link " aria-current="page" href="/about">About Us</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link " aria-current="page" href="contact.html">Contact</a>
@@ -31,12 +31,15 @@
                 <a href="tracking.html" class=" d-none d-sm-inline-block txt-primary me-4"> <img
                         src="/frontend/images/parcel_tarck_icon.svg" alt="" class="parcel_tarck_icon">
                     Track Parcel </a>
-                <div class="d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center gap-2 gap-sm-3">
 
                     <a href="register.html">
-                        <button class="btn btn-md">Sign Up</button>
+                        <button class="header-button">Sign Up</button>
                     </a>
-                    <a href="{{ route('frontend.login') }}" class="btn border px-4 py-2 rounded">Login</a>
+                    <a href="{{ route('frontend.login') }}">
+                        
+                        <button class="header-button">Login</button>
+                    </a>
                 </div>
                 <!-- <button class="btn-outline btn-md d-none d-sm-inline-block">EN</button> -->
 

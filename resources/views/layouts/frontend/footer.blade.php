@@ -39,7 +39,7 @@
                             <a href="#">Merchant Login</a>
                         </li>
                         <li>
-                            <a href="#">Tearms & Conditions</a>
+                            <a href="/terms-and-conditions">Tearms & Conditions</a>
                         </li>
                     </ul>
                 </div>

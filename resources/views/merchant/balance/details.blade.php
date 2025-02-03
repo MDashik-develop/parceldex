@@ -103,7 +103,7 @@
                                 @foreach ($parcels->get() ?? [] as $parcel)
                                     <tr>
                                         <td>{{ $parcel->created_at }}</td>
-                                        <td>{{ $parcel->consignment_id }}</td>
+                                        <td>{{ $parcel->parcel_invoice }}</td>
                                         <td>{{ $parcel->merchant_order_id }}</td>
                                         <td>{{ $parcel->status }}</td>
                                         <td>{{ $parcel->customer_collect_amount }}</td>

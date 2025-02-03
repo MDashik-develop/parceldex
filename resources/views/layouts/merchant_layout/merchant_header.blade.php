@@ -110,9 +110,10 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-        <li class="nav-item dropdown">
-            <div style="border:1px solid #f87326;border-radius:20px;" class="px-4 text-bold py-1">
-                {{ $total_pending_payment }} BDT</div>
+        <li class="nav-item dropdown" style="display: flex;align-items: center;">
+            <a href="{{ route('merchant.balance') }}" style="border:1px solid #f87326;border-radius:20px;"
+                class="px-4 text-bold py-1">
+                {{ $total_pending_payment }} BDT</a>
         </li>
 
         <li class="nav-item dropdown">

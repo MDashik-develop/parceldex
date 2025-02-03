@@ -100,7 +100,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($parcels ?? [] as $parcel)
+                                @foreach ($parcels->get() ?? [] as $parcel)
                                     <tr>
                                         <td>{{ $parcel->created_at }}</td>
                                         <td>{{ $parcel->consignment_id }}</td>

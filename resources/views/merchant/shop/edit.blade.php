@@ -45,8 +45,8 @@
                                                     <label for="company_name">Company Name <span
                                                             style="font-weight: bold; color: red;">*</span></label>
                                                     <input type="text" name="company_name" id="company_name"
-                                                        value="{{ old('company_name') ?? $shop->company_name }}" class="form-control"
-                                                        placeholder="Company Name" required>
+                                                        value="{{ old('company_name') ?? $shop->company_name }}"
+                                                        class="form-control" placeholder="Company Name" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="name">Name <span
@@ -72,7 +72,7 @@
                                                             class="form-control select2" style="width: 100%">
                                                             <option value="0">Select District</option>
                                                             @foreach ($districts as $district)
-                                                                <option value="{{ $district->id }}" >{{ $district->name }}
+                                                                <option value="{{ $district->id }}">{{ $district->name }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -116,8 +116,9 @@
                                                             <div class="input-group-text">+88</div>
                                                         </div>
                                                         <input type="text" name="contact_number" id="contact_number"
-                                                            value="{{ old('contact_number') ?? $shop->contact_number }}" class="form-control"
-                                                            placeholder="Merchant Contact Number" required="">
+                                                            value="{{ old('contact_number') ?? $shop->contact_number }}"
+                                                            class="form-control" placeholder="Merchant Contact Number"
+                                                            required="">
                                                     </div>
                                                 </div>
 
@@ -267,35 +268,37 @@
                                                 </div>
 
                                                 <div class="col-md-4">
-                                                    <label for="parent_merchant_commission">Commission</label>
+                                                    <label for="parent_merchant_commission">Commission %</label>
                                                     <input type="input" name="parent_merchant_commission"
                                                         placeholder="commission percentage %"
                                                         id="parent_merchant_commission" class="form-control"
-                                                        value="{{ old('parent_merchant_commission') }}">
+                                                        value="{{ old('parent_merchant_commission') ?? $shop->parent_merchant_commission }}">
                                                 </div>
 
                                                 <div class="col-md-4">
                                                     <label for="payment_recived_by">Payment Recived By</label>
                                                     <select name="payment_recived_by" id="payment_recived_by"
                                                         class="form-control select2" style="width: 100%">
-                                                        <option value="0">Not
+                                                        <option value="0"
+                                                            {{ $shop->payment_recived_by == 0 ? 'selected' : '' }}>Not
                                                             selected</option>
-                                                        <option value="1">Cash
+                                                        <option value="1"
+                                                            {{ $shop->payment_recived_by == 1 ? 'selected' : '' }}>Cash
                                                         </option>
                                                         <option value="2"
-                                                            {{ old('payment_recived_by') == 2 ? 'selected' : '' }}>
+                                                            {{ $shop->payment_recived_by == 2 ? 'selected' : '' }}>
                                                             Bkash
                                                         </option>
                                                         <option value="3"
-                                                            {{ old('payment_recived_by') == 3 ? 'selected' : '' }}>
+                                                            {{ $shop->payment_recived_by == 3 ? 'selected' : '' }}>
                                                             Nagad
                                                         </option>
                                                         <option value="4"
-                                                            {{ old('payment_recived_by') == 4 ? 'selected' : '' }}>
+                                                            {{ $shop->payment_recived_by == 4 ? 'selected' : '' }}>
                                                             Rocket
                                                         </option>
                                                         <option value="5"
-                                                            {{ old('payment_recived_by') == 5 ? 'selected' : '' }}>Bank
+                                                            {{ $shop->payment_recived_by == 5 ? 'selected' : '' }}>Bank
                                                         </option>
                                                     </select>
                                                 </div>
@@ -303,19 +306,19 @@
                                                 <div class="bkash_info col-md-6" style="display: none;">
                                                     <label for="bkash_number">BKash Number</label>
                                                     <input type="text" name="bkash_number" id="bkash_number"
-                                                        value="{{ $merchant->bkash_number ?? old('bkash_number') }}"
+                                                        value="{{ $shop->bkash_number ?? old('bkash_number') }}"
                                                         class="form-control" placeholder="BKash Number">
                                                 </div>
                                                 <div class="nagad_info col-md-6" style="display: none;">
                                                     <label for="nagad_number">Nagad Number</label>
                                                     <input type="text" name="nagad_number" id="nagad_number"
-                                                        value="{{ $merchant->nagad_number ?? old('nagad_number') }}"
+                                                        value="{{ $shop->nagad_number ?? old('nagad_number') }}"
                                                         class="form-control" placeholder="Nagad Number">
                                                 </div>
                                                 <div class="rocket_info col-md-6" style="display: none;">
                                                     <label for="rocket_name">Rocket Number</label>
                                                     <input type="text" name="rocket_name" id="rocket_name"
-                                                        value="{{ $merchant->rocket_name ?? old('rocket_name') }}"
+                                                        value="{{ $shop->rocket_name ?? old('rocket_name') }}"
                                                         class="form-control" placeholder="Rocket Number">
                                                 </div>
 
@@ -346,12 +349,71 @@
     <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endpush
 
+
+<script>
+    window.onload = function() {
+        $('#district_id').on('change', function() {
+            var district_id = $("#district_id option:selected").val();
+            // $("#upazila_id").val(0).change().attr('disabled', true);
+            $("#area_id").val(0).change().attr('disabled', true);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    district_id: district_id,
+                    _token: "{{ csrf_token() }}"
+                },
+                error: function(xhr) {
+                    alert("An error occurred: " + xhr.status + " " + xhr.statusText);
+                },
+                // url       : "{{ route('upazila.districtOption') }}",
+                url: "{{ route('area.districtWiseAreaOption') }}",
+                success: function(response) {
+                    // $("#upazila_id").html(response.option).attr('disabled', false);
+                    $("#area_id").html(response.option).attr('disabled', false);
+                }
+            })
+        });
+    };
+</script>
+
+
+
+
 @push('script_js')
     <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
     <script>
-        function editForm() {
+        $("#district_id").val('{{ $shop->district_id }}');
+        // $("#upazila_id").val('{{ $shop->upazila_id }}');
 
-        }
+        @if ($shop->district_id)
+            var district_id = $("#district_id option:selected").val();
+            // $("#upazila_id").val(0).change().attr('disabled', true);
+            $("#area_id").val(0).change().attr('disabled', true);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    district_id: district_id,
+                    _token: "{{ csrf_token() }}"
+                },
+                error: function(xhr) {
+                    alert("An error occurred: " + xhr.status + " " + xhr.statusText);
+                },
+                // url       : "{{ route('upazila.districtOption') }}",
+                url: "{{ route('area.districtWiseAreaOption') }}",
+                success: function(response) {
+                    // $("#upazila_id").html(response.option).attr('disabled', false);
+                    $("#area_id").html(response.option).attr('disabled', false);
+                    $("#area_id").val('{{ $shop->area_id }}');
+                }
+            })
+        @endif
+
+        $("#status").val('{{ $shop->status }}');
+
 
         function filePreview(input, div) {
             $('#' + div).html('');
@@ -372,6 +434,70 @@
                     }
                     reader.readAsDataURL(input.files[0]);
                 }
+            }
+        }
+    </script>
+    <script>
+        window.onload = function() {
+            select_payment_method();
+
+
+
+            $('#district_id').on('change', function() {
+                var district_id = $("#district_id option:selected").val();
+                // $("#upazila_id").val(0).change().attr('disabled', true);
+                $("#area_id").val(0).change().attr('disabled', true);
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        district_id: district_id,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    error: function(xhr) {
+                        alert("An error occurred: " + xhr.status + " " + xhr.statusText);
+                    },
+                    // url       : "{{ route('upazila.districtOption') }}",
+                    url: "{{ route('area.districtWiseAreaOption') }}",
+                    success: function(response) {
+                        // $("#upazila_id").html(response.option).attr('disabled', false);
+                        $("#area_id").html(response.option).attr('disabled', false);
+                    }
+                })
+            });
+
+        };
+
+        function select_payment_method() {
+            var payment_recived_by = $('#payment_recived_by').val();
+
+            console.log(payment_recived_by);
+            if (payment_recived_by == 2) {
+                $(".bank_info").css("display", "none");
+                $(".bkash_info").css("display", "");
+                $(".rocket_info").css("display", "none");
+                $(".nagad_info").css("display", "none");
+            } else if (payment_recived_by == 3) {
+                $(".bank_info").css("display", "none");
+                $(".bkash_info").css("display", "none");
+                $(".rocket_info").css("display", "none");
+                $(".nagad_info").css("display", "");
+            } else if (payment_recived_by == 4) {
+                $(".bank_info").css("display", "none");
+                $(".bkash_info").css("display", "none");
+                $(".rocket_info").css("display", "");
+                $(".nagad_info").css("display", "none");
+            } else if (payment_recived_by == 5) {
+                $(".bank_info").css("display", "");
+                $(".bkash_info").css("display", "none");
+                $(".rocket_info").css("display", "none");
+                $(".nagad_info").css("display", "none");
+            } else {
+                $(".bank_info").css("display", "none");
+                $(".bkash_info").css("display", "none");
+                $(".rocket_info").css("display", "none");
+                $(".nagad_info").css("display", "none");
             }
         }
 

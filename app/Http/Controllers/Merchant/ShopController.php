@@ -482,8 +482,11 @@ class ShopController extends Controller
                 'date' => date('Y-m-d'),
                 //                'status' => 1,
                 'updated_admin_id' => auth()->guard('admin')->user()->id,
-                'parent_merchant_commission' => $request->input('commission'),
+                'parent_merchant_commission' => $request->input('parent_merchant_commission'),
             ];
+
+            // dd($data);
+            // dd($request->all());
 
             $password = $request->input('password');
 
@@ -493,7 +496,7 @@ class ShopController extends Controller
             }
 
             $check = Merchant::where('id', $shop->id)->update($data) ? true : false;
-
+// dd($check);
             if ($check) {
                 $charge = $request->input('charge');
                 $return_charge = $request->input('return_charge');

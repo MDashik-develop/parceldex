@@ -158,4 +158,7 @@ Route::group(['middleware' => 'merchant', 'prefix' => 'merchant'], function () {
     Route::get('parcel/parcelPaymentRequestList', [App\Http\Controllers\Merchant\ParcelPaymentRequestController::class, 'parcelPaymentRequestList'])->name('parcel.parcelPaymentRequestList');
     Route::get('parcel/getParcelPaymentRequestList', [App\Http\Controllers\Merchant\ParcelPaymentRequestController::class, 'getParcelPaymentRequestList'])->name('parcel.getParcelPaymentRequestList');
     Route::get('parcel/viewParcelPaymentRequest/{parcelPaymentRequest}', [App\Http\Controllers\Merchant\ParcelPaymentRequestController::class, 'viewParcelPaymentRequest'])->name('parcel.viewParcelPaymentRequest');
+
+    // balance details
+    Route::get('balance/detials', [App\Http\Controllers\Merchant\BalanceController::class, 'details'])->name('balance');
 });

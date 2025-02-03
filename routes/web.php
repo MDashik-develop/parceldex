@@ -169,6 +169,7 @@ Route::get('/contact', [App\Http\Controllers\Frontend\HomeController::class, 'co
 Route::post('/visitorMessages', [App\Http\Controllers\Frontend\HomeController::class, 'visitorMessages'])->name('frontend.visitorMessages');
 Route::post('/newsLetter', [App\Http\Controllers\Frontend\HomeController::class, 'newsLetter'])->name('frontend.newsLetter');
 Route::get('/our-partners', [App\Http\Controllers\Frontend\HomeController::class, 'ourPartners'])->name('frontend.ourPartners');
+Route::get('/terms-and-conditions', [App\Http\Controllers\Frontend\HomeController::class, 'termsAndConditions'])->name('frontend.termsAndConditions');
 
 
 Route::post('/orderTracking', [App\Http\Controllers\Frontend\HomeController::class, 'orderTracking'])->name('frontend.orderTracking');

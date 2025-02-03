@@ -2696,7 +2696,6 @@ body.auth {
   }
 }
 
-
 .modal {
   display: none;
   position: fixed;
@@ -2716,7 +2715,8 @@ body.auth {
   width: 80%;
   max-width: 600px;
 }
-
+/*----- about page-----*/
+/*----- faq page-----*/
 .main-faq-page{
   background-color: #fff;
 }
@@ -2734,4 +2734,34 @@ body.auth {
   border-radius: 4px;
   border-color: #07539e21 !important;
 }
-/*----- about page-----*/
+/*----- faq page-----*/
+/*----- terms page-----*/
+.main-termsAndConditions-page{
+  background-color: #fff;
+}
+.termsAndConditions-1st-section{
+  height: 100%;
+  width: 100%;
+  padding-top: 70px;
+  padding-bottom: 80px;
+	background-color: #07539e21;
+	clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7vw), 0% 100%);
+}
+.termsAndConditions-2nd-section div svg{
+  fill: #07539E;
+  stroke: #07539E;
+  path{
+    fill: #07539E;
+  }
+}
+.termsAndConditions-2nd-section div h4{
+  font-size: 16px;
+  font-family: sans-serif !important;
+  font-size: 1.875rem;
+  letter-spacing: -1px;
+}
+.termsAndConditions-2nd-section div p{
+  font-size: 17px;
+  text-align: left !important;;
+}
+/*----- terms page-----*/

@@ -52,7 +52,7 @@
                 </div>
 			</div> --}}
             @if ($services->count() > 0)
-			<div class="row gap-3 felx-wrap mb-5">
+			<div class="row justify-content-center gap-3 felx-wrap mb-5">
                 @foreach ($services as $service)
 
 				<div class="card shadow my-2" style="width: 18rem;">

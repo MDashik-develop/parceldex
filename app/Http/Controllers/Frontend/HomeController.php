@@ -460,4 +460,10 @@ class HomeController extends Controller
     {
         return view('frontend.ourPartnersPage');
     }
+    
+    //terms-and-conditions
+    public function termsAndConditions()
+    {
+        return view('frontend.termsAndConditions');
+    }
 }

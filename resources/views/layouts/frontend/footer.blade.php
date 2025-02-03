@@ -16,7 +16,7 @@
                             <a href="/about">About Us</a>
                         </li>
                         <li>
-                            <a href="#">Our Partner</a>
+                            <a href="/our-partners">Our Partner</a>
                         </li>
                         <li>
                             <a href="/services">Services</a>

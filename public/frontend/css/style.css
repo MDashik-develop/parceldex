@@ -2761,7 +2761,17 @@ body.auth {
   letter-spacing: -1px;
 }
 .termsAndConditions-2nd-section div p{
-  font-size: 17px;
-  text-align: left !important;;
+  font-size: 18px;
+  text-align: left !important;
+}
+
+.termsAndConditions-2nd-section div button{
+  background-color: #F27B21;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 5px 0px !important;
+  transition: 0.5s;
+}
+.termsAndConditions-2nd-section div button:hover{
+  background-color: #07539e;
+  transform: translateY(-2px);
 }
 /*----- terms page-----*/

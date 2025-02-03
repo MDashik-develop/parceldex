@@ -100,7 +100,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($parcels->get() ?? [] as $parcel)
+                                @forelse ($parcels->get() as $parcel)
                                     <tr>
                                         <td>{{ $parcel->created_at }}</td>
                                         <td>{{ $parcel->parcel_invoice }}</td>

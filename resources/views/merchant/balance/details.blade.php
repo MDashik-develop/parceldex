@@ -141,7 +141,7 @@
                                                 $parcel->cod_charge -
                                                 $parcel->weight_package_charge -
                                                 $parcel->return_charge -
-                                                $parcel->parent_commission_amount;`
+                                                $parcel->parent_commission_amount;
                                         @endphp
 
                                         <td>{{ $payable_amount }}</td>

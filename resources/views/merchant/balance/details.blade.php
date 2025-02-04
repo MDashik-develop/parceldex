@@ -127,7 +127,7 @@
                                         <td>{{ $parcel->total_collect_amount }}</td>
                                         <td>{{ $parcel->customer_collect_amount + $parcel->cancel_amount_collection }}</td>
                                         <td>{{ $parcel->delivery_charge }}</td>
-                                        <td>{{ $parcel->cod_charge }}</td>
+                                        <td>{{ number_format($parcel->cod_charge) }}</td>
                                         <td>{{ $parcel->weight_package_charge }}</td>
                                         <td>{{ $parcel->return_charge }}</td>
                                         <td>{{ 0 }}</td>
@@ -141,7 +141,7 @@
                                                 $parcel->cod_charge -
                                                 $parcel->weight_package_charge -
                                                 $parcel->return_charge -
-                                                $parcel->parent_commission_amount;
+                                                $parcel->parent_commission_amount;`
                                         @endphp
 
                                         <td>{{ $payable_amount }}</td>

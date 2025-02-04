@@ -17,7 +17,7 @@
                         <a class="nav-link " aria-current="page" href="pricing.html">Pricing</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="coverage.html">Coverage</a>
+                        <a class="nav-link " aria-current="page" href="/coverage-map">Coverage</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link " aria-current="page" href="/about">About Us</a>

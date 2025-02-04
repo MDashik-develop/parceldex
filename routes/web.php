@@ -171,6 +171,7 @@ Route::post('/newsLetter', [App\Http\Controllers\Frontend\HomeController::class,
 Route::get('/our-partners', [App\Http\Controllers\Frontend\HomeController::class, 'ourPartners'])->name('frontend.ourPartners');
 Route::get('/terms-and-conditions', [App\Http\Controllers\Frontend\HomeController::class, 'termsAndConditions'])->name('frontend.termsAndConditions');
 Route::get('/return-refund-policy', [App\Http\Controllers\Frontend\HomeController::class, 'returnRefundPolicy'])->name('frontend.returnRefundPolicy');
+Route::get('/coverage-map', [App\Http\Controllers\Frontend\HomeController::class, 'coverageMap'])->name('frontend.coverageMap');
 
 
 

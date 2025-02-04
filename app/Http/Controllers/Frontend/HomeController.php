@@ -472,4 +472,10 @@ class HomeController extends Controller
     {
         return view('frontend.returnRefundPolicy');
     }
+
+    //coverage-map
+    public function coverageMap()
+    {
+        return view('frontend.coverageMap');
+    }
 }

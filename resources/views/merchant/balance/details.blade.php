@@ -14,11 +14,45 @@
             ->where(function ($query) {
                 $query->whereNull('payment_type')->orWhereIn('payment_type', [1, 2, 3, 6]);
             });
-
-        $total_customer_collect_amount =
-            $parcels->sum('customer_collect_amount') + $parcels->sum('cancel_amount_collection');
-
     @endphp
+
+    @php
+        $total_customer_collect_amount = 0;
+        $total_collected_amount = 0;
+        $total_delivery_charge = 0;
+        $total_cod_charge = 0;
+        $total_weight_charge = 0;
+        $total_return_charge = 0;
+        $total_child_commission = 0;
+        $total_referral_commission = 0;
+        $total_payable = 0;
+    @endphp
+
+    @forelse ($parcels->get() as $parcel)
+        @php
+            $total_customer_collect_amount += $parcel->customer_collect_amount + $parcel->cancel_amount_collection;
+            $total_collected_amount += $parcel->total_collect_amount;
+            $total_delivery_charge += $parcel->delivery_charge;
+            $total_cod_charge += $parcel->cod_charge;
+            $total_weight_charge += $parcel->weight_package_charge;
+            $total_return_charge += $parcel->return_charge;
+            $total_child_commission += $parcel->parent_commission_amount;
+            $total_referral_commission += 0;
+
+            $payable_amount =
+                $parcel->customer_collect_amount +
+                $parcel->cancel_amount_collection -
+                $parcel->delivery_charge -
+                $parcel->cod_charge -
+                $parcel->weight_package_charge -
+                $parcel->return_charge -
+                $parcel->parent_commission_amount;
+
+            $total_payable += $payable_amount;
+        @endphp
+
+    @empty
+    @endforelse
 
     <style>
         .table thead th {
@@ -50,12 +84,12 @@
 
                 <div style="display: flex; justify-content: space-between;">
                     <div>Delivery Charge</div>
-                    <div>-0</div>
+                    <div>- {{ $total_delivery_charge }}</div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between;">
                     <div>COD Charge</div>
-                    <div>-0</div>
+                    <div>-{{ $total_cod_charge }}</div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between;">
@@ -65,22 +99,22 @@
 
                 <div style="display: flex; justify-content: space-between;">
                     <div>Return Charge</div>
-                    <div>-0</div>
+                    <div>-{{ $total_return_charge }}</div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between;">
                     <div>Child Commission</div>
-                    <div>-0</div>
+                    <div>-{{ $total_child_commission }}</div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between;">
                     <div>Referral Commission</div>
-                    <div>-0</div>
+                    <div>-{{ $total_referral_commission }}</div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between; border-top: 1px solid #3d3d3d;">
                     <div>Avaiable Balance (BDT)</div>
-                    <div>0</div>
+                    <div> {{ $total_payable }} </div>
                 </div>
 
             </div>
@@ -155,7 +189,8 @@
                                         <td>{{ returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel->parcel_invoice)['status_name'] }}
                                         </td>
                                         <td>{{ $parcel->total_collect_amount }}</td>
-                                        <td>{{ $parcel->customer_collect_amount + $parcel->cancel_amount_collection }}</td>
+                                        <td>{{ $parcel->customer_collect_amount + $parcel->cancel_amount_collection }}
+                                        </td>
                                         <td>{{ $parcel->delivery_charge }}</td>
                                         <td>{{ number_format($parcel->cod_charge) }}</td>
                                         <td>{{ $parcel->weight_package_charge }}</td>

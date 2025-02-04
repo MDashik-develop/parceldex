@@ -466,4 +466,16 @@ class HomeController extends Controller
     {
         return view('frontend.termsAndConditions');
     }
+    
+    //return-refund-policy
+    public function returnRefundPolicy()
+    {
+        return view('frontend.returnRefundPolicy');
+    }
+
+    //coverage-map
+    public function coverageMap()
+    {
+        return view('frontend.coverageMap');
+    }
 }

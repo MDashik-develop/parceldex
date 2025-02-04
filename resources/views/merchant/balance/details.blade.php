@@ -68,6 +68,11 @@
                     <div>-0</div>
                 </div>
 
+                <div style="display: flex; justify-content: space-between;">
+                    <div>Commission</div>
+                    <div>-0</div>
+                </div>
+
                 <div style="display: flex; justify-content: space-between; border-top: 1px solid #3d3d3d;">
                     <div>Avaiable Balance (BDT)</div>
                     <div>0</div>
@@ -96,6 +101,7 @@
                                     <th>COD Charge</th>
                                     <th>Weight Charge</th>
                                     <th>Return Charge</th>
+                                    <th>Commission</th>
                                     <th>Payable Amount</th>
                                 </tr>
                             </thead>
@@ -112,11 +118,12 @@
                                         <td>{{ $parcel->cod_charge }}</td>
                                         <td>{{ $parcel->weight_package_charge }}</td>
                                         <td>{{ $parcel->return_charge }}</td>
+                                        <td>{{ $parcel->parent_commission_amount }}</td>
                                         <td>{{ $parcel->payable_amount }}</td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="11">No data found</td>
+                                        <td colspan="12">No data found</td>
                                     </tr>
                                 @endforelse
                             </tbody>

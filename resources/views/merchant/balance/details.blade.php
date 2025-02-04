@@ -110,7 +110,7 @@
                                         <td>{{ $parcel->collected_amount }}</td>
                                         <td>{{ $parcel->delivery_charge }}</td>
                                         <td>{{ $parcel->cod_charge }}</td>
-                                        <td>{{ $parcel->weight_charge }}</td>
+                                        <td>{{ $parcel->weight_package_charge }}</td>
                                         <td>{{ $parcel->return_charge }}</td>
                                         <td>{{ $parcel->payable_amount }}</td>
                                     </tr>

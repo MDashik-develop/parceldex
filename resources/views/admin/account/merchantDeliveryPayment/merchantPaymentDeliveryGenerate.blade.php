@@ -409,6 +409,9 @@
                                                     {{ $t_returnCharge }}</td>
                                                 <td id="total_commission_charge" style="text-align: right">
                                                     {{ $t_commissionCharge }}</td>
+                                                <td style="text-align: right">
+                                                    {{ 0 }}
+                                                </td>
                                                 <td id="total_charge" style="text-align: right">
                                                     {{ $t_charge }}
                                                 </td>

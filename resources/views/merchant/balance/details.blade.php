@@ -102,7 +102,7 @@
                                     <th>Weight Charge</th>
                                     <th>Return Charge</th>
                                     <th>Child Commission</th>
-                                    <th>Referral Commision</th>
+                                    <th>Discount</th>
                                     <th>Payable Amount</th>
                                 </tr>
                             </thead>

@@ -67,7 +67,7 @@
             <div
                 style="max-width: 800px; margin: 0 auto; background: #ff8b34; padding: 20px; border-radius: 10px; color: #fff;">
                 <h6 style="text-align: center">Your Balance</h6>
-                <h2 style="text-align: center">0 TK</h2>
+                <h2 style="text-align: center">{{ $total_payable }} TK</h2>
             </div>
         </div>
 

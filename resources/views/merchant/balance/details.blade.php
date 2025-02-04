@@ -94,6 +94,7 @@
                                     <th>Date</th>
                                     <th>Cons ID</th>
                                     <th>Merchant order ID</th>
+                                    <th>Service Area</th>
                                     <th>Status</th>
                                     <th>Amount to be Collect</th>
                                     <th>Collected Amount</th>
@@ -102,7 +103,7 @@
                                     <th>Weight Charge</th>
                                     <th>Return Charge</th>
                                     <th>Child Commission</th>
-                                    <th>Discount</th>
+                                    <th>Referral Commision</th>
                                     <th>Payable Amount</th>
                                 </tr>
                             </thead>
@@ -112,6 +113,7 @@
                                         <td>{{ $parcel->created_at }}</td>
                                         <td>{{ $parcel->parcel_invoice }}</td>
                                         <td>{{ $parcel->merchant_order_id }}</td>
+                                        <td>{{ $parcel?->district?->service_area?->name }}</td>
                                         <td>{{ returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel->parcel_invoice)['status_name'] }}</td>
                                         <td>{{ $parcel->customer_collect_amount }}</td>
                                         <td>{{ $parcel->customer_collect_amount + $parcel->cancel_amount_collection }}</td>

@@ -124,15 +124,27 @@
                                         </td>
                                         <td>{{ returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel->parcel_invoice)['status_name'] }}
                                         </td>
-                                        <td>{{ $parcel->customer_collect_amount }}</td>
+                                        <td>{{ $parcel->total_collect_amount }}</td>
                                         <td>{{ $parcel->customer_collect_amount + $parcel->cancel_amount_collection }}</td>
                                         <td>{{ $parcel->delivery_charge }}</td>
                                         <td>{{ $parcel->cod_charge }}</td>
                                         <td>{{ $parcel->weight_package_charge }}</td>
                                         <td>{{ $parcel->return_charge }}</td>
+                                        <td>{{ 0 }}</td>
                                         <td>{{ $parcel->parent_commission_amount ?? 0 }}</td>
-                                        <td>{{ $parcel->parent_commission_amount ?? 0 }}</td>
-                                        <td>{{ $parcel->payable_amount }}</td>
+
+                                        @php
+                                            $payable_amount =
+                                                $parcel->customer_collect_amount +
+                                                $parcel->cancel_amount_collection -
+                                                $parcel->delivery_charge -
+                                                $parcel->cod_charge -
+                                                $parcel->weight_package_charge -
+                                                $parcel->return_charge -
+                                                $parcel->parent_commission_amount;
+                                        @endphp
+
+                                        <td>{{ $payable_amount }}</td>
                                     </tr>
                                 @empty
                                     <tr>

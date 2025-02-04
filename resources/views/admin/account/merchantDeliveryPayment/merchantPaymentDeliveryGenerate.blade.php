@@ -174,7 +174,7 @@
                                     <thead>
                                         <tr
                                             style="background-color: #a2bbca !important; font-family: Arial Black;font-size: 14px">
-                                            <th colspan="14" class="text-left">
+                                            <th colspan="15" class="text-left">
                                                 <button type="button" id="addParcelInvoice" class="btn btn-info">Add
                                                     Payment Amount</button>
                                             </th>
@@ -277,15 +277,7 @@
                                                         {{ $parcel->customer_contact_number }}
                                                     </td>
                                                     <td class="text-center">
-                                                        @if ($parcel->delivery_type == 1)
-                                                            <div class="badge badge-success">Completed</div>
-                                                        @elseif($parcel->delivery_type == 2)
-                                                            <div class="badge badge-warning">Partial Delivered</div>
-                                                        @elseif($parcel->delivery_type == 3)
-                                                            <div class="badge badge-info">Rescheduled</div>
-                                                        @elseif($parcel->delivery_type == 4)
-                                                            <div class="badge badge-danger">Returned</div>
-                                                        @endif
+                                                        {{ returnParcelStatusNameForMerchant($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel->parcel_invoice)['status_name'] }}
                                                     </td>
 
                                                     <td class="text-right">

@@ -101,7 +101,8 @@
                                     <th>COD Charge</th>
                                     <th>Weight Charge</th>
                                     <th>Return Charge</th>
-                                    <th>Commission</th>
+                                    <th>Child Commission</th>
+                                    <th>Referral Commision</th>
                                     <th>Payable Amount</th>
                                 </tr>
                             </thead>
@@ -119,11 +120,12 @@
                                         <td>{{ $parcel->weight_package_charge }}</td>
                                         <td>{{ $parcel->return_charge }}</td>
                                         <td>{{ $parcel->parent_commission_amount ?? 0 }}</td>
+                                        <td>{{ $parcel->parent_commission_amount ?? 0 }}</td>
                                         <td>{{ $parcel->payable_amount }}</td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="12">No data found</td>
+                                        <td colspan="13">No data found</td>
                                     </tr>
                                 @endforelse
                             </tbody>

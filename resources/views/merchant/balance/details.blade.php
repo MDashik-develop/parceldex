@@ -111,14 +111,14 @@
                                         <td>{{ $parcel->created_at }}</td>
                                         <td>{{ $parcel->parcel_invoice }}</td>
                                         <td>{{ $parcel->merchant_order_id }}</td>
-                                        <td>{{ $parcel->status }}</td>
+                                        <td>{{ returnParcelStatusNameForMerchant($parcels->status, $parcels->delivery_type, $parcels->payment_type, $data->parcel_invoice) }}</td>
                                         <td>{{ $parcel->customer_collect_amount }}</td>
                                         <td>{{ $parcel->customer_collect_amount + $parcel->cancel_amount_collection }}</td>
                                         <td>{{ $parcel->delivery_charge }}</td>
                                         <td>{{ $parcel->cod_charge }}</td>
                                         <td>{{ $parcel->weight_package_charge }}</td>
                                         <td>{{ $parcel->return_charge }}</td>
-                                        <td>{{ $parcel->parent_commission_amount }}</td>
+                                        <td>{{ $parcel->parent_commission_amount ?? 0 }}</td>
                                         <td>{{ $parcel->payable_amount }}</td>
                                     </tr>
                                 @empty

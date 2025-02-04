@@ -107,7 +107,7 @@
                                         <td>{{ $parcel->merchant_order_id }}</td>
                                         <td>{{ $parcel->status }}</td>
                                         <td>{{ $parcel->customer_collect_amount }}</td>
-                                        <td>{{ $parcel->collected_amount }}</td>
+                                        <td>{{ $parcel->customer_collect_amount + $parcel->cancel_amount_collection }}</td>
                                         <td>{{ $parcel->delivery_charge }}</td>
                                         <td>{{ $parcel->cod_charge }}</td>
                                         <td>{{ $parcel->weight_package_charge }}</td>

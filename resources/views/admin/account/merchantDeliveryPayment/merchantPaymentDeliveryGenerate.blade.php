@@ -101,6 +101,11 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
+                                                    <td colspan="3">
+                                                        <textarea name="adjustment_note" id="adjustment_note" class="form-control" placeholder="Adjustment Note"></textarea>
+                                                    </td>
+                                                </tr>
+                                                <tr>
                                                     <th> Transfer Reference</th>
                                                     <td colspan="2">
                                                         <input type="text" name="transfer_reference"
@@ -111,11 +116,6 @@
                                                 <tr>
                                                     <td colspan="3">
                                                         <textarea name="note" id="note" class="form-control" placeholder="Delivery Payment Note "></textarea>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3">
-                                                        <textarea name="adjustment_note" id="adjustment_note" class="form-control" placeholder="Adjustment Note"></textarea>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -174,7 +174,7 @@
                                     <thead>
                                         <tr
                                             style="background-color: #a2bbca !important; font-family: Arial Black;font-size: 14px">
-                                            <th colspan="13" class="text-left">
+                                            <th colspan="14" class="text-left">
                                                 <button type="button" id="addParcelInvoice" class="btn btn-info">Add
                                                     Payment Amount</button>
                                             </th>
@@ -195,7 +195,8 @@
                                             <th width="10%" class="text-center">Delivery </th>
                                             <th width="5%" class="text-center">COD Charge</th>
                                             <th width="5%" class="text-center">Return Charge</th>
-                                            <th width="5%" class="text-center">Commission</th>
+                                            <th width="5%" class="text-center">Child Commission</th>
+                                            <th width="5%" class="text-center">Referral Commission</th>
                                             <th width="5%" class="text-center">Total Charge</th>
                                             <th width="5%" class="text-center">Payable</th>
                                         </tr>
@@ -258,7 +259,7 @@
                                                         <input type="checkbox" id="checkItem" class="parcelId"
                                                             value="{{ $parcel->id }}">
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td class="text-center"> 
                                                         {{-- {{ $returnCharge }},
                                                         {{ $parcel->suborder }},
                                                         {{ $parcel->delivery_type }},

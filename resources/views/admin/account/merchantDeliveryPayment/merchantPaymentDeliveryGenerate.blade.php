@@ -259,7 +259,7 @@
                                                         <input type="checkbox" id="checkItem" class="parcelId"
                                                             value="{{ $parcel->id }}">
                                                     </td>
-                                                    <td class="text-center"> 
+                                                    <td class="text-center">
                                                         {{-- {{ $returnCharge }},
                                                         {{ $parcel->suborder }},
                                                         {{ $parcel->delivery_type }},
@@ -364,13 +364,11 @@
                                                     <td class="text-right">
 
                                                         @php
-
                                                             $commission = $parcel->merchant->parent_merchant_commission
                                                                 ? ($parcel->merchant->parent_merchant_commission *
                                                                         $parcel->customer_collect_amount) /
                                                                     100
                                                                 : 0;
-
                                                             $t_commissionCharge += $commission;
                                                         @endphp
 
@@ -378,7 +376,9 @@
                                                             value="{{ $commission }}" parcel_id="{{ $parcel->id }}"
                                                             class="form-control text-center commission_charge"
                                                             step="any" />
-
+                                                    </td>
+                                                    <td class="text-right">
+                                                        0
                                                     </td>
                                                     <td class="text-right " id="view_payable_amount{{ $parcel->id }}">
 

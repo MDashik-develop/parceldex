@@ -24,9 +24,6 @@
             $total_return_charge = 0;
             $total_child_commission = 0;
             $total_referral_commission = 0;
-            $total_child_commission_percentage = 0;
-            $total_referral_commission_percentage = 0;
-            $total_charge = 0;
             $total_payable = 0;
 
             if ($parcels->count() > 0) {
@@ -41,17 +38,14 @@
                     $total_child_commission += $parcel->parent_commission_amount;
                     $total_referral_commission += 0;
 
-                    $total_charge +=
-                        $parcel->delivery_charge -
-                        $parcel->cod_charge -
-                        $parcel->weight_package_charge -
-                        $parcel->return_charge;
-
                     $payable_amount =
                         $parcel->customer_collect_amount +
                         $parcel->cancel_amount_collection -
-                        $parcel->parent_commission_amount -
-                        $parcel->total_charge;
+                        $parcel->delivery_charge -
+                        $parcel->cod_charge -
+                        $parcel->weight_package_charge -
+                        $parcel->return_charge -
+                        $parcel->parent_commission_amount;
 
                     $total_payable += $payable_amount;
                 }
@@ -60,7 +54,7 @@
                     'id' => $merchant->id,
                     'name' => $merchant->name,
                     'collected' => $total_customer_collect_amount,
-                    'total_charge' => $total_charge,
+                    'total_charge' => $total_delivery_charge + $total_cod_charge + $total_weight_charge + $total_return_charge + $total_child_commission + $total_referral_commission,
                     'adjustment' => 0,
                     'adjustment_reason' => '',
                     'payable' => $payable_amount,

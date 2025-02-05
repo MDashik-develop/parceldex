@@ -57,7 +57,7 @@
                     'total_charge' => $total_delivery_charge + $total_cod_charge + $total_weight_charge + $total_return_charge + $total_child_commission + $total_referral_commission,
                     'adjustment' => 0,
                     'adjustment_reason' => '',
-                    'payable' => $payable_amount,
+                    'payable' => $total_payable,
                     'number_of_parcels' => $parcels->count(),
                 ];
             }

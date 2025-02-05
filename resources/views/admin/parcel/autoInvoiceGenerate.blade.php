@@ -52,7 +52,7 @@
 
                 $data[] = [
                     'id' => $merchant->id,
-                    'name' => $merchant->name,
+                    'name' => $merchant->company_name,
                     'collected' => $total_customer_collect_amount,
                     'total_charge' => $total_delivery_charge + $total_cod_charge + $total_weight_charge + $total_return_charge + $total_child_commission + $total_referral_commission,
                     'adjustment' => 0,

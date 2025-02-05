@@ -25,7 +25,7 @@
                     'adjustment' => 0,
                     'adjustment_reason' => '',
                     'payable' => 191000,
-                    'number_of_parcels' => 26,
+                    'number_of_parcels' => $parcels->count(),
                 ];
             }
         }

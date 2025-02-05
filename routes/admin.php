@@ -356,7 +356,8 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
     Route::get('account/{parcelMerchantDeliveryPayment}/exportMerchantDeliveryPayment', [App\Http\Controllers\Admin\MerchantDeliveryPaymentController::class, 'exportMerchantDeliveryPayment'])->name('account.exportMerchantDeliveryPayment');
 
 
-
+    // auto invoice generate
+    Route::get('account/autoInvoiceGenerate', [App\Http\Controllers\Admin\ParcelController::class, 'autoInvoiceGenerate'])->name('account.autoInvoiceGenerate');
 
     //================ Merchant Delivery Payment  ================================
     Route::get('account/merchantPaymentDeliveryGenerate', [App\Http\Controllers\Admin\MerchantDeliveryPaymentController::class, 'merchantPaymentDeliveryGenerate'])->name('account.merchantPaymentDeliveryGenerate');

@@ -873,4 +873,15 @@ class ParcelController extends Controller
         return $parcels;
 
     }
+
+    public function autoInvoiceGenerate(Request $request)
+    {
+
+        $data = [];
+        $data['main_menu'] = 'merchant-payment';
+        $data['child_menu'] = 'autoInvoiceGenerate';
+        $data['page_title'] = 'autoInvoiceGenerate';
+
+        return view('admin.parcel.autoInvoiceGenerate', $data);
+    }
 }

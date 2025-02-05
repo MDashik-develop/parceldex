@@ -16,15 +16,54 @@
                     $query->whereNull('payment_type')->orWhereIn('payment_type', [1, 2, 3, 6]);
                 });
 
+            $total_customer_collect_amount = 0;
+            $total_collected_amount = 0;
+            $total_delivery_charge = 0;
+            $total_cod_charge = 0;
+            $total_weight_charge = 0;
+            $total_return_charge = 0;
+            $total_child_commission = 0;
+            $total_referral_commission = 0;
+            $total_child_commission_percentage = 0;
+            $total_referral_commission_percentage = 0;
+            $total_charge = 0;
+            $total_payable = 0;
+
             if ($parcels->count() > 0) {
+                foreach ($parcels->get() as $parcel) {
+                    $total_customer_collect_amount +=
+                        $parcel->customer_collect_amount + $parcel->cancel_amount_collection;
+                    $total_collected_amount += $parcel->total_collect_amount;
+                    $total_delivery_charge += $parcel->delivery_charge;
+                    $total_cod_charge += $parcel->cod_charge;
+                    $total_weight_charge += $parcel->weight_package_charge;
+                    $total_return_charge += $parcel->return_charge;
+                    $total_child_commission += $parcel->parent_commission_amount;
+                    $total_referral_commission += 0;
+
+                    $total_charge +=
+                        $parcel->delivery_charge -
+                        $parcel->cod_charge -
+                        $parcel->weight_package_charge -
+                        $parcel->return_charge;
+
+                    $payable_amount =
+                        $parcel->customer_collect_amount +
+                        $parcel->cancel_amount_collection -
+                        $parcel->parent_commission_amount -
+                        $parcel->total_charge;
+
+                    $total_payable += $payable_amount;
+                }
+
                 $data[] = [
                     'id' => $merchant->id,
                     'name' => $merchant->name,
-                    'collected' => 200000,
-                    'total_charge' => 9000,
+                    'collected' => $total_customer_collect_amount,
+                    'total_charge' => $total_charge,
                     'adjustment' => 0,
                     'adjustment_reason' => '',
-                    'payable' => 191000,
+                    'payable' => $payable_amount,
                     'number_of_parcels' => $parcels->count(),
                 ];
             }

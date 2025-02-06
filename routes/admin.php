@@ -558,4 +558,7 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
 
     // Amount Charge
     Route::get('amount-charged', [App\Http\Controllers\Admin\AmountChangedController::class, 'index'])->name('amount.charge');
+
+    Route::get('parcel-reset-single', [App\Http\Controllers\Admin\ParcelResetController::class, 'single'])->name('parcel-reset.single');
+    Route::get('parcel-reset-bulk', [App\Http\Controllers\Admin\ParcelResetController::class, 'bulk'])->name('parcel-reset.bulk');
 });

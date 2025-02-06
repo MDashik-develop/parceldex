@@ -285,27 +285,6 @@
                             </a>
                         </li>
                     </ul>
-
-                    <!--<ul class="nav nav-treeview">-->
-                    <!--    <li class="nav-item">-->
-                    <!--        <a href="{{ route('admin.warehouse.index') }}"-->
-                    <!--           class="nav-link {{ $child_menu == 'warehouse' ? 'active' : '' }}">-->
-                    <!--            <i class="fas fa-tags"></i>-->
-                    <!--            <p>Warehouse</p>-->
-                    <!--        </a>-->
-                    <!--    </li>-->
-                    <!--</ul>-->
-                    <!--<ul class="nav nav-treeview">-->
-                    <!--    <li class="nav-item">-->
-                    <!--        <a href="{{ route('admin.warehouseUser.index') }}"-->
-                    <!--           class="nav-link {{ $child_menu == 'warehouseUser' ? 'active' : '' }}">-->
-                    <!--            <i class="fas fa-tags"></i>-->
-                    <!--            <p>Warehouse User</p>-->
-                    <!--        </a>-->
-                    <!--    </li>-->
-                    <!--</ul>-->
-
-
                 </li>
 
                 <li class="nav-item has-treeview {{ $main_menu == 'branch-payment' ? 'menu-open' : '' }} ">
@@ -344,7 +323,6 @@
                         </li>
                     </ul>
                 </li>
-
                 <li class="nav-item has-treeview {{ $main_menu == 'merchant-payment' ? 'menu-open' : '' }} ">
                     <a href="#" class="nav-link {{ $main_menu == 'merchant-payment' ? 'active' : '' }}">
                         <i class="fa fa-users fa-lg text-success"></i>
@@ -404,6 +382,31 @@
                                 class="nav-link {{ $child_menu == 'allParcelList' ? 'active' : '' }}">
                                 <i class="fas fa-tags"></i>
                                 <p>All Parcel List </p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview {{ $main_menu == 'parcel-reset' ? 'menu-open' : '' }} ">
+                    <a href="#" class="nav-link {{ $main_menu == 'parcel' ? 'active' : '' }}">
+                        <i class="fas fa-box-open fa-lg text-success"></i>
+                        <p>
+                            Parcel Reset
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.parcel-reset.single') }}"
+                                class="nav-link {{ $child_menu == 'single' ? 'active' : '' }}">
+                                <i class="fas fa-tags"></i>
+                                <p>Single</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.parcel-reset.bulk') }}"
+                                class="nav-link {{ $child_menu == 'bulk' ? 'active' : '' }}">
+                                <i class="fas fa-tags"></i>
+                                <p>Bulk</p>
                             </a>
                         </li>
                     </ul>

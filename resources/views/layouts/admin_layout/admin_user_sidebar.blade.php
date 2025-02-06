@@ -316,7 +316,6 @@
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.account.branchDeliveryPaymentList') }}"
@@ -345,7 +344,6 @@
                         </li>
                     </ul>
                 </li>
-
 
                 <li class="nav-item has-treeview {{ $main_menu == 'merchant-payment' ? 'menu-open' : '' }} ">
                     <a href="#" class="nav-link {{ $main_menu == 'merchant-payment' ? 'active' : '' }}">
@@ -419,7 +417,13 @@
                         </li>
                     </ul>
                 </li>
-
+                <li class="nav-item">
+                    <a href="{{ route('admin.amount.charge') }}"
+                        class="nav-link {{ $child_menu == 'amountCharge' ? 'active' : '' }}">
+                        <i class="fas fa-tags text-success"></i>
+                        <p>Amount Changed</p>
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.report') }}"
                         class="nav-link {{ $child_menu == 'report' ? 'active' : '' }}">

@@ -720,7 +720,7 @@ class ParcelController extends Controller
                 if ($hasUpdated) {
                     $x .= ' & total collect amount ' . $oldTotal_collect_amount . ' to ' . $newTotal_collect_amount;
                 } else {
-                    $x .= 'Amount to be collect has been changed to ' . $oldTotal_collect_amount . ' to ' . $newTotal_collect_amount;
+                    $x .= 'Amount to be collect has been changed from ' . $oldTotal_collect_amount . ' to ' . $newTotal_collect_amount;
                 }
                 $hasUpdated = true;
             }

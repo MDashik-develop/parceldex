@@ -64,21 +64,21 @@
                                                 <label for="parcel_status">Parcel Status</label>
                                                 <select name="parcel_status" id="parcel_status" class="form-control select2"
                                                     style="width: 100%">
-                                                <option value="0">Select Parcel Status</option>
-                                                <option value="0">Select Parcel Status</option>
-                                                {{--<option value="1">Complete Delivery </option>--}}
-                                                {{--<option value="2">Partial Delivery </option>--}}
-                                                {{--<option value="3">Return Parcel </option>--}}
-                                                {{--<option value="4">Waiting For Pickup</option>--}}
-                                                {{--<option value="5">Waiting For Delivery </option>--}}
-                                                {{--<option value="6">Cancel Parcel </option>--}}
                                                     <option value="0">Select Parcel Status</option>
-                                                {{--<option value="1">Complete Delivery </option>--}}
-                                                {{--<option value="2">Partial Delivery </option>--}}
-                                                {{--<option value="3">Return Parcel </option>--}}
-                                                {{--<option value="4">Waiting For Pickup</option>--}}
-                                                {{--<option value="5">Waiting For Delivery </option>--}}
-                                                {{--<option value="6">Cancel Parcel </option>--}}
+                                                    <option value="0">Select Parcel Status</option>
+                                                    {{-- <option value="1">Complete Delivery </option> --}}
+                                                    {{-- <option value="2">Partial Delivery </option> --}}
+                                                    {{-- <option value="3">Return Parcel </option> --}}
+                                                    {{-- <option value="4">Waiting For Pickup</option> --}}
+                                                    {{-- <option value="5">Waiting For Delivery </option> --}}
+                                                    {{-- <option value="6">Cancel Parcel </option> --}}
+                                                    <option value="0">Select Parcel Status</option>
+                                                    {{-- <option value="1">Complete Delivery </option> --}}
+                                                    {{-- <option value="2">Partial Delivery </option> --}}
+                                                    {{-- <option value="3">Return Parcel </option> --}}
+                                                    {{-- <option value="4">Waiting For Pickup</option> --}}
+                                                    {{-- <option value="5">Waiting For Delivery </option> --}}
+                                                    {{-- <option value="6">Cancel Parcel </option> --}}
 
                                                     <option value="1">Delivered</option>
                                                     <option value="11">Delivery Approval Pending</option>
@@ -150,8 +150,8 @@
 
                                             <div class="col-sm-12 col-md-3">
                                                 <label for="to_date">Payment Status</label>
-                                                <select name="payment_status" id="payment_status" class="form-control select2"
-                                                    style="width:100%">
+                                                <select name="payment_status" id="payment_status"
+                                                    class="form-control select2" style="width:100%">
                                                     <option value="">All</option>
                                                     <option value="Paid">Paid</option>
                                                     <option value="Unpaid">Unpaid</option>
@@ -262,10 +262,10 @@
         }
 
         /*
-                    div.container {
-                        width: 80%;
-                    }
-                    */
+                        div.container {
+                            width: 80%;
+                        }
+                        */
     </style>
     <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">

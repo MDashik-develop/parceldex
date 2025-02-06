@@ -554,4 +554,8 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
     Route::post('notice/updateStatus', [App\Http\Controllers\Admin\NoticeController::class, 'updateStatus'])->name('notice.updateStatus');
     Route::delete('notice/delete', [App\Http\Controllers\Admin\NoticeController::class, 'delete'])->name('notice.delete');
     Route::resource('notice', App\Http\Controllers\Admin\NoticeController::class);
+
+
+    // Amount Charge
+    Route::get('amount-charged', [App\Http\Controllers\Admin\AmountChangedController::class, 'index'])->name('amount.charge');
 });

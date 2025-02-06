@@ -2627,7 +2627,7 @@ body.auth {
   min-width: 100% !important;
 }
 .about-2nd-section div{
-  height: 320px;
+  min-height: 320px;
   background-color: #f7f7f7 !important;
   transition: 0.5s;
   border-radius: 10px;
@@ -2697,6 +2697,9 @@ body.auth {
 }
 
 @media (max-width: 768px) {
+  .header-button{
+    font-weight: 500;
+  }
   .about-3nd-section>div {
     padding: 10px 20px !important;
   }

@@ -246,9 +246,9 @@ class Controller extends BaseController
         if (!empty($lastDeliveryPayment)) {
             $get_serial = explode("-", $lastDeliveryPayment->merchant_payment_invoice);
             $current_serials = $get_serial[1] + 1;
-            $merchant_payment_invoice = 'MPAY-' . str_pad($current_serials, 5, '0', STR_PAD_LEFT);
+            $merchant_payment_invoice = 'PDLPAY-' . str_pad($current_serials, 5, '0', STR_PAD_LEFT);
         } else {
-            $merchant_payment_invoice = 'MPAY-00001';
+            $merchant_payment_invoice = 'PDLPAY-00001';
         }
         return $merchant_payment_invoice;
     }

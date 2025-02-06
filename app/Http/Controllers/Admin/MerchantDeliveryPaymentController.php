@@ -1018,9 +1018,9 @@ class MerchantDeliveryPaymentController extends Controller
 
     public function printMerchantPaymentDeliveryStatement(Request $request)
     {
-
         $data = [];
         $filter = array();
+
         $model = ParcelMerchantDeliveryPaymentDetail::with(['parcel', 'parcel_merchant_delivery_payment'])
             ->where(function ($query) use ($request) {
                 $from_date = $request->input('from_date');
@@ -1043,6 +1043,7 @@ class MerchantDeliveryPaymentController extends Controller
         $from_date = $request->input('from_date');
         $to_date = $request->input('to_date');
         $merchant_id = $request->input('merchant_id');
+
         if ($request->has('merchant_id') && !is_null($merchant_id) && $merchant_id != '' && $merchant_id != 0) {
             $filter['merchant_id'] = $merchant_id;
         }
@@ -1068,5 +1069,104 @@ class MerchantDeliveryPaymentController extends Controller
             $merchant_payment_data = $model;
         }
         return view('admin.account.merchantDeliveryPayment.printMerchantDeliveryPaymentStatement', compact('merchant_payment_data', 'filter', 'date_array', 'transaction_ids'));
+    }
+
+    public function autoInvoiceGenerateStore(Request $request)
+    {
+        // Define validation rules
+        $validationRules = [
+            'merchant_id' => 'required|exists:merchants,id',
+            'total_payment_parcel' => 'required',
+            'total_payment_amount' => 'required',
+            'parcels' => 'required|array',
+        ];
+
+        // Validate the request
+        if (!$request->validate($validationRules)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+            ], 422)->withErrors($request->errors()->all(), false);
+        }
+
+        $merchant = Merchant::find($request->merchant_id);
+
+        $merchant_payment_invoice = $this->returnUniqueMerchantDeliveryPaymentInvoice();
+
+        $data = [
+            'merchant_payment_invoice' => $merchant_payment_invoice,
+            'admin_id' => 0,
+            'merchant_id' => $merchant->id,
+            'date_time' => date('Y-m-d H:i:s'),
+            'total_payment_parcel' => $request->total_payment_parcel,
+            'total_payment_amount' => $request->total_payment_amount,
+            'status' => 1,
+        ];
+
+        $parcelMerchantDeliveryPayment = ParcelMerchantDeliveryPayment::create($data);
+
+        $parcels = Parcel::whereIn('id', $request->parcels)->get();
+
+        foreach ($parcels as $parcel) {
+            $cod_charge = $parcel->cod_charge;
+
+            $returnCharge = 0;
+
+            if ($parcel->delivery_type == 4 || $parcel->delivery_type == 2) {
+                $returnCharge = $parcel->merchant_service_area_return_charge;
+            } elseif (
+                $parcel->suborder &&
+                $parcel->exchange == 'yes' &&
+                $parcel->parent_delivery_type == 1
+            ) {
+                $returnCharge = $parcel->merchant_service_area_return_charge;
+            } elseif (
+                $parcel->suborder &&
+                $parcel->exchange == 'yes' &&
+                $parcel->parent_delivery_type == 2
+            ) {
+                $returnCharge = $parcel->merchant_service_area_return_charge;
+            } elseif (
+                $parcel->suborder &&
+                $parcel->exchange == 'no' &&
+                $parcel->parent_delivery_type == 2
+            ) {
+                $returnCharge = $parcel->merchant_service_area_return_charge;
+            }
+
+            $commission = 0;
+            if ($merchant->parent_merchant_commission) {
+                $commission = ($parcel->customer_collect_amount * $merchant->parent_merchant_commission) / 100;
+            }
+
+            $sum_charge = $parcel->weight_package_charge + $parcel->delivery_charge + ceil($cod_charge) + $returnCharge + $commission;
+
+            ParcelMerchantDeliveryPaymentDetail::create([
+                'parcel_merchant_delivery_payment_id' => $parcelMerchantDeliveryPayment->id,
+                'parcel_id' => $parcel->id,
+                'collected_amount' => $parcel->customer_collect_amount,
+                'cod_charge' => ceil($cod_charge),
+                'delivery_charge' => $parcel->delivery_charge,
+                'weight_package_charge' => $parcel->weight_package_charge,
+                'return_charge' => $returnCharge,
+                'paid_amount' => $sum_charge,
+                'parent_commission_amount' => $commission,
+            ]);
+
+            Parcel::where('id', $parcel->id)->update([
+                'payment_type' => 4,
+                'return_charge' => $returnCharge,
+                'cod_charge' => ceil($cod_charge),
+                'merchant_paid_amount' => $sum_charge,
+                'parent_commission_amount' => $commission,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Merchant delivery payment generated successfully',
+            'data' => $parcelMerchantDeliveryPayment,
+        ]);
+
     }
 }

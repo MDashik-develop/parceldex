@@ -5,6 +5,10 @@
         $merchants = \App\Models\Merchant::all();
 
         $data = [];
+        $bank = 0;
+        $mfs = 0;
+        $cash = 0;
+        $payment_method_null = 0;
 
         foreach ($merchants as $merchant) {
             $parcels = App\Models\Parcel::where('merchant_id', $merchant->id)
@@ -27,6 +31,8 @@
             $total_payable = 0;
 
             if ($parcels->count() > 0) {
+                $p = [];
+
                 foreach ($parcels->get() as $parcel) {
                     $total_customer_collect_amount +=
                         $parcel->customer_collect_amount + $parcel->cancel_amount_collection;
@@ -48,18 +54,49 @@
                         $parcel->parent_commission_amount;
 
                     $total_payable += $payable_amount;
+
+                    $p[] = [
+                        'id' => $parcel->id,
+                        'parcel_invoice' => $parcel->parcel_invoice,
+                        'collected' => $parcel->customer_collect_amount + $parcel->cancel_amount_collection,
+                        'payable' => $payable_amount,
+                        'parcel_charge' =>
+                            $parcel->delivery_charge +
+                            $parcel->cod_charge +
+                            $parcel->weight_package_charge +
+                            $parcel->return_charge +
+                            $parcel->parent_commission_amount,
+                        'parcel_payable' => $payable_amount,
+                    ];
                 }
 
                 $data[] = [
                     'id' => $merchant->id,
                     'name' => $merchant->company_name,
                     'collected' => $total_customer_collect_amount,
-                    'total_charge' => $total_delivery_charge + $total_cod_charge + $total_weight_charge + $total_return_charge + $total_child_commission + $total_referral_commission,
+                    'total_charge' =>
+                        $total_delivery_charge +
+                        $total_cod_charge +
+                        $total_weight_charge +
+                        $total_return_charge +
+                        $total_child_commission +
+                        $total_referral_commission,
                     'adjustment' => 0,
                     'adjustment_reason' => '',
                     'payable' => $total_payable,
                     'number_of_parcels' => $parcels->count(),
+                    'parcels' => $p,
                 ];
+
+                if ($merchant->payment_recived_by == 0) {
+                    $payment_method_null += $total_payable;
+                } elseif ($merchant->payment_recived_by == 1) {
+                    $cash += $total_payable;
+                } elseif ($merchant->payment_recived_by == 5) {
+                    $bank += $total_payable;
+                } else {
+                    $mfs += $total_payable;
+                }
             }
         }
     @endphp
@@ -79,23 +116,23 @@
                     <tbody>
                         <tr>
                             <td>Bank</td>
-                            <td>2,00,000</td>
+                            <td> {{ $bank }} </td>
                         </tr>
                         <tr>
                             <td>MFS</td>
-                            <td>23,000</td>
+                            <td>{{ $mfs }}</td>
                         </tr>
                         <tr>
                             <td>Cash</td>
-                            <td>10,00,000</td>
+                            <td>{{ $cash }}</td>
                         </tr>
                         <tr>
                             <td>Pament Method Null</td>
-                            <td>6,000</td>
+                            <td>{{ $payment_method_null }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold">Total Payable</td>
-                            <td class="font-weight-bold">12,29,000</td>
+                            <td class="font-weight-bold">{{ $bank + $mfs + $cash + $payment_method_null }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -123,20 +160,32 @@
 
                         @forelse ($data as $key => $item)
                             <tr>
+                                <input type="text" id="merchant-id-{{ $key }}" value="{{ $item['id'] }}"
+                                    hidden>
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $item['name'] }}</td>
-                                <td>{{ $item['collected'] }}</td>
-                                <td>{{ $item['total_charge'] }}</td>
+                                <td id="total-collected-{{ $key }}">{{ $item['collected'] }}</td>
+                                <td id="total-charge-{{ $key }}">{{ $item['total_charge'] }}</td>
                                 <td>
-                                    <input type="number" style="max-width: 80px;" class="form-control">
+                                    <input type="number" style="max-width: 80px;" class="form-control"
+                                        id="adjustment-input-{{ $key }}"
+                                        oninput="adjustment({{ $key }})">
                                 </td>
                                 <td>
                                     <textarea name="" id="" style="width: 100%"></textarea>
                                 </td>
-                                <td>{{ $item['payable'] }}</td>
-                                <td>{{ $item['number_of_parcels'] }} (eidt)</td>
+                                <td id="total-payable-{{ $key }}">{{ $item['payable'] }}</td>
+                                <td id="ctotal-payable-{{ $key }}" style="display: none">{{ $item['payable'] }}
+                                </td>
                                 <td>
-                                    <button>Approve</button>
+                                    <span id="parcel-count-{{ $key }}">{{ $item['number_of_parcels'] }}</span>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal-{{ $key }}">
+                                        Edit
+                                    </button>
+                                </td>
+                                <td>
+                                    <button onclick="approve({{ $key }})">Approve</button>
                                     <input type="checkbox">
                                 </td>
                             </tr>
@@ -151,4 +200,110 @@
             </div>
         </div>
     </div>
+
+    @foreach ($data as $key => $item)
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal-{{ $key }}" tabindex="-1"
+            aria-labelledby="exampleModalLabel-{{ $key }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel-{{ $key }}">Parcel List</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered table-striped">
+                            <tr>
+                                <td>Order ID</td>
+                                <td>Collected</td>
+                                <td>Delete</td>
+                            </tr>
+                            @foreach ($item['parcels'] as $k => $p)
+                                <tr id="parcel-tr-{{ $p['parcel_invoice'] }}">
+                                    <input type="text" id="parcel-charge-{{ $p['parcel_invoice'] }}"
+                                        value="{{ $p['parcel_charge'] }}" hidden>
+                                    <input type="text" id="parcel-payable-{{ $p['parcel_invoice'] }}"
+                                        value="{{ $p['parcel_payable'] }}" hidden>
+                                    <input type="text" value="{{ $p['id'] }}"
+                                        class="parcel-id-{{ $key }}" hidden>
+                                    <td>{{ $p['parcel_invoice'] }}
+                                    </td>
+                                    <td id="parcel-collected-{{ $p['parcel_invoice'] }}">{{ $p['collected'] }}</td>
+                                    <td><button
+                                            onclick="removeParcel({{ $p['parcel_invoice'] }}, {{ $key }})">Delete</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    @push('script_js')
+        <script>
+            function removeParcel(parcelId, key) {
+                $('#total-collected-' + key).text(
+                    $('#total-collected-' + key).text() - $('#parcel-collected-' + parcelId).text()
+                );
+
+                $('#total-charge-' + key).text($('#total-charge-' + key).text() - $('#parcel-charge-' + parcelId).val());
+
+                $('#total-payable-' + key).text($('#total-payable-' + key).text() - $('#parcel-payable-' + parcelId).val());
+                $('#ctotal-payable-' + key).text($('#total-payable-' + key).text() - $('#parcel-payable-' + parcelId).val());
+
+                $('#parcel-tr-' + parcelId).remove();
+                $('#parcel-count-' + key).text($('#parcel-count-' + key).text() - 1);
+            }
+
+            function adjustment(key) {
+                let a = parseInt($('#adjustment-input-' +
+                        key)
+                    .val());
+
+                if (a) {
+                    $('#total-payable-' + key).text(parseInt($('#ctotal-payable-' + key).text()) + a);
+                } else {
+                    $('#total-payable-' + key).text(parseInt($('#ctotal-payable-' + key).text()));
+                }
+            }
+
+            async function approve(key) {
+                let merchantId = $('#merchant-id-' + key).val();
+                let parcels = [];
+
+                $('.parcel-id-' + key).each(function() {
+                    let parcelId = $(this).val();
+                    parcels.push(parcelId);
+                });
+
+                let response = await fetch("{{ route('admin.account.autoInvoiceGenerate') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    body: JSON.stringify({
+                        total_payment_parcel: $('#parcel-count-' + key).text(),
+                        total_payment_amount: $('#total-payable-' + key).text(),
+                        merchant_id: merchantId,
+                        parcels: parcels
+                    })
+                });
+
+                let result = await response.json();
+
+                if (result.success) {
+                    alert('Invoice created successfully');
+                    location.reload();
+                } else {
+                    alert('Something went wrong');
+                }
+            }
+        </script>
+    @endpush
 @endsection

@@ -8,6 +8,50 @@ $partners = App\Models\Partner::where('status', 1)->get();
 @extends('layouts.frontend.app')
 
 @section('content')
+
+<!-- Modal Trigger Button -->
+{{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Open Modal
+</button> --}}
+
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="exampleModalLabel">Fill Your Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="row gap-3">
+                            <div class="form-group col mb-3">
+                                <label for="inputEmail4">Email</label>
+                                <input type="text" class="form-control text-start" id="inputEmail4" placeholder="Enter Your Name">
+                            </div>
+                            <div class="form-group col mb-3">
+                                <label for="inputPassword4">Phone</label>
+                                <input type="tel" class="form-control text-start" id="inputPassword4" placeholder="Enter Your Phone Number">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-2">
+                      <label for="inputAddress">Facebook Or Website</label>
+                      <input type="link" class="form-control text-start" id="inputAddress" placeholder="Enter Link">
+                    </div>
+
+                    <div class="form-control border-0 pb-4">
+                        <button type="submit" class="btn btn-primary w-100">Sign in</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap Modal -->
+
+
     <div class="intro-wrapper">
         <div class="container-fluid">
             <div class="intro d-flex justify-content-between">
@@ -19,7 +63,11 @@ $partners = App\Models\Partner::where('status', 1)->get();
                         a hurricane or tornado season can demand a higher cost due to the circumstances surrounding
                         the process.
                     </p>
-                    <a href="register.html"><button class="btn btn-lg">Become a Merchant</button></a>
+                    <div class="row justify-content-start">
+                        <a class="col-5 text-left" href="register.html"><button class="btn btn-lg">Become a Merchant</button></a>
+                        <a class="col-3"><button class="btn btn-lg" style=" background-color: #F27B21;" data-bs-toggle="modal" data-bs-target="#exampleModal">Get A Call</button></a>
+                        
+                    </div>
                 </div>
                 <div class="intro-img center text-center">
                     <img class=" animate__animated animate__fadeIn" src="/frontend/images/rider.png" alt="">

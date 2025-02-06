@@ -24,6 +24,7 @@
 
     {{-- <meta name="description" content="{{ $application->meta_description }}" />
     <meta name="keywords" content="{{ $application->meta_description }}">
+    
     <meta name="author" content="{{ $application->meta_description }}" /> --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property="article:modified_time" content="2024-12-18T07:31:37+00:00" />
@@ -43,8 +44,8 @@
 
     <!-- bootstrap and font-awesome cdn link -->
     <link rel="stylesheet" href="/frontend/css/cdn.jsdelivr.net/npm/bootstrap%405.2.3/dist/css/bootstrap.min.css">
-    {{-- <link rel="stylesheet" href="/frontend/css/cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" /> --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="/frontend/css/cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"> --}}
 
 
     <link rel="stylesheet" href="/frontend/css/cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css" />
@@ -207,6 +208,8 @@
     <script src="/frontend/css/cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" defer></script>
     <script src="/frontend/css/cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.js" defer></script>
     <script src="/frontend/css/cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.js" defer></script>
+    <!-- Bootstrap JS (Bundle contains Popper.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- end bootstrap and jquery cdn link -->
 

@@ -33,7 +33,7 @@
                             <a href="#">Become a Merchant </a>
                         </li>
                         <li>
-                            <a href="#">Track Parel</a>
+                            <a href="/track-parcel">Track Parcel</a>
                         </li>
                         <li>
                             <a href="#">Merchant Login</a>

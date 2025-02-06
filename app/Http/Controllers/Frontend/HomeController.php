@@ -478,4 +478,10 @@ class HomeController extends Controller
     {
         return view('frontend.coverageMap');
     }
+
+    //trackParcel
+    public function trackParcel()
+    {
+        return view('frontend.trackParcel');
+    }
 }

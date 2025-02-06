@@ -10,11 +10,11 @@
 		Some of our value-added services for you to manage your  <br> online store just the way you want.
 	</p>
 	<div class="row justify-content-center gap-2 bg-transparent mt-4">
-		<button class="col-1 py-2 bg-white  shadow rounded-1 text-black fw-bold">
+		<button class="col-3 col-lg-1 py-2 bg-white  shadow rounded-1 text-black fw-bold">
 			<i class="fa-solid fa-bars" style="margin-right: 7px"></i>
 			Discover More
 		</button>
-		<button class="col-1 py-2 shadow rounded-1 text-white fw-bold" style="background-color: #F27B21 !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 5px 0px !important;">
+		<button class="col-3 col-lg-1 py-2 shadow rounded-1 text-white fw-bold" style="background-color: #F27B21 !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 5px 0px !important;">
 			<i class="fa-solid fa-phone" style="margin-right: 7px"></i>
 			Contact Us
 		</button>

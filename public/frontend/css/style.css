@@ -2696,6 +2696,12 @@ body.auth {
   }
 }
 
+@media (max-width: 768px) {
+  .about-3nd-section>div {
+    padding: 10px 20px !important;
+  }
+}
+
 .main-about-page .modal {
   display: none;
   position: fixed;
@@ -2795,7 +2801,7 @@ body.auth {
   content: "";
   /* border: 1px solid #07539E; */
   border-radius: 50%;
-  background-color: #07539E;
+  background-color:#F27B21;
   height: 0.6em;
   width: 0.6em;
   margin-right: 10px;
@@ -2814,8 +2820,10 @@ body.auth {
   content: "";
   border-radius: 50%;
   /* border: 1px solid #07539E; */
-  box-shadow: 0 0 4px rgba(7, 83, 158, 0.6),
-              inset 0 0 4px rgba(7, 83, 158, 0.6);
+   box-shadow: 0 0 4px rgba(7, 83, 158, 0.6),
+               inset 0 0 4px rgba(7, 83, 158, 0.6);
+  /* box-shadow: 0 0 4px#F27B21,
+              inset 0 0 4px #F27B21; */
   height: 2em;
   width: 2em;
   position: absolute;

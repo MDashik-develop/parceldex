@@ -114,7 +114,6 @@
                                             <div class="col-md-6">
                                                 <div class="col-md-12">
                                                     <fieldset>
-                                                        {{-- <legend>Customer Information</legend> --}}
                                                         <div class="row">
 
                                                             <div class="col-md-12">

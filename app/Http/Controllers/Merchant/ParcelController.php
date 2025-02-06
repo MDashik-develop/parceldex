@@ -890,11 +890,22 @@ class ParcelController extends Controller
                         $button .= '&nbsp; <button class="btn btn-danger pickup-cancel btn-sm" parcel_id="' . $data->id . '" title="Parcel Cancel">
                                         <i class="far fa-window-close"></i>
                                     </button>';
-
-                        $button .= '&nbsp;  <a class="btn btn-secondary btn-sm" href="' . route('merchant.parcel.edit', $data->id) . '"   title="Parcel Edit">
-                                        <i class="fas fa-pencil-alt"></i>
-                                </a>';
                     }
+
+                    $st = $data->status;
+                    $editCondition = $st == 1 ||
+                        $st == 2 || $st == 4 ||
+                        $st == 5 || $st == 6 || $st == 7 || $st == 8 ||
+                        $st == 9 || $st == 10 || $st == 11 || $st == 12 || $st == 13 || $st == 14 ||
+                        $st == 15 || $st == 16 || $st == 17 || $st == 18 ||
+                        $st == 19 || $st == 20 || $st == 23 || ($st == 25 && $data->delivery_type == 3);
+
+                    if ($editCondition) {
+                        $button .= '&nbsp;  <a class="btn btn-secondary btn-sm" href="' . route('merchant.parcel.edit', $data->id) . '"   title="Parcel Edit">
+                        <i class="fas fa-pencil-alt"></i>
+                </a>';
+                    }
+
                 }
                 return $button;
             })
@@ -1339,15 +1350,16 @@ class ParcelController extends Controller
             'merchant_service_area_charge' => 'required',
             'merchant_service_area_return_charge' => 'required',
             'total_charge' => 'required',
-            'weight_package_id' => 'required',
+            'weight_package_id' => 'nullable',
             'delivery_option_id' => 'required',
             //            'product_details' => 'required',
-            'product_value' => 'required|numeric|min:1',
+            'product_value' => 'nullable|numeric',
             'total_collect_amount' => 'sometimes',
             'customer_name' => 'required',
             'customer_contact_number' => 'required|numeric|digits:11',
+            'customer_contact_number2' => 'nullable|numeric|digits:11',
             'customer_address' => 'required',
-            'district_id' => 'required',
+            'district_id' => 'nullable',
             // 'upazila_id'                   => 'required',
             'area_id' => 'sometimes',
             'parcel_note' => 'sometimes',
@@ -1368,12 +1380,11 @@ class ParcelController extends Controller
             'customer_name' => $request->input('customer_name'),
             'customer_address' => $request->input('customer_address'),
             'customer_contact_number' => $request->input('customer_contact_number'),
+            'customer_contact_number2' => $request->input('customer_contact_number2'),
             'product_details' => $request->input('product_details'),
-            'district_id' => $request->input('district_id'),
             // 'upazila_id'                   => $request->input('upazila_id'),
             'upazila_id' => 0,
             'area_id' => $request->input('area_id') ?? 0,
-            'weight_package_id' => $request->input('weight_package_id'),
             'delivery_charge' => $request->input('delivery_charge'),
             'weight_package_charge' => $request->input('weight_package_charge'),
             'merchant_service_area_charge' => $request->input('merchant_service_area_charge'),
@@ -1390,8 +1401,15 @@ class ParcelController extends Controller
             'item_type_id' => $request->input('item_type_id') == 0 ? null : $request->input('item_type_id'),
             'item_type_charge' => $request->input('item_type_charge'),
             'service_type_charge' => $request->input('service_type_charge'),
-            'status' => 1,
         ];
+
+        if ($request->has('weight_package_id')) {
+            $data['weight_package_id'] = $request->input('weight_package_id');
+        }
+
+        if ($request->has('district_id')) {
+            $data['district_id'] = $request->input('district_id');
+        }
 
         $x = 'Update: ';
         $hasUpdated = false;
@@ -1417,6 +1435,24 @@ class ParcelController extends Controller
                     $x .= ' & amount to be collect ' . $oldTotal_collect_amount . ' to ' . $newTotal_collect_amount;
                 } else {
                     $x .= 'Amount to be collect has been changed to ' . $oldTotal_collect_amount . ' to ' . $newTotal_collect_amount;
+                }
+                $hasUpdated = true;
+            }
+
+            if ($parcelOld->customer_contact_number != $request->input('customer_contact_number')) {
+                if ($hasUpdated) {
+                    $x .= ' & customer contact number ' . $parcelOld->customer_contact_number . ' to ' . $request->input('customer_contact_number');
+                } else {
+                    $x .= 'Customer contact number has been changed to ' . $parcelOld->customer_contact_number . ' to ' . $request->input('customer_contact_number');
+                }
+                $hasUpdated = true;
+            }
+
+            if ($parcelOld->customer_contact_number2 != $request->input('customer_contact_number2')) {
+                if ($hasUpdated) {
+                    $x .= ' & customer alternative number ' . ($parcelOld->customer_contact_number2 ?? 'null') . ' to ' . $request->input('customer_contact_number2');
+                } else {
+                    $x .= 'Customer alternative contact number has been changed to ' . ($parcelOld->customer_contact_number2 ?? 'null') . ' to ' . $request->input('customer_contact_number2');
                 }
                 $hasUpdated = true;
             }

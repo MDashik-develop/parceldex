@@ -17,64 +17,6 @@
         </div>
     </div>
 
-
-    <style>
-        .form-control {
-            display: block;
-            width: 100%;
-            height: calc(2.25rem + 2px);
-            padding: .375rem .75rem;
-            font-size: 1rem;
-            font-weight: 400;
-            line-height: 1.5;
-            color: #495057;
-            background-color: #fff;
-            background-clip: padding-box;
-            border: 1px solid #f87326;
-            border-radius: .25rem;
-            box-shadow: none;
-            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-        }
-
-        .form-control:focus {
-            color: #495057;
-            background-color: #fff;
-            border-color: #f87326;
-            caret-color: #f87326;
-            outline: 0;
-            box-shadow: none;
-        }
-
-        .select2-selection {
-            overflow: hidden !important;
-        }
-
-        .select2-selection__rendered {
-            white-space: normal !important;
-            word-break: break-all !important;
-        }
-
-        .select2-container .select2-selection--single {
-            height: 40px !important;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            line-height: 30px !important;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: 26px !important;
-            position: absolute !important;
-            top: 7px !important;
-            right: 1px !important;
-            width: 20px !important;
-        }
-
-        .select2-container--default .select2-selection--single {
-            border: 1px solid #f87326 !important;
-        }
-    </style>
-
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -94,13 +36,12 @@
                                     method="POST" enctype="multipart/form-data" onsubmit="return createForm()">
                                     @csrf
                                     @method('patch')
-
-
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="col-md-12">
                                                     <fieldset>
+                                                        <legend>Customer Information</legend>
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <div class="form-group">
@@ -109,9 +50,8 @@
                                                                     <input type="text" name="customer_name"
                                                                         id="customer_name"
                                                                         value="{{ $parcel->customer_name }}"
-                                                                        class="form-control"
-                                                                        {{ $parcel->status != 1 ? 'readonly' : '' }}
-                                                                        placeholder="Customer Name" required>
+                                                                        class="form-control" placeholder="Customer Name"
+                                                                        required>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-12">
@@ -127,23 +67,11 @@
                                                             </div>
                                                             <div class="col-md-12">
                                                                 <div class="form-group">
-                                                                    <label for="customer_contact_number2">Customer
-                                                                        Alternative Contact Number</label>
-                                                                    <input type="text" name="customer_contact_number2"
-                                                                        id="customer_contact_number2"
-                                                                        value="{{ $parcel->customer_contact_number2 }}"
-                                                                        class="form-control"
-                                                                        placeholder="কাস্টমারের ২য় মোবাইল নাম্বার লিখুন (যদি থাকে)">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-12">
-                                                                <div class="form-group">
                                                                     <label for="customer_address">Customer Address
                                                                         <code>*</code></label>
                                                                     <input type="text" name="customer_address"
                                                                         id="customer_address"
                                                                         value="{{ $parcel->customer_address }}"
-                                                                        {{ $parcel->status != 1 ? 'readonly' : '' }}
                                                                         class="form-control" placeholder="Customer Address"
                                                                         required>
                                                                 </div>
@@ -153,9 +81,7 @@
                                                                     <label for="district_id"> Districts <code>*</code>
                                                                     </label>
                                                                     <select name="district_id" id="district_id"
-                                                                        class="form-control select2"
-                                                                        {{ $parcel->status != 1 ? 'disabled' : '' }}
-                                                                        style="width: 100%">
+                                                                        class="form-control select2" style="width: 100%">
                                                                         <option value="0">Select District</option>
                                                                         @foreach ($districts as $district)
                                                                             <option value="{{ $district->id }}">
@@ -179,9 +105,7 @@
                                                                 <div class="form-group">
                                                                     <label for="area_id"> Area <code></code></label>
                                                                     <select name="area_id" id="area_id"
-                                                                        class="form-control select2"
-                                                                        {{ $parcel->status != 1 ? 'disabled' : '' }}
-                                                                        style="width: 100%">
+                                                                        class="form-control select2" style="width: 100%">
                                                                         <option value="0">Select Area</option>
                                                                         @foreach ($areas as $area)
                                                                             <option value="{{ $area->id }}">
@@ -197,6 +121,7 @@
 
                                             <div class="col-md-6">
                                                 <fieldset>
+                                                    <legend>Parcel Information</legend>
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <div class="form-group">
@@ -206,7 +131,6 @@
                                                                     id="merchant_order_id"
                                                                     value="{{ $parcel->merchant_order_id }}"
                                                                     class="form-control"
-                                                                    {{ $parcel->status != 1 ? 'readonly' : '' }}
                                                                     placeholder="Merchant Order ID">
                                                             </div>
                                                         </div>
@@ -228,7 +152,6 @@
                                                                     id="product_value"
                                                                     value="{{ $parcel->product_value }}"
                                                                     class="form-control" placeholder="1200.00"
-                                                                    {{ $parcel->status != 1 ? 'readonly' : '' }}
                                                                     min="1">
                                                             </div>
                                                         </div>
@@ -236,8 +159,8 @@
                                                             <div class="form-group">
                                                                 <label for="weight_package_id"> Weight Package
                                                                     <code>*</code> </label>
-                                                                <select name="weight_package_id" id="weight_package_id"
-                                                                    {{ $parcel->status != 1 ? 'disabled' : '' }}
+                                                                <select name="weight_package_id"
+                                                                    id="weight_package_id"
                                                                     class="form-control select2" style="width: 100%">
                                                                     <option value="0" data-charge="0">Select
                                                                         Weight
@@ -246,9 +169,12 @@
                                                                     @foreach ($weightPackages as $weightPackage)
                                                                         @php
                                                                             $rate = $weightPackage->rate;
-                                                                            if (!empty($weightPackage->service_area)) {
+                                                                            if (
+                                                                                !empty($weightPackage->service_area)
+                                                                            ) {
                                                                                 $rate =
-                                                                                    $weightPackage->service_area->rate;
+                                                                                    $weightPackage->service_area
+                                                                                        ->rate;
                                                                             }
                                                                         @endphp
                                                                         <option value="{{ $weightPackage->id }}"
@@ -263,7 +189,6 @@
                                                                 <label for="weight_package_id">Exchange
                                                                     <code>*</code> </label>
                                                                 <select name="exchange" class="form-control select2"
-                                                                    {{ $parcel->status != 1 ? 'disabled' : '' }}
                                                                     style="width: 100%">
                                                                     <option value="yes"
                                                                         {{ $parcel->exchange == 'yes' ? 'selected' : '' }}>
@@ -284,7 +209,6 @@
                                                                     id="product_details"
                                                                     value="{{ $parcel->product_details }}"
                                                                     class="form-control"
-                                                                    {{ $parcel->status != 1 ? 'readonly' : '' }}
                                                                     placeholder="product details">
                                                             </div>
                                                         </div>
@@ -459,8 +383,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-
                                 </form>
                             </div>
                         </div>
@@ -529,7 +451,7 @@
                             $("#service_type_id").html(response.serviceTypeOption).attr('disabled',
                                 false);
                             $("#item_type_id").html(response.itemTypeOption).attr('disabled',
-                                false);
+                            false);
                             $("#weight_package_id").html(response.weightPackageOption).attr(
                                 'disabled', false);
 
@@ -635,7 +557,7 @@
                 var weight_package_name = $("#weight_package_id option:selected").text();
                 var charge = returnNumber($("#weight_package_id option:selected").attr('data-charge'));
                 var merchant_service_area_charge = returnNumber($("#confirm_merchant_service_area_charge")
-                    .val());
+                .val());
 
                 // $("#confirm_weight_package_charge").val(charge);
                 // if(merchant_service_area_charge == 0){

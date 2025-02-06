@@ -202,11 +202,10 @@ class PathaoController extends Controller
 
     public function bulkImport(Request $request)
     {
-
         $data = [];
         $data['main_menu'] = 'pathaoOrder';
-        $data['child_menu'] = 'pathaoOrderGenerate';
-        $data['page_title'] = 'Pathao Order Generate';
+        $data['child_menu'] = 'bulkImport';
+        $data['page_title'] = 'Pathao Bulk Import';
         $data['collapse'] = 'sidebar-collapse';
 
         return view('branch.parcel.pathaoOrder.bulkImport', $data);

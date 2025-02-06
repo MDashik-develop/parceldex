@@ -8,13 +8,16 @@
                 </div>
                 <div class="brand-logo">
                     <!-- <a href="index.html"><img src="/frontend/images/logo/logo.png" alt="" class="web_logo"></a> -->
-                    <a href="https://parceldex.com.bd/"><img src="/frontend/images/logo/logo.png" alt="" class="web_logo"></a>
+                    <a href="/"><img src="/frontend/images/logo/logo.png" alt="" class="web_logo"></a>
                 </div>
             </div>
             <div class="navbar-menu">
                 <ul class="navbar-nav" id="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link " aria-current="page" href="pricing.html">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " aria-current="page" href="/services">Service</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link " aria-current="page" href="/coverage-map">Coverage</a>

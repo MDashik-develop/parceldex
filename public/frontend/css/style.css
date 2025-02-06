@@ -2696,7 +2696,7 @@ body.auth {
   }
 }
 
-.modal {
+.main-about-page .modal {
   display: none;
   position: fixed;
   z-index: 50;
@@ -2707,7 +2707,7 @@ body.auth {
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.5);
 }
-.modal-content {
+.main-about-page .modal-content {
   background-color: #fefefe;
   margin: 15% auto;
   padding: 20px;
@@ -2857,4 +2857,72 @@ body.auth {
 
 /*----- coverage page-----*/
 
+
+.trackParcel-1st-section {
+  div {
+    h1, h2{
+      font-size: 30px;
+      font-weight: 700;
+      text-align: center;
+      font-family: system-ui, sans-serif;
+    }
+  }
+}
+.input-section{
+  div{
+    div{
+      p{
+        font-size: 18px;
+        font-weight: 500;
+        color: black;
+        margin-bottom: 10px;
+        margin-left: 8px;
+      }
+      input{
+        padding: 10px 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+        margin-bottom: 20px;
+        border-color: #F27B21;
+      }
+    }
+    svg{
+      width: 30px;
+      height: 30px;
+      padding: 4px;
+      margin: 0 0px;
+      margin-bottom: -15px;
+      fill: white;
+      background-color: #F27B21;
+      border-radius: 50pc;
+    }
+  }
+}
+.submit-section{
+  div{
+    label{
+      cursor: pointer;
+      margin-top: 36px;
+      padding: 8px;
+      border-color: royalblue;
+      img{
+        width: 30px;
+        height: 30px;
+        margin-bottom: 0;
+      }
+      p{
+        font-size: 18px;
+        font-weight: 800;
+        margin-bottom: 0;
+        color: #F27B21;
+      }
+    }
+  }
+}
+
+
+    /* .modal {
+        z-index: 2050 !important;
+    } */
 

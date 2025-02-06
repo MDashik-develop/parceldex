@@ -11,10 +11,10 @@ class AmountChangedController extends Controller
     public function index()
     {
         $data = [];
-        $data['main_menu'] = 'setting';
+        $data['main_menu'] = 'amountCharge';
         $data['child_menu'] = 'amountCharge';
-        $data['page_title'] = 'amountCharge';
-        
+        $data['page_title'] = 'amount-charge';
+
 
         return view('admin.amount_changed.index', $data);
     }

@@ -380,7 +380,6 @@
                             </a>
                         </li>
                     </ul>
-
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.account.merchantPaymentDeliveryStatement') }}"
@@ -391,7 +390,6 @@
                         </li>
                     </ul>
                 </li>
-
                 <li class="nav-item has-treeview {{ $main_menu == 'parcel' ? 'menu-open' : '' }} ">
                     <a href="#" class="nav-link {{ $main_menu == 'parcel' ? 'active' : '' }}">
                         <i class="fas fa-box-open fa-lg text-success"></i>
@@ -400,14 +398,7 @@
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-
                     <ul class="nav nav-treeview">
-                        {{-- <li class="nav-item"> --}}
-                        {{-- <a href="{{ route('admin.parcel.list') }}" class="nav-link {{ $child_menu == 'parcelList' ? 'active' : '' }}"> --}}
-                        {{-- <i class="fas fa-tags"></i> --}}
-                        {{-- <p>Parcel List </p> --}}
-                        {{-- </a> --}}
-                        {{-- </li> --}}
                         <li class="nav-item">
                             <a href="{{ route('admin.parcel.allParcelList') }}"
                                 class="nav-link {{ $child_menu == 'allParcelList' ? 'active' : '' }}">

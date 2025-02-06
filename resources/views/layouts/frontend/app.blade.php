@@ -45,7 +45,6 @@
     <!-- bootstrap and font-awesome cdn link -->
     <link rel="stylesheet" href="/frontend/css/cdn.jsdelivr.net/npm/bootstrap%405.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/frontend/css/cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"> --}}
 
 
     <link rel="stylesheet" href="/frontend/css/cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css" />

@@ -484,4 +484,10 @@ class HomeController extends Controller
     {
         return view('frontend.trackParcel');
     }
+
+    //career
+    public function career()
+    {
+        return view('frontend.career');
+    }
 }

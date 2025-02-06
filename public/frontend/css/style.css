@@ -2867,8 +2867,6 @@ body.auth {
 }
 
 /*----- coverage page-----*/
-
-
 .trackParcel-1st-section {
   div {
     h1, h2{
@@ -2916,7 +2914,7 @@ body.auth {
       cursor: pointer;
       margin-top: 36px;
       padding: 8px;
-      border-color: royalblue;
+      border-color: #07539E;
       img{
         width: 30px;
         height: 30px;
@@ -2932,8 +2930,27 @@ body.auth {
   }
 }
 
-
-    /* .modal {
-        z-index: 2050 !important;
-    } */
-
+/*----- career page-----*/
+.career-2nd-section{
+  .form-div{
+    background-color: white;
+    form{
+      input, .input-group-text, select, textarea{
+        border-color: #07539e49;
+      }
+      .form-check-input{
+        border-color: #07539e83 !important;
+      }
+      input[type="checkbox"]:checked {
+        background-color:  #07539e83 !important;
+      }
+      
+      button{
+        background-color: 07539E;
+        font-weight: 700;
+        word-spacing: 10px;
+      }
+    }
+  }
+}
+/*----- career page-----*/

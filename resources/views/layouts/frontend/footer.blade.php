@@ -22,7 +22,7 @@
                             <a href="/services">Services</a>
                         </li>
                         <li>
-                            <a href="#">Join our Team</a>
+                            <a href="/career">Join our Team</a>
                         </li>
                     </ul>
                 </div>

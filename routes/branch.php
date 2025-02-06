@@ -174,6 +174,7 @@ Route::group(['middleware' => 'branch', 'prefix' => 'branch'], function () {
 
 
   Route::get('parcel/pathaoOrderGenerate', [App\Http\Controllers\Branch\PathaoController::class, 'pathaoOrderGenerate'])->name('parcel.pathaoOrderGenerate');
+  Route::get('parcel/bulk-import', [App\Http\Controllers\Branch\PathaoController::class, 'bulkImport'])->name('parcel.bulkImport');
   Route::post('parcel/confirmPathaoOrderGenerate', [App\Http\Controllers\Branch\PathaoController::class, 'confirmPathaoOrderGenerate'])->name('parcel.confirmPathaoOrderGenerate');
 
 

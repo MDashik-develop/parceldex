@@ -27,22 +27,25 @@ class PathaoController extends Controller
         $data['child_menu'] = 'pathaoOrderGenerate';
         $data['page_title'] = 'Pathao Order Generate';
         $data['collapse'] = 'sidebar-collapse';
-        $data['riders'] = Rider::with(['rider_runs' => function ($query) {
-            $query->select('id', 'status', 'rider_id')->orderBy('id', 'desc');
-        }])->where([
-            'status' => 1,
-            'branch_id' => $branch_id,
-        ])
+        $data['riders'] = Rider::with([
+            'rider_runs' => function ($query) {
+                $query->select('id', 'status', 'rider_id')->orderBy('id', 'desc');
+            }
+        ])->where([
+                    'status' => 1,
+                    'branch_id' => $branch_id,
+                ])
             ->select('id', 'name', 'contact_number', 'address')
             ->get();
 
-//        $access_token = pathao_access_token();
+        //        $access_token = pathao_access_token();
         $data['pathao_cities'] = $pathao_cities = get_pathao_cities();
-//        dd($pathao_cities);
+        //        dd($pathao_cities);
 
-        $data['parcels'] = Parcel::with(['merchant' => function ($query) {
-            $query->select('id', 'name', 'company_name', 'contact_number');
-        },
+        $data['parcels'] = Parcel::with([
+            'merchant' => function ($query) {
+                $query->select('id', 'name', 'company_name', 'contact_number');
+            },
         ])
             ->whereRaw('((status = 25 AND delivery_type = 3) OR status in (14,18,20)) and delivery_branch_id = ?', $branch_id)
             ->select('id', 'parcel_invoice', 'merchant_order_id', 'customer_name', 'customer_contact_number', 'customer_address', 'merchant_id', 'total_collect_amount', 'cod_charge', 'total_charge')
@@ -54,7 +57,7 @@ class PathaoController extends Controller
 
     public function confirmPathaoOrderGenerate(Request $request)
     {
-        
+
         // $branch_id = auth()->guard('branch')->user()->branch->id;
         //         $cart = \Cart::session($branch_id)->getContent();
         // dd($cart);
@@ -65,7 +68,7 @@ class PathaoController extends Controller
             'area_id' => 'required',
             'date' => 'required',
         ]);
-        $rider_id=1;
+        $rider_id = 1;
 
         if ($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator);
@@ -115,8 +118,8 @@ class PathaoController extends Controller
                     $city_id = $request->input('city_id');
                     $zone_id = $request->input('zone_id');
                     $area_id = $request->input('area_id');
-                    $pathaoOrderCreate = create_pathao_order($access_token, $city_id, $zone_id, $area_id,$parcel);
-// dd($pathaoOrderCreate);
+                    $pathaoOrderCreate = create_pathao_order($access_token, $city_id, $zone_id, $area_id, $parcel);
+                    // dd($pathaoOrderCreate);
                     if ($pathaoOrderCreate['code'] == 200) {
                         $riderRunDetail = RiderRunDetail::create([
                             'rider_run_id' => $riderRun->id,
@@ -129,7 +132,7 @@ class PathaoController extends Controller
                             'consignment_id' => $pathaoOrderCreate['data']['consignment_id'],
                             'merchant_order_id' => $pathaoOrderCreate['data']['merchant_order_id'],
                         ]);
-                        $parcel=Parcel::where('id', $parcel_id)->first();
+                        $parcel = Parcel::where('id', $parcel_id)->first();
 
                         $parcel->update([
                             'status' => 16,
@@ -167,7 +170,7 @@ class PathaoController extends Controller
             }
         } catch (\Exception $e) {
             \DB::rollback();
-//            $this->setMessage('Database Error Found', 'danger');
+            //            $this->setMessage('Database Error Found', 'danger');
             $this->setMessage($e->getMessage(), 'danger');
             return redirect()->back()->withInput();
         }
@@ -197,5 +200,16 @@ class PathaoController extends Controller
         return $option;
     }
 
+    public function bulkImport(Request $request)
+    {
+
+        $data = [];
+        $data['main_menu'] = 'pathaoOrder';
+        $data['child_menu'] = 'pathaoOrderGenerate';
+        $data['page_title'] = 'Pathao Order Generate';
+        $data['collapse'] = 'sidebar-collapse';
+
+        return view('branch.parcel.pathaoOrder.bulkImport', $data);
+    }
 
 }

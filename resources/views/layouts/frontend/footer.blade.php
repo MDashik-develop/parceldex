@@ -47,7 +47,7 @@
                     <h6>Connect with Parceldex</h6>
                     <ul class="links-list d-flex flex-column">
                         <li>
-                            <a href="#">News Room </a>
+                            <a href="/newsroom">News Room </a>
                         </li>
                         <li>
                             <a href="/faq">FAQs</a>

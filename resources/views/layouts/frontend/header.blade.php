@@ -14,7 +14,7 @@
             <div class="navbar-menu">
                 <ul class="navbar-nav" id="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="pricing.html">Pricing</a>
+                        <a class="nav-link " aria-current="page" href="/prices">Pricing</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link " aria-current="page" href="/services">Service</a>

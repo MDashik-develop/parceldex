@@ -490,4 +490,10 @@ class HomeController extends Controller
     {
         return view('frontend.career');
     }
+
+    //prices
+    public function prices()
+    {
+        return view('frontend.prices');
+    }
 }

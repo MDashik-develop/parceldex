@@ -25,13 +25,13 @@
 
     <div class="career-2nd-section my-5">
         <div class="container">
-            <div class="row p-3  gap-3 justify-content-center">
-                <div class="col-md d-flex justify-content-center align-content-center">
+            <div class="row p-3 gap-3 justify-content-center">
+                <div class="col-lg d-flex justify-content-center align-content-center">
                     <div class="d-flex justify-content-center align-content-center" >
                         <img src="/frontend/images/deleveryai.png" alt="" style="width: 600px; height: 100%; object-fit: contain;">
                     </div>
                 </div>
-                <div class="col-md">
+                <div class="col-lg">
                     <div class="form-div container p-5 border rounded">
                         <form>
                             <div class="row form-row gap-2">

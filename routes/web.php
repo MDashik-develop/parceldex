@@ -174,6 +174,7 @@ Route::get('/return-refund-policy', [App\Http\Controllers\Frontend\HomeControlle
 Route::get('/coverage-map', [App\Http\Controllers\Frontend\HomeController::class, 'coverageMap'])->name('frontend.coverageMap');
 Route::get('/track-parcel', [App\Http\Controllers\Frontend\HomeController::class, 'trackParcel'])->name('frontend.trackParcel');
 Route::get('/career', [App\Http\Controllers\Frontend\HomeController::class, 'career'])->name('frontend.career');
+Route::get('/prices', [App\Http\Controllers\Frontend\HomeController::class, 'prices'])->name('frontend.prices');
 
 
 

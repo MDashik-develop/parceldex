@@ -1,5 +1,9 @@
 @extends('layouts.frontend.app')
 
+@push('meta_title')
+	our service
+@endpush
+
 @section('content')
 
 <div class="faq-1st-section text-center">

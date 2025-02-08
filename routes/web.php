@@ -173,6 +173,10 @@ Route::get('/terms-and-conditions', [App\Http\Controllers\Frontend\HomeControlle
 Route::get('/return-refund-policy', [App\Http\Controllers\Frontend\HomeController::class, 'returnRefundPolicy'])->name('frontend.returnRefundPolicy');
 Route::get('/coverage-map', [App\Http\Controllers\Frontend\HomeController::class, 'coverageMap'])->name('frontend.coverageMap');
 Route::get('/track-parcel', [App\Http\Controllers\Frontend\HomeController::class, 'trackParcel'])->name('frontend.trackParcel');
+Route::get('/career', [App\Http\Controllers\Frontend\HomeController::class, 'career'])->name('frontend.career');
+Route::get('/prices', [App\Http\Controllers\Frontend\HomeController::class, 'prices'])->name('frontend.prices');
+Route::get('/newsroom', [App\Http\Controllers\Frontend\HomeController::class, 'newsroom'])->name('frontend.newsroom');
+Route::get('/news-details', [App\Http\Controllers\Frontend\HomeController::class, 'newsDetails'])->name('frontend.newsDetails');
 
 
 

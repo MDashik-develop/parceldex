@@ -484,4 +484,28 @@ class HomeController extends Controller
     {
         return view('frontend.trackParcel');
     }
+
+    //career
+    public function career()
+    {
+        return view('frontend.career');
+    }
+
+    //prices
+    public function prices()
+    {
+        return view('frontend.prices');
+    }
+
+    //newsroom
+    public function newsroom()
+    {
+        return view('frontend.newsroom');
+    }
+
+    //news-details
+    public function newsDetails()
+    {
+        return view('frontend.newsDetails');
+    }
 }

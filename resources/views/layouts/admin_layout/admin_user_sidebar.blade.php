@@ -386,31 +386,15 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item has-treeview {{ $main_menu == 'parcel-reset' ? 'menu-open' : '' }} ">
-                    <a href="#" class="nav-link {{ $main_menu == 'parcel' ? 'active' : '' }}">
-                        <i class="fas fa-box-open fa-lg text-success"></i>
-                        <p>
-                            Parcel Reset
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.parcel-reset.index') }}"
+                        class="nav-link {{ $child_menu == 'parcel-reset' ? 'active' : '' }}">
+                        <i class="fas fa-tags text-success"></i>
+                        <p>Parcel Reset</p>
                     </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.parcel-reset.single') }}"
-                                class="nav-link {{ $child_menu == 'single' ? 'active' : '' }}">
-                                <i class="fas fa-tags"></i>
-                                <p>Single</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.parcel-reset.bulk') }}"
-                                class="nav-link {{ $child_menu == 'bulk' ? 'active' : '' }}">
-                                <i class="fas fa-tags"></i>
-                                <p>Bulk</p>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
+
                 <li class="nav-item">
                     <a href="{{ route('admin.amount.charge') }}"
                         class="nav-link {{ $child_menu == 'amountCharge' ? 'active' : '' }}">

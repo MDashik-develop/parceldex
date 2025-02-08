@@ -13,7 +13,9 @@
                 </div>
             </form>
 
-            <form action="" method="post">
+            <form action="{{route('admin.parcel-reset.update')}}" method="post">
+                @csrf
+                @method('put')
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -33,7 +35,7 @@
                     <tbody>
 
                         @foreach ($parcels ?? [] as $k => $p)
-                            <tr id="parcel_row-{{ $k }}">
+                            <tr id="parcel_row-{{ $p->parcel_invoice }}">
                                 <td>{{ $k + 1 }}</td>
                                 <td>{{ $p->parcel_invoice }}</td>
                                 <td>{{ returnParcelStatusForAdmin($p->status, $p->delivery_type, $p->payment_type, $p)['status_name'] }}
@@ -60,7 +62,8 @@
 
                                 </td>
                                 <td>
-                                    <select name="" id="" class="form-control">
+                                    <select name="parcels[{{ $p->parcel_invoice }}][status]" id=""
+                                        class="form-control">
                                         <option value="">Select Status</option>
                                         <option value="0">In Review API</option>
                                         <option value="1">Pick Requested Reschedule</option>
@@ -151,15 +154,16 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" name="" id="" class="form-control"
-                                        placeholder="Amount To Be Collect">
+                                    <input type="text" name="parcels[{{ $p->parcel_invoice }}][amount_be_collect]"
+                                        id="" class="form-control" placeholder="Amount To Be Collect">
                                 </td>
                                 <td>
-                                    <input type="text" name="" id="" class="form-control"
-                                        placeholder="Collected Amount">
+                                    <input type="text" name="parcels[{{ $p->parcel_invoice }}][collected_amount]"
+                                        id="" class="form-control" placeholder="Collected Amount">
                                 </td>
                                 <td>
-                                    <select name="" id="" class="form-control">
+                                    <select name="parcels[{{ $p->parcel_invoice }}][payment_type]" id=""
+                                        class="form-control">
                                         <option value="1" @if ($p->payment_type == 1) selected @endif>Delivery
                                             Branch Send Accounts Paid Request</option>
                                         <option value="2" @if ($p->payment_type == 2) selected @endif>Accounts
@@ -175,7 +179,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <button onclick="remove($k)">Remove</button>
+                                    <button type="button" onclick="remove({{ $p->parcel_invoice }})">Remove</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -184,6 +188,8 @@
                     <tfoot>
                     </tfoot>
                 </table>
+
+                <button class="btn btn-success mt-3">Comfirm</button>
             </form>
 
         </div>
@@ -193,9 +199,7 @@
 @push('script_js')
     <script>
         function remove(k) {
-
             document.getElementById('parcel_row-' + k).remove();
-
         }
     </script>
 @endpush

@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class ParcelResetController extends Controller
 {
-
     public function index(Request $request)
     {
         $data = [];
@@ -29,6 +28,8 @@ class ParcelResetController extends Controller
     public function update(Request $request)
     {
 
+        // dd($request->all());
+
         foreach ($request->parcels as $parcel_invoice => $data) {
             $parcel = Parcel::where('parcel_invoice', $parcel_invoice)->first();
 
@@ -44,12 +45,19 @@ class ParcelResetController extends Controller
                     $update_data['payment_type'] = $data['payment_type'];
                 }
 
+                if ($data['total_collect_amount']) {
+                    $update_data['total_collect_amount'] = $data['total_collect_amount'];
+                }
+
+                if ($data['customer_collect_amount']) {
+                    $update_data['customer_collect_amount'] = $data['customer_collect_amount'];
+                }
+
                 $parcel->update($update_data);
             }
         }
 
         return redirect()->back()->with('success', 'Parcel status updated successfully');
     }
-
 
 }

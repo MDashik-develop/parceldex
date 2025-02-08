@@ -13,7 +13,12 @@
                 </div>
             </form>
 
-            <form action="{{route('admin.parcel-reset.update')}}" method="post">
+            {{-- success message --}}
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            <form action="{{ route('admin.parcel-reset.update') }}" method="post">
                 @csrf
                 @method('put')
                 <table class="table table-bordered table-striped">
@@ -154,12 +159,13 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" name="parcels[{{ $p->parcel_invoice }}][amount_be_collect]"
+                                    <input type="text" name="parcels[{{ $p->parcel_invoice }}][total_collect_amount]"
                                         id="" class="form-control" placeholder="Amount To Be Collect">
                                 </td>
                                 <td>
-                                    <input type="text" name="parcels[{{ $p->parcel_invoice }}][collected_amount]"
-                                        id="" class="form-control" placeholder="Collected Amount">
+                                    <input type="text"
+                                        name="parcels[{{ $p->parcel_invoice }}][customer_collect_amount]" id=""
+                                        class="form-control" placeholder="Collected Amount">
                                 </td>
                                 <td>
                                     <select name="parcels[{{ $p->parcel_invoice }}][payment_type]" id=""

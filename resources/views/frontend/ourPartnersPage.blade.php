@@ -4,22 +4,22 @@
 
 <div class="main-ourPatner-page">
     
-	<div class="faq-1st-section text-center">
+	<div class="common-hero-section text-center">
 		<h3 class="mb-4">
 			Our Partners
 		</h3>
-		<p class="mb-4 fs-4" style="color: #6C757D;">
+		<p class="mb-4" style="color: #6C757D;">
 			With the expansion of Trax in its niche, it has also partnered with  <br> established brands across the industry. Have a look at them below.
 		</p>
 		<div class="row justify-content-center gap-2 bg-transparent mt-4">
-			<button class="col-1 py-2 bg-white  shadow rounded-1 text-black fw-bold">
+			<a class="col-6 col-sm-3 col-lg-auto py-2 bg-white px-lg-4 shadow rounded-1 text-black fw-semibold">
 				<i class="fa-solid fa-bars" style="margin-right: 7px"></i>
 				Discover More
-			</button>
-			<button class="col-1 py-2 shadow rounded-1 text-white fw-bold" style="background-color: #F27B21 !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 5px 0px !important;">
+            </a>
+			<a class="col-5 col-sm-3 col-lg-1 py-2 shadow rounded-1 text-white fw-semibold" style="background-color: #F27B21 !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 5px 0px !important;">
 				<i class="fa-solid fa-phone" style="margin-right: 7px"></i>
 				Contact Us
-			</button>
+            </a>
 		</div>
 	</div>
 

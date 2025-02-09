@@ -1,7 +1,7 @@
 @extends('layouts.frontend.app')
 
 @section('content')
-    <div class="container-fluid" style="margin-top: 10px">
+    <div class="" style="margin-top: 10px">
         <div class="row">
             <div class="col-lg-7 col-md-7 col-sm-12">
                 <img class="auth-image" src="{{ asset('image/login.png') }}" style="max-width: 100%;">

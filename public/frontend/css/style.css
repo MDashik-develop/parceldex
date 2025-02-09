@@ -1,5 +1,9 @@
 @import "../../../assets/css/structure.css";
 
+:root{
+  /* --bs-nav-pills-link-active-bg: #07539E !important; */
+}
+
 /* ************comon css *********** */
 input[type="email"]::placeholder,
 input[type="text"]::placeholder,
@@ -1853,10 +1857,10 @@ body.auth {
     display: none !important;
   }
   .intro-content {
-    width: 35%;
+    width: 50%;
   }
   .intro-img {
-    width: 49%;
+    width: 45%;
     /* margin-right: 128px; */
   }
 
@@ -1919,6 +1923,15 @@ body.auth {
   }
   .terms-conditions ul li {
     font-size: 14px;
+  }
+  .home-hero-section-buttons a button{
+    padding: 8px 13px !important;
+    font-size: 13px !important;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
   }
 }
 @media (min-width: 768px) {
@@ -2074,6 +2087,36 @@ body.auth {
     bottom: -20px;
     left: -20px;
     border: 20px solid #fff3e5;
+  }
+
+  .common-hero-section h3{
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .common-hero-section p{
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .trackParcel-1st-section {
+    div {
+      h1, h2{
+        font-size: 18px !important;
+        font-weight: 700;
+        text-align: center;
+        font-family: system-ui, sans-serif;
+      }
+      svg{
+        margin: 6px 0 !important;
+      }
+    }
+  }
+  
+  .main-ourPatner-page img{
+    aspect-ratio: 1 / 1;
+  }
+  .main-ourPatner-page .patner-wrapper, .patner-wrapper1, .patner-wrapper2{
+    margin: 50px 0 !important;
+    padding: 20px 10px !important;
   }
 }
 @media (min-width: 640px) {
@@ -2557,7 +2600,7 @@ body.auth {
   content: '';
   position: absolute;
   top: 0;
-  width: 100px; /* Adjust shadow width */
+  width: 100px;
   height: 100%;
   z-index: 2;
 }
@@ -2729,14 +2772,6 @@ body.auth {
 .main-faq-page{
   background-color: #fff;
 }
-.faq-1st-section{
-  height: 100%;
-  width: 100%;
-  padding-top: 70px;
-  padding-bottom: 80px;
-	background-color: #07539e21;
-	clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7vw), 0% 100%);
-}
 .accordion-item {
   background-color: var(--bg-neutral-50);
   border: 1px solid var(--border-neutral-300) !important;
@@ -2747,14 +2782,6 @@ body.auth {
 /*----- terms page-----*/
 .main-termsAndConditions-page{
   background-color: #fff;
-}
-.termsAndConditions-1st-section{
-  height: 100%;
-  width: 100%;
-  padding-top: 70px;
-  padding-bottom: 80px;
-	background-color: #07539e21;
-	clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7vw), 0% 100%);
 }
 .termsAndConditions-2nd-section div svg{
   fill: #07539E;
@@ -2802,7 +2829,6 @@ body.auth {
 
 .coverage-2nd-section div div ul li:before {
   content: "";
-  /* border: 1px solid #07539E; */
   border-radius: 50%;
   background-color:#F27B21;
   height: 0.6em;
@@ -2822,11 +2848,8 @@ body.auth {
 .coverage-2nd-section div div ul li:after {
   content: "";
   border-radius: 50%;
-  /* border: 1px solid #07539E; */
    box-shadow: 0 0 4px rgba(7, 83, 158, 0.6),
                inset 0 0 4px rgba(7, 83, 158, 0.6);
-  /* box-shadow: 0 0 4px#F27B21,
-              inset 0 0 4px #F27B21; */
   height: 2em;
   width: 2em;
   position: absolute;
@@ -2902,7 +2925,6 @@ body.auth {
       padding: 4px;
       margin: 0 0px;
       margin-bottom: -15px;
-      fill: white;
       background-color: #F27B21;
       border-radius: 50pc;
     }
@@ -2954,3 +2976,93 @@ body.auth {
   }
 }
 /*----- career page-----*/
+/*----- Home Page ------*/
+.home-hero-section-buttons a button{
+  padding: 5px 10px;
+  background:  #07539E;
+  color: white;
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+/*----- Home Page ------*/
+/*----- common -----*/
+.common-hero-section{
+  height: 100%;
+  width: 100%;
+  padding-top: 70px;
+  padding-bottom: 100px;
+	background-color: #07539e21;
+	clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7vw), 0% 100%);
+}
+.common-hero-section p{
+  font-size: 18px;
+}
+.easy-translate{
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 65px;
+    height: 35px;
+  }
+  .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+  }
+  .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 30px;
+      border: 1px solid  #F27B21;
+  }
+  .slider:before {
+      position: absolute;
+      content: "ENG";
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 29px;
+      width: 29px;
+      left: 3px;
+      bottom: 3px;
+      background-color:  #F27B21;
+      color: white;
+      transition: .4s;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 5px;
+  }
+  input:checked + .slider {
+      background-color: #07539e;
+      border: none;
+  }
+  input:checked + .slider:before {
+      transform: translateX(30px);
+      content: "BD";
+  }
+}
+/*----- common -----*/
+/*----- price page-----*/
+.prices-2nd-section table thead tr th{
+  font-size: 17px;
+  padding: 15px;
+}
+.prices-2nd-section table tbody tr td{
+  font-size: 25px;
+  font-weight: 600;
+  background-color: #fff !important;
+  padding: 20px;
+}
+/*----- price page-----*/

@@ -31,7 +31,7 @@
                 </ul>
             </div>
             <div class="navbar-action d-flex align-items-center">
-                <a href="tracking.html" class=" d-none d-sm-inline-block txt-primary me-4"> <img
+                <a href="/track-parcel" class=" d-none d-sm-inline-block txt-primary me-4"> <img
                         src="/frontend/images/parcel_tarck_icon.svg" alt="" class="parcel_tarck_icon">
                     Track Parcel </a>
                 <div class="d-flex align-items-center gap-2 gap-sm-3">

@@ -24,29 +24,28 @@
 
 .pagination > li > a {
   background-color: white;
-  color: var(--bs-primary-500) !important;
 }
 
 .pagination > li > a:focus,
 .pagination > li > a:hover,
 .pagination > li > span:focus,
 .pagination > li > span:hover {
-  color: #5a5a5a;
-  background-color: #eee;
+  color: white !important;
+  background-color: #F27B21;
   border-color: #ddd;
 }
 
 .pagination > li.active {
-  color: white;
-  background-color: var(--bs-primary-500) !important;
+  color: white !important;
+  background-color: #07539E !important;
 }
 .pagination > li:last-child:hover {
-  color: white;
-  background-color: var(--bs-primary-500) !important;
+  color: white !important;
+  background-color: #F27B21;
 }
 
 .pagination > .page-item > .active > a:hover {
-  background-color: var(--bs-primary-500) !important ;
+  background-color: #F27B21 !important ;
   /* border: solid 1px #5A4181; */
 }
 
@@ -64,11 +63,11 @@
 }
 .btn-primary {
   width: 148px;
-  background: var(--bg-primary-500);
+  background: #07539E;
   color: var(--txt-white);
 }
 .btn-primary:hover {
-  background: var(--bg-primary-600);
+  background: #F27B21;
   border: 1px solid transparent;
 }
 .btn-primary:focus {

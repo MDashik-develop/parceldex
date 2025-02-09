@@ -508,4 +508,10 @@ class HomeController extends Controller
     {
         return view('frontend.newsDetails');
     }
+
+    //get-A-Call
+    public function getACall()
+    {
+        return view('frontend.getACall');
+    }
 }

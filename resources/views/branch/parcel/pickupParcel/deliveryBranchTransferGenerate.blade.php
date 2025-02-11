@@ -93,9 +93,7 @@
                                             <fieldset id="div_delivery_branch_transfer_parcel" style="display: none">
                                                 <legend>Delivery Branch Transfer Parcel </legend>
                                                 <div class="row">
-                                                    <div class="col-sm-12" id="show_delivery_branch_transfer_parcel">
-
-                                                    </div>
+                                                    <div class="col-sm-12" id="show_delivery_branch_transfer_parcel"></div>
                                                 </div>
                                             </fieldset>
                                         </div>
@@ -147,7 +145,7 @@
                                     <thead>
                                         <tr
                                             style="background-color: #a2bbca !important; font-family: Arial Black;font-size: 14px">
-                                            <th colspan="9" class="text-left">
+                                            <th colspan="10" class="text-left">
                                                 <button type="button" id="addParcelInvoice" class="btn btn-info">Add
                                                     Parcel to Transfer</button>
                                             </th>
@@ -160,12 +158,13 @@
                                             </th>
                                             <th width="5%" class="text-center">Invoice </th>
                                             <th width="10%" class="text-center">Merchant Order </th>
-                                            <th width="15%" class="text-center">Company Name</th>
+                                            <th width="10%" class="text-center">Company Name</th>
                                             {{--                                        <th width="10%" class="text-center">Merchant Name</th> --}}
-                                            <th width="15%" class="text-center">Customer Name</th>
+                                            <th width="10%" class="text-center">Customer Name</th>
                                             <th width="10%" class="text-center">Customer Number</th>
                                             <th width="10%" class="text-center">District</th>
                                             <th width="10%" class="text-center">Area</th>
+                                            <th width="10%" class="text-center">Service Area</th>
                                             <th width="10%" class="text-center">Product Brief</th>
                                         </tr>
                                     </thead>
@@ -202,6 +201,15 @@
                                                     </td>
                                                     <td class="text-center">
                                                         {{ $parcel->area->name }}
+                                                    </td>
+                                                    <td class="text-center" id="service_area-{{ $parcel->id }}">
+                                                        @if ($parcel?->district?->service_area?->name == 'Inside City')
+                                                            ISD
+                                                        @elseif ($parcel?->district?->service_area?->name == 'Outside City')
+                                                            OSD
+                                                        @else
+                                                            SUB
+                                                        @endif
                                                     </td>
                                                     <td class="text-center">
                                                         {{ $parcel->product_details }}
@@ -289,14 +297,34 @@
 
 
             $('#addParcelInvoice').on('click', function() {
+                var branch = $("#branch_id option:selected");
+                var branch_id = branch.val();
+
+                if (branch_id == 0 || !branch_id ) {
+                    console.log(branch_id);
+                    alert("Please select a branch.");
+                    
+                    return false;
+                }
+
                 var parcel_invoices = $('.parcelId:checkbox:checked').map(function() {
-                    return this.value;
+                    let service_area = document.getElementById('service_area-' + this.value).innerText;
+
+                    if (branch_id != 6 && service_area != "OSD") {
+                        return this.value;
+                    }
+
+                    if (branch_id == 6 && service_area == "OSD") {
+                        return this.value;
+                    }
+
                 }).get();
 
                 if (parcel_invoices.length == 0) {
                     toastr.error("Please Select Parcel Invoice ");
                     return false;
                 }
+
                 $.ajax({
                     cache: false,
                     type: "POST",

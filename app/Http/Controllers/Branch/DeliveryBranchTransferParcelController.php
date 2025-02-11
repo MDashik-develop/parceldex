@@ -219,7 +219,7 @@ class DeliveryBranchTransferParcelController extends Controller
                 $query->select('id', 'name', 'company_name', 'contact_number');
             },
             'district' => function ($query) {
-                $query->select('id', 'name');
+                $query->select('id', 'name', 'service_area_id');
             },
             'upazila' => function ($query) {
                 $query->select('id', 'name');

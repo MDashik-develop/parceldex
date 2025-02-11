@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Branch\HandsontableDataController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/branch/test', function () {
@@ -176,6 +177,25 @@ Route::group(['middleware' => 'branch', 'prefix' => 'branch'], function () {
   Route::get('parcel/pathaoOrderGenerate', [App\Http\Controllers\Branch\PathaoController::class, 'pathaoOrderGenerate'])->name('parcel.pathaoOrderGenerate');
   Route::get('parcel/bulk-import', [App\Http\Controllers\Branch\PathaoController::class, 'bulkImport'])->name('parcel.bulkImport');
   Route::post('parcel/confirmPathaoOrderGenerate', [App\Http\Controllers\Branch\PathaoController::class, 'confirmPathaoOrderGenerate'])->name('parcel.confirmPathaoOrderGenerate');
+
+  // handsontable
+  Route::name('handsontable.')
+    ->prefix('handsontable')
+    ->controller(HandsontableDataController::class)
+    ->group(function () {
+
+      Route::get('parcel-invoices', 'getParcelInvoices')->name('parcel-invoices');
+      Route::get('get-order-details', 'getOrderDetails')->name('get-order-details');
+
+      Route::get('get-cities', 'getCities')->name('get-cities');
+      Route::get('get-zones', 'getZones')->name('get-zones');
+      Route::get('area-list', 'areaList')->name('area-list');
+
+      Route::post('confirm-orders', 'confirmOrders')->name('confirm-orders');
+
+      Route::get('merchant-store', 'merchantStore')->name('merchant-store');
+
+    });
 
 
 

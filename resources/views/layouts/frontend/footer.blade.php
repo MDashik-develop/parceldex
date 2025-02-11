@@ -3,8 +3,8 @@
         <div class="footer">
             <div class="top d-flex justify-content-between">
                 <div class="short-info d-flex gap-2 flex-column">
-                    <a href="index-2.html"><img src="/frontend/images/logo/logo.png" alt=""
-                            class=" footer-logo"></a>
+                    <a href="/">
+                        <img src="/frontend/images/logo/logo.png" alt="" class=" footer-logo"></a>
                     <p> House# 44, Rd No. 2/A, Dhanmondi, <br> Dhaka 1209</p>
                     <p>E-mail: info@moved.com</p>
                     <p>Hotline: 09678-045045</p>
@@ -41,13 +41,19 @@
                         <li>
                             <a href="/terms-and-conditions">Tearms & Conditions</a>
                         </li>
+                        <li>
+                            <a href="/return-refund-policy">Return Refund Policy</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="sister-concern">
                     <h6>Connect with Parceldex</h6>
                     <ul class="links-list d-flex flex-column">
                         <li>
-                            <a href="/newsroom">News Room </a>
+                            <a href="/newsroom">News Room</a>
+                        </li>
+                        <li>
+                            <a href="/blogs">Blogs</a>
                         </li>
                         <li>
                             <a href="/faq">FAQs</a>

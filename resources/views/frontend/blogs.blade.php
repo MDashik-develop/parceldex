@@ -1,129 +1,165 @@
 @extends('layouts.frontend.app')
 
 @section('content')
-
-<div class="container mx-auto px-4 py-8">
-    <div class="flex flex-col md:flex-row">
-        <div class="md:w-2/3 md:pr-8">
-            <!-- First Blog Post with Big Image -->
-            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                <img alt="A detailed description of the first blog post image" class="w-full h-auto rounded-lg mb-4" src="https://placehold.co/800x400" />
-                <h2 class="text-2xl font-bold mb-2">
-                    First Blog Post
-                </h2>
-                <p class="text-gray-600 mb-4">
-                    January 1, 2023 by
-                    <a class="text-blue-500" href="#">
-                        Author
-                    </a>
-                </p>
-                <p class="text-gray-700 mb-4">
-                    This is the content of the first blog post. It contains some interesting information about a particular topic.
-                </p>
-                <a class="text-blue-500 hover:underline" href="#">
-                    Read more
-                </a>
-            </div>
-            <!-- Smaller Blog Posts -->
-            <div class="bg-white p-6 rounded-lg shadow-md mb-6 flex">
-                <img alt="" style="height: 200px !important;" class=" rounded-lg mr-4" src="https://placehold.co/100x100" />
-                <div>
-                    <h2 class="text-xl font-bold mb-2">
-                        Second Blog Post
-                    </h2>
-                    <p class="text-gray-600 mb-2">
-                        February 1, 2023 by
-                        <a class="text-blue-500" href="#">
-                            Author
+    <div class="main-blogs-page">
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex flex-col md:flex-row">
+                <div class="md:w-2/3 md:pr-8">
+                    <!-- First Blog Post with Big Image -->
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                        <img alt="A detailed description of the first blog post image" class="w-full h-auto rounded-lg mb-4" src="https://placehold.co/800x400" />
+                        <h2 class="text-2xl font-bold mb-2">
+                            First Blog Post
+                        </h2>
+                        <p class="text-gray-600 mb-4">
+                            January 1, 2023 by
+                            <a class="text-blue-500" href="#">
+                                Author
+                            </a>
+                        </p>
+                        <p class="text-gray-700 mb-4">
+                            This is the content of the first blog post. It contains some interesting information about a particular topic.
+                        </p>
+                        <a class="text-blue-500 hover:underline" href="#">
+                            Read more
                         </a>
-                    </p>
-                    <p class="text-gray-700 line-clamp-2">
-                        This is the content of the second blog post. It contains some more interesting information about another topic.
-                    </p>
-                    <a class="text-blue-500 hover:underline" href="#">
-                        Read more
-                    </a>
+                    </div>
+                    <!-- Smaller Blog Posts -->
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-6 flex">
+                        <img alt="" style="height: 200px !important;" class=" rounded-lg mr-4" src="https://placehold.co/100x100" />
+                        <div>
+                            <h2 class="text-xl font-bold mb-2">
+                                Second Blog Post
+                            </h2>
+                            <p class="text-gray-600 mb-2">
+                                February 1, 2023 by
+                                <a class="text-blue-500" href="#">
+                                    Author
+                                </a>
+                            </p>
+                            <p class="text-gray-700 line-clamp-2">
+                                This is the content of the second blog post. It contains some more interesting information about another topic.
+                            </p>
+                            <a class="text-blue-500 hover:underline" href="#">
+                                Read more
+                            </a>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-6 flex">
+                        <img alt="" style="height: 200px !important;" class="w-1/3 h-auto rounded-lg mr-4" src="https://placehold.co/200x200" />
+                        <div>
+                            <h2 class="text-xl font-bold mb-2">
+                                Third Blog Post
+                            </h2>
+                            <p class="text-gray-600 mb-2">
+                                March 1, 2023 by
+                                <a class="text-blue-500" href="#">
+                                    Author
+                                </a>
+                            </p>
+                            <p class="text-gray-700 line-clamp-2">
+                                This is the content of the third blog post. It contains even more interesting information about yet another topic.
+                            </p>
+                            <a class="text-blue-500 hover:underline" href="#">
+                                Read more
+                            </a>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-6 flex">
+                        <img alt="" style="height: 200px !important;" class="w-1/3 h-auto rounded-lg mr-4" src="https://placehold.co/200x200" />
+                        <div>
+                            <h2 class="text-xl font-bold mb-2">
+                                Third Blog Post
+                            </h2>
+                            <p class="text-gray-600 mb-2">
+                                March 1, 2023 by
+                                <a class="text-blue-500" href="#">
+                                    Author
+                                </a>
+                            </p>
+                            <p class="text-gray-700 line-clamp-2">
+                                This is the content of the third blog post. It contains even more interesting information about yet another topic.
+                            </p>
+                            <a class="text-blue-500 hover:underline" href="#">
+                                Read more
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow-md mb-6 flex">
-                <img alt="" style="height: 200px !important;" class="w-1/3 h-auto rounded-lg mr-4" src="https://placehold.co/200x200" />
-                <div>
-                    <h2 class="text-xl font-bold mb-2">
-                        Third Blog Post
-                    </h2>
-                    <p class="text-gray-600 mb-2">
-                        March 1, 2023 by
-                        <a class="text-blue-500" href="#">
-                            Author
-                        </a>
-                    </p>
-                    <p class="text-gray-700 line-clamp-2">
-                        This is the content of the third blog post. It contains even more interesting information about yet another topic.
-                    </p>
-                    <a class="text-blue-500 hover:underline" href="#">
-                        Read more
-                    </a>
-                </div>
+                <!-- <div class="md:w-1/3">
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                        <h4 class="text-xl font-bold mb-4">
+                            About
+                        </h4>
+                        <p class="text-gray-700">
+                            This is a blog about various interesting topics. Stay tuned for more updates!
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                        <h4 class="text-xl font-bold mb-4">
+                            Archives
+                        </h4>
+                        <ul class="list-disc list-inside text-gray-700">
+                            <li>
+                                <a class="text-blue-500" href="#">
+                                    January 2023
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-blue-500" href="#">
+                                    February 2023
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-blue-500" href="#">
+                                    March 2023
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                        <h4 class="text-xl font-bold mb-4">
+                            Elsewhere
+                        </h4>
+                        <ul class="list-disc list-inside text-gray-700">
+                            <li>
+                                <a class="text-blue-500" href="#">
+                                    GitHub
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-blue-500" href="#">
+                                    Twitter
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-blue-500" href="#">
+                                    Facebook
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div> -->
             </div>
         </div>
-        <!-- <div class="md:w-1/3">
-            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                <h4 class="text-xl font-bold mb-4">
-                    About
-                </h4>
-                <p class="text-gray-700">
-                    This is a blog about various interesting topics. Stay tuned for more updates!
-                </p>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                <h4 class="text-xl font-bold mb-4">
-                    Archives
-                </h4>
-                <ul class="list-disc list-inside text-gray-700">
-                    <li>
-                        <a class="text-blue-500" href="#">
-                            January 2023
-                        </a>
-                    </li>
-                    <li>
-                        <a class="text-blue-500" href="#">
-                            February 2023
-                        </a>
-                    </li>
-                    <li>
-                        <a class="text-blue-500" href="#">
-                            March 2023
-                        </a>
-                    </li>
+        <div class="container d-flex justify-content-center justify-content-md-end mt-5">
+            <nav aria-label="...">
+                <ul class="pagination" style="color: black">
+                <li class="page-item disabled">
+                    <a class="page-link">Previous</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="/news-details">1</a></li>
+                <li class="page-item" aria-current="page">
+                    <a class="page-link" href="/news-details">2</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="/news-details">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="/news-details">Next</a>
+                </li>
                 </ul>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                <h4 class="text-xl font-bold mb-4">
-                    Elsewhere
-                </h4>
-                <ul class="list-disc list-inside text-gray-700">
-                    <li>
-                        <a class="text-blue-500" href="#">
-                            GitHub
-                        </a>
-                    </li>
-                    <li>
-                        <a class="text-blue-500" href="#">
-                            Twitter
-                        </a>
-                    </li>
-                    <li>
-                        <a class="text-blue-500" href="#">
-                            Facebook
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div> -->
+            </nav>
+        </div>
     </div>
-</div>
-
-
 @endsection
 
 @push('style_css')

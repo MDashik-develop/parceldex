@@ -3,22 +3,22 @@
 @section('content')
 
     <div class="main-career-page">
-        <div class="faq-1st-section text-center">
+        <div class="common-hero-section text-center">
             <h3 class="mb-4">
                 Join our team
             </h3>
-            <p class="mb-4 fs-4" style="color: #6C757D;">
+            <p class="mb-4" style="color: #6C757D;">
                 We are always on the lookout for dynamic, growth-oriented <br> individuals willing to step out of their comfort zone and perform <br> beyond the ordinary.
             </p>
             <div class="row justify-content-center gap-2 bg-transparent mt-4">
-                <button class="col-6 col-sm-3 col-lg-2 py-2 bg-white  shadow rounded-1 text-black fw-bold">
+                <a class="col-6 col-sm-3 col-lg-auto py-2 bg-white px-lg-4 shadow rounded-1 text-black fw-semibold">
                     <i class="fa-solid fa-bars" style="margin-right: 7px"></i>
                     Discover More
-                </button>
-                <button class="col-5 col-sm-3 col-lg-2 py-2 shadow rounded-1 text-white fw-bold" style="background-color: #F27B21 !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 5px 0px !important;">
+                </a>
+                <a class="col-5 col-sm-3 col-lg-1 py-2 shadow rounded-1 text-white fw-semibold" style="background-color: #F27B21 !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 5px 0px !important;">
                     <i class="fa-solid fa-phone" style="margin-right: 7px"></i>
                     Contact Us
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -27,12 +27,12 @@
         <div class="container">
             <div class="row p-3 gap-3 justify-content-center">
                 <div class="col-lg d-flex justify-content-center align-content-center">
-                    <div class="d-flex justify-content-center align-content-center" >
-                        <img src="/frontend/images/deleveryai.png" alt="" style="width: 600px; height: 100%; object-fit: contain;">
+                    <div class="d-flex justify-content-center align-content-center h-100 w-100" >
+                        <img src="/frontend/images/deleveryai.png" alt="" class="rounded" style="width: 100%; height: 100%;">
                     </div>
                 </div>
                 <div class="col-lg">
-                    <div class="form-div container p-5 border rounded">
+                    <div class="form-div container p-3 p-md-5 border rounded">
                         <form>
                             <div class="row form-row gap-2">
                                 <div class="form-group col-md mb-3">

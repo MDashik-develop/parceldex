@@ -63,9 +63,10 @@ $partners = App\Models\Partner::where('status', 1)->get();
                         a hurricane or tornado season can demand a higher cost due to the circumstances surrounding
                         the process.
                     </p>
-                    <div class="row justify-content-start">
-                        <a class="col-5 text-left" href="register.html"><button class="btn btn-lg">Become a Merchant</button></a>
-                        <a class="col-3"><button class="btn btn-lg" style=" background-color: #F27B21;" data-bs-toggle="modal" data-bs-target="#exampleModal">Get A Call</button></a>
+                    <div class="home-hero-section-buttons row justify-content-start px-0">
+                        <a class="col-12 mb-2 mb-lg-0 m-0 col-md-5 col-lg-6 text-left" href="/register"><button class="">Become a Merchant</button></a>
+                        {{-- <a class="col-12 col-lg-3"><button class="btn btn-lg" style=" background-color: #F27B21;" data-bs-toggle="modal" data-bs-target="#exampleModal">Get A Call</button></a> --}}
+                        <a href="/get-a-call" class="col-12 col-md-5 col-lg-3"><button class="" style=" background-color: #F27B21;">Get A Call</button></a>
                         
                     </div>
                 </div>
@@ -78,162 +79,164 @@ $partners = App\Models\Partner::where('status', 1)->get();
     </div>
 
 
-    <div class="patner-wrapper patner-wrapper1 d-flex flex-column flex-md-row justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp">
-        <p class="brands-logos-p p-1 rounded">Fashion</p>
-        <div class="container-fluid mx-0 brand_logos">
-            <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items">
-                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
-                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
-                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
-                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
-                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
-                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
-                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
+    <div class="px-sm-2 px-md-4">
+        <div class="patner-wrapper patner-wrapper1 d-flex flex-column flex-md-row justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp">
+            <p class="brands-logos-p p-1 rounded">Fashion</p>
+            <div class="container-fluid mx-0 brand_logos">
+                <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items">
+                        <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                        <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                        <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_online.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                        <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                        <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_online.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                        <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                        <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_online.png" alt="">
+                </div>
             </div>
         </div>
-    </div>
-    <div class="patner-wrapper patner-wrapper2 d-flex flex-column flex-md-row justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp ">
-        <p class="brands-logos-p p-1 rounded">Corporate</p>
-        <div class="container-fluid mx-0 brand_logos">
-            <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items brand_logo_items2">
-                    <img src="/frontend/images/partner_img/othoba.png" alt="">
-                    <img src="/frontend/images/partner_img/lotto.png" alt="">
-                    <img src="/frontend/images/partner_img/sailor.png" alt="">
-                    <img src="/frontend/images/partner_img/fashion.png" alt="">
-                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
-                    <img src="/frontend/images/partner_img/othoba.png" alt="">
-                    <img src="/frontend/images/partner_img/lotto.png" alt="">
-                    <img src="/frontend/images/partner_img/sailor.png" alt="">
-                    <img src="/frontend/images/partner_img/fashion.png" alt="">
-                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
-                    <img src="/frontend/images/partner_img/othoba.png" alt="">
-                    <img src="/frontend/images/partner_img/lotto.png" alt="">
-                    <img src="/frontend/images/partner_img/sailor.png" alt="">
-                    <img src="/frontend/images/partner_img/fashion.png" alt="">
-                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
+        <div class="patner-wrapper patner-wrapper2 d-flex flex-column flex-md-row justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp ">
+            <p class="brands-logos-p p-1 rounded">Corporate</p>
+            <div class="container-fluid mx-0 brand_logos">
+                <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items brand_logo_items2">
+                        <img src="/frontend/images/partner_img/othoba.png" alt="">
+                        <img src="/frontend/images/partner_img/lotto.png" alt="">
+                        <img src="/frontend/images/partner_img/sailor.png" alt="">
+                        <img src="/frontend/images/partner_img/fashion.png" alt="">
+                        <img src="/frontend/images/partner_img/htbazar.png" alt="">
+                        <img src="/frontend/images/partner_img/othoba.png" alt="">
+                        <img src="/frontend/images/partner_img/lotto.png" alt="">
+                        <img src="/frontend/images/partner_img/sailor.png" alt="">
+                        <img src="/frontend/images/partner_img/fashion.png" alt="">
+                        <img src="/frontend/images/partner_img/htbazar.png" alt="">
+                        <img src="/frontend/images/partner_img/othoba.png" alt="">
+                        <img src="/frontend/images/partner_img/lotto.png" alt="">
+                        <img src="/frontend/images/partner_img/sailor.png" alt="">
+                        <img src="/frontend/images/partner_img/fashion.png" alt="">
+                        <img src="/frontend/images/partner_img/htbazar.png" alt="">
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="patner-wrapper patner-wrapper1 d-flex flex-column flex-md-row justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp">
-        <p class="brands-logos-p py-1 px-3 rounded">Marketplace</p>
-        <div class="container-fluid mx-0 brand_logos">
-            <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items">
-                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
-                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
-                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
-                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
-                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
-                    <img src="/frontend/images/partner_img/rokomari.png" alt="">
-                    <img src="/frontend/images/partner_img/naturo-01.png" alt="">
-                    <img src="/frontend/images/partner_img/sm_online.png" alt="">
+    
+        <div class="patner-wrapper patner-wrapper2 d-flex flex-column flex-md-row justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp">
+            <p class="brands-logos-p py-1 px-3 rounded">Marketplace</p>
+            <div class="container-fluid mx-0 brand_logos">
+                <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items">
+                        <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                        <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                        <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_online.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                        <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                        <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_online.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_ghor.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_halal_food.png" alt="">
+                        <img src="/frontend/images/partner_img/rokomari.png" alt="">
+                        <img src="/frontend/images/partner_img/naturo-01.png" alt="">
+                        <img src="/frontend/images/partner_img/sm_online.png" alt="">
+                </div>
             </div>
         </div>
-    </div>
-    <div class="patner-wrapper patner-wrapper2 d-flex flex-column flex-md-row justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp ">
-        <p class="brands-logos-p p-1 rounded">Banking</p>
-        <div class="container-fluid mx-0 brand_logos">
-            <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items brand_logo_items2">
-                    <img src="/frontend/images/partner_img/othoba.png" alt="">
-                    <img src="/frontend/images/partner_img/lotto.png" alt="">
-                    <img src="/frontend/images/partner_img/sailor.png" alt="">
-                    <img src="/frontend/images/partner_img/fashion.png" alt="">
-                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
-                    <img src="/frontend/images/partner_img/othoba.png" alt="">
-                    <img src="/frontend/images/partner_img/lotto.png" alt="">
-                    <img src="/frontend/images/partner_img/sailor.png" alt="">
-                    <img src="/frontend/images/partner_img/fashion.png" alt="">
-                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
-                    <img src="/frontend/images/partner_img/othoba.png" alt="">
-                    <img src="/frontend/images/partner_img/lotto.png" alt="">
-                    <img src="/frontend/images/partner_img/sailor.png" alt="">
-                    <img src="/frontend/images/partner_img/fashion.png" alt="">
-                    <img src="/frontend/images/partner_img/htbazar.png" alt="">
+        <div class="patner-wrapper patner-wrapper2 d-flex flex-column flex-md-row justify-content-center align-items-center gap-5 animate__animated animate__fadeInUp ">
+            <p class="brands-logos-p p-1 rounded">Banking</p>
+            <div class="container-fluid mx-0 brand_logos">
+                <div class="patner d-flex flex-nowrap justify-content-between align-items-center brand_logo_items brand_logo_items2">
+                        <img src="/frontend/images/partner_img/othoba.png" alt="">
+                        <img src="/frontend/images/partner_img/lotto.png" alt="">
+                        <img src="/frontend/images/partner_img/sailor.png" alt="">
+                        <img src="/frontend/images/partner_img/fashion.png" alt="">
+                        <img src="/frontend/images/partner_img/htbazar.png" alt="">
+                        <img src="/frontend/images/partner_img/othoba.png" alt="">
+                        <img src="/frontend/images/partner_img/lotto.png" alt="">
+                        <img src="/frontend/images/partner_img/sailor.png" alt="">
+                        <img src="/frontend/images/partner_img/fashion.png" alt="">
+                        <img src="/frontend/images/partner_img/htbazar.png" alt="">
+                        <img src="/frontend/images/partner_img/othoba.png" alt="">
+                        <img src="/frontend/images/partner_img/lotto.png" alt="">
+                        <img src="/frontend/images/partner_img/sailor.png" alt="">
+                        <img src="/frontend/images/partner_img/fashion.png" alt="">
+                        <img src="/frontend/images/partner_img/htbazar.png" alt="">
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="chairman-wrapper animate__animated animate__fadeInUp">
-        <div class="container-fluid">
-            <div class="about-ceo ">
-                <div class="row">
-                    <div class="col-5">
-                        <div class="ceo-img position-relative">
-                            <img src="/frontend/images/mans.jpg" alt="">
+    
+        <div class="chairman-wrapper animate__animated animate__fadeInUp">
+            <div class="container-fluid">
+                <div class="about-ceo ">
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="ceo-img position-relative">
+                                <img src="/frontend/images/mans.jpg" alt="">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-7">
-                        <div>
-                            <h2 class="text-3xl font-bold text-gray-800 mb-4">
-                                Find Solutions to Your Shipping Challenges
-                            </h2>
-                            <p class="text-gray-600 mb-6">
-                                We keep moving forward, opening new doors, and doing new things, because we're
-                                curious and curiosity
-                                keeps leading us down new paths.
-                            </p>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div class="flex items-center">
-                                    <i class="fas fa-smile text-green-500 text-2xl mr-4">
-                                    </i>
-                                    <div>
-                                        <h3 class="text-xl font-bold text-gray-800">
-                                            Happy Customer
-                                        </h3>
-                                        <p class="text-gray-600">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                        </p>
+                        <div class="col-7">
+                            <div>
+                                <h2 class="text-3xl font-bold text-gray-800 mb-4">
+                                    Find Solutions to Your Shipping Challenges
+                                </h2>
+                                <p class="text-gray-600 mb-6">
+                                    We keep moving forward, opening new doors, and doing new things, because we're
+                                    curious and curiosity
+                                    keeps leading us down new paths.
+                                </p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-smile text-green-500 text-2xl mr-4">
+                                        </i>
+                                        <div>
+                                            <h3 class="text-xl font-bold text-gray-800">
+                                                Happy Customer
+                                            </h3>
+                                            <p class="text-gray-600">
+                                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-box text-green-500 text-2xl mr-4">
-                                    </i>
-                                    <div>
-                                        <h3 class="text-xl font-bold text-gray-800">
-                                            500+ Routes
-                                        </h3>
-                                        <p class="text-gray-600">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                        </p>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-box text-green-500 text-2xl mr-4">
+                                        </i>
+                                        <div>
+                                            <h3 class="text-xl font-bold text-gray-800">
+                                                500+ Routes
+                                            </h3>
+                                            <p class="text-gray-600">
+                                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-cube text-green-500 text-2xl mr-4">
-                                    </i>
-                                    <div>
-                                        <h3 class="text-xl font-bold text-gray-800">
-                                            Care Packaging
-                                        </h3>
-                                        <p class="text-gray-600">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                        </p>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-cube text-green-500 text-2xl mr-4">
+                                        </i>
+                                        <div>
+                                            <h3 class="text-xl font-bold text-gray-800">
+                                                Care Packaging
+                                            </h3>
+                                            <p class="text-gray-600">
+                                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-truck text-green-500 text-2xl mr-4">
-                                    </i>
-                                    <div>
-                                        <h3 class="text-xl font-bold text-gray-800">
-                                            Quick Response
-                                        </h3>
-                                        <p class="text-gray-600">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                        </p>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-truck text-green-500 text-2xl mr-4">
+                                        </i>
+                                        <div>
+                                            <h3 class="text-xl font-bold text-gray-800">
+                                                Quick Response
+                                            </h3>
+                                            <p class="text-gray-600">
+                                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -358,8 +361,12 @@ $partners = App\Models\Partner::where('status', 1)->get();
         <div class="ellipseFade2"></div>
     </div>
 
-    <div class=" container px-2 px-md-0 blog-section">
-        <h4 class="mb-4 text-center text-md-start" style="color: #07539e;">Latest News</h4>
+    <div class=" container px-3 px-md-0 blog-section">
+        <div class="w-100 mb-3
+         d-flex justify-content-between">
+            <h5>Related Post</h5>
+            <a href="/newsroom" class="border px-3 py-2 rounded">View All</a>
+        </div>
         <div class="row gap-5 gap-md-2 flex-column flex-md-row justify-content-start align-items-center">
             <div class="card col" style="width: 18rem;">
                 <img class="card-img-top" src="https://placehold.co/600x400" alt="Card image cap">
@@ -385,7 +392,7 @@ $partners = App\Models\Partner::where('status', 1)->get();
         </div>
     </div>
 
-    <div class="container text-box-seo pt-5 pb-2">
+    <div class="container text-box-seo pt-5 pb-2 px-3">
         <p class="fs-5" style=" line-height: 27px; color: #000000c2; word-spacing: 2px; letter-spacing: -1px; font-weight: 500;">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde ipsum praesentium omnis at veniam? Excepturi rerum saepe quas, provident ipsum sequi cum reiciendis eligendi quam optio quos tempora facilis? Assumenda temporibus perferendis laboriosam ut nobis itaque ex earum, fuga a nisi unde placeat repellat autem rerum rem? Unde, repellat rerum. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugiat porro dignissimos ducimus necessitatibus vero dolorum quas saepe tenetur. Ea totam delectus quo quia voluptatibus aperiam autem quaerat! Sint assumenda ab dolorum, placeat dolor voluptates perspiciatis quaerat illo ipsum eveniet laborum consequatur explicabo, dignissimos, minus minima magni pariatur! Fuga, esse ea?
         </p>

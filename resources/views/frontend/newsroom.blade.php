@@ -156,7 +156,7 @@
     </div>
     <div class="container d-flex justify-content-center justify-content-md-end mt-5">
         <nav aria-label="...">
-            <ul class="pagination" style="color: black">
+            <ul class="pagination">
               <li class="page-item disabled">
                 <a class="page-link">Previous</a>
               </li>
@@ -169,7 +169,7 @@
                 <a class="page-link" href="/news-details">Next</a>
               </li>
             </ul>
-          </nav>
+        </nav>
     </div>
 </div>
 

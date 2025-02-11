@@ -177,6 +177,7 @@ Route::get('/career', [App\Http\Controllers\Frontend\HomeController::class, 'car
 Route::get('/prices', [App\Http\Controllers\Frontend\HomeController::class, 'prices'])->name('frontend.prices');
 Route::get('/newsroom', [App\Http\Controllers\Frontend\HomeController::class, 'newsroom'])->name('frontend.newsroom');
 Route::get('/news-details', [App\Http\Controllers\Frontend\HomeController::class, 'newsDetails'])->name('frontend.newsDetails');
+Route::get('/get-a-call', [App\Http\Controllers\Frontend\HomeController::class, 'getACall'])->name('frontend.getACall');
 
 
 

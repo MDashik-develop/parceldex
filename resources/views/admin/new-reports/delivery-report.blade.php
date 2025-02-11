@@ -87,92 +87,96 @@
             ? \Illuminate\Support\Carbon::parse(request()->end_date)->endOfDay()
             : \Illuminate\Support\Carbon::now()->endOfDay();
 
-        $qbrach = \App\Models\Branch::with(['riders.deliveryParcels' => function($q) use ($start_date, $end_date) {
-            $q->whereBetween('delivery_date', [$start_date, $end_date]);
-        }])
-            ->withCount([
-                'riders as total_parcel' => function ($query) use ($start_date, $end_date) {
-                    $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
-                        $subQuery
-                            ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
-                            ->where('parcel_logs.status', 19)
-                            ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
-                    });
-                },
-            ])
-            ->withCount([
-                'riders as total_deliveried' => function ($query) use ($start_date, $end_date) {
-                    $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
-                        $subQuery
-                            ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
-                            ->where('parcel_logs.status', 25)
-                            ->where('parcels.delivery_type', 1)
-                            ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
-                    });
-                },
-            ])
-            ->withCount([
-                'riders as total_partial_deliveried' => function ($query) use ($start_date, $end_date) {
-                    $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
-                        $subQuery
-                            ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
-                            ->where('parcel_logs.status', 25)
-                            ->where('parcels.delivery_type', 2)
-                            ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
-                    });
-                },
-            ])
-            ->withCount([
-                'riders as total_hold' => function ($query) use ($start_date, $end_date) {
-                    $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
-                        $subQuery
-                            ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
-                            ->where('parcel_logs.status', 25)
-                            ->where('parcels.delivery_type', 3)
-                            ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
-                    });
-                },
-            ])
-            ->withCount([
-                'riders as total_cancel' => function ($query) use ($start_date, $end_date) {
-                    $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
-                        $subQuery
-                            ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
-                            ->where('parcel_logs.status', 25)
-                            ->where('parcels.delivery_type', 4)
-                            ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
-                    });
-                },
-            ])
-            ->withCount([
-                'riders as total_cancel' => function ($query) use ($start_date, $end_date) {
-                    $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
-                        $subQuery
-                            ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
-                            ->where('parcel_logs.status', 25)
-                            ->where('parcels.delivery_type', 4)
-                            ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
-                    });
-                },
-            ])
-            ->withCount([
-                'riders as total_unassigned' => function ($query) use ($start_date, $end_date) {
-                    $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
-                        $subQuery
-                            ->whereIn('parcels.status', [16, 17, 18, 20])
-                            ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
-                            ->where('parcel_logs.status', 16)
-                            // ->where('parcels.delivery_type', 2)
-                            ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
-                    });
-                },
-            ]);
+        $qbrach = \App\Models\Branch::with([
+            'riders.deliveryParcels' => function ($q) use ($start_date, $end_date) {
+                $q->whereBetween('delivery_date', [$start_date, $end_date]);
+            },
+        ]);
+        // ->withCount([
+        //     'riders as total_parcel' => function ($query) use ($start_date, $end_date) {
+        //         $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
+        //             $subQuery
+        //                 ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
+        //                 ->where('parcel_logs.status', 19)
+        //                 ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
+        //         });
+        //     },
+        // ])
+        // ->withCount([
+        //     'riders as total_deliveried' => function ($query) use ($start_date, $end_date) {
+        //         $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
+        //             $subQuery
+        //                 ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
+        //                 ->where('parcel_logs.status', 25)
+        //                 ->where('parcels.delivery_type', 1)
+        //                 ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
+        //         });
+        //     },
+        // ])
+        // ->withCount([
+        //     'riders as total_partial_deliveried' => function ($query) use ($start_date, $end_date) {
+        //         $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
+        //             $subQuery
+        //                 ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
+        //                 ->where('parcel_logs.status', 25)
+        //                 ->where('parcels.delivery_type', 2)
+        //                 ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
+        //         });
+        //     },
+        // ])
+        // ->withCount([
+        //     'riders as total_hold' => function ($query) use ($start_date, $end_date) {
+        //         $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
+        //             $subQuery
+        //                 ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
+        //                 ->where('parcel_logs.status', 25)
+        //                 ->where('parcels.delivery_type', 3)
+        //                 ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
+        //         });
+        //     },
+        // ])
+        // ->withCount([
+        //     'riders as total_cancel' => function ($query) use ($start_date, $end_date) {
+        //         $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
+        //             $subQuery
+        //                 ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
+        //                 ->where('parcel_logs.status', 25)
+        //                 ->where('parcels.delivery_type', 4)
+        //                 ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
+        //         });
+        //     },
+        // ])
+        // ->withCount([
+        //     'riders as total_cancel' => function ($query) use ($start_date, $end_date) {
+        //         $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
+        //             $subQuery
+        //                 ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
+        //                 ->where('parcel_logs.status', 25)
+        //                 ->where('parcels.delivery_type', 4)
+        //                 ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
+        //         });
+        //     },
+        // ])
+        // ->withCount([
+        //     'riders as total_unassigned' => function ($query) use ($start_date, $end_date) {
+        //         $query->whereHas('deliveryParcels', function ($subQuery) use ($start_date, $end_date) {
+        //             $subQuery
+        //                 ->whereIn('parcels.status', [16, 17, 18, 20])
+        //                 ->join('parcel_logs', 'parcel_logs.parcel_id', '=', 'parcels.id')
+        //                 ->where('parcel_logs.status', 16)
+        //                 // ->where('parcels.delivery_type', 2)
+        //                 ->whereBetween('parcel_logs.date', [$start_date, $end_date]);
+        //         });
+        //     },
+        // ]);
 
         if (request()->branch_id) {
             $qbrach = $qbrach->where('id', request()->branch_id);
         }
 
-        $qbrach = $qbrach->get();
+        $qbrach = $qbrach->limit(1000)->get();
+
+        // dd($qbrach);
 
         $branches = App\Models\Branch::get();
 
@@ -208,7 +212,6 @@
                         <th>Hub Name</th>
                         <th>Rider Name</th>
                         <th>Total Assigned</th>
-                        <th>Unassigned</th>
                         <th>Delivered</th>
                         <th>Partial Delivered</th>
                         <th>Hold</th>
@@ -220,37 +223,130 @@
                     </tr>
                 </thead>
                 <tbody>
+
+                    @php
+                        $btotal_assigned = 0;
+                        $btotal_deliveried = 0;
+                        $btotal_partial_delivered = 0;
+                        $btotal_hold = 0;
+                        $btotal_cancel = 0;
+                        $btotal_collect_amount = 0;
+                    @endphp
+
                     @foreach ($qbrach as $b)
                         <!-- Hub -->
+
+                        @php
+                            $total_assigned = 0;
+                            $total_deliveried = 0;
+                            $total_partial_delivered = 0;
+                            $total_hold = 0;
+                            $total_cancel = 0;
+                            $total_collect_amount = 0;
+                        @endphp
+
                         @foreach ($b->riders as $kr => $r)
+                            @php
+                                $totalParcels = $r->deliveryParcels->count();
+
+                                $btotal_assigned += $totalParcels;
+                                $total_assigned += $totalParcels;
+
+                                $btotal_deliveried += $r->deliveryParcels
+                                    ->where('status', 25)
+                                    ->where('delivery_type', 1)
+                                    ->count();
+                                $total_deliveried += $r->deliveryParcels
+                                    ->where('status', 25)
+                                    ->where('delivery_type', 1)
+                                    ->count();
+
+                                $btotal_partial_delivered += $r->deliveryParcels
+                                    ->where('status', 25)
+                                    ->where('delivery_type', 2)
+                                    ->count();
+                                $total_partial_delivered += $r->deliveryParcels
+                                    ->where('status', 25)
+                                    ->where('delivery_type', 2)
+                                    ->count();
+
+                                $btotal_hold += $r->deliveryParcels
+                                    ->where('status', 25)
+                                    ->where('delivery_type', 3)
+                                    ->count();
+                                $total_hold += $r->deliveryParcels
+                                    ->where('status', 25)
+                                    ->where('delivery_type', 3)
+                                    ->count();
+
+                                $btotal_cancel += $r->deliveryParcels
+                                    ->where('status', 25)
+                                    ->where('delivery_type', 4)
+                                    ->count();
+                                $total_cancel += $r->deliveryParcels
+                                    ->where('status', 25)
+                                    ->where('delivery_type', 4)
+                                    ->count();
+
+                                $total_collect_amount +=
+                                    $r->deliveryParcels->sum('customer_collect_amount') +
+                                    $r->deliveryParcels->sum('cancel_amount_collection');
+                            @endphp
+
                             <tr>
                                 @if (!$kr)
                                     <td rowspan="{{ $b->riders->count() }}">{{ $b->name }}</td>
                                 @endif
                                 <td>{{ $r->name }}</td>
-                                <td style="text-align: right">{{ $r->total_parcel ?? 0 }}</td>
-                                <td style="text-align: right">{{ $r->total_unassigned ?? 0 }}</td>
-                                <td style="text-align: right">{{ $r->total_deliveried ?? 0 }}</td>
-                                <td style="text-align: right">{{ $r->total_partial_deliveried ?? 0 }}</td>
-                                <td style="text-align: right">{{ $r->total_hold ?? 0 }}</td>
-                                <td style="text-align: right">{{ $r->total_cancel ?? 0 }}</td>
+                                <td style="text-align: right">{{ $r->deliveryParcels->count() ?? 0 }}</td>
                                 <td style="text-align: right">
-                                    @if ($r->total_parcel > 0)
-                                        {{ (($r->total_deliveried + $r->total_partial_deliveried) / $r->total_parcel) * 100 }}%
+                                    {{ $r->deliveryParcels->where('status', 25)->where('delivery_type', 1)->count() ?? 0 }}
+                                </td>
+                                <td style="text-align: right">
+                                    {{ $r->deliveryParcels->where('status', 25)->where('delivery_type', 2)->count() ?? 0 }}
+                                </td>
+                                <td style="text-align: right">
+                                    {{ $r->deliveryParcels->where('status', 25)->where('delivery_type', 3)->count() ?? 0 }}
+                                </td>
+                                <td style="text-align: right">
+                                    {{ $r->deliveryParcels->where('status', 25)->where('delivery_type', 4)->count() ?? 0 }}
+                                </td>
+                                <td style="text-align: right">
+                                    @php
+                                        $deliveredParcels = $r->deliveryParcels
+                                            ->where('status', 25)
+                                            ->whereIn('delivery_type', [1, 2])
+                                            ->count();
+                                    @endphp
+
+                                    @if ($totalParcels > 0)
+                                        {{ number_format(($deliveredParcels / $totalParcels) * 100, 2) }}%
                                     @else
                                         0%
                                     @endif
                                 </td>
                                 <td style="text-align: right">
-                                    @if ($r->total_hold > 0)
-                                        {{ ($r->total_hold / ($r->total_parcel ?? 1)) * 100 }}%
+                                    @php
+                                        $holdParcels = $r->deliveryParcels
+                                            ->where('status', 25)
+                                            ->where('delivery_type', 3)
+                                            ->count();
+                                    @endphp
+                                    @if ($totalParcels > 0)
+                                        {{ number_format(($holdParcels / $totalParcels) * 100, 2) }}%
                                     @else
                                         0%
                                     @endif
                                 </td>
                                 <td style="text-align: right">
-                                    @if ($r->total_cancel > 0)
-                                        {{ ($r->total_cancel / ($r->total_parcel ?? 1)) * 100 }}%
+                                    @php
+                                        $cancelParcels = $r->deliveryParcels
+                                            ->where('status', 25)
+                                            ->where('delivery_type', 4)
+                                            ->count();
+                                    @endphp
+                                    @if ($totalParcels > 0)
+                                        {{ number_format(($cancelParcels / $totalParcels) * 100, 2) }}%
                                     @else
                                         0%
                                     @endif
@@ -260,35 +356,52 @@
                                 </td>
                             </tr>
                         @endforeach
-
                         <tr class="fw-bold">
                             <td colspan="2" class="text-center">{{ $b->name }} Total</td>
-                            <td style="text-align: right">70</td>
-                            <td style="text-align: right">70</td>
-                            <td style="text-align: right">70</td>
-                            <td style="text-align: right">70</td>
-                            <td style="text-align: right">70</td>
-                            <td style="text-align: right">70</td>
-                            <td style="text-align: right">70</td>
-                            <td style="text-align: right">70</td>
-                            <td style="text-align: right">70</td>
-                            <td style="text-align: right">70</td>
+                            <td style="text-align: right">{{ $total_assigned }}</td>
+                            <td style="text-align: right"> {{ $total_deliveried }} </td>
+                            <td style="text-align: right">{{ $total_partial_delivered }}</td>
+                            <td style="text-align: right">
+                                {{ $total_hold }}
+                            </td>
+                            <td style="text-align: right">
+                                {{ $total_cancel }}
+                            </td>
+                            <td style="text-align: right">
+                                {{ number_format(($total_deliveried * 100) / ($total_assigned ?? 1), 2) }}%
+                            </td>
+                            <td style="text-align: right">
+                                {{ number_format(($total_hold * 100) / ($total_assigned ?? 1), 2) }}%
+                            </td>
+                            <td style="text-align: right">
+                                {{ number_format(($total_cancel * 100) / ($total_assigned ?? 1), 2) }}%
+                            </td>
+                            <td style="text-align: right">
+                                {{ $total_collect_amount }}
+                            </td>
                         </tr>
                     @endforeach
 
                     <!-- Grand Total -->
                     <tr class="table-dark fw-bold">
                         <td colspan="2" class="text-center">Grand Total</td>
-                        <td style="text-align: right">!</td>
-                        <td style="text-align: right">!</td>
-                        <td style="text-align: right">!</td>
-                        <td style="text-align: right">!</td>
-                        <td style="text-align: right">!</td>
-                        <td style="text-align: right">!</td>
-                        <td style="text-align: right">!</td>
-                        <td style="text-align: right">!</td>
-                        <td style="text-align: right">!</td>
-                        <td style="text-align: right">!</td>
+                        <td style="text-align: right">{{ $btotal_assigned }}</td>
+                        <td style="text-align: right">{{ $btotal_deliveried }}</td>
+                        <td style="text-align: right">{{ $btotal_partial_delivered }}</td>
+                        <td style="text-align: right">{{ $btotal_hold }}</td>
+                        <td style="text-align: right">{{ $btotal_cancel }}</td>
+                        <td style="text-align: right">
+                            {{ number_format(($btotal_deliveried * 100) / ($btotal_assigned ?? 1), 2) }}%
+                        </td>
+                        <td style="text-align: right">
+                            {{ number_format(($btotal_hold * 100) / ($btotal_assigned ?? 1), 2) }} %
+                        </td>
+                        <td style="text-align: right">
+                            {{ number_format(($btotal_cancel * 100) / ($btotal_assigned ?? 1), 2) }}%
+                        </td>
+                        <td style="text-align: right">
+                            {{ $btotal_collect_amount }}
+                        </td>
                     </tr>
                 </tbody>
             </table>

@@ -26,7 +26,7 @@
 
     <center>
         <div class="termsAndConditions-2nd-section container row justify-content-center min-vw-100 my-5">
-        <div class="col-6">
+        <div class="col-11 col-md-10 col-lg-6">
             <h5 class="my-5 fs-2 fw-semibold text-center" style="font-family: system-ui; letter-spacing: -1px;">Return and Refund Policy</h5>
             <div id="eng-text" style="display: none">
                 <strong class="mb-5 fs-4 text-left w-100" style="color: #737373;">Return Policy:</strong>

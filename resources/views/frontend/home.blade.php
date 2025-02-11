@@ -8,50 +8,6 @@ $partners = App\Models\Partner::where('status', 1)->get();
 @extends('layouts.frontend.app')
 
 @section('content')
-
-<!-- Modal Trigger Button -->
-{{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Open Modal
-</button> --}}
-
-<!-- Bootstrap Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="exampleModalLabel">Fill Your Data</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-row">
-                        <div class="row gap-3">
-                            <div class="form-group col mb-3">
-                                <label for="inputEmail4">Email</label>
-                                <input type="text" class="form-control text-start" id="inputEmail4" placeholder="Enter Your Name">
-                            </div>
-                            <div class="form-group col mb-3">
-                                <label for="inputPassword4">Phone</label>
-                                <input type="tel" class="form-control text-start" id="inputPassword4" placeholder="Enter Your Phone Number">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group mb-2">
-                      <label for="inputAddress">Facebook Or Website</label>
-                      <input type="link" class="form-control text-start" id="inputAddress" placeholder="Enter Link">
-                    </div>
-
-                    <div class="form-control border-0 pb-4">
-                        <button type="submit" class="btn btn-primary w-100">Sign in</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Bootstrap Modal -->
-
-
     <div class="intro-wrapper">
         <div class="container-fluid">
             <div class="intro d-flex justify-content-between">
@@ -63,10 +19,9 @@ $partners = App\Models\Partner::where('status', 1)->get();
                         a hurricane or tornado season can demand a higher cost due to the circumstances surrounding
                         the process.
                     </p>
-                    <div class="home-hero-section-buttons row justify-content-start px-0">
-                        <a class="col-12 mb-2 mb-lg-0 m-0 col-md-5 col-lg-6 text-left" href="/register"><button class="">Become a Merchant</button></a>
-                        {{-- <a class="col-12 col-lg-3"><button class="btn btn-lg" style=" background-color: #F27B21;" data-bs-toggle="modal" data-bs-target="#exampleModal">Get A Call</button></a> --}}
-                        <a href="/get-a-call" class="col-12 col-md-5 col-lg-3"><button class="" style=" background-color: #F27B21;">Get A Call</button></a>
+                    <div class="home-hero-section-buttons row justify-content-start px-0 gap-2 gap-lg-3">
+                        <a class="col col-md-auto col-lg-auto text-left" href="/register"><button class="">Become a Merchant</button></a>
+                        <a href="/get-a-call" class="col col-md-auto col-lg-auto"><button class="" style=" background-color: #F27B21;">Get A Call</button></a>
                         
                     </div>
                 </div>
@@ -361,11 +316,10 @@ $partners = App\Models\Partner::where('status', 1)->get();
         <div class="ellipseFade2"></div>
     </div>
 
-    <div class=" container px-3 px-md-0 blog-section">
-        <div class="w-100 mb-3
-         d-flex justify-content-between">
+    <div class="px-3 px-md-0 container blog-section">
+        <div class="w-100 mb-3 d-flex justify-content-between">
             <h5>Related Post</h5>
-            <a href="/newsroom" class="border px-3 py-2 rounded">View All</a>
+            <a href="/blogs" class="border px-3 py-2 rounded">View All</a>
         </div>
         <div class="row gap-5 gap-md-2 flex-column flex-md-row justify-content-start align-items-center">
             <div class="card col" style="width: 18rem;">
@@ -392,8 +346,8 @@ $partners = App\Models\Partner::where('status', 1)->get();
         </div>
     </div>
 
-    <div class="container text-box-seo pt-5 pb-2 px-3">
-        <p class="fs-5" style=" line-height: 27px; color: #000000c2; word-spacing: 2px; letter-spacing: -1px; font-weight: 500;">
+    <div class="px-3 container text-box-seo pt-5 pb-2">
+        <p style="">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde ipsum praesentium omnis at veniam? Excepturi rerum saepe quas, provident ipsum sequi cum reiciendis eligendi quam optio quos tempora facilis? Assumenda temporibus perferendis laboriosam ut nobis itaque ex earum, fuga a nisi unde placeat repellat autem rerum rem? Unde, repellat rerum. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugiat porro dignissimos ducimus necessitatibus vero dolorum quas saepe tenetur. Ea totam delectus quo quia voluptatibus aperiam autem quaerat! Sint assumenda ab dolorum, placeat dolor voluptates perspiciatis quaerat illo ipsum eveniet laborum consequatur explicabo, dignissimos, minus minima magni pariatur! Fuga, esse ea?
         </p>
     </div>

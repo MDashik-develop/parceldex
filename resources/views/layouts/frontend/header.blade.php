@@ -2,12 +2,11 @@
 <div class="navbar-wrapper d-flex align-items-center">
     <div class="container-fluid">
         <nav class="navbar">
-            <div class="d-flex gap-3 align-items-center">
+            <div class="d-flex gap-1 gap-md-3 align-items-center">
                 <div class="mobile-nav-toggler">
                     <img src="/frontend/images/fa_bar.svg" alt="">
                 </div>
                 <div class="brand-logo">
-                    <!-- <a href="index.html"><img src="/frontend/images/logo/logo.png" alt="" class="web_logo"></a> -->
                     <a href="/"><img src="/frontend/images/logo/logo.png" alt="" class="web_logo"></a>
                 </div>
             </div>

@@ -36,12 +36,8 @@
                         <form>
                             <div class="row form-row gap-2">
                                 <div class="form-group col-md mb-3">
-                                    <label for="inputEmail4">First Name</label>
-                                    <input type="text" class="form-control" id="inputEmail4" placeholder="Enter your First Name">
-                                </div>
-                                <div class="form-group col-md mb-3">
-                                    <label for="inputPassword4">Last Name</label>
-                                    <input type="text" class="form-control" id="inputPassword4" placeholder="Enter your Last Name">
+                                    <label for="inputEmail4">Your Name</label>
+                                    <input type="text" class="form-control" id="inputEmail4" placeholder="Enter Your Name">
                                 </div>
                             </div>
                             <div class="row form-row gap-2">
@@ -67,8 +63,8 @@
                                     <label for="inputCity">City</label>
                                     <input type="text" class="form-control" id="inputCity" placeholder="Enter your City">
                                 </div>
-                                <div class="form-group col-md-4 mb-3">
-                                    <label for="inputState">State</label>
+                                {{-- <div class="form-group col-md-4 mb-3">
+                                    <label for="inputState">Diviso</label>
                                     <select id="inputState" class="form-control">
                                         <option selected>Choose State<option>
                                         <option value="Dhaka">Dhaka</option>
@@ -80,28 +76,28 @@
                                         <option value="Rangpur">Rangpur</option>
                                         <option value="Mymensingh">Mymensingh</option>
                                     </select>
-                                </div>
+                                </div> --}}
                                 <div class="form-group col-md mb-3">
                                     <label for="inputZip">Zip</label>
                                     <input type="text" class="form-control" id="inputZip" placeholder="Postal Code...">
                                 </div>
                             </div>
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Why Choose Yoe</label>
+                                <textarea class="form-control" id="message" rows="2" placeholder="Type Why We Choose YOu..."></textarea>
+                            </div>
                             <div class="input-group mb-3">
                                 <input type="file" class="form-control" id="inputGroupFile">
                                 <label class="input-group-text" for="inputGroupFile">Upload your Resume</label>
-                            </div>
-                            <div class="mb-3">
-                                <label for="message" class="form-label">Your Message</label>
-                                <textarea class="form-control" id="message" rows="2" placeholder="Type your message..."></textarea>
-                            </div>                          
-                            <div class="form-group mb-3">
+                            </div>                         
+                            {{-- <div class="form-group mb-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="gridCheck">
                                     <label class="form-check-label" for="gridCheck">
                                         Are you agree all terms and conditions
                                     </label>
                                 </div>
-                            </div>
+                            </div> --}}
                             <button type="submit" class="btn w-100">Submit <i class="fa-solid fa-paper-plane"></i> </button>
                         </form>
                     </div>

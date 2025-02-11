@@ -3,31 +3,36 @@
 @section('content')
 
 <div class="main-termsAndConditions-page">
-    
-	<div class="common-hero-section text-center p-3 p-md-0">
-        <div class="easy-translate">
+    <div class="common-hero-section text-center">
+        {{-- <div class="easy-translate">
             <label class="switch">
                 <input type="checkbox" id="toggleSwitch">
                 <span class="slider"></span>
             </label>
-        </div>
-		<h3 class="mb-4">
-			Terms & Conditions
-		</h3>
-		<p class="mb-4 position-relative z-1" style="color: #6C757D;">
-			Find out more about our policies and other regulations to gain<br> information about how our services operate.
-		</p>
-		<div class="row justify-content-center gap-2 bg-transparent mt-4">
-			<a class="col-5 col-sm-3 col-lg-1 py-2 shadow rounded-1 text-white fw-semibold" style="background-color: #F27B21 !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 5px 0px !important;">
-				<i class="fa-solid fa-phone" style="margin-right: 7px"></i>
-				Contact Us
+        </div> --}}
+        <h3 class="mb-4">
+            Terms & Conditions
+        </h3>
+        <p class="mb-4" style="color: #6C757D;">
+            Find out more about our policies and other regulations to gain<br> information about how our services operate.
+        </p>
+        <div class="row justify-content-center gap-2 bg-transparent mt-4">
+            <a class="col-5 col-sm-3 col-lg-1 py-2 shadow rounded-1 text-white fw-semibold" style="background-color: #F27B21 !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 5px 0px !important;">
+                <i class="fa-solid fa-phone" style="margin-right: 7px"></i>
+                Contact Us
             </a>
-		</div>
-	</div>
+            <div class="easy-translate col-2">
+                <label class="switch">
+                    <input type="checkbox" id="toggleSwitch">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
 
     <center>
         <div class="termsAndConditions-2nd-section container row justify-content-center min-vw-100 my-5">
-        <div class="col-6">
+        <div class="col-11 col-md-10 col-lg-6">
             <h5 class="my-5 fs-2 fw-semibold text-center" style="font-family: system-ui; letter-spacing: -1px;">Return and Refund Policy</h5>
             <div id="eng-text" style="display: none">
                 <strong class="mb-5 fs-4 text-left w-100" style="color: #737373;">Return Policy:</strong>

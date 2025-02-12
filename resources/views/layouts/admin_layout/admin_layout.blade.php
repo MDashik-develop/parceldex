@@ -38,7 +38,7 @@
             location.reload();
         }
 
-        // Set the key combination (e.g., Ctrl + Shift + C)
+        // Set the key combination (e.g., Ctrl + Shift + S)
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.shiftKey && e.key === 'S') {
                 clearCache();

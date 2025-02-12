@@ -3079,6 +3079,21 @@ body.auth {
   letter-spacing: 0px;
   font-weight: 500;
 }
+.section-heading{
+  font-size: 25px;
+  font-family: inter;
+  font-weight: 700;
+  margin: 0;
+}
+.section-heading-border{
+  width: 120px;
+  height: 3px;
+  background-color: #F27B21;
+  border-radius: 50pc;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
 /*----- common -----*/
 /*----- price page-----*/
 .prices-2nd-section table thead tr th{
@@ -3092,3 +3107,5 @@ body.auth {
   padding: 20px;
 }
 /*----- price page-----*/
+/*----- services page-----*/
+/*----- services page-----*/

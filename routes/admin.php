@@ -561,4 +561,7 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
 
     Route::get('parcel-reset', [App\Http\Controllers\Admin\ParcelResetController::class, 'index'])->name('parcel-reset.index');
     Route::put('parcel-reset', [App\Http\Controllers\Admin\ParcelResetController::class, 'update'])->name('parcel-reset.update');
+
+    Route::resource('page-seo', App\Http\Controllers\Admin\SeoMetaController::class);
+
 });

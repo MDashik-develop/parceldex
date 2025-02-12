@@ -3,9 +3,7 @@
         <img src="{{ asset('uploads/application/') . '/' . session()->get('company_photo') }}"
             alt="{{ session()->get('company_name') ?? config('app.name') }}" class="brand-image" style="opacity: .8">
         <br>
-
     </a>
-
 
     <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 text-center">
@@ -49,6 +47,15 @@
                         </p>
                     </a>
 
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.page-seo.index') }}"
+                                class="nav-link {{ $child_menu == 'page-seo' ? 'active' : '' }}">
+                                <i class="fas fa-tags"></i>
+                                <p>Page Seo</p>
+                            </a>
+                        </li>
+                    </ul>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.slider.index') }}"

@@ -6,61 +6,8 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
     <!-- Basic SEO Meta Tags -->
-    <title>@yield('meta_title', 'Parceldex Courier | Fast & Reliable Delivery in Bangladesh')</title>
-
-    <meta name="description"
-        content="Explore our fast & reliable courier services, including express delivery, cash on delivery, eCommerce logistics, and nationwide shipping across Bangladesh.">
-    <meta name="keywords"
-        content="courier services Bangladesh, express delivery, cash on delivery, eCommerce logistics, nationwide shipping, Parceldex, parcel tracking">
-
-    <meta property="og:title" content="Our Courier Services | Fast Delivery Across Bangladesh">
-    <meta property="og:description"
-        content="Parceldex offers express delivery, COD, and eCommerce logistics across Bangladesh. Get secure & fast courier solutions for businesses and individuals.">
-    <meta property="og:image" content="https://parceldex.com/path-to-image.jpg">
-    <meta property="og:url" content="https://parceldex.com/services">
-
-    <meta name="twitter:title" content="Our Courier Services | Fast Delivery Across Bangladesh">
-    <meta name="twitter:description"
-        content="Parceldex provides express courier, cash on delivery, and nationwide shipping solutions in Bangladesh. Reliable & fast delivery for businesses and individuals.">
-    <meta name="twitter:image" content="https://parceldex.com/path-to-image.jpg">
-
-    <link rel="canonical" href="https://parceldex.com/services">
-
-    <!-- JSON-LD Schema Markup for Services Page -->
-    <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "Service",
-          "name": "Courier Services",
-          "url": "https://parceldex.com/services",
-          "provider": {
-            "@type": "CourierService",
-            "name": "Parceldex Courier",
-            "url": "https://parceldex.com"
-          },
-          "serviceType": "Express Delivery, Same-Day Delivery, Next-Day Delivery, Cash on Delivery, eCommerce Logistics",
-          "areaServed": {
-            "@type": "Country",
-            "name": "Bangladesh"
-          },
-          "availableChannel": {
-            "@type": "ServiceChannel",
-            "serviceUrl": "https://parceldex.com/services",
-            "availableLanguage": ["English", "Bengali"]
-          },
-          "offers": {
-            "@type": "Offer",
-            "priceCurrency": "BDT",
-            "price": "Varies",
-            "url": "https://parceldex.com/services"
-          },
-          "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": "+8809642727727",
-            "contactType": "customer service"
-          }
-        }
-        </script>
+    @yield('seo-meta')
+    <!-- Basic SEO Meta Tags end -->
 
     <meta name="author" content="Parceldex Courier">
     <meta name="robots" content="index, follow">

@@ -175,8 +175,7 @@
                                     <textarea name="" id="" style="width: 100%"></textarea>
                                 </td>
                                 <td id="total-payable-{{ $key }}">{{ $item['payable'] }}</td>
-                                <td id="ctotal-payable-{{ $key }}" style="display: none">{{ $item['payable'] }}
-                                </td>
+                                <td id="ctotal-payable-{{ $key }}" style="display: none">{{ $item['payable'] }}</td>
                                 <td>
                                     <span id="parcel-count-{{ $key }}">{{ $item['number_of_parcels'] }}</span>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -226,12 +225,9 @@
                                         value="{{ $p['parcel_payable'] }}" hidden>
                                     <input type="text" value="{{ $p['id'] }}"
                                         class="parcel-id-{{ $key }}" hidden>
-                                    <td>{{ $p['parcel_invoice'] }}
-                                    </td>
+                                    <td>{{ $p['parcel_invoice'] }}</td>
                                     <td id="parcel-collected-{{ $p['parcel_invoice'] }}">{{ $p['collected'] }}</td>
-                                    <td><button
-                                            onclick="removeParcel({{ $p['parcel_invoice'] }}, {{ $key }})">Delete</button>
-                                    </td>
+                                    <td><button onclick="removeParcel({{ $p['parcel_invoice'] }}, {{ $key }})">Delete</button></td>
                                 </tr>
                             @endforeach
                         </table>
@@ -254,16 +250,14 @@
                 $('#total-charge-' + key).text($('#total-charge-' + key).text() - $('#parcel-charge-' + parcelId).val());
 
                 $('#total-payable-' + key).text($('#total-payable-' + key).text() - $('#parcel-payable-' + parcelId).val());
-                $('#ctotal-payable-' + key).text($('#total-payable-' + key).text() - $('#parcel-payable-' + parcelId).val());
+                $('#ctotal-payable-' + key).text($('#ctotal-payable-' + key).text() - $('#parcel-payable-' + parcelId).val());
 
                 $('#parcel-tr-' + parcelId).remove();
                 $('#parcel-count-' + key).text($('#parcel-count-' + key).text() - 1);
             }
 
             function adjustment(key) {
-                let a = parseInt($('#adjustment-input-' +
-                        key)
-                    .val());
+                let a = parseInt($('#adjustment-input-' + key).val());
 
                 if (a) {
                     $('#total-payable-' + key).text(parseInt($('#ctotal-payable-' + key).text()) + a);

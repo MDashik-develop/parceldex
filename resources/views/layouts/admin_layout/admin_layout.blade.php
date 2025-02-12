@@ -26,6 +26,26 @@
 
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 
+    <script>
+        function clearCache() {
+            localStorage.clear();
+            sessionStorage.clear();
+            if ('caches' in window) {
+                caches.keys().then(cacheNames => {
+                    cacheNames.forEach(name => caches.delete(name));
+                });
+            }
+            location.reload();
+        }
+
+        // Set the key combination (e.g., Ctrl + Shift + C)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'S') {
+                clearCache();
+            }
+        });
+    </script>
+
 </head>
 {{-- <body class="hold-transition sidebar-mini {{ isset($collapse) ? $collapse : ''}}"> --}}
 
@@ -70,7 +90,7 @@
 
     @stack('script_js')
     @stack('navbar-script')
-    
+
 </body>
 
 </html>

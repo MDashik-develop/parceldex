@@ -121,10 +121,12 @@ class PathaoController extends Controller
                     $pathaoOrderCreate = create_pathao_order($access_token, $city_id, $zone_id, $area_id, $parcel);
                     // dd($pathaoOrderCreate);
                     if ($pathaoOrderCreate['code'] == 200) {
+                        
                         $riderRunDetail = RiderRunDetail::create([
                             'rider_run_id' => $riderRun->id,
                             'parcel_id' => $parcel_id,
                         ]);
+
                         PathaoOrderDetail::create([
                             'pathao_order_id' => $pathaoOrder->id,
                             'parcel_id' => $parcel_id,
@@ -132,6 +134,7 @@ class PathaoController extends Controller
                             'consignment_id' => $pathaoOrderCreate['data']['consignment_id'],
                             'merchant_order_id' => $pathaoOrderCreate['data']['merchant_order_id'],
                         ]);
+
                         $parcel = Parcel::where('id', $parcel_id)->first();
 
                         $parcel->update([

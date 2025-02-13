@@ -4,8 +4,15 @@ namespace App\Http\Controllers\Branch;
 
 use App\Http\Controllers\Controller;
 use App\Models\Parcel;
+use App\Models\ParcelLog;
+use App\Models\PathaoOrder;
+use App\Models\PathaoOrderDetail;
+use App\Models\RiderRun;
+use App\Models\RiderRunDetail;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class HandsontableDataController extends Controller
@@ -338,9 +345,9 @@ class HandsontableDataController extends Controller
                 $store_list = $this->getStoreList($access_token);
                 $store_id = $this->getStoreId($store_list, $value[1]);
 
-                $orderData[] = [
+                $order = [
                     "delivery_type" => 48,
-                    "item_type" => $value[0] == 'Parcel' ? 2 : 1,
+                    "item_type" => $value[0] === 'Parcel' ? 2 : 1,
                     "store_id" => $store_id,
                     "merchant_order_id" => $value[2],
                     "recipient_name" => $value[3],
@@ -348,7 +355,6 @@ class HandsontableDataController extends Controller
                     "recipient_address" => $value[5],
                     "recipient_city" => $city_id,
                     "recipient_zone" => $zone_id,
-                    // "recipient_area" => $area_id,
                     "amount_to_collect" => $value[9],
                     "item_quantity" => $value[10],
                     "item_weight" => $value[11],
@@ -357,10 +363,110 @@ class HandsontableDataController extends Controller
                 ];
 
                 if ($area_id) {
-                    $orderData[count($orderData) - 1]['recipient_area'] = $area_id;
+                    $order['recipient_area'] = $area_id;
                 }
+
+                $orderData[] = $order;
             }
         }
+
+        if (!$orderData) {
+            return response()->json(['error' => 'No parcel to confirm'], 400);
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            $branch_id = auth()->guard('branch')->user()->branch->id;
+            $branch_user_id = auth()->guard('branch')->user()->id;
+            $rider_id = 1;
+
+            // run rider create
+            $riderRun = RiderRun::create([
+                'run_invoice' => $this->returnUniqueRiderRunInvoice(),
+                'rider_id' => $rider_id,
+                'branch_id' => $branch_id,
+                'branch_user_id' => $branch_user_id,
+                'create_date_time' => now(),
+                'total_run_parcel' => count($orderData),
+                'note' => $request->input('note'),
+                'run_type' => 2,
+                'status' => 1,
+            ]);
+
+            foreach ($orderData as $parcelData) {
+
+                $parcel = Parcel::where('id', $parcelData['merchant_order_id'])->first();
+
+                // create pathao order
+                $pathaoOrderCreate = create_pathao_order($access_token, $parcelData['recipient_city'], $parcelData['recipient_zone'], $orderData['recipient_area'], $parcel);
+
+                if ($pathaoOrderCreate['code'] == 200) {
+
+                    // rider run details create
+                    $riderRunDetail = RiderRunDetail::create([
+                        'rider_run_id' => $riderRun->id,
+                        'parcel_id' => $parcel->id,
+                    ]);
+
+                    $pathaoOrder = PathaoOrder::create([
+                        'order_no' => $this->returnUniquePathaoOrderNo(),
+                        'city_id' => $parcelData['recipient_city'],
+                        'zone_id' => $request->input('recipient_zone'),
+                        'area_id' => $request->input('recipient_area'),
+                        'branch_id' => $branch_id,
+                        'branch_user_id' => $branch_user_id,
+                        'date' => now(),
+                        'time' => date('H:i:s'),
+                        'total_parcel' => 1,
+                        'note' => $request->input('note'),
+                    ]);
+
+                    // create pathao order details
+                    PathaoOrderDetail::create([
+                        'pathao_order_id' => $pathaoOrder->id,
+                        'parcel_id' => $parcel->id,
+                        'rider_run_detail_id' => $riderRunDetail->id,
+                        'consignment_id' => $pathaoOrderCreate['data']['consignment_id'],
+                        'merchant_order_id' => $pathaoOrderCreate['data']['merchant_order_id'],
+                    ]);
+
+                    $parcel = Parcel::where('id', $parcel->id)->first();
+
+                    $parcel->update([
+                        'status' => 16,
+                        'parcel_date' => $request->input('date'),
+                        'is_pathao' => 1,
+                        'pathao_status' => "Pending",
+                        'delivery_rider_id' => $rider_id,
+                        'delivery_rider_accept_date' => date('Y-m-d'),
+                        'delivery_branch_id' => $branch_id,
+                        'delivery_branch_user_id' => $branch_user_id,
+                    ]);
+
+                    ParcelLog::create([
+                        'parcel_id' => $parcel->id,
+                        'delivery_rider_id' => $rider_id,
+                        'delivery_branch_id' => $branch_id,
+                        'delivery_branch_user_id' => $branch_user_id,
+                        'date' => date('Y-m-d'),
+                        'time' => date('H:i:s'),
+                        'status' => 16,
+                        'delivery_type' => $parcel->delivery_type,
+                    ]);
+
+                } else {
+                    throw new Exception("Error Processing Request", 1);
+                }
+            }
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
+
+
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',

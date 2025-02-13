@@ -66,10 +66,12 @@ if (!function_exists('pathao_access_token')) {
             'password' => 'parceldex2023',
             'grant_type' => 'password',
         ];
+
         $res = Http::withHeaders([
             'Accept' => 'application/json',
             'Content-Type' => 'application/json'
         ])->post("https://api-hermes.pathao.com/aladdin/api/v1/issue-token", $data);
+
         $response = json_decode($res, true);
         return $response['access_token'];
     }
@@ -138,11 +140,13 @@ if (!function_exists('create_pathao_order')) {
             "item_description" => $parcel->product_details
         ];
         // dd($data);
+        
         $res = Http::withHeaders([
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
             'Authorization' => "Bearer $access_token"
         ])->post("https://api-hermes.pathao.com/aladdin/api/v1/orders", $data);
+
         return json_decode($res, true);
     }
 }

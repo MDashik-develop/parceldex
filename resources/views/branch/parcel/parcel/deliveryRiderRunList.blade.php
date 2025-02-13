@@ -78,7 +78,7 @@
             pageLength: 100,
             lengthMenu: [[100,200,500,-1],[100,200,500,'All']],
             language : {
-                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span> '
+                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>'
             },
             processing: true,
             serverSide: true,

@@ -124,7 +124,30 @@ class HandsontableDataController extends Controller
     //
     public function getParcelInvoices()
     {
-        $data = Parcel::get('parcel_invoice')->pluck('parcel_invoice');
+        $branch_user = auth()->guard('branch')->user();
+        $branch_id = $branch_user->branch->id;
+        $branch_type = $branch_user->branch->type;
+
+        if ($branch_type == 1) {
+            $where_condition = "status NOT IN (2,3,4)";
+        } else {
+            $where_condition = "sub_branch_id = {$branch_id} and status NOT IN (2,3,4)";
+        }
+
+        // $data = Parcel::get('parcel_invoice')->pluck('parcel_invoice');
+
+        $data = Parcel::where(function ($query) use ($branch_id) {
+            $query->where('delivery_branch_id', $branch_id)
+                ->orWhere('return_branch_id', $branch_id)
+                ->orWhere(function ($subQuery) use ($branch_id) {
+                    $subQuery->where('status', '<=', 11)
+                        ->where('pickup_branch_id', $branch_id);
+                });
+        })
+            ->whereRaw($where_condition)
+            ->get('parcel_invoice')
+            ->pluck('parcel_invoice');
+
         return response()->json($data);
     }
 
@@ -364,6 +387,8 @@ class HandsontableDataController extends Controller
 
                 if ($area_id) {
                     $order['recipient_area'] = $area_id;
+                } else {
+                    $order['recipient_area'] = 0;
                 }
 
                 $orderData[] = $order;
@@ -397,10 +422,10 @@ class HandsontableDataController extends Controller
 
             foreach ($orderData as $parcelData) {
 
-                $parcel = Parcel::where('id', $parcelData['merchant_order_id'])->first();
+                $parcel = Parcel::where('parcel_invoice', $parcelData['merchant_order_id'])->first();
 
                 // create pathao order
-                $pathaoOrderCreate = create_pathao_order($access_token, $parcelData['recipient_city'], $parcelData['recipient_zone'], $orderData['recipient_area'], $parcel);
+                $pathaoOrderCreate = create_pathao_order($access_token, $parcelData['recipient_city'], $parcelData['recipient_zone'], $parcelData['recipient_area'], $parcel);
 
                 if ($pathaoOrderCreate['code'] == 200) {
 
@@ -413,8 +438,8 @@ class HandsontableDataController extends Controller
                     $pathaoOrder = PathaoOrder::create([
                         'order_no' => $this->returnUniquePathaoOrderNo(),
                         'city_id' => $parcelData['recipient_city'],
-                        'zone_id' => $request->input('recipient_zone'),
-                        'area_id' => $request->input('recipient_area'),
+                        'zone_id' => $parcelData['recipient_zone'],
+                        'area_id' => $parcelData['recipient_zone'],
                         'branch_id' => $branch_id,
                         'branch_user_id' => $branch_user_id,
                         'date' => now(),
@@ -466,29 +491,33 @@ class HandsontableDataController extends Controller
             throw $th;
         }
 
+        return [
+            'success' => true,
+            'message' => 'Orders confirmed successfully',
+            // 'data' => $response->json(),
+        ];
 
+        // $response = Http::withHeaders([
+        //     'Content-Type' => 'application/json',
+        //     'Authorization' => 'Bearer ' . $access_token,
+        // ])->post($this->base_url . '/aladdin/api/v1/orders', ['orders' => $orderData]);
 
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer ' . $access_token,
-        ])->post($this->base_url . '/aladdin/api/v1/orders', ['orders' => $orderData]);
+        // if ($response->successful()) {
+        //     // Handle successful response
+        //     return [
+        //         'success' => true,
+        //         'message' => 'Orders confirmed successfully',
+        //         'data' => $response->json(),
+        //     ];
+        // } else {
+        //     // Handle failed response
 
-        if ($response->successful()) {
-            // Handle successful response
-            return [
-                'success' => true,
-                'message' => 'Orders confirmed successfully',
-                'data' => $response->json(),
-            ];
-        } else {
-            // Handle failed response
-
-            return [
-                'success' => false,
-                'message' => 'Failed to confirm orders',
-                'body' => $response->body(),
-                'data' => $orderData
-            ];
-        }
+        //     return [
+        //         'success' => false,
+        //         'message' => 'Failed to confirm orders',
+        //         'body' => $response->body(),
+        //         'data' => $orderData
+        //     ];
+        // }
     }
 }

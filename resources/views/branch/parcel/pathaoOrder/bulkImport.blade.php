@@ -305,6 +305,11 @@
 
         // Add event listener to save button
         save.addEventListener('click', async () => {
+            // button disable and loading
+            save.disabled = true;
+            save.textContent = 'Saving...';
+            save.style.cursor = 'progress';
+
             try {
                 // Save all cell's data
                 const response = await fetch(`{{ route('branch.handsontable.confirm-orders') }}`, {
@@ -330,6 +335,9 @@
 
                 if (data.success) {
                     alert(data.message);
+
+                    // reload page
+                    window.location.reload();
                 }
 
                 // exampleConsole.innerText = 'Data saved';
@@ -338,6 +346,8 @@
                 console.error('Error saving data:', error);
                 // exampleConsole.innerText = 'Error saving data';
             }
+
+           
         });
     </script>
 @endpush

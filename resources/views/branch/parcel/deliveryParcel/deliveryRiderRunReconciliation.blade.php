@@ -136,30 +136,33 @@
                             <table class="table table-style table-striped">
                                 <thead>
                                     <tr>
-                                        <th width="3%" class="text-center">Order ID</th>
-                                        <th width="10%" class="text-center">Run Status</th>
-                                        <th width="10%" class="text-center">M.Company</th>
-                                        <th width="10%" class="text-center">Customer Name</th>
-                                        <th width="15%" class="text-center">Address</th>
-                                        {{-- <th width="5%" class="text-center">Area</th> --}}
-                                        <th width="10%" class="text-center">Amount to be Collect</th>
+                                        <th class="text-center">Order ID</th>
+                                        <th class="text-center">Run Status</th>
+                                        <th class="text-center">M.Company</th>
+                                        <th class="text-center">Customer Name</th>
+                                        <th class="text-center">Address</th>
+                                        {{-- <th class="text-center">Area</th> --}}
+                                        <th class="text-center">Amount to be Collect</th>
                                         {{-- @if ($riderRun->rider->id == 1)
                                             <th class="text-center">Pathao Info</th>
                                         @endif --}}
-                                        <th width="5%" class="text-center">Exchange</th>
-                                        <th width="5%" class="text-center">Status</th>
-                                        <th width="5%" class="text-center">Delivery Type</th>
-                                        <th width="10%" class="text-center">Collected</th>
-                                        <th width="17%" class="text-center">Complete Note</th>
+                                        <th class="text-center">Exchange</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center">Delivery Type</th>
+                                        <th class="text-center">Collected</th>
+                                        <th class="text-center">Complete Note</th>
+                                        <th class="text-center">Ok</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($riderRun->rider_run_details as $rider_run_detail)
-                                        <tr>
-                                            <td class="text-center"> {{ $rider_run_detail->parcel->parcel_invoice }}
-                                            </td>
-                                            <td class="text-center">
-                                                {{-- @switch($rider_run_detail->status)
+                                    @foreach ($riderRun->rider_run_details as $k => $rider_run_detail)
+                                        @if ($rider_run_detail->status != 7 && $rider_run_detail->status != 5)
+                                            <tr>
+                                                <td class="text-center">
+                                                    {{ $rider_run_detail->parcel->parcel_invoice }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{-- @switch($rider_run_detail->status)
                                                     @case(1)
                                                         Run Create
                                                     @break
@@ -192,141 +195,156 @@
                                                     {{ \Carbon\Carbon::parse($rider_run_detail->complete_date_time)->format('d/m/Y H:i:s') }}
                                                     <br>
                                                 @endif --}}
-                                                @php
-                                                    $parcelStatus = returnParcelStatusNameForMerchant(
-                                                        $rider_run_detail->parcel->status,
-                                                        $rider_run_detail->parcel->delivery_type,
-                                                        $rider_run_detail->parcel->payment_type,
-                                                        $rider_run_detail->parcel->parcel_invoice,
-                                                    );
-
-                                                @endphp
-                                                {{ $parcelStatus['status_name'] }}
-                                            </td>
-                                            <td class="text-center">
-                                                {{ $rider_run_detail->parcel->merchant ? $rider_run_detail->parcel->merchant->company_name : '' }}
-                                            </td>
-                                            <td class="text-center"> {{ $rider_run_detail->parcel->customer_name }}
-                                            </td>
-                                            <td class="text-center"> {{ $rider_run_detail->parcel->customer_address }}
-                                                </br> Area : {{ $rider_run_detail?->parcel?->area?->name }}
-                                            </td>
-                                            {{-- <td class="text-center"> {{ $rider_run_detail?->parcel?->area?->name }}
-                                            </td> --}}
-                                            <td class="text-center">
-
-                                                {{ $rider_run_detail->parcel->total_collect_amount }}
-
-                                                <input type="hidden" class="amount_to_be_collect"
-                                                    id="total_collect_amount{{ $rider_run_detail->id }}"
-                                                    value="{{ $rider_run_detail->parcel->total_collect_amount }}">
-
-                                            </td>
-                                            @if ($rider_run_detail->parcel->is_pathao == 1)
-                                                <td class="text-center">
-                                                    <span
-                                                        class="">{{ optional($rider_run_detail->PathaoOrderDetail)->consignment_id }}</span>
-                                                    <br>
-                                                    <span
-                                                        class="">{{ str_replace('_', ' ', $rider_run_detail->parcel->pathao_status) }}</span>
-                                                </td>
-                                            @endif
-                                            <td class="text-center">{{ $rider_run_detail?->parcel?->exchange }}</td>
-                                            <td class="text-center">
-                                                <select name="rider_run_status[]"
-                                                    class="form-control select2 rider_run_status" style="width: 100%" onchange="return rider_run_status(this,{{ $rider_run_detail->id }})">
-                                                    <option value="7"
-                                                        @if ($rider_run_detail->status == 7) selected ="" @endif>Run
-                                                        Complete
-                                                    </option>
-                                                    <option value="5"
-                                                        @if ($rider_run_detail->status != 7) selected ="" @endif>Run
-                                                        Reject
-                                                    </option>
-                                                </select>
-                                                <input type="hidden" name="rider_run_details_id"
-                                                    class="rider_run_details_id" value="{{ $rider_run_detail->id }}">
-                                                <input type="hidden" name="parcel_id" class="parcel_id" value="{{ $rider_run_detail->parcel_id }}">
-                                            </td>
-                                            <td class="text-center">
-                                                <select name="complete_type[]"
-                                                    class="form-control select2 complete_type"
-                                                    id="complete_type{{ $rider_run_detail->id }}" style="width: 100%"
-                                                    onchange="return check_complete_type(this,{{ $rider_run_detail->id }})">
-                                                    <option value="0">Select Delivery Type</option>
-                                                    <option
-                                                        @if ($rider_run_detail->parcel->status == 22) value="22"
-                                                    @else value="21" @endif
-                                                        @if ($rider_run_detail->parcel->status == 21 || $rider_run_detail->parcel->status == 22) selected ="" @endif>Delivery
-                                                        Complete
-                                                    </option>
-                                                    <option value="22"
-                                                        @if ($rider_run_detail->parcel->status == 22) selected ="" @endif>
-                                                        Partial Delivery
-                                                    </option>
-                                                    <option value="23"
-                                                        @if ($rider_run_detail->parcel->status == 23) selected ="" @endif>
-                                                        Reschedule Delivery
-                                                    </option>
-                                                    <option value="24"
-                                                        @if ($rider_run_detail->parcel->status == 24) selected ="" @endif>
-                                                        Delivery Cancel
-                                                    </option>
-                                                    {{--                                                <option value="24" @if ($rider_run_detail->parcel->status == 24) selected ="" @endif >Delivery Cancel</option> --}}
-                                                </select>
-                                            </td>
-                                            <td class="text-center">
-                                                <div id="div_customer_collect_amount{{ $rider_run_detail->id }}"
-                                                    style="display: {{ $rider_run_detail->parcel->status == 21 || $rider_run_detail->parcel->status == 22 ? 'inline' : 'none' }}">
-                                                    <input type="number" name="customer_collect_amount[]"
-                                                        class="form-control customer_collect_amount"
-                                                        id="customer_collect_amount{{ $rider_run_detail->id }}"
-                                                        value="{{ $rider_run_detail->parcel->customer_collect_amount }}"
-                                                        placeholder="Customer Payment Amount"
-                                                        total_collect_amount="{{ $rider_run_detail->parcel->total_collect_amount }}"
-                                                        customer_collect_amount="{{ $rider_run_detail->parcel->customer_collect_amount }}"
-                                                        style="width: 100%">
-                                                </div>
-                                                <div id="div_reschedule_parcel_date{{ $rider_run_detail->id }}"
-                                                    style="display: {{ $rider_run_detail->parcel->status == 23 ? 'inline' : 'none' }}">
-
                                                     @php
-                                                        if (
-                                                            !is_null(
-                                                                $rider_run_detail->parcel->reschedule_parcel_date,
-                                                            ) &&
-                                                            '' != $rider_run_detail->parcel->reschedule_parcel_date
-                                                        ) {
-                                                            $reschedule_date = date(
-                                                                'Y-m-d',
-                                                                strtotime(
-                                                                    $rider_run_detail->parcel->reschedule_parcel_date,
-                                                                ),
-                                                            );
-                                                        } else {
-                                                            $reschedule_date = date('Y-m-d', strtotime('+ 1 day'));
-                                                        }
+                                                        $parcelStatus = returnParcelStatusNameForMerchant(
+                                                            $rider_run_detail->parcel->status,
+                                                            $rider_run_detail->parcel->delivery_type,
+                                                            $rider_run_detail->parcel->payment_type,
+                                                            $rider_run_detail->parcel->parcel_invoice,
+                                                        );
+
                                                     @endphp
+                                                    {{ $parcelStatus['status_name'] }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ $rider_run_detail->parcel->merchant ? $rider_run_detail->parcel->merchant->company_name : '' }}
+                                                </td>
+                                                <td class="text-center"> {{ $rider_run_detail->parcel->customer_name }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ $rider_run_detail->parcel->customer_address }}
+                                                    </br> Area : {{ $rider_run_detail?->parcel?->area?->name }}
+                                                </td>
+                                                {{-- <td class="text-center"> {{ $rider_run_detail?->parcel?->area?->name }}
+                                            </td> --}}
+                                                <td class="text-center">
 
-                                                    <input type="date" name="reschedule_parcel_date[]"
-                                                        class="form-control reschedule_parcel_date"
-                                                        id="reschedule_parcel_date{{ $rider_run_detail->id }}"
-                                                        value="{{ $reschedule_date }}">
+                                                    {{ $rider_run_detail->parcel->total_collect_amount }}
 
-                                                </div>
+                                                    <input type="hidden" class="amount_to_be_collect"
+                                                        id="total_collect_amount{{ $rider_run_detail->id }}"
+                                                        value="{{ $rider_run_detail->parcel->total_collect_amount }}">
 
-                                                <div id="div_cancel_amount_collection{{ $rider_run_detail->id }}"
-                                                    style="display: {{ $rider_run_detail->parcel->status == 24 ? 'inline' : 'none' }}">
-                                                    <input type="number" name="cancel_amount_collection[]"
-                                                        class="form-control cancel_amount_collection"
-                                                        id="cancel_amount_collection{{ $rider_run_detail->id }}"
-                                                        value="{{ $rider_run_detail->parcel->cancel_amount_collection }}">
-                                                </div>
-                                            </td>
-                                            <td class="text-center">
-                                                <textarea name="complete_note[]" class="form-control complete_note" placeholder="Complete Not">{{ $rider_run_detail->complete_note }}</textarea>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                                @if ($rider_run_detail->parcel->is_pathao == 1)
+                                                    <td class="text-center">
+                                                        <span
+                                                            class="">{{ optional($rider_run_detail->PathaoOrderDetail)->consignment_id }}</span>
+                                                        <br>
+                                                        <span
+                                                            class="">{{ str_replace('_', ' ', $rider_run_detail->parcel->pathao_status) }}</span>
+                                                    </td>
+                                                @endif
+                                                <td class="text-center">{{ $rider_run_detail?->parcel?->exchange }}
+                                                </td>
+                                                <td class="text-center">
+                                                    <select name="rider_run_status[]"
+                                                        class="form-control select2 rider_run_status"
+                                                        style="width: 100%"
+                                                        onchange="return rider_run_status(this,{{ $rider_run_detail->id }})">
+                                                        <option value="7"
+                                                            @if ($rider_run_detail->status == 7) selected ="" @endif>Run
+                                                            Complete
+                                                        </option>
+                                                        <option value="5"
+                                                            @if ($rider_run_detail->status != 7) selected ="" @endif>Run
+                                                            Reject
+                                                        </option>
+                                                    </select>
+                                                    <input type="hidden" name="rider_run_details_id"
+                                                        class="rider_run_details_id"
+                                                        value="{{ $rider_run_detail->id }}">
+                                                    <input type="hidden" name="parcel_id" class="parcel_id"
+                                                        value="{{ $rider_run_detail->parcel_id }}">
+                                                </td>
+                                                <td class="text-center">
+                                                    <select name="complete_type[]"
+                                                        class="form-control select2 complete_type"
+                                                        id="complete_type{{ $rider_run_detail->id }}"
+                                                        style="width: 100%"
+                                                        onchange="return check_complete_type(this,{{ $rider_run_detail->id }})">
+                                                        <option value="0">Select Delivery Type</option>
+                                                        <option
+                                                            @if ($rider_run_detail->parcel->status == 22) value="22"
+                                                    @else value="21" @endif
+                                                            @if ($rider_run_detail->parcel->status == 21 || $rider_run_detail->parcel->status == 22) selected ="" @endif>
+                                                            Delivery
+                                                            Complete
+                                                        </option>
+                                                        <option value="22"
+                                                            @if ($rider_run_detail->parcel->status == 22) selected ="" @endif>
+                                                            Partial Delivery
+                                                        </option>
+                                                        <option value="23"
+                                                            @if ($rider_run_detail->parcel->status == 23) selected ="" @endif>
+                                                            Reschedule Delivery
+                                                        </option>
+                                                        <option value="24"
+                                                            @if ($rider_run_detail->parcel->status == 24) selected ="" @endif>
+                                                            Delivery Cancel
+                                                        </option>
+                                                        {{-- <option value="24" @if ($rider_run_detail->parcel->status == 24) selected ="" @endif >Delivery Cancel</option> --}}
+                                                    </select>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div id="div_customer_collect_amount{{ $rider_run_detail->id }}"
+                                                        style="display: {{ $rider_run_detail->parcel->status == 21 || $rider_run_detail->parcel->status == 22 ? 'inline' : 'none' }}">
+                                                        <input type="number" name="customer_collect_amount[]"
+                                                            class="form-control customer_collect_amount"
+                                                            id="customer_collect_amount{{ $rider_run_detail->id }}"
+                                                            value="{{ $rider_run_detail->parcel->customer_collect_amount }}"
+                                                            placeholder="Customer Payment Amount"
+                                                            total_collect_amount="{{ $rider_run_detail->parcel->total_collect_amount }}"
+                                                            customer_collect_amount="{{ $rider_run_detail->parcel->customer_collect_amount }}"
+                                                            style="width: 100%">
+                                                    </div>
+                                                    <div id="div_reschedule_parcel_date{{ $rider_run_detail->id }}"
+                                                        style="display: {{ $rider_run_detail->parcel->status == 23 ? 'inline' : 'none' }}">
+
+                                                        @php
+                                                            if (
+                                                                !is_null(
+                                                                    $rider_run_detail->parcel->reschedule_parcel_date,
+                                                                ) &&
+                                                                '' != $rider_run_detail->parcel->reschedule_parcel_date
+                                                            ) {
+                                                                $reschedule_date = date(
+                                                                    'Y-m-d',
+                                                                    strtotime(
+                                                                        $rider_run_detail->parcel
+                                                                            ->reschedule_parcel_date,
+                                                                    ),
+                                                                );
+                                                            } else {
+                                                                $reschedule_date = date('Y-m-d', strtotime('+ 1 day'));
+                                                            }
+                                                        @endphp
+
+                                                        <input type="date" name="reschedule_parcel_date[]"
+                                                            class="form-control reschedule_parcel_date"
+                                                            id="reschedule_parcel_date{{ $rider_run_detail->id }}"
+                                                            value="{{ $reschedule_date }}">
+
+                                                    </div>
+
+                                                    <div id="div_cancel_amount_collection{{ $rider_run_detail->id }}"
+                                                        style="display: {{ $rider_run_detail->parcel->status == 24 ? 'inline' : 'none' }}">
+                                                        <input type="number" name="cancel_amount_collection[]"
+                                                            class="form-control cancel_amount_collection"
+                                                            id="cancel_amount_collection{{ $rider_run_detail->id }}"
+                                                            value="{{ $rider_run_detail->parcel->cancel_amount_collection }}">
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <textarea name="complete_note[]" class="form-control complete_note" placeholder="Complete Not">{{ $rider_run_detail->complete_note }}</textarea>
+                                                </td>
+                                                <td>
+                                                    <input type="checkbox" name="checked_parcel[{{ $k }}]"
+                                                        value="{{ $rider_run_detail->parcel_id }}" id=""
+                                                        class="form-control checked_parcel">
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
@@ -460,6 +478,10 @@
             return this.value;
         }).get();
 
+        var checked_parcel = $('.checked_parcel').map(function() {
+            return this.checked;
+        }).get();
+
 
         $.ajax({
             cache: false,
@@ -478,6 +500,7 @@
                 reschedule_parcel_date: reschedule_parcel_date,
                 cancel_amount_collection: cancel_amount_collection,
                 complete_note: complete_note,
+                checked_parcel: checked_parcel,
                 _token: "{{ csrf_token() }}"
             },
             error: function(xhr) {

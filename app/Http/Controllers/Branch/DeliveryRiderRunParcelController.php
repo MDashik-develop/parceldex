@@ -446,9 +446,11 @@ class DeliveryRiderRunParcelController extends Controller
         $data['child_menu'] = 'deliveryRiderRunGenerate';
         $data['page_title'] = 'Delivery Rider Run Generate';
         $data['collapse'] = 'sidebar-collapse';
-        $data['riders'] = Rider::with(['rider_runs' => function ($query) {
-            $query->select('id', 'status', 'rider_id')->orderBy('id', 'desc');
-        }])
+        $data['riders'] = Rider::with([
+            'rider_runs' => function ($query) {
+                $query->select('id', 'status', 'rider_id')->orderBy('id', 'desc');
+            }
+        ])
             ->where([
                 'status' => 1,
                 'branch_id' => $branch_id,
@@ -510,7 +512,7 @@ class DeliveryRiderRunParcelController extends Controller
                         // $query->where([
                         //     'merchant_order_id' => $merchant_order_id,
                         // ]);
-
+    
                         $query->where([
                             'customer_contact_number' => $merchant_order_id,
 
@@ -870,9 +872,11 @@ class DeliveryRiderRunParcelController extends Controller
         $data['collapse'] = 'sidebar-collapse';
         $data['riderRun'] = $riderRun;
 
-        $data['riders'] = Rider::with(['rider_runs' => function ($query) {
-            $query->select('id', 'status', 'rider_id')->orderBy('id', 'desc');
-        }])
+        $data['riders'] = Rider::with([
+            'rider_runs' => function ($query) {
+                $query->select('id', 'status', 'rider_id')->orderBy('id', 'desc');
+            }
+        ])
             ->where([
                 'status' => 1,
                 'branch_id' => $branch_id,
@@ -1002,8 +1006,12 @@ class DeliveryRiderRunParcelController extends Controller
 
     public function confirmDeliveryRiderRunReconciliation(Request $request)
     {
+        // return dd($request->all());
+
         $response = ['error' => 'Error Found'];
+
         if ($request->ajax()) {
+
             $validator = Validator::make($request->all(), [
                 'run_note' => 'sometimes',
                 'rider_run_id' => 'required',
@@ -1011,27 +1019,17 @@ class DeliveryRiderRunParcelController extends Controller
             ]);
 
             if ($validator->fails()) {
+
                 return response()->json(['error' => $validator->errors()]);
+
             } else {
 
                 \DB::beginTransaction();
 
-                //try {
+                try {
 
-                $riderRun = RiderRun::where([
-                    'id' => $request->rider_run_id,
-                    'run_type' => 2,
-                    'status' => 2,
-                ])
-                    ->update([
-                        'complete_date_time' => date('Y-m-d H:i:s'),
-                        'total_run_complete_parcel' => $request->total_run_complete_parcel,
-                        'note' => $request->run_note,
-                        'status' => 4,
-                    ]);
+                    $total_run_complete_parcel = 0;
 
-
-                if ($riderRun) {
                     $rider_run_status = $request->rider_run_status;
                     $rider_run_details_id = $request->rider_run_details_id;
                     $parcel_id = $request->parcel_id;
@@ -1041,308 +1039,333 @@ class DeliveryRiderRunParcelController extends Controller
                     $cancel_amount_collection = $request->cancel_amount_collection;
                     $reschedule_parcel_date = $request->reschedule_parcel_date;
                     $complete_note = $request->complete_note;
+                    $checked_parcel = $request->checked_parcel;
 
                     $count = count($rider_run_details_id);
 
                     for ($i = 0; $i < $count; $i++) {
-                        RiderRunDetail::where('id', $rider_run_details_id[$i])->update([
-                            'complete_note' => $complete_note[$i],
-                            'complete_date_time' => date('Y-m-d H:i:s'),
-                            'status' => $rider_run_status[$i],
-                        ]);
 
-                        $parcel_update_data = [
-                            'status' => 20,
-                            //                                'parcel_note' => $complete_note[$i],
-                            'parcel_date' => date('Y-m-d'),
-                            'delivery_branch_date' => date('Y-m-d'),
-                        ];
+                        if ($checked_parcel[$i] == "true") {
+                            $total_run_complete_parcel += 1;
 
-                        $parcel_log_create_data = [
-                            'parcel_id' => $parcel_id[$i],
-                            'date' => date('Y-m-d'),
-                            'note' => $complete_note[$i],
-                            'time' => date('H:i:s'),
-                            'status' => 20,
-                        ];
+                            RiderRunDetail::where('id', $rider_run_details_id[$i])->update([
+                                'complete_note' => $complete_note[$i],
+                                'complete_date_time' => date('Y-m-d H:i:s'),
+                                'status' => $rider_run_status[$i],
+                            ]);
 
-                        $sms_delivery_status = 0;
-                        $sms_delivery_type = "";
-                        $parcel = Parcel::where('id', $parcel_id[$i])->first();
-                        $confirm_customer_collect_amount = $customer_collect_amount[$i];
-                        $confirm_amount_to_be_collect = $amount_to_be_collect[$i];
-                        switch ($complete_type[$i]) {
-                            case 21:
+                            $parcel_update_data = [
+                                'status' => 20,
+                                // 'parcel_note' => $complete_note[$i],
+                                'parcel_date' => date('Y-m-d'),
+                                'delivery_branch_date' => date('Y-m-d'),
+                            ];
 
-                                //update cod charge start
-                                $cod_percent = $parcel->cod_percent;
-                                $charge_without_cod = ceil($parcel->total_charge) - $parcel->cod_charge;
-                                $collection_amount = $confirm_customer_collect_amount ?? 0;
-                                if ($collection_amount != 0 && $cod_percent != 0) {
-                                    $cod_charge = ($collection_amount / 100) * $cod_percent;
-                                    $parcel_update_data['total_charge'] = ceil($charge_without_cod + $cod_charge);
-                                    $parcel_update_data['cod_charge'] = ceil($cod_charge);
-                                }
-                                //update cod charge end
+                            $parcel_log_create_data = [
+                                'parcel_id' => $parcel_id[$i],
+                                'date' => date('Y-m-d'),
+                                'note' => $complete_note[$i],
+                                'time' => date('H:i:s'),
+                                'status' => 20,
+                            ];
 
-                                $parcel_update_data['status'] = 25;
-                                $parcel_update_data['customer_collect_amount'] = $confirm_customer_collect_amount;
-                                $parcel_update_data['delivery_type'] = 1;
-                                $parcel_update_data['delivery_date'] = date("Y-m-d");
-                                $parcel_log_create_data['status'] = 25;
-                                $parcel_log_create_data['delivery_branch_id'] = auth()->guard('branch')->user()->branch->id;
-                                $parcel_log_create_data['delivery_branch_user_id'] = auth()->guard('branch')->user()->id;
-                                $sms_delivery_status = 1;
-                                $sms_delivery_type = "Delivered";
+                            $sms_delivery_status = 0;
+                            $sms_delivery_type = "";
+                            $parcel = Parcel::where('id', $parcel_id[$i])->first();
+                            $confirm_customer_collect_amount = $customer_collect_amount[$i];
+                            $confirm_amount_to_be_collect = $amount_to_be_collect[$i];
+                            switch ($complete_type[$i]) {
+                                case 21:
 
-                                $area = Area::with('district')->where('id', $parcel->area_id)->first();
-                                $service_area_id = $area?->district?->service_area_id;
+                                    //update cod charge start
+                                    $cod_percent = $parcel->cod_percent;
+                                    $charge_without_cod = ceil($parcel->total_charge) - $parcel->cod_charge;
+                                    $collection_amount = $confirm_customer_collect_amount ?? 0;
+                                    if ($collection_amount != 0 && $cod_percent != 0) {
+                                        $cod_charge = ($collection_amount / 100) * $cod_percent;
+                                        $parcel_update_data['total_charge'] = ceil($charge_without_cod + $cod_charge);
+                                        $parcel_update_data['cod_charge'] = ceil($cod_charge);
+                                    }
+                                    //update cod charge end
 
-                                $merchantServiceAreaReturnCharge = MerchantServiceAreaReturnCharge::where([
-                                    'service_area_id' => $service_area_id,
-                                    'merchant_id' => $parcel->merchant_id,
-                                ])->first();
+                                    $parcel_update_data['status'] = 25;
+                                    $parcel_update_data['customer_collect_amount'] = $confirm_customer_collect_amount;
+                                    $parcel_update_data['delivery_type'] = 1;
+                                    $parcel_update_data['delivery_date'] = date("Y-m-d");
+                                    $parcel_log_create_data['status'] = 25;
+                                    $parcel_log_create_data['delivery_branch_id'] = auth()->guard('branch')->user()->branch->id;
+                                    $parcel_log_create_data['delivery_branch_user_id'] = auth()->guard('branch')->user()->id;
+                                    $sms_delivery_status = 1;
+                                    $sms_delivery_type = "Delivered";
 
-                                $merchant_service_area_return_charge = 0;
+                                    $area = Area::with('district')->where('id', $parcel->area_id)->first();
+                                    $service_area_id = $area?->district?->service_area_id;
 
-                                if ($merchantServiceAreaReturnCharge && !empty($merchantServiceAreaReturnCharge->return_charge)) {
-                                    $merchant_service_area_return_charge = $merchantServiceAreaReturnCharge->return_charge;
-                                }
+                                    $merchantServiceAreaReturnCharge = MerchantServiceAreaReturnCharge::where([
+                                        'service_area_id' => $service_area_id,
+                                        'merchant_id' => $parcel->merchant_id,
+                                    ])->first();
 
-                                if ($parcel->exchange == 'yes') {
-                                    $new_parcel = $parcel->replicate();
-                                    $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
-                                    $new_parcel->suborder = $parcel->parcel_invoice;
-                                    $new_parcel->return_charge = $merchant_service_area_return_charge; // return charge
-                                    $new_parcel->delivery_type = 4;
-                                    $new_parcel->status = 25;
-                                    $new_parcel->total_collect_amount = 0;
-                                    $new_parcel->delivery_charge = 0;
-                                    $new_parcel->merchant_service_area_charge = 0;
-                                    $new_parcel->cod_percent = 0;
-                                    $new_parcel->cod_charge = 0;
-                                    $new_parcel->weight_package_charge = 0;
-                                    // $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
-                                    $new_parcel->total_charge = $parcel->return_charge > 0 ? ceil($parcel->return_charge) : 0;
-                                    $new_parcel->customer_collect_amount = 0;
-                                    $new_parcel->cancel_amount_collection = 0;
-                                    $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
-                                    $new_parcel->delivery_date = now()->toDateString();
-                                    $new_parcel->created_at = now();
-                                    $new_parcel->parent_delivery_type = 1;
-                                    $new_parcel->save();
+                                    $merchant_service_area_return_charge = 0;
 
-                                    $parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
-                                    $parcel->save();
+                                    if ($merchantServiceAreaReturnCharge && !empty($merchantServiceAreaReturnCharge->return_charge)) {
+                                        $merchant_service_area_return_charge = $merchantServiceAreaReturnCharge->return_charge;
+                                    }
 
-                                    $new_parcel_log = [
-                                        'parcel_id' => $new_parcel->id,
-                                        'delivery_branch_id' => auth()->guard('branch')->user()->branch->id,
-                                        'delivery_branch_user_id' => auth()->guard('branch')->user()->id,
-                                        'date' => date('Y-m-d'),
-                                        'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
-                                        'time' => date('H:i:s'),
-                                        'status' => 25,
-                                        'delivery_type' => 4,
-                                    ];
+                                    if ($parcel->exchange == 'yes') {
+                                        $new_parcel = $parcel->replicate();
+                                        $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
+                                        $new_parcel->suborder = $parcel->parcel_invoice;
+                                        $new_parcel->return_charge = $merchant_service_area_return_charge; // return charge
+                                        $new_parcel->delivery_type = 4;
+                                        $new_parcel->status = 25;
+                                        $new_parcel->total_collect_amount = 0;
+                                        $new_parcel->delivery_charge = 0;
+                                        $new_parcel->merchant_service_area_charge = 0;
+                                        $new_parcel->cod_percent = 0;
+                                        $new_parcel->cod_charge = 0;
+                                        $new_parcel->weight_package_charge = 0;
+                                        // $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                        $new_parcel->total_charge = $parcel->return_charge > 0 ? ceil($parcel->return_charge) : 0;
+                                        $new_parcel->customer_collect_amount = 0;
+                                        $new_parcel->cancel_amount_collection = 0;
+                                        $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                        $new_parcel->delivery_date = now()->toDateString();
+                                        $new_parcel->created_at = now();
+                                        $new_parcel->parent_delivery_type = 1;
+                                        $new_parcel->save();
 
-                                    ParcelLog::create($new_parcel_log);
-                                }
+                                        $parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                        $parcel->save();
 
-                                break;
+                                        $new_parcel_log = [
+                                            'parcel_id' => $new_parcel->id,
+                                            'delivery_branch_id' => auth()->guard('branch')->user()->branch->id,
+                                            'delivery_branch_user_id' => auth()->guard('branch')->user()->id,
+                                            'date' => date('Y-m-d'),
+                                            'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
+                                            'time' => date('H:i:s'),
+                                            'status' => 25,
+                                            'delivery_type' => 4,
+                                        ];
 
-                            case 22:
+                                        ParcelLog::create($new_parcel_log);
+                                    }
 
-                                //update cod charge start
-                                $cod_percent = $parcel->cod_percent;
-                                $charge_without_cod = ceil($parcel->total_charge) - $parcel->cod_charge;
-                                $collection_amount = $confirm_customer_collect_amount ?? 0;
-                                if ($collection_amount != 0 && $cod_percent != 0) {
-                                    $cod_charge = ($collection_amount / 100) * $cod_percent;
-                                    $parcel_update_data['total_charge'] = ceil($charge_without_cod + $cod_charge);
-                                    $parcel_update_data['cod_charge'] = ceil($cod_charge);
-                                }
-                                //update cod charge end
+                                    break;
 
-                                $parcel_update_data['status'] = 25;
-                                $parcel_update_data['customer_collect_amount'] = $confirm_customer_collect_amount;
-                                $parcel_update_data['delivery_type'] = 2;
-                                $parcel_update_data['delivery_date'] = date("Y-m-d");
-                                $parcel_log_create_data['status'] = 25;
-                                $parcel_log_create_data['delivery_branch_id'] = auth()->guard('branch')->user()->branch->id;
-                                $parcel_log_create_data['delivery_branch_user_id'] = auth()->guard('branch')->user()->id;
-                                $sms_delivery_status = 1;
-                                $sms_delivery_type = "Delivered";
+                                case 22:
 
-                                $area = Area::with('district')->where('id', $parcel->area_id)->first();
-                                $service_area_id = $area?->district?->service_area_id;
+                                    //update cod charge start
+                                    $cod_percent = $parcel->cod_percent;
+                                    $charge_without_cod = ceil($parcel->total_charge) - $parcel->cod_charge;
+                                    $collection_amount = $confirm_customer_collect_amount ?? 0;
+                                    if ($collection_amount != 0 && $cod_percent != 0) {
+                                        $cod_charge = ($collection_amount / 100) * $cod_percent;
+                                        $parcel_update_data['total_charge'] = ceil($charge_without_cod + $cod_charge);
+                                        $parcel_update_data['cod_charge'] = ceil($cod_charge);
+                                    }
+                                    //update cod charge end
 
-                                $merchantServiceAreaReturnCharge = MerchantServiceAreaReturnCharge::where([
-                                    'service_area_id' => $service_area_id,
-                                    'merchant_id' => $parcel->merchant_id,
-                                ])->first();
+                                    $parcel_update_data['status'] = 25;
+                                    $parcel_update_data['customer_collect_amount'] = $confirm_customer_collect_amount;
+                                    $parcel_update_data['delivery_type'] = 2;
+                                    $parcel_update_data['delivery_date'] = date("Y-m-d");
+                                    $parcel_log_create_data['status'] = 25;
+                                    $parcel_log_create_data['delivery_branch_id'] = auth()->guard('branch')->user()->branch->id;
+                                    $parcel_log_create_data['delivery_branch_user_id'] = auth()->guard('branch')->user()->id;
+                                    $sms_delivery_status = 1;
+                                    $sms_delivery_type = "Delivered";
 
-                                $merchant_service_area_return_charge = 0;
+                                    $area = Area::with('district')->where('id', $parcel->area_id)->first();
+                                    $service_area_id = $area?->district?->service_area_id;
 
-                                if ($merchantServiceAreaReturnCharge && !empty($merchantServiceAreaReturnCharge->return_charge)) {
-                                    $merchant_service_area_return_charge = $merchantServiceAreaReturnCharge->return_charge;
-                                }
+                                    $merchantServiceAreaReturnCharge = MerchantServiceAreaReturnCharge::where([
+                                        'service_area_id' => $service_area_id,
+                                        'merchant_id' => $parcel->merchant_id,
+                                    ])->first();
 
-                                if ($parcel->exchange == 'yes') {
-                                    $new_parcel = $parcel->replicate();
-                                    $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
-                                    $new_parcel->suborder = $parcel->parcel_invoice;
-                                    $new_parcel->return_charge = $merchant_service_area_return_charge; // return charge
-                                    $new_parcel->delivery_type = 4;
-                                    $new_parcel->status = 25;
-                                    $new_parcel->total_collect_amount = $confirm_amount_to_be_collect - $confirm_customer_collect_amount;
-                                    $new_parcel->delivery_charge = 0;
-                                    $new_parcel->merchant_service_area_charge = 0;
-                                    $new_parcel->cod_percent = 0;
-                                    $new_parcel->cod_charge = 0;
-                                    $new_parcel->weight_package_charge = 0;
-                                    $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
-                                    $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
-                                    $new_parcel->customer_collect_amount = 0;
-                                    $new_parcel->cancel_amount_collection = 0;
-                                    $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
-                                    $new_parcel->delivery_date = now()->toDateString();
-                                    $new_parcel->created_at = now();
-                                    $new_parcel->parent_delivery_type = 2;
-                                    $new_parcel->save();
+                                    $merchant_service_area_return_charge = 0;
 
-                                    $parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
-                                    $parcel->save();
+                                    if ($merchantServiceAreaReturnCharge && !empty($merchantServiceAreaReturnCharge->return_charge)) {
+                                        $merchant_service_area_return_charge = $merchantServiceAreaReturnCharge->return_charge;
+                                    }
 
-                                    $new_parcel_log = [
-                                        'parcel_id' => $new_parcel->id,
-                                        'delivery_branch_id' => auth()->guard('branch')->user()->branch->id,
-                                        'delivery_branch_user_id' => auth()->guard('branch')->user()->id,
-                                        'date' => date('Y-m-d'),
-                                        'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
-                                        'time' => date('H:i:s'),
-                                        'status' => 25,
-                                        'delivery_type' => 4,
-                                    ];
+                                    if ($parcel->exchange == 'yes') {
+                                        $new_parcel = $parcel->replicate();
+                                        $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
+                                        $new_parcel->suborder = $parcel->parcel_invoice;
+                                        $new_parcel->return_charge = $merchant_service_area_return_charge; // return charge
+                                        $new_parcel->delivery_type = 4;
+                                        $new_parcel->status = 25;
+                                        $new_parcel->total_collect_amount = $confirm_amount_to_be_collect - $confirm_customer_collect_amount;
+                                        $new_parcel->delivery_charge = 0;
+                                        $new_parcel->merchant_service_area_charge = 0;
+                                        $new_parcel->cod_percent = 0;
+                                        $new_parcel->cod_charge = 0;
+                                        $new_parcel->weight_package_charge = 0;
+                                        $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                        $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                        $new_parcel->customer_collect_amount = 0;
+                                        $new_parcel->cancel_amount_collection = 0;
+                                        $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                        $new_parcel->delivery_date = now()->toDateString();
+                                        $new_parcel->created_at = now();
+                                        $new_parcel->parent_delivery_type = 2;
+                                        $new_parcel->save();
 
-                                    ParcelLog::create($new_parcel_log);
-                                } elseif ($parcel->exchange == 'no') {
-                                    $new_parcel = $parcel->replicate();
-                                    $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
-                                    $new_parcel->suborder = $parcel->parcel_invoice;
-                                    $new_parcel->delivery_type = 4;
-                                    $new_parcel->status = 25;
-                                    $new_parcel->total_collect_amount = $confirm_amount_to_be_collect - $confirm_customer_collect_amount;
-                                    $new_parcel->delivery_charge = 0;
-                                    $new_parcel->merchant_service_area_charge = 0;
-                                    $new_parcel->cod_percent = 0;
-                                    $new_parcel->cod_charge = 0;
-                                    $new_parcel->weight_package_charge = 0;
-                                    $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
-                                    $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
-                                    $new_parcel->customer_collect_amount = 0;
-                                    $new_parcel->cancel_amount_collection = 0;
-                                    $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
-                                    $new_parcel->delivery_date = now()->toDateString();
-                                    $new_parcel->created_at = now();
-                                    $new_parcel->parent_delivery_type = 2;
-                                    $new_parcel->save();
+                                        $parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                        $parcel->save();
 
-                                    $parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
-                                    $parcel->save();
+                                        $new_parcel_log = [
+                                            'parcel_id' => $new_parcel->id,
+                                            'delivery_branch_id' => auth()->guard('branch')->user()->branch->id,
+                                            'delivery_branch_user_id' => auth()->guard('branch')->user()->id,
+                                            'date' => date('Y-m-d'),
+                                            'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
+                                            'time' => date('H:i:s'),
+                                            'status' => 25,
+                                            'delivery_type' => 4,
+                                        ];
 
-                                    $new_parcel_log = [
-                                        'parcel_id' => $new_parcel->id,
-                                        'delivery_branch_id' => auth()->guard('branch')->user()->branch->id,
-                                        'delivery_branch_user_id' => auth()->guard('branch')->user()->id,
-                                        'date' => date('Y-m-d'),
-                                        'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
-                                        'time' => date('H:i:s'),
-                                        'status' => 25,
-                                        'delivery_type' => 4,
-                                    ];
+                                        ParcelLog::create($new_parcel_log);
+                                    } elseif ($parcel->exchange == 'no') {
+                                        $new_parcel = $parcel->replicate();
+                                        $new_parcel->parcel_invoice = $this->returnUniqueParcelInvoice();
+                                        $new_parcel->suborder = $parcel->parcel_invoice;
+                                        $new_parcel->delivery_type = 4;
+                                        $new_parcel->status = 25;
+                                        $new_parcel->total_collect_amount = $confirm_amount_to_be_collect - $confirm_customer_collect_amount;
+                                        $new_parcel->delivery_charge = 0;
+                                        $new_parcel->merchant_service_area_charge = 0;
+                                        $new_parcel->cod_percent = 0;
+                                        $new_parcel->cod_charge = 0;
+                                        $new_parcel->weight_package_charge = 0;
+                                        $new_parcel->return_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                        $new_parcel->total_charge = $parcel->return_charge > 0 ? $parcel->return_charge : 0;
+                                        $new_parcel->customer_collect_amount = 0;
+                                        $new_parcel->cancel_amount_collection = 0;
+                                        $new_parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                        $new_parcel->delivery_date = now()->toDateString();
+                                        $new_parcel->created_at = now();
+                                        $new_parcel->parent_delivery_type = 2;
+                                        $new_parcel->save();
 
-                                    ParcelLog::create($new_parcel_log);
-                                }
+                                        $parcel->merchant_service_area_return_charge = $merchant_service_area_return_charge;
+                                        $parcel->save();
 
-                                break;
+                                        $new_parcel_log = [
+                                            'parcel_id' => $new_parcel->id,
+                                            'delivery_branch_id' => auth()->guard('branch')->user()->branch->id,
+                                            'delivery_branch_user_id' => auth()->guard('branch')->user()->id,
+                                            'date' => date('Y-m-d'),
+                                            'note' => 'Related Consignment: #' . $parcel->parcel_invoice,
+                                            'time' => date('H:i:s'),
+                                            'status' => 25,
+                                            'delivery_type' => 4,
+                                        ];
 
-                            case 23:
-                                $parcel_update_data['status'] = 25;
-                                $parcel_update_data['reschedule_parcel_date'] = $reschedule_parcel_date[$i];
-                                $parcel_update_data['customer_collect_amount'] = 0;
-                                $parcel_update_data['delivery_type'] = 3;
-                                $parcel_log_create_data['status'] = 25;
-                                $parcel_log_create_data['reschedule_parcel_date'] = $reschedule_parcel_date[$i];
-                                $parcel_log_create_data['delivery_branch_id'] = auth()->guard('branch')->user()->branch->id;
-                                $parcel_log_create_data['delivery_branch_user_id'] = auth()->guard('branch')->user()->id;
-                                $sms_delivery_status = 0;
-                                $sms_delivery_type = "";
-                                break;
+                                        ParcelLog::create($new_parcel_log);
+                                    }
 
-                            case 24:
-                                $parcel_update_data['cancel_amount_collection'] = $cancel_amount_collection[$i];
-                                $parcel_update_data['status'] = 25;
-                                $parcel_update_data['delivery_type'] = 4;
-                                if ($parcel->cod_charge != 0) {
-                                    $parcel_update_data['total_charge'] = (ceil($parcel->total_charge) - $parcel->cod_charge);
-                                }
+                                    break;
 
-                                $parcel_update_data['customer_collect_amount'] = 0;
-                                $parcel_update_data['cod_charge'] = 0;
-                                $parcel_log_create_data['status'] = 25;
-                                $parcel_log_create_data['delivery_branch_id'] = auth()->guard('branch')->user()->branch->id;
-                                $parcel_log_create_data['delivery_branch_user_id'] = auth()->guard('branch')->user()->id;
-                                $sms_delivery_status = 1;
-                                $sms_delivery_type = "Canceled";
+                                case 23:
+                                    $parcel_update_data['status'] = 25;
+                                    $parcel_update_data['reschedule_parcel_date'] = $reschedule_parcel_date[$i];
+                                    $parcel_update_data['customer_collect_amount'] = 0;
+                                    $parcel_update_data['delivery_type'] = 3;
+                                    $parcel_log_create_data['status'] = 25;
+                                    $parcel_log_create_data['reschedule_parcel_date'] = $reschedule_parcel_date[$i];
+                                    $parcel_log_create_data['delivery_branch_id'] = auth()->guard('branch')->user()->branch->id;
+                                    $parcel_log_create_data['delivery_branch_user_id'] = auth()->guard('branch')->user()->id;
+                                    $sms_delivery_status = 0;
+                                    $sms_delivery_type = "";
+                                    break;
 
-                                $cod_percent = $parcel->cod_percent;
-                                $charge_without_cod = ceil($parcel->total_charge) - $parcel->cod_charge;
-                                $collection_amount = $confirm_customer_collect_amount ?? 0;
+                                case 24:
+                                    $parcel_update_data['cancel_amount_collection'] = $cancel_amount_collection[$i];
+                                    $parcel_update_data['status'] = 25;
+                                    $parcel_update_data['delivery_type'] = 4;
+                                    if ($parcel->cod_charge != 0) {
+                                        $parcel_update_data['total_charge'] = (ceil($parcel->total_charge) - $parcel->cod_charge);
+                                    }
 
-                                if ($collection_amount != 0 && $cod_percent != 0) {
-                                    $cod_charge = ($collection_amount / 100) * $cod_percent;
-                                    $parcel_update_data['total_charge'] = $charge_without_cod + $cod_charge;
-                                    $parcel_update_data['cod_charge'] = ceil($cod_charge);
-                                }
-                                break;
+                                    $parcel_update_data['customer_collect_amount'] = 0;
+                                    $parcel_update_data['cod_charge'] = 0;
+                                    $parcel_log_create_data['status'] = 25;
+                                    $parcel_log_create_data['delivery_branch_id'] = auth()->guard('branch')->user()->branch->id;
+                                    $parcel_log_create_data['delivery_branch_user_id'] = auth()->guard('branch')->user()->id;
+                                    $sms_delivery_status = 1;
+                                    $sms_delivery_type = "Canceled";
 
-                            default:
+                                    $cod_percent = $parcel->cod_percent;
+                                    $charge_without_cod = ceil($parcel->total_charge) - $parcel->cod_charge;
+                                    $collection_amount = $confirm_customer_collect_amount ?? 0;
 
-                                break;
+                                    if ($collection_amount != 0 && $cod_percent != 0) {
+                                        $cod_charge = ($collection_amount / 100) * $cod_percent;
+                                        $parcel_update_data['total_charge'] = $charge_without_cod + $cod_charge;
+                                        $parcel_update_data['cod_charge'] = ceil($cod_charge);
+                                    }
+                                    break;
+
+                                default:
+
+                                    break;
+                            }
+                            Parcel::where('id', $parcel_id[$i])->update($parcel_update_data);
+                            $parcel = Parcel::where('id', $parcel_id[$i])->first();
+                            $parcel_log_create_data['delivery_type'] = $parcel->delivery_type;
+                            // Invalid Log 
+                            ParcelLog::create($parcel_log_create_data);
+
+                            //                            if ($sms_delivery_status == 1) {
+                            $parcel = Parcel::with('merchant')->where('id', $parcel_id[$i])->first();
+                            $message = "Dear " . $parcel->merchant->name . ", ";
+                            $message .= "Your Parcel ID No " . $parcel->parcel_invoice . "  is successfully " . $sms_delivery_type . ".";
+                            $message .= "Please rate your experience https://www.facebook.com/parceldex  \n-Parceldex";
+                            //  $this->send_sms($parcel->merchant->contact_number, $message);
+                            //                            }
+
+                            $parcel = Parcel::where('id', $parcel_id[$i])->first();
+                            // $this->merchantDashboardCounterEvent($parcel->merchant_id);
+                            // $this->branchDashboardCounterEvent($parcel->delivery_branch_id);
                         }
-                        Parcel::where('id', $parcel_id[$i])->update($parcel_update_data);
-                        $parcel = Parcel::where('id', $parcel_id[$i])->first();
-                        $parcel_log_create_data['delivery_type'] = $parcel->delivery_type;
-                        // Invalid Log 
-                        ParcelLog::create($parcel_log_create_data);
-
-                        //                            if ($sms_delivery_status == 1) {
-                        $parcel = Parcel::with('merchant')->where('id', $parcel_id[$i])->first();
-                        $message = "Dear " . $parcel->merchant->name . ", ";
-                        $message .= "Your Parcel ID No " . $parcel->parcel_invoice . "  is successfully " . $sms_delivery_type . ".";
-                        $message .= "Please rate your experience https://www.facebook.com/parceldex  \n-Parceldex";
-                        //  $this->send_sms($parcel->merchant->contact_number, $message);
-                        //                            }
-
-                        $parcel = Parcel::where('id', $parcel_id[$i])->first();
-                        // $this->merchantDashboardCounterEvent($parcel->merchant_id);
-                        // $this->branchDashboardCounterEvent($parcel->delivery_branch_id);
                     }
+
+                    // rider run update
+
+                    $riderRun2 = RiderRun::where([
+                        'id' => $request->rider_run_id,
+                        'run_type' => 2,
+                        'status' => 2,
+                    ])->first();
+
+                    $riderRun = RiderRun::where([
+                        'id' => $request->rider_run_id,
+                        'run_type' => 2,
+                        'status' => 2,
+                    ])
+                        ->update([
+                            'complete_date_time' => date('Y-m-d H:i:s'),
+                            'total_run_complete_parcel' => $total_run_complete_parcel + $riderRun2->total_run_complete_parcel,
+                            'note' => $request->run_note,
+                            'status' => ($total_run_complete_parcel + $riderRun2->total_run_complete_parcel) == $riderRun2->total_run_parcel ? 4 : 2,
+                        ]);
 
                     \DB::commit();
                     // $this->adminDashboardCounterEvent();
                     $response = ['success' => 'Delivery Rider Run Reconciliation Successfully'];
-                } else {
-                    $response = ['error' => 'Database Error Found'];
+
+                } catch (\Exception $e) {
+                    \DB::rollback();
+                    // $response = ['error' => 'Database Error Found'];
+                    $response = ['error' => $e->getMessage()];
                 }
-                // } catch (\Exception $e) {
-                //     \DB::rollback();
-                //     // $response = ['error' => 'Database Error Found'];
-                //     $response = ['error' => $e->getMessage()];
-                // }
             }
         }
+
         return response()->json($response);
     }
 }

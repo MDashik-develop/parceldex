@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Branch\WebhookController;
 use Carbon\Carbon;
 use App\Models\RiderRun;
 use App\Mail\WelcomeMail;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
-
+Route::post('/webhook/status-update', [WebhookController::class, 'handle']);
 
 Route::get('/log', function () {
     $parcel = Parcel::find(10);

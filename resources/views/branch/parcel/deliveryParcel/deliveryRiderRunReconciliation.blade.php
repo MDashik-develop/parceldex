@@ -128,7 +128,6 @@
                                             <td style="width: 10%"> :</td>
                                             <td style="width: 50%"> {{ $riderRun->rider->address }} </td>
                                         </tr>
-
                                     </table>
                                 </fieldset>
                             </div>
@@ -232,12 +231,10 @@
                                                         class="">{{ str_replace('_', ' ', $rider_run_detail->parcel->pathao_status) }}</span>
                                                 </td>
                                             @endif
-                                            <td class="text-center"> {{ $rider_run_detail?->parcel?->exchange }}
-                                            </td>
+                                            <td class="text-center">{{ $rider_run_detail?->parcel?->exchange }}</td>
                                             <td class="text-center">
                                                 <select name="rider_run_status[]"
-                                                    class="form-control select2 rider_run_status" style="width: 100%"
-                                                    onchange="return rider_run_status(this,{{ $rider_run_detail->id }})">
+                                                    class="form-control select2 rider_run_status" style="width: 100%" onchange="return rider_run_status(this,{{ $rider_run_detail->id }})">
                                                     <option value="7"
                                                         @if ($rider_run_detail->status == 7) selected ="" @endif>Run
                                                         Complete
@@ -249,8 +246,7 @@
                                                 </select>
                                                 <input type="hidden" name="rider_run_details_id"
                                                     class="rider_run_details_id" value="{{ $rider_run_detail->id }}">
-                                                <input type="hidden" name="parcel_id" class="parcel_id"
-                                                    value="{{ $rider_run_detail->parcel_id }}">
+                                                <input type="hidden" name="parcel_id" class="parcel_id" value="{{ $rider_run_detail->parcel_id }}">
                                             </td>
                                             <td class="text-center">
                                                 <select name="complete_type[]"

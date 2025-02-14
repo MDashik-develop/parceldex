@@ -153,6 +153,8 @@
                 <span>Email: {{ $parcelMerchantDeliveryPayment->merchant->email }}</span><br>
                 <span>Mobile: {{ $parcelMerchantDeliveryPayment->merchant->contact_number }}</span><br>
                 <span><strong>Adjustment Note:</strong> {{ $parcelMerchantDeliveryPayment->adjustment_note }}</span>
+                <br>
+                <span><strong>Payment Reference:</strong>{{ $parcelMerchantDeliveryPayment->transfer_reference }}</span> <br>
             </div>
 
             <table class="table w-auto table-striped table-bordered font-14" style="min-width: 300px;">
@@ -170,16 +172,12 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Paid Amount</th>
-                    <td>{{ number_format($parcelMerchantDeliveryPayment->total_payment_amount, 0) }}</td>
-                </tr>
-                <tr>
                     <th>Adjustment</th>
                     <td> {{ $parcelMerchantDeliveryPayment->adjustment ?? 0 }} </td>
                 </tr>
                 <tr>
                     <th>Total Paid Amount</th>
-                    <td>{{ number_format($parcelMerchantDeliveryPayment->total_payment_amount + ($parcelMerchantDeliveryPayment->adjustment ?? 0), 0) }}
+                    <td>{{ number_format($parcelMerchantDeliveryPayment->total_payment_amount, 0) }}
                     </td>
                 </tr>
             </table>

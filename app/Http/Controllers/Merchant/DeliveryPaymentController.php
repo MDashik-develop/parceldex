@@ -23,11 +23,11 @@ class DeliveryPaymentController extends Controller
 
     public function deliveryPaymentList()
     {
-        $data               = [];
-        $data['main_menu']  = 'account';
+        $data = [];
+        $data['main_menu'] = 'account';
         $data['child_menu'] = 'deliveryPaymentList';
         $data['page_title'] = 'Delivery Payment List';
-        $data['collapse']   = 'sidebar-collapse';
+        $data['collapse'] = 'sidebar-collapse';
         return view('merchant.account.deliveryPaymentList', $data);
     }
 
@@ -53,22 +53,23 @@ class DeliveryPaymentController extends Controller
 
             ->whereRaw('merchant_id = ?', [$merchant_id])
             ->where(function ($query) use ($request) {
-                $status      = $request->input('status');
-                $from_date          = $request->input('from_date');
-                $to_date            = $request->input('to_date');
+                $status = $request->input('status');
+                $from_date = $request->input('from_date');
+                $to_date = $request->input('to_date');
 
-                if (($request->has('status')  && !is_null($status))
-                    || ($request->has('from_date')  && !is_null($from_date))
-                    || ($request->has('to_date')  && !is_null($to_date))
+                if (
+                    ($request->has('status') && !is_null($status))
+                    || ($request->has('from_date') && !is_null($from_date))
+                    || ($request->has('to_date') && !is_null($to_date))
                 ) {
 
-                    if ($request->has('status') && ! is_null($status) && $status != 0) {
+                    if ($request->has('status') && !is_null($status) && $status != 0) {
                         $query->whereRaw('status = ?', $request->input('status'));
                     }
-                    if ($request->has('from_date') && ! is_null($from_date)) {
+                    if ($request->has('from_date') && !is_null($from_date)) {
                         $query->whereDate('date_time', '>=', $from_date);
                     }
-                    if ($request->has('to_date') && ! is_null($to_date)) {
+                    if ($request->has('to_date') && !is_null($to_date)) {
                         $query->whereDate('date_time', '<=', $to_date);
                     }
                 } else {
@@ -91,16 +92,16 @@ class DeliveryPaymentController extends Controller
             ->editColumn('status', function ($data) {
                 switch ($data->status) {
                     case 1:
-                        $status_name  = "Payment Request";
-                        $class  = "success";
+                        $status_name = "Payment Request";
+                        $class = "success";
                         break;
                     case 2:
-                        $status_name  = "Paid";
-                        $class  = "success";
+                        $status_name = "Paid";
+                        $class = "success";
                         break;
                     case 3:
-                        $status_name  = "Payment Reject";
-                        $class  = "danger";
+                        $status_name = "Payment Reject";
+                        $class = "danger";
                         break;
                     default:
                         $status_name = "None";
@@ -113,17 +114,17 @@ class DeliveryPaymentController extends Controller
                 $button = '<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" parcel_merchant_delivery_payment_id="' . $data->id . '" title="View Delivery Payment">
                 <i class="fa fa-eye"></i> </button>';
 
-                $button .= '&nbsp; <a href="' . route('merchant.account.printMerchantDeliveryPayment', $data->id) . '" class="btn btn-success btn-sm" title="Print Merchant Delivery Payment" target="_blank">
+                $button .= '&nbsp; <a href="' . route('merchant.account.printMerchantDeliveryPayment', $data->id) . '" class="btn btn-success btn-sm" title="Print Merchant Delivery Payment" >
                 <i class="fas fa-print"></i> </a>';
 
 
-                $button .= '&nbsp; <a class="btn btn-primary btn-sm" href="' . route('merchant.account.exportMerchantDeliveryPayment', $data->id) . '" title="Export Delivery Payment" target="_blank">
+                $button .= '&nbsp; <a class="btn btn-primary btn-sm" href="' . route('merchant.account.exportMerchantDeliveryPayment', $data->id) . '" title="Export Delivery Payment" >
                 <i class="fas fa-file-excel"></i> </a>';
 
                 //                 if($data->status == 1){
                 //                     $button .= '&nbsp; <button class="btn btn-success merchant-delivery-payment-accept btn-sm" data-toggle="modal" data-target="#viewModal" parcel_merchant_delivery_payment_id="' . $data->id . '" title="Accept  Delivery Payment">
                 //                     <i class="fa fa-check"></i>  </button>';
-
+    
                 // //                    $button .= '&nbsp; <button class="btn btn-danger merchant-delivery-payment-reject btn-sm" data-toggle="modal" data-target="#viewModal" parcel_merchant_delivery_payment_id="' . $data->id . '" title="Accept  Delivery Payment">
                 // //                    <i class="far fa-window-close"></i>  </button>';
                 //                 }
@@ -217,18 +218,18 @@ class DeliveryPaymentController extends Controller
                 \DB::beginTransaction();
                 try {
                     $data = [
-                        'total_payment_received_parcel'      => $parcelMerchantDeliveryPayment->total_payment_parcel,
-                        'total_payment_received_amount'      => $parcelMerchantDeliveryPayment->total_payment_amount,
-                        'note'      => $request->note,
-                        'status'      => 2,
+                        'total_payment_received_parcel' => $parcelMerchantDeliveryPayment->total_payment_parcel,
+                        'total_payment_received_amount' => $parcelMerchantDeliveryPayment->total_payment_amount,
+                        'note' => $request->note,
+                        'status' => 2,
                         'action_date_time' => date('Y-m-d H:i:s'),
                     ];
                     $check = ParcelMerchantDeliveryPayment::where('id', $parcelMerchantDeliveryPayment->id)->update($data);
-                    $payment_request    = ParcelPaymentRequest::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)->first();
+                    $payment_request = ParcelPaymentRequest::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)->first();
 
                     if ($check) {
 
-                        $ParcelMerchantDeliveryPaymentDetails =  ParcelMerchantDeliveryPaymentDetail::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)->get();
+                        $ParcelMerchantDeliveryPaymentDetails = ParcelMerchantDeliveryPaymentDetail::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)->get();
 
                         //dd($parcelMerchantDeliveryPayment->id, $ParcelMerchantDeliveryPaymentDetails);
 
@@ -243,14 +244,14 @@ class DeliveryPaymentController extends Controller
                         }
                         if ($payment_request) {
                             $payment_request->update([
-                                'status'    => 5,
+                                'status' => 5,
                                 //                                'action_admin_id'   => auth('admin')->user()->id
                             ]);
                         }
                         ParcelMerchantDeliveryPaymentDetail::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)
                             ->update([
-                                'status'      => 2,
-                                'date_time'   => date('Y-m-d H:i:s'),
+                                'status' => 2,
+                                'date_time' => date('Y-m-d H:i:s'),
                             ]);
 
                         \DB::commit();
@@ -288,7 +289,7 @@ class DeliveryPaymentController extends Controller
     public function merchantDeliveryPaymentRejectConfirm(Request $request, ParcelMerchantDeliveryPayment $parcelMerchantDeliveryPayment)
     {
         $response = ['error' => 'Error Found'];
-        $merchant_id    = auth()->guard('merchant')->user()->id;
+        $merchant_id = auth()->guard('merchant')->user()->id;
 
         if ($request->ajax()) {
             $validator = Validator::make($request->all(), [
@@ -301,15 +302,15 @@ class DeliveryPaymentController extends Controller
                 \DB::beginTransaction();
                 try {
                     $data = [
-                        'status'      => 3,
-                        'note'      => $request->note,
+                        'status' => 3,
+                        'note' => $request->note,
                         'action_date_time' => date('Y-m-d H:i:s'),
                     ];
                     $check = ParcelMerchantDeliveryPayment::where('id', $parcelMerchantDeliveryPayment->id)->update($data);
 
                     if ($check) {
 
-                        $ParcelMerchantDeliveryPaymentDetails =  ParcelMerchantDeliveryPaymentDetail::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)->get();
+                        $ParcelMerchantDeliveryPaymentDetails = ParcelMerchantDeliveryPaymentDetail::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)->get();
                         foreach ($ParcelMerchantDeliveryPaymentDetails as $ParcelMerchantDeliveryPaymentDetail) {
                             Parcel::where('id', $ParcelMerchantDeliveryPaymentDetail->parcel_id)->update([
                                 'payment_type' => 6
@@ -318,8 +319,8 @@ class DeliveryPaymentController extends Controller
 
                         ParcelMerchantDeliveryPaymentDetail::where('parcel_merchant_delivery_payment_id', $parcelMerchantDeliveryPayment->id)
                             ->update([
-                                'status'      => 3,
-                                'date_time'   => date('Y-m-d H:i:s'),
+                                'status' => 3,
+                                'date_time' => date('Y-m-d H:i:s'),
                             ]);
 
                         \DB::commit();

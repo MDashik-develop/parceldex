@@ -99,10 +99,10 @@ class MerchantDeliveryPaymentController extends Controller
                 return date('d-m-Y', strtotime($data->date_time));
             })
             ->editColumn('total_payment_amount', function ($data) {
-                return number_format($data->total_payment_amount + $data->adjustment, 2);
+                return number_format($data->total_payment_amount, 0);
             })
             ->editColumn('commission', function ($data) {
-                return number_format($data->parcel_merchant_delivery_payment_details->sum('parent_commission_amount'), 2);
+                return number_format($data->parcel_merchant_delivery_payment_details->sum('parent_commission_amount'), 0);
             })
             ->editColumn('total_payment_received_amount', function ($data) {
                 return number_format($data->total_payment_received_amount, 2);
@@ -131,10 +131,10 @@ class MerchantDeliveryPaymentController extends Controller
             ->addColumn('action', function ($data) {
                 $button = '<button class="btn btn-secondary view-modal btn-sm" data-toggle="modal" data-target="#viewModal" parcel_delivery_payment_id="' . $data->id . '" title="View Merchant Delivery Payment">
                 <i class="fa fa-eye"></i> </button>';
-                $button .= '&nbsp; <a href="' . route('admin.account.printMerchantDeliveryPayment', $data->id) . '" class="btn btn-success btn-sm" title="Print Merchant Delivery Payment" target="_blank">
+                $button .= '&nbsp; <a href="' . route('admin.account.printMerchantDeliveryPayment', $data->id) . '" class="btn btn-success btn-sm" title="Print Merchant Delivery Payment" >
                 <i class="fas fa-print"></i> </a>';
 
-                $button .= '&nbsp; <a class="btn btn-primary btn-sm" href="' . route('admin.account.exportMerchantDeliveryPayment', $data->id) . '" title="Export Delivery Payment" target="_blank">
+                $button .= '&nbsp; <a class="btn btn-primary btn-sm" href="' . route('admin.account.exportMerchantDeliveryPayment', $data->id) . '" title="Export Delivery Payment" >
                 <i class="fas fa-file-excel"></i> </a>';
 
                 if ($data->status == 1) {

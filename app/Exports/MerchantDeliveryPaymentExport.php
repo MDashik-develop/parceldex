@@ -28,7 +28,7 @@ class MerchantDeliveryPaymentExport implements
 
     public function __construct($id)
     {
-        $this->id        = $id;
+        $this->id = $id;
     }
 
     /**
@@ -55,7 +55,7 @@ class MerchantDeliveryPaymentExport implements
 
             $parcelStatus = returnParcelStatusNameForMerchant($parcel_merchant_delivery_payment_detail?->parcel?->status, $parcel_merchant_delivery_payment_detail?->parcel?->delivery_type, $parcel_merchant_delivery_payment_detail?->parcel?->payment_type, $parcel_merchant_delivery_payment_detail?->parcel?->parcel_invoice);
 
-            $data_parcel_array[] = (object)[
+            $data_parcel_array[] = (object) [
                 'serial' => $key + 1,
                 'parcel_invoice' => $parcel_merchant_delivery_payment_detail?->parcel?->parcel_invoice,
                 'order_id' => $parcel_merchant_delivery_payment_detail?->parcel?->merchant_order_id ?? "---",
@@ -73,8 +73,7 @@ class MerchantDeliveryPaymentExport implements
                 'delivery_charge' => $parcel_merchant_delivery_payment_detail->delivery_charge,
                 'return_charge' => $parcel_merchant_delivery_payment_detail->return_charge,
                 'total_charge' => ceil($parcel_merchant_delivery_payment_detail?->parcel?->total_charge + $parcel_merchant_delivery_payment_detail->return_charge),
-                'paid_amount' => $parcel_merchant_delivery_payment_detail->paid_amount,
-
+                'paid_amount' => ($parcel_merchant_delivery_payment_detail?->parcel?->cancel_amount_collection + $parcel_merchant_delivery_payment_detail?->parcel?->customer_collect_amount) - ceil($parcel_merchant_delivery_payment_detail?->parcel?->total_charge + $parcel_merchant_delivery_payment_detail->return_charge),
             ];
 
             $total_collect_amount += $parcel_merchant_delivery_payment_detail?->parcel?->total_collect_amount;
@@ -87,7 +86,25 @@ class MerchantDeliveryPaymentExport implements
             $paid_amount += $parcel_merchant_delivery_payment_detail->paid_amount;
         }
 
-        $data_parcel_array[] = (object)[
+        $data_parcel_array[] = (object) [
+            'serial' => '',
+            'parcel_invoice' => "",
+            'order_id' => "",
+            'status' => "",
+            'delivery_branch_date' => "",
+            'customer_name' => "",
+            'customer_contact_number' => "Adjustment: ",
+            'total_collect_amount' => '0',
+            'collected_amount' => '0',
+            'weight_package_charge' => '0',
+            'cod_charge' => '0',
+            'delivery_charge' => '0',
+            'return_charge' => '0',
+            'total_charge' => '0',
+            'paid_amount' => $parcelMerchantDeliveryPayment->adjustment,
+        ];
+
+        $data_parcel_array[] = (object) [
             'serial' => '',
             'parcel_invoice' => "",
             'order_id' => "",
@@ -95,7 +112,6 @@ class MerchantDeliveryPaymentExport implements
             'delivery_branch_date' => "",
             'customer_name' => "",
             'customer_contact_number' => "Total: ",
-
             'total_collect_amount' => $total_collect_amount,
             'collected_amount' => $collected_amount,
             'weight_package_charge' => $weight_package_charge,
@@ -103,8 +119,7 @@ class MerchantDeliveryPaymentExport implements
             'delivery_charge' => $delivery_charge,
             'return_charge' => $return_charge,
             'total_charge' => ceil($total_charge),
-            'paid_amount' => $paid_amount,
-
+            'paid_amount' => $collected_amount - ceil($total_charge) + $parcel_merchant_delivery_payment_detail->adjustment,
         ];
 
         return new Collection($data_parcel_array);
@@ -112,7 +127,7 @@ class MerchantDeliveryPaymentExport implements
 
     public function map($row): array
     {
-        return  [
+        return [
             $row->serial,
             $row->parcel_invoice,
             $row->order_id,
@@ -157,7 +172,7 @@ class MerchantDeliveryPaymentExport implements
         return [
             //            'creator'        => 'Patrick Brouwers',
             //            'lastModifiedBy' => 'Patrick Brouwers',
-            'title'             => 'Merchant Delivery Payment Parcel List',
+            'title' => 'Merchant Delivery Payment Parcel List',
             //            'description'    => 'Latest Invoices',
             //            'subject'        => 'Invoices',
             //            'keywords'       => 'invoices,export,spreadsheet',
@@ -171,11 +186,11 @@ class MerchantDeliveryPaymentExport implements
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class    => function (AfterSheet $event) {
+            AfterSheet::class => function (AfterSheet $event) {
 
                 $event->sheet->getStyle('A1:O1')->applyFromArray([
-                    'font'  => [
-                        'bold'  => true,
+                    'font' => [
+                        'bold' => true,
                     ]
                 ]);
 
@@ -184,7 +199,7 @@ class MerchantDeliveryPaymentExport implements
                 //                        'bold'  => true,
                 //                    ]
                 //                ]);
-
+    
                 if ('pdf' == "pdf") {
 
                     foreach (range('B', 'Z') as $columnID) {
@@ -206,7 +221,7 @@ class MerchantDeliveryPaymentExport implements
                 //                        ]
                 //                    ]
                 //                );
-
+    
             },
         ];
     }

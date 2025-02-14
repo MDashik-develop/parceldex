@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BulkMerchantPaymentOkController;
 use App\Models\Parcel;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ExpenseController;
@@ -563,5 +564,7 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
     Route::put('parcel-reset', [App\Http\Controllers\Admin\ParcelResetController::class, 'update'])->name('parcel-reset.update');
 
     Route::resource('page-seo', App\Http\Controllers\Admin\SeoMetaController::class);
+
+    Route::post('bulk-merchant-payment-delivery-comfirm', [BulkMerchantPaymentOkController::class, 'bulkConfirm']);
 
 });

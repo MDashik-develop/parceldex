@@ -17,6 +17,21 @@
         </div>
     </div>
 
+    <form action="/admin/bulk-merchant-payment-delivery-comfirm" method="POST" class="container mb-3 mx-auto">
+        @csrf
+        <div class="form-group mr-2">
+            <label for="transfer_reference" class="sr-only">Payment Reference</label>
+            <textarea id="transfer_reference" name="transfer_reference" class="form-control" rows="2" placeholder="Enter Payment Reference"></textarea>
+        </div>
+        <div class="form-group mr-2">
+            <label for="invoice_numbers" class="sr-only">Invoice Numbers</label>
+            <textarea id="invoice_numbers" name="invoice_numbers" class="form-control" rows="2" placeholder="Enter Payment Invoice Numbers"></textarea>
+        </div>
+        <button type="submit" class="btn btn-secondary">
+            <i class="fas fa-check"></i> Bulk Approve
+        </button>
+    </form>
+
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -63,7 +78,8 @@
                                         <i class="fas fa-sync-alt"></i>
                                     </button>
 
-                                    <form action="{{ route('admin.account.getMerchantPaymentDeliveryListExport') }}" style="display: inline">
+                                    <form action="{{ route('admin.account.getMerchantPaymentDeliveryListExport') }}"
+                                        style="display: inline">
                                         @csrf
                                         <input type="hidden" id="ex_parcel_status" name="ex_parcel_status" value="0">
                                         <input type="hidden" id="ex_merchant_id" name="ex_merchant_id" value="0">
@@ -129,10 +145,10 @@
         }
 
         /*
-                        div.container {
-                            width: 80%;
-                        }
-                        */
+                                    div.container {
+                                        width: 80%;
+                                    }
+                                    */
     </style>
     <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">

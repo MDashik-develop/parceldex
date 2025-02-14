@@ -29,7 +29,7 @@ class BranchParcelExport implements
 
     public function __construct($request)
     {
-        $this->request        = $request;
+        $this->request = $request;
     }
 
     /**
@@ -41,7 +41,7 @@ class BranchParcelExport implements
 
 
         $branch_user = auth()->guard('branch')->user();
-        $branch_id   = $branch_user->branch->id;
+        $branch_id = $branch_user->branch->id;
         $branch_type = $branch_user->branch->type;
 
         if ($branch_type == 1) {
@@ -150,7 +150,7 @@ class BranchParcelExport implements
         }
 
         $parcels = $model->get();
-        $data_parcel_array  = [];
+        $data_parcel_array = [];
         if (count($parcels) > 0) {
             foreach ($parcels as $key => $parcel) {
                 $parcelStatus = returnParcelStatusForAdmin($parcel->status, $parcel->delivery_type, $parcel->payment_type, $parcel);
@@ -172,7 +172,7 @@ class BranchParcelExport implements
 
                 $a = ParcelMerchantDeliveryPaymentDetail::where('parcel_id', $parcel->id)->where('status', 2)->first();
 
-                $data_parcel_array[] = (object)[
+                $data_parcel_array[] = (object) [
                     'serial' => $key + 1,
                     'parcel_invoice' => $parcel->parcel_invoice,
                     'merchant_order_id' => $parcel->merchant_order_id,
@@ -181,6 +181,8 @@ class BranchParcelExport implements
                     'parcel_date' => $parcel->updated_at->format('d-m-Y h:i A'),
                     'company_name' => $parcel->merchant->company_name,
                     'm_id' => $parcel->merchant->m_id,
+                    'store_name' => $parcel->merchant->parentMerchant?->company_name, //$parcel->merchant->store_name,
+                    'store_id' => $parcel->merchant->parentMerchant?->m_id, //$parcel->merchant->store_id,
                     'customer_name' => $parcel->customer_name,
                     'customer_contact_number' => $parcel->customer_contact_number,
                     'customer_contact_number2' => $parcel->customer_contact_number2,
@@ -190,6 +192,7 @@ class BranchParcelExport implements
                     'service_type' => optional($parcel->service_type)->title,
                     'delivery_branch' => optional($parcel->delivery_branch)->name,
                     'delivery_rider' => optional($parcel->delivery_rider)->name,
+                    'delivery_rider_id' => optional($parcel->delivery_rider)->r_id,
                     'item_type' => optional($parcel->item_type)->title,
                     'total_collect_amount' => $parcel->total_collect_amount != 0 ? $parcel->total_collect_amount : '0',
                     'customer_collect_amount' => $parcel->cancel_amount_collection != 0 ? $parcel->cancel_amount_collection : ($parcel->customer_collect_amount != 0 ? $parcel->customer_collect_amount : '0'),
@@ -212,17 +215,20 @@ class BranchParcelExport implements
 
     public function map($row): array
     {
-        return  [
+        return [
             $row->serial,
             $row->parcel_invoice,
             $row->merchant_order_id,
             $row->date,
             $row->number_of_attempt,
             $row->status,
+            $row->payment_status_name,
             $row->parcel_date,
             $row->picked_up_date,
             $row->company_name,
             $row->m_id,
+            $row->store_name,
+            $row->store_id,
             $row->customer_name,
             $row->customer_contact_number,
             $row->customer_contact_number2,
@@ -233,12 +239,12 @@ class BranchParcelExport implements
             $row->service_type,
             $row->delivery_branch,
             $row->delivery_rider,
+            $row->delivery_rider_id,
             $row->item_type,
             $row->total_collect_amount,
             $row->customer_collect_amount,
             $row->parcel_note,
             $row->logs_note,
-            $row->payment_status_name,
             $row->payment_invoice_id,
             $row->return_status_name,
             $row->return_status_time,
@@ -248,16 +254,19 @@ class BranchParcelExport implements
     public function headings(): array
     {
         return [
-            'serial',
+            'Serial',
             'Parcel Invoice',
             'Merchant Order ID',
-            'Parcel Date',
+            'Booking Date',
             'Attempt',
             'Status',
+            'Payment Status',
             'Last Update Date',
             'Picked Up Date',
-            'company_name',
+            'Company name',
             'Merchant ID',
+            'Store Name',
+            'Store Id',
             'Customer Name',
             'Customer Contact Number',
             'Alternative Number',
@@ -268,14 +277,14 @@ class BranchParcelExport implements
             'Service Type',
             'Delivery Branch',
             'Delivery Rider',
+            'Rider Id',
             'Item Type',
             'Amount To be Collect',
             'Collected',
             'Parcel Note',
             'Logs Note',
-            'Payment Status Name',
             'Payment Invoice ID',
-            'Return Status Name',
+            'Return Status',
             'Return Status Date & Time',
         ];
     }
@@ -285,7 +294,7 @@ class BranchParcelExport implements
         return [
             //            'creator'        => 'Patrick Brouwers',
             //            'lastModifiedBy' => 'Patrick Brouwers',
-            'title'             => 'Admin Parcel List',
+            'title' => 'Admin Parcel List',
             //            'description'    => 'Latest Invoices',
             //            'subject'        => 'Invoices',
             //            'keywords'       => 'invoices,export,spreadsheet',
@@ -299,11 +308,11 @@ class BranchParcelExport implements
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class    => function (AfterSheet $event) {
+            AfterSheet::class => function (AfterSheet $event) {
 
-                $event->sheet->getStyle('A1:Z1')->applyFromArray([
-                    'font'  => [
-                        'bold'  => true,
+                $event->sheet->getStyle('A1:AF1')->applyFromArray([
+                    'font' => [
+                        'bold' => true,
                     ]
                 ]);
 
@@ -312,7 +321,7 @@ class BranchParcelExport implements
                 //                        'bold'  => true,
                 //                    ]
                 //                ]);
-
+    
                 if ('pdf' == "pdf") {
 
                     foreach (range('B', 'Z') as $columnID) {
@@ -334,7 +343,7 @@ class BranchParcelExport implements
                 //                        ]
                 //                    ]
                 //                );
-
+    
             },
         ];
     }

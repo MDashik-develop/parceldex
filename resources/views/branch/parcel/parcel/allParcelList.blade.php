@@ -139,17 +139,16 @@
 
                                 </div>
                                 <div class="col-sm-12 col-md-2" style="margin-top: 20px">
+
                                     <button type="button" name="filter" id="filter" class="btn btn-success">
                                         <i class="fas fa-search-plus"></i>
                                     </button>
+
                                     <button type="button" name="refresh" id="refresh" class="btn btn-info">
                                         <i class="fas fa-sync-alt"></i>
                                     </button>
-                                    <button type="button" name="printBtn" id="printBtn" class="btn btn-primary">
-                                        <i class="fas fa-print"></i>
-                                    </button>
 
-                                    <form action="{{ route('branch.parcel.excelAllParcelList') }}" method="post">
+                                    <form action="{{ route('branch.parcel.excelAllParcelList') }}" method="post" style="display: inline">
                                         @csrf
                                         <input type="hidden" id="ex_parcel_status" name="ex_parcel_status"
                                             value="0">
@@ -160,7 +159,7 @@
                                             value="">
                                         <input type="hidden" id="ex_from_date" name="ex_from_date" value="">
                                         <input type="hidden" id="ex_to_date" name="ex_to_date" value="">
-                                        <button type="submit" class="btn btn-primary mt-4">
+                                        <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-file-excel"></i>
                                         </button>
                                     </form>

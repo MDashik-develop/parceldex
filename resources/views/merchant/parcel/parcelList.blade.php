@@ -32,14 +32,12 @@
                                 </a>
                             </div>
 
-
                             <div class="row input-daterange" style="margin-top: 40px">
                                 <div class="col-sm-12 col-md-2">
                                     <label for="parcel_status">Parcel Status</label>
                                     <select name="parcel_status" id="parcel_status" class="form-control select2"
                                         style="width: 100%">
                                         <option value="0">Select Parcel Status</option>
-
                                         <option value="1">Delivered</option>
                                         <option value="11">Delivery Approval Pending</option>
                                         <option value="13">Partial Delivered</option>
@@ -57,8 +55,7 @@
                                     </select>
                                 </div>
 
-
-                                <div class="col-sm-12 col-md-4" style="margin-top: 20px">
+                                <div class="col-sm-12 col-md-2" style="margin-top: 20px">
                                     <input type="text" name="parcel_invoice" id="parcel_invoice" class="form-control"
                                         placeholder="Enter Parcel Invoice / Order ID / C. Number"
                                         style="font-size: 16px; box-shadow: 0 0 5px rgb(62, 196, 118);
@@ -67,28 +64,6 @@
                                     border: 1px solid rgb(62, 196, 118);">
                                 </div>
 
-
-
-                                <!--<div class="col-sm-12 col-md-2" style="margin-top: 20px">-->
-                                <!--    <input type="text" name="merchant_order_id" id="merchant_order_id"-->
-                                <!--           class="form-control" placeholder="Enter Merchant Order ID"-->
-                                <!--           style="font-size: 16px; box-shadow: 0 0 5px rgb(62, 196, 118);-->
-                                <!--    padding: 3px 0px 3px 3px;-->
-                                <!--    margin: 5px 1px 3px 0px;-->
-                                <!--    border: 1px solid rgb(62, 196, 118);">-->
-                                <!--</div>-->
-
-
-                                <!--<div class="col-sm-12 col-md-2" style="margin-top: 20px">-->
-                                <!--    <input type="text" name="customer_contact_number" id="customer_contact_number"-->
-                                <!--           class="form-control" placeholder="Customer Number"-->
-                                <!--           style="font-size: 16px; box-shadow: 0 0 5px rgb(62, 196, 118);-->
-                                <!--    padding: 3px 0px 3px 3px;-->
-                                <!--    margin: 5px 1px 3px 0px;-->
-                                <!--    border: 1px solid rgb(62, 196, 118);">-->
-                                <!--</div>-->
-
-
                                 <div class="col-sm-12 col-md-3">
                                     <label for="to_date">Date</label>
                                     <div class="input-group">
@@ -96,6 +71,17 @@
                                         <input type="date" name="to_date" id="to_date" class="form-control" />
                                     </div>
                                 </div>
+
+                                <div class="col-sm-12 col-md-2">
+                                    <label for="to_date">Payment Status</label>
+                                    <select name="payment_status" id="payment_status" class="form-control select2"
+                                        style="width:100%">
+                                        <option value="">All</option>
+                                        <option value="Paid">Paid</option>
+                                        <option value="Unpaid">Unpaid</option>
+                                    </select>
+                                </div>
+
                                 <div class="col-sm-12 col-md-3" style="margin-top: 20px">
                                     <button type="button" name="filter" id="filter" class="btn btn-success">
                                         <i class="fas fa-search-plus"></i>
@@ -103,19 +89,17 @@
                                     <button type="button" name="refresh" id="refresh" class="btn btn-info">
                                         <i class="fas fa-sync-alt"></i>
                                     </button>
-                                    <button type="button" name="printBtn" id="printBtn" class="btn btn-primary">
-                                        <i class="fas fa-print"></i>
-                                    </button>
-                                    <form action="{{ route('merchant.parcel.excelAllParcelList') }}" method="post">
+                                    <form action="{{ route('merchant.parcel.excelAllParcelList') }}" method="post" style="display: inline">
                                         @csrf
                                         <input type="hidden" id="ex_parcel_status" name="ex_parcel_status" value="0">
                                         <input type="hidden" id="ex_parcel_invoice" name="ex_parcel_invoice"
                                             value="">
                                         <input type="hidden" id="ex_from_date" name="ex_from_date" value="">
                                         <input type="hidden" id="ex_to_date" name="ex_to_date" value="">
-                                        <button type="submit" class="btn btn-primary mt-4">
+                                        <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-file-excel"></i>
                                         </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -143,9 +127,6 @@
                                                 <button type="button" id="checkAll" class="btn btn-success btn-sm">
                                                     <i class="fas fa-check"></i>
                                                 </button>
-
-                                                </form>
-
                                             </th>
 
                                         </tr>
@@ -184,10 +165,10 @@
         }
 
         /*
-                div.container {
-                    width: 80%;
-                }
-                */
+                        div.container {
+                            width: 80%;
+                        }
+                        */
     </style>
     <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">

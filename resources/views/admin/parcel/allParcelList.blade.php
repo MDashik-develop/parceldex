@@ -108,6 +108,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
+
                                             <div class="col-sm-12 col-md-3">
                                                 <label for="delivery_branch_id"> Delivery Branch</label>
                                                 <select name="delivery_branch_id" id="delivery_branch_id"
@@ -119,22 +120,11 @@
                                                 </select>
                                             </div>
 
-
-
-
-
                                             <div class="col-sm-12 col-md-3" style="margin-top: 20px">
                                                 <input type="text" name="parcel_invoice" id="parcel_invoice"
                                                     class="form-control" placeholder="Enter Invoice / Order ID / P. Number"
-                                                    style="font-size: 16px; box-shadow: 0 0 5px rgb(62, 196, 118);
-                                            padding: 3px 0px 3px 3px;
-                                            margin: 5px 1px 3px 0px;
-                                            border: 1px solid rgb(62, 196, 118);">
+                                                    style="font-size: 16px; box-shadow: 0 0 5px rgb(62, 196, 118);padding: 3px 0px 3px 3px;margin: 5px 1px 3px 0px;border: 1px solid rgb(62, 196, 118);">
                                             </div>
-
-
-
-
 
                                             <div class="col-sm-12 col-md-3">
                                                 <label for="from_date">From Date</label>
@@ -163,17 +153,16 @@
                                 </div>
 
                                 <div class="col-sm-12 col-md-2" style="margin-top: 20px">
+
                                     <button type="button" name="filter" id="filter" class="btn btn-success">
                                         <i class="fas fa-search-plus"></i>
                                     </button>
+
                                     <button type="button" name="refresh" id="refresh" class="btn btn-info">
                                         <i class="fas fa-sync-alt"></i>
                                     </button>
-                                    <button type="button" name="print" id="print" class="btn btn-primary">
-                                        <i class="fas fa-print"></i>
-                                    </button>
 
-                                    <form action="{{ route('admin.parcel.excelAllParcelList') }}">
+                                    <form action="{{ route('admin.parcel.excelAllParcelList') }}" style="display: inline">
                                         @csrf
                                         <input type="hidden" id="ex_parcel_status" name="ex_parcel_status"
                                             value="0">
@@ -188,7 +177,7 @@
                                             value="{{ $to_date }}">
                                         <input type="hidden" id="ex_payment_status" name="ex_payment_status"
                                             value="{{ $payment_status }}">
-                                        <button type="submit" class="btn btn-primary mt-4">
+                                        <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-file-excel"></i>
                                         </button>
                                     </form>

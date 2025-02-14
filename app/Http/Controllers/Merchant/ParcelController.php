@@ -668,7 +668,6 @@ class ParcelController extends Controller
                         $query->orWhere('merchant_order_id', 'like', "%{$parcel_invoice}%");
                         $query->orWhere('customer_contact_number', 'like', "%{$parcel_invoice}%");
 
-
                         /*if (!is_null($parcel_invoice) && !is_null($parcel_invoice)) {
                             $query->where('parcel_invoice', 'like', "%$parcel_invoice");
                         } elseif (!is_null($merchant_order_id) && !is_null($merchant_order_id)) {
@@ -676,6 +675,7 @@ class ParcelController extends Controller
                         } elseif (!is_null($customer_contact_number) && !is_null($customer_contact_number)) {
                             $query->where('customer_contact_number', 'like', "%$customer_contact_number");
                         }*/
+
                     } else {
                         if ($request->has('parcel_status') && !is_null($parcel_status) && $parcel_status != 0) {
                             if ($parcel_status == 1) {
@@ -780,7 +780,17 @@ class ParcelController extends Controller
                 'suborder',
                 'cancel_amount_collection',
                 'parcel_otp',
+                'weight_package_id'
             );
+
+        // dd($model);
+        if ($request->has('payment_status')) {
+            if ($request->get('payment_status') == 'Paid') {
+                $model->whereRaw('payment_type = 6 and status in (21, 22,23,24, 25, 26, 27, 28,29, 30,31,32,33,34,35, 36) and delivery_type in (1,2,4)');
+            } elseif ($request->get('payment_status') == 'Unpaid') {
+                $model->whereRaw('payment_type in (1,2,3,4,5, null) and status in (21, 22,23,24, 25, 26, 27, 28,29, 30,31,32,33,34,35, 36)');
+            }
+        }
 
         return DataTables::of($model)
             ->addIndexColumn()
@@ -978,7 +988,7 @@ class ParcelController extends Controller
                 }
 
                 $amount .= '<p><strong>Delivery Charge:  </strong>' . $data->delivery_charge . '</p>';
-                $amount .= '<p><strong>Weight Charge:  </strong>' . $data->weight_package_charge . '</p>';
+                $amount .= '<p><strong>Weight:  </strong>' . $data->weight_package->name . '</p>';
                 // $amount .= '<p><strong>Delivery Charge: </strong>'.$data->total_charge.'</p>';
                 // $amount .= '<p><strong>COD Charge: </strong>'.$data->cod_charge.'</p>';
                 return $amount;

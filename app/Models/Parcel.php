@@ -108,7 +108,6 @@ class Parcel extends Model
         return $this->belongsTo(BranchUser::class, 'return_branch_user_id');
     }
 
-
     public function pickup_rider()
     {
         return $this->belongsTo(Rider::class, 'pickup_rider_id');
@@ -123,7 +122,6 @@ class Parcel extends Model
     {
         return $this->belongsTo(Rider::class, 'return_rider_id');
     }
-
 
     public function parcel_logs()
     {

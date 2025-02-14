@@ -218,6 +218,7 @@ class ParcelController extends Controller
                 $model->whereRaw('status = 0');
             }
         }
+
         // dd($model);
         if ($request->has('payment_status')) {
             if ($request->get('payment_status') == 'Paid') {
@@ -403,6 +404,7 @@ class ParcelController extends Controller
                 }
 
                 $amount .= '<p><strong>Delivery Charge:   </strong>' . $data->delivery_charge . '</p>';
+                $amount .= '<p><strong>Weight:  </strong>' . $data->weight_package->name . '</p>';
                 $amount .= '<p><strong>Weight Charge:  </strong>' . $data->weight_package_charge . '</p>';
                 // $amount .= '<p><strong>Delivery Charge: </strong>'.$data->total_charge.'</p>';
                 // $amount .= '<p><strong>COD Charge: </strong>'.$data->cod_charge.'</p>';

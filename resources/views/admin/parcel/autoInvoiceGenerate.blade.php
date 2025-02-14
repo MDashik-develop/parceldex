@@ -57,6 +57,7 @@
 
                     $p[] = [
                         'id' => $parcel->id,
+                        'delivery_date' => $parcel->delivery_date,
                         'parcel_invoice' => $parcel->parcel_invoice,
                         'collected' => $parcel->customer_collect_amount + $parcel->cancel_amount_collection,
                         'payable' => $payable_amount,
@@ -151,8 +152,9 @@
                             <th class="bg-light2">Payable</th>
                             <th class="bg-light2">Number of Parcels</th>
                             <th class="bg-light2">
-                                <button>Approve All</button>
-                                <input type="checkbox">
+                                <button onclick="submitChecked()" id="approve_all">Approve All</button>
+                                <input type="checkbox" id="checkbox" class="checkbox checkbox-parcel"
+                                    onchange="checkAll()">
                             </th>
                         </tr>
                     </thead>
@@ -172,10 +174,11 @@
                                         oninput="adjustment({{ $key }})">
                                 </td>
                                 <td>
-                                    <textarea name="" id="" style="width: 100%"></textarea>
+                                    <textarea style="width: 100%" id="adjustment_note-{{ $key }}"></textarea>
                                 </td>
                                 <td id="total-payable-{{ $key }}">{{ $item['payable'] }}</td>
-                                <td id="ctotal-payable-{{ $key }}" style="display: none">{{ $item['payable'] }}</td>
+                                <td id="ctotal-payable-{{ $key }}" style="display: none">{{ $item['payable'] }}
+                                </td>
                                 <td>
                                     <span id="parcel-count-{{ $key }}">{{ $item['number_of_parcels'] }}</span>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -185,7 +188,7 @@
                                 </td>
                                 <td>
                                     <button onclick="approve({{ $key }})">Approve</button>
-                                    <input type="checkbox">
+                                    <input type="checkbox" class="checkbox" value="{{ $key }}">
                                 </td>
                             </tr>
                         @empty
@@ -215,19 +218,26 @@
                             <tr>
                                 <td>Order ID</td>
                                 <td>Collected</td>
+                                <td>Delivery Date</td>
                                 <td>Delete</td>
                             </tr>
                             @foreach ($item['parcels'] as $k => $p)
                                 <tr id="parcel-tr-{{ $p['parcel_invoice'] }}">
-                                    <input type="text" id="parcel-charge-{{ $p['parcel_invoice'] }}"
-                                        value="{{ $p['parcel_charge'] }}" hidden>
-                                    <input type="text" id="parcel-payable-{{ $p['parcel_invoice'] }}"
-                                        value="{{ $p['parcel_payable'] }}" hidden>
-                                    <input type="text" value="{{ $p['id'] }}"
-                                        class="parcel-id-{{ $key }}" hidden>
-                                    <td>{{ $p['parcel_invoice'] }}</td>
+                                    <td>
+                                        <input type="text" id="parcel-charge-{{ $p['parcel_invoice'] }}"
+                                            value="{{ $p['parcel_charge'] }}" hidden>
+                                        <input type="text" id="parcel-payable-{{ $p['parcel_invoice'] }}"
+                                            value="{{ $p['parcel_payable'] }}" hidden>
+                                        <input type="text" value="{{ $p['id'] }}"
+                                            class="parcel-id-{{ $key }}" hidden>
+
+                                        {{ $p['parcel_invoice'] }}
+                                    </td>
                                     <td id="parcel-collected-{{ $p['parcel_invoice'] }}">{{ $p['collected'] }}</td>
-                                    <td><button onclick="removeParcel({{ $p['parcel_invoice'] }}, {{ $key }})">Delete</button></td>
+                                    <td>{{ $p['delivery_date'] }}</td>
+                                    <td><button
+                                            onclick="removeParcel({{ $p['parcel_invoice'] }}, {{ $key }})">Delete</button>
+                                    </td>
                                 </tr>
                             @endforeach
                         </table>
@@ -266,8 +276,11 @@
                 }
             }
 
-            async function approve(key) {
+            async function approve(key,
+                return_result = false) {
                 let merchantId = $('#merchant-id-' + key).val();
+                let adjustment = parseInt($('#adjustment-input-' + key).val());
+                let adjustment_note = $('#adjustment_note-' + key).val();
                 let parcels = [];
 
                 $('.parcel-id-' + key).each(function() {
@@ -285,11 +298,17 @@
                         total_payment_parcel: $('#parcel-count-' + key).text(),
                         total_payment_amount: $('#total-payable-' + key).text(),
                         merchant_id: merchantId,
-                        parcels: parcels
+                        parcels: parcels,
+                        adjustment: adjustment ? adjustment : 0,
+                        adjustment_note: adjustment_note
                     })
                 });
 
                 let result = await response.json();
+
+                if (return_result) {
+                    return result;
+                }
 
                 if (result.success) {
                     alert('Invoice created successfully');
@@ -297,6 +316,39 @@
                 } else {
                     alert('Something went wrong');
                 }
+            }
+
+            let check_toggle = false;
+
+            function checkAll() {
+                if (check_toggle == false) {
+                    $('.checkbox').prop('checked', true);
+                    check_toggle = true;
+                } else {
+                    $('.checkbox').prop('checked', false);
+                    check_toggle = false;
+                }
+            }
+
+            async function submitChecked() {
+
+                // button loading and change text loading
+                $('#approve_all').text('Approving...');
+                $('#approve_all').prop('disabled', true);
+
+                let checked = [];
+                $('.checkbox-parcel').each(function() {
+                    if ($(this).is(':checked')) {
+                        checked.push($(this).val());
+                    }
+                });
+
+                checked.forEach(async (key, value) => {
+                    await approve(value, true)
+                });
+
+                alert('Invoice created successfully');
+                location.reload();
             }
         </script>
     @endpush

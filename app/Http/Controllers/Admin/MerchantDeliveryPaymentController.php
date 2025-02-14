@@ -1101,6 +1101,8 @@ class MerchantDeliveryPaymentController extends Controller
             'total_payment_parcel' => $request->total_payment_parcel,
             'total_payment_amount' => $request->total_payment_amount,
             'status' => 1,
+            'adjustment' => $request->adjustment,
+            'adjustment_note' => $request->adjustment_note,
         ];
 
         $parcelMerchantDeliveryPayment = ParcelMerchantDeliveryPayment::create($data);

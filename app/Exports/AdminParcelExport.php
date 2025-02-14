@@ -62,8 +62,8 @@ class AdminParcelExport implements
                     $query->select('id', 'name', 'm_id', 'company_name', 'contact_number', 'address');
                 },
             ])
-            ->orderBy('id', 'desc')
-            ->select();
+                ->orderBy('id', 'desc')
+                ->select();
 
         $filter = [];
 
@@ -174,7 +174,7 @@ class AdminParcelExport implements
 
                 $a = ParcelMerchantDeliveryPaymentDetail::where('parcel_id', $parcel->id)->first();
 
-                $data_parcel_array[] = (object)[
+                $data_parcel_array[] = (object) [
                     'serial' => $key + 1,
                     'parcel_invoice' => $parcel->parcel_invoice,
                     'merchant_order_id' => $parcel->merchant_order_id,
@@ -183,6 +183,8 @@ class AdminParcelExport implements
                     'parcel_date' => $parcel->updated_at->format('d-m-Y h:i A'),
                     'company_name' => $parcel->merchant->company_name,
                     'm_id' => $parcel->merchant->m_id,
+                    'store_name' => $parcel->merchant->parentMerchant?->company_name,
+                    'store_id' => $parcel->merchant->parentMerchant?->m_id,
                     'customer_name' => $parcel->customer_name,
                     'customer_contact_number' => $parcel->customer_contact_number,
                     'customer_contact_number2' => $parcel->customer_contact_number2,
@@ -192,6 +194,7 @@ class AdminParcelExport implements
                     'service_type' => optional($parcel->service_type)->title,
                     'delivery_branch' => optional($parcel->delivery_branch)->name,
                     'delivery_rider' => optional($parcel->delivery_rider)->name,
+                    'delivery_rider_id' => optional($parcel->delivery_rider)->r_id,
                     'item_type' => optional($parcel->item_type)->title,
                     'total_collect_amount' => $parcel->total_collect_amount != 0 ? $parcel->total_collect_amount : '0',
                     'customer_collect_amount' => $parcel->cancel_amount_collection != 0 ? $parcel->cancel_amount_collection : ($parcel->customer_collect_amount != 0 ? $parcel->customer_collect_amount : '0'),
@@ -233,6 +236,8 @@ class AdminParcelExport implements
             $row->picked_up_date,
             $row->company_name,
             $row->m_id,
+            $row->store_name,
+            $row->store_id,
             $row->customer_name,
             $row->customer_contact_number,
             $row->customer_contact_number2,
@@ -243,18 +248,19 @@ class AdminParcelExport implements
             $row->service_type,
             $row->delivery_branch,
             $row->delivery_rider,
+            $row->delivery_rider_id,
             $row->item_type,
             $row->total_collect_amount,
             $row->customer_collect_amount,
             $row->weight_charge,
             $row->cod_charge,
             $row->delivery_charge,
-            $row->return_charge,
+            $row->return_charge ? $row->return_charge : "0",
             $row->total_charge,
             $row->parcel_note,
             $row->logs_note,
             $row->payment_status_name,
-            $row->paid_amount,
+            $row->payment_invoice_id ? $row->paid_amount : "0",
             $row->payment_date,
             $row->payment_invoice_id,
             $row->return_status_name,
@@ -266,7 +272,7 @@ class AdminParcelExport implements
     public function headings(): array
     {
         return [
-            'serial',
+            'Serial',
             'Parcel Invoice',
             'Merchant Order ID',
             'Parcel Created Date & Time',
@@ -274,8 +280,10 @@ class AdminParcelExport implements
             'Status',
             'Last Update Date & Time',
             'Picked Up Date & Time',
-            'company_name',
+            'Company Name',
             'Merchant ID',
+            'Store Name',
+            'Store Id',
             'Customer Name',
             'Customer Contact Number',
             'Alternative Number',
@@ -286,6 +294,7 @@ class AdminParcelExport implements
             'Service Type',
             'Delivery Branch',
             'Delivery Rider',
+            'Rider Id',
             'Item Type',
             'Amount To be Collect',
             'Collected',
@@ -326,7 +335,7 @@ class AdminParcelExport implements
         return [
             AfterSheet::class => function (AfterSheet $event) {
 
-                $event->sheet->getStyle('A1:Z1')->applyFromArray([
+                $event->sheet->getStyle('A1:AM1')->applyFromArray([
                     'font' => [
                         'bold' => true,
                     ]
@@ -337,7 +346,7 @@ class AdminParcelExport implements
                 //                        'bold'  => true,
                 //                    ]
                 //                ]);
-
+    
                 if ('pdf' == "pdf") {
 
                     foreach (range('B', 'Z') as $columnID) {
@@ -359,7 +368,7 @@ class AdminParcelExport implements
                 //                        ]
                 //                    ]
                 //                );
-
+    
             },
         ];
     }

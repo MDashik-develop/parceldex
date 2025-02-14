@@ -391,7 +391,7 @@
                         <td style="text-align: right">{{ $btotal_hold }}</td>
                         <td style="text-align: right">{{ $btotal_cancel }}</td>
                         <td style="text-align: right">
-                            {{ number_format(($btotal_deliveried * 100) / ($btotal_assigned ?? 1), 2) }}%
+                            {{ $btotal_assigned > 0 ? number_format(($btotal_deliveried * 100) / $btotal_assigned, 2) : '0.00' }}%
                         </td>
                         <td style="text-align: right">
                             {{ number_format(($btotal_hold * 100) / ($btotal_assigned ?? 1), 2) }} %

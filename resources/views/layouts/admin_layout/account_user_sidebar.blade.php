@@ -154,6 +154,15 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
+                            <a href="{{ route('admin.account.autoInvoiceGenerate') }}"
+                                class="nav-link {{ $child_menu == 'autoInvoiceGenerate' ? 'active' : '' }}">
+                                <i class="fas fa-flask"></i>
+                                <p>Auto Invoice</p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
                             <a href="{{ route('admin.account.merchantPaymentDeliveryGenerate') }}" class="nav-link {{ $child_menu == 'merchantPaymentDeliveryGenerate' ? 'active' : '' }}">
                                 <i class="fas fa-flask"></i>
                                 <p>Merchant Delivery Payment </p>

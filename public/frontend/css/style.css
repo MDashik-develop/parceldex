@@ -2666,13 +2666,6 @@ body.auth {
 .brand_logos:hover .brand_logo_items2 {
   animation-play-state: paused;
 }
-.custom-ellipsis{
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 
 /*----- about page-----*/
 .hero-section2{
@@ -3094,6 +3087,21 @@ body.auth {
   display: flex;
   justify-content: center;
 }
+
+.custom-ellipsis{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.custom-ellipsis-3{
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 /*----- common -----*/
 /*----- price page-----*/
 .prices-2nd-section table thead tr th{
@@ -3108,4 +3116,24 @@ body.auth {
 }
 /*----- price page-----*/
 /*----- services page-----*/
+.main-services-page{
+  #service-detail, #services{
+    .card{
+      transition: 0.5s;
+      .card-title{
+        font-size: 19px;
+        font-weight: 700;
+        font-family: inter;
+        text-align: center;
+      }
+      a{
+        background-color: #f27b21 !important;
+      }
+    }
+    .card:hover{
+      transform: scale(1.05);
+      box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+    }
+  }
+}
 /*----- services page-----*/

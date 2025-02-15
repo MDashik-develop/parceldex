@@ -18,14 +18,14 @@
 					<i class="fa-solid fa-bars" style="margin-right: 7px"></i>
 					Discover More
 				</a>
-				<a class="col-5 col-sm-3 col-lg-1 py-2 shadow rounded-1 text-white fw-semibold" style="background-color: #F27B21 !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 5px 0px !important;">
+				<a class="col-5 col-sm-3 col-lg-auto py-2 px-lg-2 shadow rounded-1 text-white fw-semibold" style="background-color: #F27B21 !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 5px 0px !important;">
 					<i class="fa-solid fa-phone" style="margin-right: 7px"></i>
 					Contact Us
 				</a>
 			</div>
 		</div>
 
-		<!-- services start -->
+		 <!-- services start -->
 		<div id="service-detail" class="services-main-block-3 pb-3">
 				<div class="d-flex justify-content-center align-items-center flex-column my-5">
 					<h1 class="section-heading">Courier Services</h1>
@@ -41,9 +41,9 @@
 						<img class="card-img-top" src="{{ asset('uploads/service/' . $service->image) }}" alt="Card image cap">
 						<div class="card-body d-flex flex-column align-items-center gap-2">
 						<h5 class="card-title">{{ $service->name }}</h5>
-						<p class="card-text">{{ $service->short_details }}</p>
-						<a href="{{ route('frontend.serviceDetails', $service->slug) }}" class="btn btn-primary">Go somewhere</a>
-						</div> b
+						<p class="card-text dcustom-ellipsis-3 my-2">{{ $service->short_details }}</p>
+						<a href="{{ route('frontend.serviceDetails', $service->slug) }}" class="btn btn-primary">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+						</div>
 					</div>
 					@endforeach
 				</div>
@@ -87,19 +87,21 @@
 		<!-- clients start-->
 		<div class="container px-2">
 			<h4 class="section-heading my-4 py-2 text-center">Our Trusted Partners</h4>
-			<div class=" item-clients d-flex overflow-hidden" style="width: 100%; position: relative;">
-				<div class="clients-slider d-flex" style="transition: transform 0.5s linear; width: max-content;">
-					@foreach ($partners as $partner)
-						<div class="item-clients-img" style="width: 204px; margin-right: 30px;">
-							<img src="{{ asset('uploads/partner/' . $partner->image) }}" class="img-fluid" alt="clients-1">
-						</div>
-					@endforeach
-					<!-- Duplicate images for smooth transition -->
-					@foreach ($partners as $partner)
-						<div class="item-clients-img" style="width: 204px; margin-right: 30px;">
-							<img src="{{ asset('uploads/partner/' . $partner->image) }}" class="img-fluid" alt="clients-1">
-						</div>
-					@endforeach
+			<div class="row justify-content-center">
+				<div class=" col-11 col-md-8 item-clients d-flex overflow-hidden" style="width: 100%; position: relative;">
+					<div class="clients-slider d-flex" style="transition: transform 0.5s linear; width: max-content;">
+						@foreach ($partners as $partner)
+							<div class="item-clients-img" style="width: 204px; margin-right: 30px;">
+								<img src="{{ asset('uploads/partner/' . $partner->image) }}" class="img-fluid" alt="clients-1">
+							</div>
+						@endforeach
+						<!-- Duplicate images for smooth transition -->
+						@foreach ($partners as $partner)
+							<div class="item-clients-img" style="width: 204px; margin-right: 30px;">
+								<img src="{{ asset('uploads/partner/' . $partner->image) }}" class="img-fluid" alt="clients-1">
+							</div>
+						@endforeach
+					</div>
 				</div>
 			</div>
 		</div>

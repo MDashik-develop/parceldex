@@ -41,7 +41,7 @@
 						<img class="card-img-top" src="{{ asset('uploads/service/' . $service->image) }}" alt="Card image cap">
 						<div class="card-body d-flex flex-column align-items-center gap-2">
 						<h5 class="card-title">{{ $service->name }}</h5>
-						<p class="card-text dcustom-ellipsis-3 my-2">{{ $service->short_details }}</p>
+						<p class="card-text custom-ellipsis-3 my-2">{{ $service->short_details }}</p>
 						<a href="{{ route('frontend.serviceDetails', $service->slug) }}" class="btn btn-primary">Learn More <i class="fa-solid fa-arrow-right"></i></a>
 						</div>
 					</div>

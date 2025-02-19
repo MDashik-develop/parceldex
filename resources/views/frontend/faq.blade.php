@@ -1,3 +1,64 @@
+
+@section('seo-meta')
+    @php
+        $seoMeta = App\Models\SeoMeta::where('page_name', 'Faq')->first();
+    @endphp
+
+    @if ($seoMeta)
+        <title>{{ $seoMeta->og_title }}</title>
+
+        <meta name="description" content="{{ $seoMeta->og_description }}">
+        <meta name="keywords" content="{{ $seoMeta->meta_keywords }}">
+
+        <meta property="og:title" content="{{ $seoMeta->og_title }}">
+        <meta property="og:description" content="{{ $seoMeta->og_description }}">
+        <meta property="og:image" content="{{ asset('storage/images/' . $seoMeta->og_image) }}">
+        <meta property="og:url" content="{{ url()->current() }}">
+
+        <meta name="twitter:title" content="{{ $seoMeta->og_title }}">
+        <meta name="twitter:description" content="{{ $seoMeta->og_description }}">
+        <meta name="twitter:image" content="{{ asset('storage/images/' . $seoMeta->og_image) }}">
+
+        <link rel="canonical" href="{{ url()->current() }}">
+
+        <!-- JSON-LD Schema Markup for Services Page -->
+        <script type="application/ld+json">
+     {
+       "@context": "https://schema.org",
+       "@type": "Service",
+       "name": "Courier Services",
+       "url": "{{url()->current()}}",
+       "provider": {
+         "@type": "CourierService",
+         "name": "Parceldex Courier",
+         "url": "https://parceldex.com"
+       },
+       "serviceType": "Express Delivery, Same-Day Delivery, Next-Day Delivery, Cash on Delivery, eCommerce Logistics",
+       "areaServed": {
+         "@type": "Country",
+         "name": "Bangladesh"
+       },
+       "availableChannel": {
+         "@type": "ServiceChannel",
+         "serviceUrl": "{{url()->current()}}",
+         "availableLanguage": ["English", "Bengali"]
+       },
+       "offers": {
+         "@type": "Offer",
+         "priceCurrency": "BDT",
+         "price": "Varies",
+         "url": "{{url()->current()}}"
+       },
+       "contactPoint": {
+         "@type": "ContactPoint",
+         "telephone": "+8809642727727",
+         "contactType": "customer service"
+       }
+     }
+     </script>
+    @endif
+@endsection
+
 @extends('layouts.frontend.app')
 
 @section('content')

@@ -32,6 +32,24 @@
                             <div class="col-sm-10">
                                 <select name="page_name" class="form-control" required>
                                     <option>Home</option>
+                                    <option>About</option>
+                                    <option>Blogs</option>
+                                    <option>Career</option>
+                                    <option>Contact</option>
+                                    <option>CoverageMap</option>
+                                    <option>Faq</option>
+                                    <option>GetACall</option>
+                                    <option>NewsRoom</option>
+                                    <option>NewsDetails</option>
+                                    <option>OurPartnersPage</option>
+                                    <option>Prices</option>
+                                    <option>PrivacyPolicyPage</option>
+                                    <option>ReturnRefundPolicy</option>
+                                    <option>ServiceDetails</option>
+                                    <option>Service</option>
+                                    <option>TeamMember</option>
+                                    <option>TermsAndConditions</option>
+                                    <option>TrackParcel</option>
                                 </select>
                             </div>
                         </div>
